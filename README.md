@@ -1,16 +1,17 @@
-# totodo
+## 📺 Giới thiệu
+Personal Tasks Management Mobile - Hệ thống Quản lý công việc cá nhân Mobile
+## Chức năng 
+   
 
-A new Flutter application.
+## Demo
+## 🤵 Thông tin nhóm thực hiện
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🎉 Các điểm đặc sắc
+**Không có.**
+## 💌 Điểm đề nghị
+Số điểm đề nghị: **10** điểm
+## 📌 Link Youtube demo
+Link: https://youtu.be/Ux2ega7tzA8
+Note: Có thể kết thúc chuyến đi bằng cách click vào nút Kết thúc (Video demo em quên demo phần đó)
+## 🔒 Quyền sử dụng Project
+Có thể share cho các khóa sau
