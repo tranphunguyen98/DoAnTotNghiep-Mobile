@@ -12,7 +12,7 @@ void main() {
       appName: "ToToDo",
       debugTag: false,
       flavorName: "prod",
-      initialRoute: AppRouter.LOGIN,
+      initialRoute: AppRouter.kLogin,
       child: MyApp.runWidget(),
     ),
   );
