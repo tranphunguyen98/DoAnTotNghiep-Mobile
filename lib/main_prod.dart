@@ -9,10 +9,10 @@ void main() {
 
   runApp(
     AppConfig(
-      appName: "FindSeat",
+      appName: "ToToDo",
       debugTag: false,
       flavorName: "prod",
-      initialRoute: AppRouter.HOME,
+      initialRoute: AppRouter.LOGIN,
       child: MyApp.runWidget(),
     ),
   );

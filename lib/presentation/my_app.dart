@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/presentation/screen/home/sc_home.dart';
+import 'package:totodo/presentation/screen/login/sc_login.dart';
 import 'package:totodo/presentation/simple_bloc_delegate.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
       ),
       onGenerateRoute: AppRouter.generateRoute,
-      home: HomeScreen(),
+      home: LoginScreen(),
     );
   }
 

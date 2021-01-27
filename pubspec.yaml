@@ -62,6 +62,23 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: fonts/Poppins-Regular.otf
+          weight: 400
+        - asset: fonts/Poppins-Medium.otf
+          weight: 500
+        - asset: fonts/Poppins-SemiBold.otf
+          weight: 600
+    - family: Oswald
+      fonts:
+        - asset: fonts/Oswald-Regular.ttf
+          weight: 400
+
+  assets:
+    - assets/
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

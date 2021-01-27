@@ -22,8 +22,40 @@ final kFontRegularDefault = kFontRegular.copyWith(color: kColorPrimary);
 final kFontRegularDefault_10 = kFontRegular.copyWith(fontSize: 10);
 final kFontRegularDefault_12 = kFontRegular.copyWith(fontSize: 12);
 
+final kFontRegularWhite = kFontRegular.copyWith(color: kColorWhite);
+final kFontRegularWhite_8 = kFontRegularWhite.copyWith(fontSize: 8);
+final kFontRegularWhite_10 = kFontRegularWhite.copyWith(fontSize: 10);
+final kFontRegularWhite_12 = kFontRegularWhite.copyWith(fontSize: 12);
+final kFontRegularWhite_14 = kFontRegularWhite.copyWith(fontSize: 14);
+
+final kFontRegularGray1 = kFontRegular.copyWith(color: kColorGray1);
+final kFontRegularGray1_10 = kFontRegularGray1.copyWith(fontSize: 10);
+final kFontRegularGray1_12 = kFontRegularGray1.copyWith(fontSize: 12);
+
 final kFontRegularGray4 = kFontRegular.copyWith(color: kColorGray4);
 final kFontRegularGray4_8 = kFontRegularGray4.copyWith(fontSize: 8);
 final kFontRegularGray4_10 = kFontRegularGray4.copyWith(fontSize: 10);
 final kFontRegularGray4_12 = kFontRegularGray4.copyWith(fontSize: 12);
 final kFontRegularGray4_14 = kFontRegularGray4.copyWith(fontSize: 14);
+
+final kFontRegularGray5 = kFontRegular.copyWith(color: kColorGray5);
+final kFontRegularGray5_10 = kFontRegular.copyWith(fontSize: 10);
+
+//MEDIUM
+final kFontMediumDefault = kFontMedium.copyWith(color: kColorPrimary);
+final kFontMediumDefault_10 = kFontMediumDefault.copyWith(fontSize: 10);
+final kFontMediumDefault_12 = kFontMediumDefault.copyWith(fontSize: 12);
+final kFontMediumDefault_14 = kFontMediumDefault.copyWith(fontSize: 14);
+final kFontMediumDefault_16 = kFontMediumDefault.copyWith(fontSize: 16);
+
+final kFontMediumWhite = kFontMedium.copyWith(color: kColorWhite);
+final kFontMediumWhite_12 = kFontMediumWhite.copyWith(fontSize: 12);
+final kFontMediumWhite_14 = kFontMediumWhite.copyWith(fontSize: 14);
+final kFontMediumWhite_16 = kFontMediumWhite.copyWith(fontSize: 16);
+final kFontMediumWhite_22 = kFontMediumWhite.copyWith(fontSize: 22);
+
+//SEMI_BOLD
+final kFontSemiboldWhite = kFontSemibold.copyWith(color: kColorWhite);
+final kFontSemiboldWhite_10 = kFontSemiboldWhite.copyWith(fontSize: 10);
+final kFontSemiboldWhite_16 = kFontSemiboldWhite.copyWith(fontSize: 16);
+final kFontSemiboldWhite_18 = kFontSemiboldWhite.copyWith(fontSize: 18);
