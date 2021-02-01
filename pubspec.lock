@@ -290,7 +290,7 @@ packages:
     source: hosted
     version: "0.10.9"
   freezed_annotation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: freezed_annotation
       url: "https://pub.dartlang.org"
@@ -535,7 +535,7 @@ packages:
     source: hosted
     version: "3.0.13"
   provider:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: provider
       url: "https://pub.dartlang.org"

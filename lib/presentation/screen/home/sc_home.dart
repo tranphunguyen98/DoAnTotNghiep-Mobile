@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:totodo/presentation/screen/home/main_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -13,8 +14,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text("HOME"),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Drawer Demo'),
+      ),
+      drawer: MainDrawer(),
     );
   }
 }

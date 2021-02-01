@@ -28,7 +28,7 @@ dependencies:
 
   # local storage
   shared_preferences: ^0.5.6+3
-
+  freezed_annotation:
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -41,18 +41,20 @@ dev_dependencies:
   flutter_svg: ^0.18.1
   dotted_border: ^1.0.4
   shimmer: ^1.1.1
-
+  # Provider
+  provider: ^4.3.2+2
   # Bloc
   flutter_bloc: ^3.1.0
   dio: 3.0.9
   retrofit_generator: any
-  build_runner: any
   json_serializable: any
   # Lint
   lint: ^1.1.1
   # Unit test
   test:
   bloc_test: ^4.0.0
+  build_runner:
+  freezed:
 
 # The following section is specific to Flutter.
 flutter:
