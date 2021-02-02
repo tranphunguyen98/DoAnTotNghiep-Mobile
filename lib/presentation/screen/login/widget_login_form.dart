@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:totodo/bloc/auth_bloc/bloc.dart';
+import 'package:totodo/bloc/login/bloc.dart';
 import 'package:totodo/presentation/common_widgets/widget_flat_button_default.dart';
 import 'package:totodo/presentation/common_widgets/widget_text_field_default.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
@@ -6,46 +9,112 @@ import 'package:totodo/utils/my_const/my_const.dart';
 import 'widget_btn_facebook.dart';
 import 'widget_btn_google.dart';
 
-class WidgetLoginForm extends StatelessWidget {
+class WidgetLoginForm extends StatefulWidget {
+  @override
+  _WidgetLoginFormState createState() => _WidgetLoginFormState();
+}
+
+class _WidgetLoginFormState extends State<WidgetLoginForm> {
+  AuthenticationBloc _authenticationBloc;
+
+  LoginBloc _loginBloc;
+
   final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
+
+  bool get isPopulated =>
+      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+
+  @override
+  void initState() {
+    _authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
+    _loginBloc = BlocProvider.of<LoginBloc>(context);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: kColorWhite,
-      ),
-      child: Form(
-        child: Column(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Đăng nhập tài khoản', style: kFontMediumDefault_16),
+    return BlocListener<LoginBloc, LoginState>(
+      listener: (context, state) {
+        if (state.isSuccess) {
+          _authenticationBloc.add(LoggedIn());
+        }
+
+        if (state.isFailure) {
+          Scaffold.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Login Failure: ${state.error}'),
+                    Icon(Icons.error),
+                  ],
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
+        }
+
+        if (state.isSubmitting) {
+          Scaffold.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Processing ...'),
+                    CircularProgressIndicator(),
+                  ],
+                ),
+              ),
+            );
+        }
+      },
+      child: BlocBuilder<LoginBloc, LoginState>(
+        builder: (context, state) {
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: kColorWhite,
             ),
-            SizedBox(height: 20),
-            _buildTextFieldUsername(),
-            SizedBox(height: 14),
-            _buildTextFieldPassword(),
-            SizedBox(height: 10),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                'Quên mật khẩu?',
-                style: kFontRegularGray4_12,
+            child: Form(
+              child: Column(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Đăng nhập tài khoản',
+                        style: kFontMediumDefault_16),
+                  ),
+                  SizedBox(height: 20),
+                  _buildTextFieldEmail(),
+                  SizedBox(height: 14),
+                  _buildTextFieldPassword(),
+                  SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'Quên mật khẩu?',
+                      style: kFontRegularGray4_12,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  _buildButtonLogin(),
+                  SizedBox(height: 30),
+                  _buildTextOr(),
+                  SizedBox(height: 20),
+                  _buildSocialLogin(),
+                ],
               ),
             ),
-            SizedBox(height: 20),
-            _buildButtonLogin(),
-            SizedBox(height: 30),
-            _buildTextOr(),
-            SizedBox(height: 20),
-            _buildSocialLogin(),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -88,11 +157,24 @@ class WidgetLoginForm extends StatelessWidget {
     );
   }
 
+  bool isRegisterButtonEnabled() {
+    return _loginBloc.state.isFormValid &&
+        isPopulated &&
+        !_loginBloc.state.isSubmitting;
+  }
+
   Widget _buildButtonLogin() {
     return FlatButtonDefault(
       text: 'Đăng Nhập',
       isEnable: true,
-      onPressed: () {},
+      onPressed: () {
+        if (isRegisterButtonEnabled()) {
+          _loginBloc.add(LoginSubmitEmailPasswordEvent(
+            email: _emailController.text,
+            password: _passwordController.text,
+          ));
+        }
+      },
     );
   }
 
@@ -100,21 +182,26 @@ class WidgetLoginForm extends StatelessWidget {
     return TextFieldDefault(
       hindText: 'Mật khẩu',
       controller: _passwordController,
-      validator: (_) {
-        return null;
+      onChanged: (value) {
+        _loginBloc.add(LoginPasswordChanged(password: value));
       },
-      onChanged: (value) {},
+      validator: (_) {
+        return !_loginBloc.state.isPasswordValid ? 'Invalid Password' : null;
+      },
+      obscureText: true,
     );
   }
 
-  Widget _buildTextFieldUsername() {
+  Widget _buildTextFieldEmail() {
     return TextFieldDefault(
       hindText: 'Email',
       controller: _emailController,
-      validator: (_) {
-        return null;
+      onChanged: (value) {
+        _loginBloc.add(LoginEmailChanged(email: value));
       },
-      onChanged: (value) {},
+      validator: (_) {
+        return !_loginBloc.state.isEmailValid ? 'Invalid Email' : null;
+      },
     );
   }
 }

@@ -19,9 +19,19 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   }
 
   @override
-  Future<User> signIn(String email, String password) {
-    // TODO: implement signIn
-    throw UnimplementedError();
+  Future<User> signIn(String email, String password) async {
+    try {
+      print("signUp! $email $password");
+      final userResponse = await _userService.signIn(email, password);
+      print("No error!");
+      print(userResponse.message.toString());
+      return userResponse.user;
+    } on DioError catch (e) {
+      print("Error: $e");
+
+      print("Error: ${e.response.data["message"]}");
+      throw Exception(e.response.data["message"] ?? "Error Dio");
+    }
   }
 
   @override

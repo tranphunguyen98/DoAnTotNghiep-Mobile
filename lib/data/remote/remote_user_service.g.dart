@@ -35,4 +35,24 @@ class _RemoteUserService implements RemoteUserService {
     final value = UserResponse.fromJson(_result.data);
     return value;
   }
+
+  @override
+  Future<UserResponse> signIn(email, password) async {
+    ArgumentError.checkNotNull(email, 'email');
+    ArgumentError.checkNotNull(password, 'password');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = {'email': email, 'password': password};
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<Map<String, dynamic>>('/users/login',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = UserResponse.fromJson(_result.data);
+    return value;
+  }
 }

@@ -11,4 +11,7 @@ abstract class RemoteUserService {
 
   @POST("/users/register")
   Future<UserResponse> signUp(@Field() String email, @Field() String password);
+
+  @POST("/users/login")
+  Future<UserResponse> signIn(@Field() String email, @Field() String password);
 }
