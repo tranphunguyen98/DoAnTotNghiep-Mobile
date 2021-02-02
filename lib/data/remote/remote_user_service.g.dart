@@ -76,4 +76,25 @@ class _RemoteUserService implements RemoteUserService {
     final value = MessageResponse.fromJson(_result.data);
     return value;
   }
+
+  @override
+  Future<MessageResponse> changePassword(oldPassword, newPassword) async {
+    ArgumentError.checkNotNull(oldPassword, 'oldPassword');
+    ArgumentError.checkNotNull(newPassword, 'newPassword');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = {'oldPassword': oldPassword, 'newPassword': newPassword};
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/users/change_password',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = MessageResponse.fromJson(_result.data);
+    return value;
+  }
 }

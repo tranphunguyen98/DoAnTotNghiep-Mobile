@@ -14,7 +14,11 @@ class SettingScreen extends StatelessWidget {
         ),
         body: Column(
           children: [
-            DrawerItemNormal("Change Password", Icons.account_circle, () {}),
+            DrawerItemNormal("Change Password", Icons.account_circle, () {
+              Future.delayed(Duration.zero, () {
+                Navigator.of(context).pushNamed(AppRouter.kChangePassword);
+              });
+            }),
             DrawerItemNormal("Đăng xuất", Icons.logout, () {
               final _authenticationBloc =
                   BlocProvider.of<AuthenticationBloc>(context);

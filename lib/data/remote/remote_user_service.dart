@@ -19,4 +19,8 @@ abstract class RemoteUserService {
   @POST("/users/reset_password")
   Future<MessageResponse> resetPassword(
       @Field() String email, @Field() String password);
+
+  @POST("/users/change_password")
+  Future<MessageResponse> changePassword(
+      @Field() String oldPassword, @Field() String newPassword);
 }
