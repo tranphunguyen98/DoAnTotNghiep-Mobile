@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
-class WidgetBottomSignUp extends StatelessWidget {
+import '../../router.dart';
+
+class WidgetBottomSignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,7 +20,9 @@ class WidgetBottomSignUp extends StatelessWidget {
           Flexible(
             child: GestureDetector(
               onTap: () {
-                // Navigator.of(context).pushNamed(AppRouter.REGISTER);
+                Future.delayed(Duration.zero, () {
+                  Navigator.of(context).pushNamed(AppRouter.kSignUp);
+                });
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),

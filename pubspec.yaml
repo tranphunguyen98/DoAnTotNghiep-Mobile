@@ -19,7 +19,9 @@ dependencies:
   retrofit: any
   json_annotation: any
   carousel_slider: ^1.4.1
-
+  # DI
+  get_it: ^5.0.1
+  injectable: ^1.0.5
   #object builder
   freezed: ^0.10.6
 
@@ -50,6 +52,7 @@ dev_dependencies:
   json_serializable: any
   # Lint
   lint: ^1.1.1
+  injectable_generator: ^1.0.4
   # Unit test
   test:
   bloc_test: ^4.0.0

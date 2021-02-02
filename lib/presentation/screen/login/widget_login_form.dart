@@ -6,22 +6,9 @@ import 'package:totodo/utils/my_const/my_const.dart';
 import 'widget_btn_facebook.dart';
 import 'widget_btn_google.dart';
 
-class WidgetLoginForm extends StatefulWidget {
-  @override
-  _WidgetLoginFormState createState() => _WidgetLoginFormState();
-}
-
-class _WidgetLoginFormState extends State<WidgetLoginForm> {
+class WidgetLoginForm extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  bool get isPopulated =>
-      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

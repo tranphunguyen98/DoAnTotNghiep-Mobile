@@ -6,8 +6,13 @@ class TextFieldDefault extends StatelessWidget {
   final String Function(String) validator;
   final void Function(String) onChanged;
   final TextEditingController controller;
+  final bool obscureText;
   const TextFieldDefault(
-      {this.hindText, this.validator, this.controller, this.onChanged});
+      {this.hindText,
+      this.validator,
+      this.controller,
+      this.onChanged,
+      this.obscureText = false});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,10 +27,12 @@ class TextFieldDefault extends StatelessWidget {
         child: TextFormField(
           controller: controller,
           onChanged: onChanged,
+          autocorrect: false,
+          autovalidate: true,
           validator: validator,
           style: kFontRegularGray1_12,
           keyboardType: TextInputType.text,
-          obscureText: true,
+          obscureText: obscureText,
           textAlign: TextAlign.left,
           decoration: InputDecoration.collapsed(
             hintText: hindText,

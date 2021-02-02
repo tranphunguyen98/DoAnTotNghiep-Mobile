@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:totodo/presentation/screen/login/widget_bottom_signup.dart';
+import 'package:totodo/presentation/screen/login/widget_bottom_signin.dart';
 import 'package:totodo/presentation/screen/login/widget_login_form.dart';
 import 'package:totodo/presentation/screen/login/widget_top_welcome.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
           children: <Widget>[
             WidgetTopWelcome(),
             WidgetLoginForm(),
-            WidgetBottomSignUp(),
+            WidgetBottomSignIn(),
           ],
         ),
       ),
