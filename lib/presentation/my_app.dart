@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final config = AppConfig.of(context);
     print("build");
-
+    getIt.get<IUserRepository>().signOut();
     return MaterialApp(
       debugShowCheckedModeBanner: config.debugTag,
       theme: ThemeData(

@@ -6,6 +6,7 @@ import 'package:totodo/presentation/common_widgets/widget_flat_button_default.da
 import 'package:totodo/presentation/common_widgets/widget_text_field_default.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
+import '../../router.dart';
 import 'widget_btn_facebook.dart';
 import 'widget_btn_google.dart';
 
@@ -97,11 +98,19 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
                   SizedBox(height: 14),
                   _buildTextFieldPassword(),
                   SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      'Quên mật khẩu?',
-                      style: kFontRegularGray4_12,
+                  GestureDetector(
+                    onTap: () {
+                      Future.delayed(Duration.zero, () {
+                        Navigator.of(context)
+                            .pushNamed(AppRouter.kForgotPassword);
+                      });
+                    },
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        'Quên mật khẩu?',
+                        style: kFontRegularGray4_12,
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),

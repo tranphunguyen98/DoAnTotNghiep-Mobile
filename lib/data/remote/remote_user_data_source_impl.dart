@@ -13,9 +13,22 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   }
 
   @override
-  Future<bool> resetPassword(String email, String password) {
-    // TODO: implement resetPassword
-    throw UnimplementedError();
+  Future<bool> resetPassword(String email, String password) async {
+    try {
+      print("signUp! $email $password");
+      final messageResponse = await _userService.resetPassword(email, password);
+      print("No error!");
+      print(messageResponse.msg.toString());
+      if (messageResponse.isSuccess) {
+        return true;
+      }
+      throw Exception("Reset Failed!");
+    } on DioError catch (e) {
+      print("Error: $e");
+
+      print("Error: ${e.response.data["message"]}");
+      throw Exception(e.response.data["message"] ?? "Error Dio");
+    }
   }
 
   @override

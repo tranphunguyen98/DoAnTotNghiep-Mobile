@@ -42,8 +42,13 @@ class LocalUserService {
     }
   }
 
-  Future<void> clearUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove(USER_KEY);
+  Future<bool> clearUser() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(USER_KEY);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

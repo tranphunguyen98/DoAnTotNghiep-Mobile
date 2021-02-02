@@ -43,7 +43,7 @@ class UserRepositoryImpl implements IUserRepository {
 
   @override
   Future<bool> signOut() async {
+    _localUserDataSource.signOut();
     return true;
-    //TODO Sign Out
   }
 }

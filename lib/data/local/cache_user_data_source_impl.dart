@@ -15,4 +15,7 @@ class LocalUserDataSourceImplement implements LocalUserDataSource {
 
   @override
   Future<bool> saveUser(User user) => _userService.saveUser(user);
+
+  @override
+  Future<bool> signOut() => _userService.clearUser();
 }
