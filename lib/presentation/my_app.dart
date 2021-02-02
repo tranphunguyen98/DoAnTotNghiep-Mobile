@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final config = AppConfig.of(context);
     print("build");
-    getIt.get<IUserRepository>().signOut();
+    //getIt.get<IUserRepository>().signOut();
     return MaterialApp(
       debugShowCheckedModeBanner: config.debugTag,
       theme: ThemeData(
@@ -34,8 +34,14 @@ class MyApp extends StatelessWidget {
           if (state is Uninitialized) {
             return SplashScreen();
           } else if (state is Unauthenticated) {
+            // Future.delayed(Duration.zero, () {
+            //   Navigator.of(context).pushNamed(AppRouter.kLogin);
+            // });
             return LoginScreen();
           } else if (state is Authenticated) {
+            // Future.delayed(Duration.zero, () {
+            //   Navigator.of(context).pushNamed(AppRouter.kHome);
+            // });
             return HomeScreen();
           } else {
             return Container(

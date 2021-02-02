@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 
-import 'drawer_item.dart';
+import 'drawer_item_selected.dart';
 
 class ItemDrawerExpanded extends StatefulWidget {
   final DrawerItemData drawerItemData;
@@ -87,10 +87,11 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
                     left: 32.0, top: 8.0, bottom: 8.0, right: 16.0),
                 child: Consumer<List<DrawerItemData>>(
                     builder: (context, drawerItems, child) {
-                  List<DrawerItem> listDrawerItem = List<DrawerItem>();
+                  List<DrawerItemSelected> listDrawerItem =
+                      List<DrawerItemSelected>();
                   for (int i = 0; i < drawerItems.length; i++) {
                     if (drawerItems[i].type == widget.drawerItemData.type) {
-                      listDrawerItem.add(DrawerItem(drawerItems[i], i));
+                      listDrawerItem.add(DrawerItemSelected(drawerItems[i], i));
                     }
                   }
                   return Column(

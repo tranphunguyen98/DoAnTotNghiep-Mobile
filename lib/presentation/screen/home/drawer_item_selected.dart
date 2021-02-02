@@ -4,11 +4,11 @@ import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/presentation/screen/home/item_drawer_index_selected.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
-class DrawerItem extends StatelessWidget {
+class DrawerItemSelected extends StatelessWidget {
   final DrawerItemData data;
   final int index;
 
-  const DrawerItem(this.data, this.index);
+  const DrawerItemSelected(this.data, this.index);
 
   @override
   Widget build(BuildContext context) {

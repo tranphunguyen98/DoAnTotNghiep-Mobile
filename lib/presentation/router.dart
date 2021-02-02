@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/presentation/screen/forgot_password/sc_forgot_password.dart';
 import 'package:totodo/presentation/screen/login/sc_login.dart';
+import 'package:totodo/presentation/screen/setting/sc_setting.dart';
 import 'package:totodo/presentation/screen/signup/sc_signup.dart';
 
 class AppRouter {
@@ -8,6 +9,7 @@ class AppRouter {
   static const String kLogin = '/login';
   static const String kSignUp = '/signUp';
   static const String kForgotPassword = '/forgotPassword';
+  static const String kSetting = '/setting';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -19,6 +21,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => SignUpScreen());
       case kForgotPassword:
         return MaterialPageRoute(builder: (_) => ForgotPasswordScreen());
+      case kSetting:
+        return MaterialPageRoute(builder: (_) => SettingScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

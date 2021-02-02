@@ -41,6 +41,9 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
       listener: (context, state) {
         if (state.isSuccess) {
           _authenticationBloc.add(LoggedIn());
+          Future.delayed(Duration.zero, () {
+            Navigator.of(context).pushNamed(AppRouter.kHome);
+          });
         }
 
         if (state.isFailure) {

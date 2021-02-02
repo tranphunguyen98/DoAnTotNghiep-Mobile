@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:totodo/data/entity/user.dart';
+import 'package:totodo/presentation/screen/home/drawer_item_normal.dart';
 import 'package:totodo/presentation/screen/home/header_main_drawer.dart';
 import 'package:totodo/presentation/screen/home/list_drawer_item_selected.dart';
 
+import '../../router.dart';
 import 'drawer_item_data.dart';
 import 'item_drawer_index_selected.dart';
 import 'list_drawer_item_expanded_1.dart';
@@ -48,6 +50,11 @@ class MainDrawer extends StatelessWidget {
             ),
             ListDrawerItemSelected(),
             ListDrawerItemExpanded(),
+            DrawerItemNormal("Cài Đặt", Icons.settings, () {
+              Future.delayed(Duration.zero, () {
+                Navigator.of(context).pushNamed(AppRouter.kSetting);
+              });
+            })
           ],
         ),
       ),

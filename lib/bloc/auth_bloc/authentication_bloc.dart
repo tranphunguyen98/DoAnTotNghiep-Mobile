@@ -24,6 +24,8 @@ class AuthenticationBloc
       print("signedUp");
       yield* _mapSignedUpToState();
     } else if (event is LoggedIn) {
+      print("LoggedIn11111");
+
       yield* _mapLoggedInToState();
     } else if (event is LoggedOut) {
       yield* _mapLoggedOutToState();
