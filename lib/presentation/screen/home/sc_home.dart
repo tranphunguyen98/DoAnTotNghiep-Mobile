@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/presentation/screen/home/main_drawer.dart';
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print("Build Home");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Drawer Demo'),

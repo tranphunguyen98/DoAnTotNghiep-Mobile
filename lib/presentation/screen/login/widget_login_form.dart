@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/auth_bloc/bloc.dart';
 import 'package:totodo/bloc/login/bloc.dart';
+import 'package:totodo/presentation/common_widgets/custom_snackbar.dart';
 import 'package:totodo/presentation/common_widgets/widget_flat_button_default.dart';
 import 'package:totodo/presentation/common_widgets/widget_text_field_default.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
@@ -17,11 +18,9 @@ class WidgetLoginForm extends StatefulWidget {
 
 class _WidgetLoginFormState extends State<WidgetLoginForm> {
   AuthenticationBloc _authenticationBloc;
-
   LoginBloc _loginBloc;
 
   final TextEditingController _emailController = TextEditingController();
-
   final TextEditingController _passwordController = TextEditingController();
 
   bool get isPopulated =>
@@ -41,42 +40,14 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
       listener: (context, state) {
         if (state.isSuccess) {
           _authenticationBloc.add(LoggedIn());
-          Future.delayed(Duration.zero, () {
-            Navigator.of(context).pushNamed(AppRouter.kHome);
-          });
         }
 
         if (state.isFailure) {
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text('Login Failure: ${state.error}'),
-                    Icon(Icons.error),
-                  ],
-                ),
-                backgroundColor: Colors.red,
-              ),
-            );
+          CustomSnackBar.failure(context, msg: state.error);
         }
 
         if (state.isSubmitting) {
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text('Processing ...'),
-                    CircularProgressIndicator(),
-                  ],
-                ),
-              ),
-            );
+          CustomSnackBar.showLoading(context);
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
@@ -103,10 +74,8 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
                   SizedBox(height: 10),
                   GestureDetector(
                     onTap: () {
-                      Future.delayed(Duration.zero, () {
-                        Navigator.of(context)
-                            .pushNamed(AppRouter.kForgotPassword);
-                      });
+                      Navigator.of(context)
+                          .pushNamed(AppRouter.kForgotPassword);
                     },
                     child: Align(
                       alignment: Alignment.centerRight,
@@ -136,7 +105,11 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
       height: 40,
       child: Row(
         children: <Widget>[
-          WidgetBtnGoogle(),
+          WidgetBtnGoogle(
+            onPressed: () async {
+              _loginBloc.add(LoginWithGoogleEvent());
+            },
+          ),
           SizedBox(width: 20),
           WidgetBtnFacebook(),
         ],

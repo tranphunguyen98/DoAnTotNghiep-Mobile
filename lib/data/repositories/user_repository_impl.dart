@@ -1,7 +1,7 @@
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
+import 'package:totodo/data/data_source/local_user_data_source.dart';
+import 'package:totodo/data/data_source/remote_user_data_source.dart';
 import 'package:totodo/data/entity/user.dart';
-import 'package:totodo/data/repositories/local_user_data_source.dart';
-import 'package:totodo/data/repositories/remote_user_data_source.dart';
 
 class UserRepositoryImpl implements IUserRepository {
   final RemoteUserDataSource _remoteUserDataSource;
@@ -22,11 +22,11 @@ class UserRepositoryImpl implements IUserRepository {
       _remoteUserDataSource.signIn(email, password);
 
   @override
-  Future<bool> signInWithFacebook() =>
+  Future<User> signInWithFacebook() =>
       _remoteUserDataSource.signInWithFacebook();
 
   @override
-  Future<bool> signInWithGoogle() => _remoteUserDataSource.signInWithGoogle();
+  Future<User> signInWithGoogle() => _remoteUserDataSource.signInWithGoogle();
 
   @override
   Future<bool> signUp(String email, String password) =>
@@ -43,7 +43,8 @@ class UserRepositoryImpl implements IUserRepository {
 
   @override
   Future<bool> signOut() async {
-    _localUserDataSource.signOut();
+    await _localUserDataSource.signOut();
+    await _remoteUserDataSource.signOut();
     return true;
   }
 }

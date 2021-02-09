@@ -3,12 +3,12 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
+import 'package:totodo/data/data_source/local_user_data_source.dart';
+import 'package:totodo/data/data_source/remote_user_data_source.dart';
 import 'package:totodo/data/local/cache_user_data_source_impl.dart';
 import 'package:totodo/data/local/local_user_service.dart';
 import 'package:totodo/data/remote/remote_user_data_source_impl.dart';
 import 'package:totodo/data/remote/remote_user_service.dart';
-import 'package:totodo/data/repositories/local_user_data_source.dart';
-import 'package:totodo/data/repositories/remote_user_data_source.dart';
 import 'package:totodo/data/repositories/user_repository_impl.dart';
 
 import 'injection.config.dart';

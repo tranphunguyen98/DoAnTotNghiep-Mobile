@@ -30,7 +30,7 @@ class CustomSnackBar {
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(msg),
+              FittedBox(child: Text(msg)),
               Icon(Icons.error),
             ],
           ),

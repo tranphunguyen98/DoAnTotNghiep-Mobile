@@ -10,13 +10,14 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MyApp.initSystemDefault();
   await configureDependencies();
+
   print("runApp");
   runApp(
     AppConfig(
       appName: "ToToDo Dev",
       debugTag: true,
       flavorName: "dev",
-      initialRoute: AppRouter.kSignUp,
+      initialRoute: AppRouter.kSplash,
       child: MyApp.runWidget(),
     ),
   );

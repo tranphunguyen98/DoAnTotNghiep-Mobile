@@ -53,6 +53,10 @@ dev_dependencies:
   # Lint
   lint: ^1.1.1
   injectable_generator: ^1.0.4
+  # Auth
+  firebase_core: ^0.4.0+8
+  google_sign_in: ^4.0.0
+  firebase_auth: ^0.15.0+1
   # Unit test
   test:
   bloc_test: ^4.0.0

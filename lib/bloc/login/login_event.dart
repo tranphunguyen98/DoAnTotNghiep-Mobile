@@ -46,3 +46,13 @@ class LoginSubmitEmailPasswordEvent extends LoginEvent {
   @override
   List<Object> get props => [email, password];
 }
+
+class LoginWithGoogleEvent extends LoginEvent {
+  @override
+  List<Object> get props => [];
+}
+
+class LoginWithFacebookEvent extends LoginEvent {
+  @override
+  List<Object> get props => [];
+}
