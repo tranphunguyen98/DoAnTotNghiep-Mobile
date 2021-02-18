@@ -1,16 +1,22 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:totodo/data/data_source/remote_user_data_source.dart';
 import 'package:totodo/data/entity/user.dart';
 import 'package:totodo/data/remote/remote_user_service.dart';
+import 'package:totodo/di/injection.dart';
 
 class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   final RemoteUserService _userService;
+
   RemoteUserDataSourceImpl(this._userService);
+
   @override
   Future<bool> changePassword(String oldPassword, String newPassword) async {
     try {
@@ -58,9 +64,67 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   }
 
   @override
-  Future<User> signInWithFacebook() {
-    // TODO: implement signInWithFacebook
-    throw UnimplementedError();
+  Future<User> signInWithFacebook() async {
+    final facebookLogin = FacebookLogin();
+    final result = await facebookLogin.logIn(['email']);
+
+    switch (result.status) {
+      case FacebookLoginStatus.loggedIn:
+        try {
+          print(result.accessToken.token);
+          final graphResponse = await getIt<Dio>().get(
+              'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email,picture&access_token=${result.accessToken.token}');
+
+          final jsonResponse = jsonDecode(graphResponse.data as String);
+
+          return User(
+            id: jsonResponse['id'] as String,
+            avatar: jsonResponse['picture']['data']['url'] as String,
+            name: jsonResponse['name'] as String,
+            email: jsonResponse['email'] as String,
+            type: User.kTypeFacebook,
+          );
+        } catch (e, stacktrace) {
+          print(stacktrace);
+        }
+        // print(graphResponse.data['email']);
+        // print(graphResponse.data['picture']);
+
+        //_sendTokenToServer(result.accessToken.token);
+        //_showLoggedInUI();
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        //_showCancelledMessage();
+        print('cancelledByUser');
+        break;
+      case FacebookLoginStatus.error:
+        print('error: ${result.errorMessage}');
+        throw Exception(result.errorMessage);
+        //_showErrorOnUI(result.errorMessage);
+        break;
+    }
+    //
+    // try {
+    //   // by default the login method has the next permissions ['email','public_profile']
+    //   AccessToken accessToken = await FacebookAuth.instance.login();
+    //   print(accessToken.toJson());
+    //   // get the user data
+    //   final userData = await FacebookAuth.instance.getUserData();
+    //   print("User data $userData");
+    // } on FacebookAuthException catch (e) {
+    //   switch (e.errorCode) {
+    //     case FacebookAuthErrorCode.OPERATION_IN_PROGRESS:
+    //       print("You have a previous login operation in progress");
+    //       break;
+    //     case FacebookAuthErrorCode.CANCELLED:
+    //       print("login cancelled");
+    //       break;
+    //     case FacebookAuthErrorCode.FAILED:
+    //       print("login failed");
+    //       print("message FB: ${e.message}");
+    //       break;
+    //   }
+    // }
   }
 
   @override

@@ -4,6 +4,10 @@ part 'user.g.dart';
 
 @JsonSerializable(nullable: false)
 class User {
+  static const int kTypeEmail = 0;
+  static const int kTypeFacebook = 1;
+  static const int kTypeGoogle = 2;
+
   final String id;
   final String name;
   final String email;
@@ -11,16 +15,17 @@ class User {
   final String avatar;
   final String accessToken;
   final String refreshToken;
+  final int type;
 
-  User({
-    this.id,
-    this.name = "Lê Thị Hồng",
-    this.email,
-    this.password,
-    this.avatar,
-    this.accessToken,
-    this.refreshToken,
-  });
+  User(
+      {this.id,
+      this.name = "Lê Thị Hồng",
+      this.email,
+      this.password,
+      this.avatar,
+      this.accessToken,
+      this.refreshToken,
+      this.type = kTypeEmail});
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

@@ -111,7 +111,11 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
             },
           ),
           SizedBox(width: 20),
-          WidgetBtnFacebook(),
+          WidgetBtnFacebook(
+            onPressed: () async {
+              _loginBloc.add(LoginWithFacebookEvent());
+            },
+          ),
         ],
       ),
     );

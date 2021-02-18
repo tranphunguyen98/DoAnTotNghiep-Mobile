@@ -30,7 +30,13 @@ class CustomSnackBar {
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              FittedBox(child: Text(msg)),
+              Expanded(
+                  child: Text(
+                msg,
+                textAlign: TextAlign.start,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 20,
+              )),
               Icon(Icons.error),
             ],
           ),
