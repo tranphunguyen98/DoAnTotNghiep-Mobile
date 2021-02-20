@@ -15,6 +15,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
     avatar: json['avatar'] as String,
     accessToken: json['accessToken'] as String,
     refreshToken: json['refreshToken'] as String,
+    type: json['type'] as int,
   );
 }
 
@@ -26,4 +27,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'avatar': instance.avatar,
       'accessToken': instance.accessToken,
       'refreshToken': instance.refreshToken,
+      'type': instance.type,
     };

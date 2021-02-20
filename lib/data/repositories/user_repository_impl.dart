@@ -1,6 +1,6 @@
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
-import 'package:totodo/data/data_source/local_user_data_source.dart';
-import 'package:totodo/data/data_source/remote_user_data_source.dart';
+import 'package:totodo/data/data_source/user/local_user_data_source.dart';
+import 'package:totodo/data/data_source/user/remote_user_data_source.dart';
 import 'package:totodo/data/entity/user.dart';
 
 class UserRepositoryImpl implements IUserRepository {

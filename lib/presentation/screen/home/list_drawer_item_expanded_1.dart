@@ -7,9 +7,9 @@ class ListDrawerItemExpanded extends StatelessWidget {
   final drawerItems = [
     DrawerItemData(
         "Dự án", "assets/ic_project_64.png", DrawerItemData.kTypeProject),
-    DrawerItemData("Thẻ", "assets/ic_label_64.png", DrawerItemData.kTypeLabel),
+    DrawerItemData("Thẻ", "assets/ic_filter_64.png", DrawerItemData.kTypeLabel),
     DrawerItemData(
-        "Bộ lọc", "assets/ic_filter_64.png", DrawerItemData.kTypeFilter),
+        "Bộ lọc", "assets/ic_label_64.png", DrawerItemData.kTypeFilter),
   ];
   @override
   Widget build(BuildContext context) {

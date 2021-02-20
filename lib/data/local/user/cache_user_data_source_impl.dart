@@ -1,6 +1,7 @@
-import 'package:totodo/data/data_source/local_user_data_source.dart';
+import 'package:totodo/data/data_source/user/local_user_data_source.dart';
 import 'package:totodo/data/entity/user.dart';
-import 'package:totodo/data/local/local_user_service.dart';
+
+import 'local_user_service.dart';
 
 class LocalUserDataSourceImplement implements LocalUserDataSource {
   final LocalUserService _userService;

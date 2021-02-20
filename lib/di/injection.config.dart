@@ -7,7 +7,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../data/local/local_user_service.dart';
+import '../data/local/task/local_task_service.dart';
+import '../data/local/user/local_user_service.dart';
 
 /// adds generated dependencies
 /// to the provided [GetIt] instance
@@ -18,6 +19,7 @@ GetIt $initGetIt(
   EnvironmentFilter environmentFilter,
 }) {
   final gh = GetItHelper(get, environment, environmentFilter);
+  gh.factory<LocalTaskService>(() => LocalTaskService());
   gh.factory<LocalUserService>(() => LocalUserService());
   return get;
 }

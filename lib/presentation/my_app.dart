@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:totodo/bloc/auth_bloc/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/di/injection.dart';
@@ -101,5 +102,11 @@ class _MyAppState extends State<MyApp> {
       //   },
       // ),
     );
+  }
+
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
   }
 }
