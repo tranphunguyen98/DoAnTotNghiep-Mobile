@@ -56,16 +56,16 @@ abstract class TaskState extends Equatable {
 // }
 
 class DisplayListTasks extends TaskState {
-  final bool canAddTask;
+  final Task taskAdd;
   final List<Task> listAllTask;
   final bool loading;
   final String msg;
 
   const DisplayListTasks({
+    this.taskAdd = const Task(),
     this.listAllTask,
     this.loading,
     this.msg,
-    this.canAddTask = false ,
   });
 
   factory DisplayListTasks.loading() {
@@ -80,25 +80,26 @@ class DisplayListTasks extends TaskState {
     return DisplayListTasks(msg: msg, loading: false);
   }
 
-  DisplayListTasks updateCanAddTask({bool canAddTask}) {
-    return copyWith(canAddTask: canAddTask);
+  DisplayListTasks updateTask(Task task) {
+    return copyWith(taskAdd: task);
   }
 
   @override
-  List<Object> get props => [listAllTask, loading, msg, canAddTask];
+  List<Object> get props => [taskAdd, listAllTask, loading, msg];
 
   @override
   String toString() {
-    return 'DisplayListShows{meta: $listAllTask, loading: $loading, msg: $msg, canAddTask: $canAddTask}';
+    return 'DisplayListTasks{taskAdd: $taskAdd, listAllTask: ${listAllTask?.length ?? "null"}, loading: $loading, msg: $msg}';
   }
 
   DisplayListTasks copyWith({
     bool canAddTask,
+    Task taskAdd,
     List<Task> listAllTask,
     bool loading,
     String msg,
   }) {
-    if ((canAddTask == null || identical(canAddTask, this.canAddTask)) &&
+    if ((taskAdd == null || identical(taskAdd, this.taskAdd)) &&
         (listAllTask == null || identical(listAllTask, this.listAllTask)) &&
         (loading == null || identical(loading, this.loading)) &&
         (msg == null || identical(msg, this.msg))) {
@@ -106,7 +107,7 @@ class DisplayListTasks extends TaskState {
     }
 
     return DisplayListTasks(
-      canAddTask: canAddTask ?? this.canAddTask,
+      taskAdd: taskAdd ?? this.taskAdd,
       listAllTask: listAllTask ?? this.listAllTask,
       loading: loading ?? this.loading,
       msg: msg ?? this.msg,

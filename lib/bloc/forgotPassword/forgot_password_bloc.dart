@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/utils/validators.dart';
 
@@ -12,26 +11,27 @@ class ForgotPasswordBloc
 
   ForgotPasswordBloc({@required IUserRepository userRepository})
       : assert(userRepository != null),
-        _userRepository = userRepository;
+        _userRepository = userRepository,
+        super(null);
 
   @override
   ForgotPasswordState get initialState => ForgotPasswordState.empty();
 
-  @override
-  Stream<ForgotPasswordState> transformEvents(
-      Stream<ForgotPasswordEvent> events,
-      Stream<ForgotPasswordState> Function(ForgotPasswordEvent) next) {
-    final nonDebounceStream = events.where((event) {
-      return (event is! ForgotEmailChanged && event is! ForgotPasswordChanged);
-    });
-
-    final debounceStream = events.where((event) {
-      return (event is ForgotEmailChanged || event is ForgotPasswordChanged);
-    }).debounceTime(Duration(milliseconds: 300));
-
-    return super
-        .transformEvents(nonDebounceStream.mergeWith([debounceStream]), next);
-  }
+  // @override
+  // Stream<ForgotPasswordState> transformEvents(
+  //     Stream<ForgotPasswordEvent> events,
+  //     Stream<ForgotPasswordState> Function(ForgotPasswordEvent) next) {
+  //   final nonDebounceStream = events.where((event) {
+  //     return (event is! ForgotEmailChanged && event is! ForgotPasswordChanged);
+  //   });
+  //
+  //   final debounceStream = events.where((event) {
+  //     return (event is ForgotEmailChanged || event is ForgotPasswordChanged);
+  //   }).debounceTime(Duration(milliseconds: 300));
+  //
+  //   return super
+  //       .transformEvents(nonDebounceStream.mergeWith([debounceStream]), next);
+  // }
 
   @override
   Stream<ForgotPasswordState> mapEventToState(

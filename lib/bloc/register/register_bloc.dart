@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
+// import 'package:rxdart/rxdart.dart';
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/utils/validators.dart';
 
@@ -11,29 +11,30 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   RegisterBloc({@required IUserRepository userRepository})
       : assert(userRepository != null),
-        _userRepository = userRepository;
+        _userRepository = userRepository,
+        super(null);
 
   @override
   RegisterState get initialState => RegisterState.empty();
 
-  @override
-  Stream<RegisterState> transformEvents(Stream<RegisterEvent> events,
-      Stream<RegisterState> Function(RegisterEvent) next) {
-    final nonDebounceStream = events.where((event) {
-      return (event is! EmailChanged &&
-          event is! PasswordChanged &&
-          event is! ConfirmPasswordChanged);
-    });
-
-    final debounceStream = events.where((event) {
-      return (event is EmailChanged ||
-          event is PasswordChanged ||
-          event is ConfirmPasswordChanged);
-    }).debounceTime(Duration(milliseconds: 300));
-
-    return super
-        .transformEvents(nonDebounceStream.mergeWith([debounceStream]), next);
-  }
+  // @override
+  // Stream<RegisterState> transformEvents(Stream<RegisterEvent> events,
+  //     Stream<RegisterState> Function(RegisterEvent) next) {
+  //   final nonDebounceStream = events.where((event) {
+  //     return (event is! EmailChanged &&
+  //         event is! PasswordChanged &&
+  //         event is! ConfirmPasswordChanged);
+  //   });
+  //
+  //   final debounceStream = events.where((event) {
+  //     return (event is EmailChanged ||
+  //         event is PasswordChanged ||
+  //         event is ConfirmPasswordChanged);
+  //   }).debounceTime(Duration(milliseconds: 300));
+  //
+  //   return super
+  //       .transformEvents(nonDebounceStream.mergeWith([debounceStream]), next);
+  // }
 
   @override
   Stream<RegisterState> mapEventToState(RegisterEvent event) async* {

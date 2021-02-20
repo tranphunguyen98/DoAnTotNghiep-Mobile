@@ -25,8 +25,7 @@ class MyApp extends StatefulWidget {
 
   static Widget runWidget() {
     WidgetsFlutterBinding.ensureInitialized();
-    BlocSupervisor.delegate = SimpleBlocDelegate();
-
+    Bloc.observer = SimpleBlocDelegate();
     print("runWidget");
 
     return BlocProvider(

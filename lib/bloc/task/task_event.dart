@@ -9,30 +9,18 @@ abstract class TaskEvent extends Equatable {
 
 class OpenHomeScreen extends TaskEvent {}
 
-class CanAddTaskChanged extends TaskEvent {
-  final bool canAddTask;
+class TaskChanged extends TaskEvent {
+  final Task taskAdd;
 
-  CanAddTaskChanged({@required this.canAddTask});
-
-  @override
-  List<Object> get props => [canAddTask];
+  TaskChanged({@required this.taskAdd});
 
   @override
-  String toString() {
-    return 'CanAddTask{canAddTask: $canAddTask}';
-  }
-}
-
-class AddTask extends TaskEvent {
-  final Task task;
-
-  AddTask({@required this.task});
-
-  @override
-  List<Object> get props => [task];
+  List<Object> get props => [taskAdd];
 
   @override
   String toString() {
-    return 'AddTask{task: $task}';
+    return 'TaskChanged{taskAdd: $taskAdd}';
   }
 }
+
+class AddTask extends TaskEvent {}

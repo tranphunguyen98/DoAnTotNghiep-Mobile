@@ -10,7 +10,8 @@ class AuthenticationBloc
 
   AuthenticationBloc({@required IUserRepository userRepository})
       : assert(userRepository != null),
-        _userRepository = userRepository;
+        _userRepository = userRepository,
+        super(null);
 
   @override
   AuthenticationState get initialState => Uninitialized();

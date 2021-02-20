@@ -35,14 +35,14 @@ packages:
       name: bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "6.1.1"
   bloc_test:
     dependency: "direct dev"
     description:
       name: bloc_test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "7.1.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -320,7 +320,7 @@ packages:
       name: flutter_bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.0"
+    version: "6.1.2"
   flutter_facebook_login:
     dependency: "direct dev"
     description:
@@ -723,13 +723,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.1+2"
-  rxdart:
-    dependency: transitive
-    description:
-      name: rxdart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.23.1"
   shared_preferences:
     dependency: "direct main"
     description:

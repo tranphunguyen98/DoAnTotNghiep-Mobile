@@ -10,7 +10,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TaskBloc, TaskState>(
-        bloc: getIt<TaskBloc>(),
+        cubit: getIt<TaskBloc>(),
         builder: (context, state) {
           if (state is DisplayListTasks) {
             if (state.loading) {

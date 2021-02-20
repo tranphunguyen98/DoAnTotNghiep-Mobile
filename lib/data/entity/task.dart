@@ -5,6 +5,10 @@ part 'task.g.dart';
 
 @HiveType(typeId: 0)
 class Task extends Equatable {
+  static const int kPriority4 = 4;
+  static const int kPriority3 = 3;
+  static const int kPriority2 = 2;
+  static const int kPriority1 = 1;
   @HiveField(0)
   final int id;
   @HiveField(1)
@@ -30,7 +34,7 @@ class Task extends Equatable {
     this.id,
     this.createdDate,
     this.updatedDate,
-    this.priorityType = 0,
+    this.priorityType = kPriority4,
     this.taskName = "",
     this.description = "",
     this.projectName = "",
