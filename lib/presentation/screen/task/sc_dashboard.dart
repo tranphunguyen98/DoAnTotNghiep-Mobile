@@ -11,7 +11,19 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TaskBloc, TaskState>(
         cubit: getIt<TaskBloc>(),
+        // buildWhen: (previous, current) {
+        //   print("previous $previous current $current");
+        //   if (previous is DisplayListTasks && current is DisplayListTasks) {
+        //     print("DashboardScreen previous: ${previous.listDataDisplay()}");
+        //     print("DashboardScreen current: ${current.listDataDisplay()}");
+        //
+        //     print(previous.listDataDisplay() != current.listDataDisplay());
+        //     return (previous.listDataDisplay() != current.listDataDisplay());
+        //   }
+        //   return false;
+        // },
         builder: (context, state) {
+          print("DashboardScreen $state");
           if (state is DisplayListTasks) {
             if (state.loading) {
               return Center(
@@ -19,11 +31,11 @@ class DashboardScreen extends StatelessWidget {
               );
             }
 
-            if (state.listAllTask != null) {
-              if (state.listAllTask.isEmpty) {
+            if (state.listDataDisplay() != null) {
+              if (state.listDataDisplay().isEmpty) {
                 return EmptyTask();
               } else {
-                return ListTask(state.listAllTask);
+                return ListTask(state.listDataDisplay());
               }
             }
 

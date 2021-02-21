@@ -12,15 +12,16 @@ class OpenHomeScreen extends TaskEvent {}
 class TaskAddChanged extends TaskEvent {
   final String taskName;
   final int priority;
+  final String taskDate;
 
-  TaskAddChanged({this.taskName, this.priority});
+  TaskAddChanged({this.taskName, this.priority, this.taskDate});
 
   @override
-  List<Object> get props => [taskName, priority];
+  List<Object> get props => [taskName, priority, taskDate];
 
   @override
   String toString() {
-    return 'TaskAddChanged{taskName: $taskName, priority: $priority}';
+    return 'TaskAddChanged{taskName: $taskName, priority: $priority, taskDate: $taskDate}';
   }
 }
 

@@ -19,7 +19,9 @@ class ListTask extends StatelessWidget {
         });
       },
       separatorBuilder: (context, index) {
-        return Divider();
+        return Divider(
+          thickness: 1.0,
+        );
       },
       itemCount: listTask.length,
       physics: BouncingScrollPhysics(),

@@ -20,7 +20,6 @@ class LocalTaskService {
   }
 
   Future<List<Task>> getAllTask() async {
-    // _taskBox.clear();
     final listTask = <Task>[];
     for (var i = 0; i < _taskBox.length; i++) {
       listTask.add(_taskBox.getAt(i) as Task);

@@ -5,18 +5,22 @@ class IconOutlineButton extends StatelessWidget {
   final String title;
   final String iconPath;
   final Color colorIcon;
+  final Color colorBorder;
   final void Function() onPressed;
 
   const IconOutlineButton(this.title, this.iconPath,
-      {@required this.onPressed, this.colorIcon});
+      {@required this.onPressed, this.colorIcon, this.colorBorder});
 
   @override
   Widget build(BuildContext context) {
     return OutlineButton(
       onPressed: onPressed,
+      borderSide: BorderSide(
+        color: colorBorder ?? kColorGray1, //Color of the border
+      ),
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-          side: BorderSide(color: kColorGray1)),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

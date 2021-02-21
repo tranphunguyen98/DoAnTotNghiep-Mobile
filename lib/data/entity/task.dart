@@ -29,12 +29,15 @@ class Task extends Equatable {
   final bool isStarred;
   @HiveField(9)
   final bool isTrashed;
+  @HiveField(10)
+  final String taskDate;
 
   const Task({
     this.id,
     this.createdDate,
     this.updatedDate,
     this.priorityType = kPriority4,
+    this.taskDate,
     this.taskName = "",
     this.description = "",
     this.projectName = "",
@@ -45,17 +48,17 @@ class Task extends Equatable {
 
   factory Task.fromJson(Map<String, dynamic> map) {
     return Task(
-      id: map['id'] as int,
-      createdDate: map['createdDate'] as String,
-      updatedDate: map['updatedDate'] as String,
-      priorityType: map['priorityType'] as int,
-      taskName: map['taskName'] as String,
-      description: map['description'] as String,
-      projectName: map['projectName'] as String,
-      isCompleted: map['isCompleted'] as bool,
-      isStarred: map['isStarred'] as bool,
-      isTrashed: map['isTrashed'] as bool,
-    );
+        id: map['id'] as int,
+        createdDate: map['createdDate'] as String,
+        updatedDate: map['updatedDate'] as String,
+        priorityType: map['priorityType'] as int,
+        taskName: map['taskName'] as String,
+        description: map['description'] as String,
+        projectName: map['projectName'] as String,
+        isCompleted: map['isCompleted'] as bool,
+        isStarred: map['isStarred'] as bool,
+        isTrashed: map['isTrashed'] as bool,
+        taskDate: map['taskDate'] as String);
   }
 
   Map<String, dynamic> toJson() {
@@ -70,6 +73,7 @@ class Task extends Equatable {
       'isCompleted': this.isCompleted,
       'isStarred': this.isStarred,
       'isTrashed': this.isTrashed,
+      'taskDate': this.taskDate,
     };
   }
 
@@ -84,6 +88,7 @@ class Task extends Equatable {
     bool isCompleted,
     bool isStarred,
     bool isTrashed,
+    String taskDate,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (createdDate == null || identical(createdDate, this.createdDate)) &&
@@ -94,7 +99,8 @@ class Task extends Equatable {
         (projectName == null || identical(projectName, this.projectName)) &&
         (isCompleted == null || identical(isCompleted, this.isCompleted)) &&
         (isStarred == null || identical(isStarred, this.isStarred)) &&
-        (isTrashed == null || identical(isTrashed, this.isTrashed))) {
+        (isTrashed == null || identical(isTrashed, this.isTrashed)) &&
+        (taskDate == null || identical(taskDate, this.taskDate))) {
       return this;
     }
 
@@ -109,43 +115,28 @@ class Task extends Equatable {
       isCompleted: isCompleted ?? this.isCompleted,
       isStarred: isStarred ?? this.isStarred,
       isTrashed: isTrashed ?? this.isTrashed,
+      taskDate: taskDate ?? this.taskDate,
     );
   }
 
   @override
   String toString() {
-    return 'Task{id: $id, taskName: $taskName projectName: $projectName, isCompleted: $isCompleted, p: ${priorityType}';
+    return 'Task{id: $id, createdDate: $createdDate, updatedDate: $updatedDate, priorityType: $priorityType, taskName: $taskName, description: $description, projectName: $projectName, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate}';
   }
 
+  //TODO add more props
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Task &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          createdDate == other.createdDate &&
-          updatedDate == other.updatedDate &&
-          priorityType == other.priorityType &&
-          taskName == other.taskName &&
-          description == other.description &&
-          projectName == other.projectName &&
-          isCompleted == other.isCompleted &&
-          isStarred == other.isStarred &&
-          isTrashed == other.isTrashed);
-
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      createdDate.hashCode ^
-      updatedDate.hashCode ^
-      priorityType.hashCode ^
-      taskName.hashCode ^
-      description.hashCode ^
-      projectName.hashCode ^
-      isCompleted.hashCode ^
-      isStarred.hashCode ^
-      isTrashed.hashCode;
-
-  @override
-  List<Object> get props => [id, taskName];
+  List<Object> get props => [
+        id,
+        // createdDate,
+        // updatedDate,
+        priorityType,
+        taskDate,
+        taskName,
+        description,
+        projectName,
+        isCompleted,
+        isStarred,
+        isTrashed
+      ];
 }

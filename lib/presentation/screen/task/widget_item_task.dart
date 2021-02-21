@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
+import 'package:totodo/utils/util.dart';
 
 class ItemTask extends StatelessWidget {
   final Task task;
@@ -17,35 +18,72 @@ class ItemTask extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final displayTextDate = Util.getDisplayTextDateFromDate(task.taskDate);
     return InkWell(
       onTap: () {},
-      child: Row(
-        children: [
-          // CircleInkWell(
-          //   Icons.fiber_manual_record_outlined,
-          //   colorIcon: listColorPriority[task.priorityType - 1],
-          // ),
-          Theme(
-            data: ThemeData(
-                unselectedWidgetColor:
-                    listColorPriority[task.priorityType - 1]),
-            child: Checkbox(
-              value: task.isCompleted,
-              onChanged: (value) {
-                updateTask(task.copyWith(isCompleted: value));
-              },
-              checkColor: Colors.white,
-              activeColor: listColorPriority[task.priorityType - 1],
-              // focusColor: listColorPriority[task.priorityType - 1],
-              // hoverColor: listColorPriority[task.priorityType - 1],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                Theme(
+                  data: ThemeData(
+                    unselectedWidgetColor:
+                        listColorPriority[task.priorityType - 1],
+                  ),
+                  child: SizedBox(
+                    width: 24.0,
+                    height: 24.0,
+                    child: Checkbox(
+                      value: task.isCompleted,
+                      onChanged: (value) {
+                        updateTask(task.copyWith(isCompleted: value));
+                      },
+                      checkColor: Colors.white,
+                      activeColor: listColorPriority[task.priorityType - 1],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 8.0,
+                ),
+                Expanded(
+                  child: Text(
+                    task.taskName,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: task.isCompleted
+                        ? kFontRegularGray1_14
+                        : kFontRegularBlack2_14,
+                  ),
+                ),
+              ],
             ),
-          ),
-          Text(
-            task.taskName,
-            style:
-                task.isCompleted ? kFontRegularGray1_14 : kFontRegularBlack2_14,
-          )
-        ],
+            if (displayTextDate != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 32.0),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.calendar_today,
+                      size: 12.0,
+                      color: Colors.green,
+                    ),
+                    SizedBox(
+                      width: 4.0,
+                    ),
+                    Text(
+                      displayTextDate ?? "NULL",
+                      style: kFontRegular.copyWith(
+                          fontSize: 12, color: Colors.green),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

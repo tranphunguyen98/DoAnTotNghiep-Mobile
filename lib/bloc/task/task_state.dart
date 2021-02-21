@@ -56,17 +56,39 @@ abstract class TaskState extends Equatable {
 // }
 
 class DisplayListTasks extends TaskState {
+  static const kDrawerIndexInbox = 0;
+  static const kDrawerIndexToday = 1;
+  static const kDrawerIndexNextWeek = 2;
+  static const kDrawerIndexThisMonth = 3;
+
+  final int indexDrawerSelected;
   final Task taskAdd;
-  final List<Task> listAllTask;
+  final List<Task> _listAllTask;
   final bool loading;
   final String msg;
 
+  List<Task> listDataDisplay({int projectId, int labelId}) {
+    if (_listAllTask == null) return <Task>[];
+
+    if (projectId == null && labelId == null) {
+      if (indexDrawerSelected == kDrawerIndexInbox) {
+        return _listAllTask
+            .where((element) =>
+                element.projectName == null || element.projectName.isEmpty)
+            .toList();
+      }
+    }
+
+    return <Task>[];
+  }
+
   const DisplayListTasks({
+    this.indexDrawerSelected = kDrawerIndexInbox,
     this.taskAdd = const Task(),
-    this.listAllTask,
     this.loading,
     this.msg,
-  });
+    List<Task> listAllTask,
+  }) : _listAllTask = listAllTask;
 
   factory DisplayListTasks.loading() {
     return DisplayListTasks(loading: true);
@@ -81,15 +103,17 @@ class DisplayListTasks extends TaskState {
   }
 
   DisplayListTasks updateTask(Task task) {
+    print("updateTask $task");
     return copyWith(taskAdd: task);
   }
 
   @override
-  List<Object> get props => [taskAdd, listAllTask, loading, msg];
+  List<Object> get props =>
+      [indexDrawerSelected, taskAdd, _listAllTask, loading, msg];
 
   @override
   String toString() {
-    return 'DisplayListTasks{taskAdd: $taskAdd, listAllTask: ${listAllTask?.length ?? "null"}, loading: $loading, msg: $msg}';
+    return 'DisplayListTasks{taskAdd: $taskAdd, listAllTask: ${_listAllTask?.length ?? "null"}, loading: $loading, msg: $msg}';
   }
 
   DisplayListTasks copyWith({
@@ -100,7 +124,7 @@ class DisplayListTasks extends TaskState {
     String msg,
   }) {
     if ((taskAdd == null || identical(taskAdd, this.taskAdd)) &&
-        (listAllTask == null || identical(listAllTask, this.listAllTask)) &&
+        (listAllTask == null || identical(listAllTask, _listAllTask)) &&
         (loading == null || identical(loading, this.loading)) &&
         (msg == null || identical(msg, this.msg))) {
       return this;
@@ -108,7 +132,7 @@ class DisplayListTasks extends TaskState {
 
     return DisplayListTasks(
       taskAdd: taskAdd ?? this.taskAdd,
-      listAllTask: listAllTask ?? this.listAllTask,
+      listAllTask: listAllTask ?? _listAllTask,
       loading: loading ?? this.loading,
       msg: msg ?? this.msg,
     );
