@@ -47,8 +47,10 @@ class BottomSheetAddTask extends StatelessWidget {
         buildWhen: (previous, current) {
           return current is DisplayListTasks &&
               previous is DisplayListTasks &&
-              previous.taskAdd.taskName.isNotEmpty !=
-                  current.taskAdd.taskName.isNotEmpty;
+              (previous.taskAdd.taskName.isNotEmpty !=
+                      current.taskAdd.taskName.isNotEmpty ||
+                  previous.taskAdd.priorityType !=
+                      current.taskAdd.priorityType);
         },
         builder: (context, state) {
           print("BUILD BOTTOM SHEET");
@@ -70,6 +72,7 @@ class BottomSheetAddTask extends StatelessWidget {
   }
 
   Row buildRowFunction(DisplayListTasks state) {
+    // print(state.)
     return Row(
       children: [
         CircleInkWell(
@@ -81,24 +84,17 @@ class BottomSheetAddTask extends StatelessWidget {
         //   sizeIcon: 24.0,
         // ),
         PopupMenuButton<DropdownChoice>(
+          offset: Offset(0, -300),
           onSelected: (DropdownChoice choice) {
-            _textNameTaskController.text = state.taskAdd.taskName;
+            //_textNameTaskController.text = state.taskAdd.taskName;
             if (choice.title.contains("1")) {
-              _taskBloc.add(TaskChanged(
-                  taskAdd:
-                      state.taskAdd.copyWith(priorityType: Task.kPriority1)));
+              _taskBloc.add(TaskAddChanged(priority: Task.kPriority1));
             } else if (choice.title.contains("2")) {
-              _taskBloc.add(TaskChanged(
-                  taskAdd:
-                      state.taskAdd.copyWith(priorityType: Task.kPriority2)));
+              _taskBloc.add(TaskAddChanged(priority: Task.kPriority2));
             } else if (choice.title.contains("3")) {
-              _taskBloc.add(TaskChanged(
-                  taskAdd:
-                      state.taskAdd.copyWith(priorityType: Task.kPriority3)));
+              _taskBloc.add(TaskAddChanged(priority: Task.kPriority3));
             } else if (choice.title.contains("4")) {
-              _taskBloc.add(TaskChanged(
-                  taskAdd:
-                      state.taskAdd.copyWith(priorityType: Task.kPriority4)));
+              _taskBloc.add(TaskAddChanged(priority: Task.kPriority4));
             }
           },
           elevation: 6,
@@ -154,13 +150,16 @@ class BottomSheetAddTask extends StatelessWidget {
   }
 
   TextFormField buildTextFieldNameTask(DisplayListTasks state) {
-    _textNameTaskController
-      ..text = state.taskAdd.taskName
-      ..selection =
-          TextSelection.collapsed(offset: state.taskAdd.taskName.length);
+    // _textNameTaskController
+    //   ..text = state.taskAdd.taskName
+    //   ..selection =
+    //       TextSelection.collapsed(offset: state.taskAdd.taskName.length);
+
     return TextFormField(
       cursorColor: Colors.black,
       controller: _textNameTaskController,
+      focusNode: FocusNode(canRequestFocus: false),
+      autofocus: true,
       decoration: InputDecoration(
         border: InputBorder.none,
         focusedBorder: InputBorder.none,
@@ -170,8 +169,7 @@ class BottomSheetAddTask extends StatelessWidget {
         hintText: 'Ví Dụ: Đọc sách',
       ),
       onChanged: (value) {
-        _taskBloc
-            .add(TaskChanged(taskAdd: state.taskAdd.copyWith(taskName: value)));
+        _taskBloc.add(TaskAddChanged(taskName: value));
       },
     );
   }

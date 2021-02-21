@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/task/bloc.dart';
 import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/screen/dashboard/widget_empty_task.dart';
-import 'package:totodo/presentation/screen/dashboard/widget_list_task.dart';
+import 'package:totodo/presentation/screen/task/widget_empty_task.dart';
+import 'package:totodo/presentation/screen/task/widget_list_task.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 
 class DashboardScreen extends StatelessWidget {

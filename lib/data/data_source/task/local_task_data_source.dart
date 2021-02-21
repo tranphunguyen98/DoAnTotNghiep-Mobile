@@ -6,4 +6,6 @@ abstract class LocalTaskDataSource {
   Future<Task> getDetailTask(String id);
 
   Future<List<Task>> getAllTask();
+
+  Future<bool> updateTask(Task task);
 }

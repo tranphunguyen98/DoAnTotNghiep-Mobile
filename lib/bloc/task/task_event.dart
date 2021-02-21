@@ -9,17 +9,32 @@ abstract class TaskEvent extends Equatable {
 
 class OpenHomeScreen extends TaskEvent {}
 
-class TaskChanged extends TaskEvent {
-  final Task taskAdd;
+class TaskAddChanged extends TaskEvent {
+  final String taskName;
+  final int priority;
 
-  TaskChanged({@required this.taskAdd});
+  TaskAddChanged({this.taskName, this.priority});
 
   @override
-  List<Object> get props => [taskAdd];
+  List<Object> get props => [taskName, priority];
 
   @override
   String toString() {
-    return 'TaskChanged{taskAdd: $taskAdd}';
+    return 'TaskAddChanged{taskName: $taskName, priority: $priority}';
+  }
+}
+
+class TaskUpdated extends TaskEvent {
+  final Task task;
+
+  TaskUpdated({@required this.task});
+
+  @override
+  List<Object> get props => [task];
+
+  @override
+  String toString() {
+    return 'TaskUpdated{task: $task}';
   }
 }
 

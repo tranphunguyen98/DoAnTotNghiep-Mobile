@@ -114,7 +114,7 @@ class Task extends Equatable {
 
   @override
   String toString() {
-    return 'Task{id: $id, taskName: $taskName projectName: $projectName, isCompleted: $isCompleted}';
+    return 'Task{id: $id, taskName: $taskName projectName: $projectName, isCompleted: $isCompleted, p: ${priorityType}';
   }
 
   @override

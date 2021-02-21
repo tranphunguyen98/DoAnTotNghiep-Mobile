@@ -20,10 +20,21 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   Stream<TaskState> mapEventToState(TaskEvent event) async* {
     if (event is OpenHomeScreen) {
       yield* _mapOpenHomeScreenToState();
-    } else if (event is TaskChanged) {
-      yield* _mapTaskChangedToState(event.taskAdd);
+    } else if (event is TaskAddChanged) {
+      yield* _mapTaskAddChangedToState(
+          taskName: event.taskName, priority: event.priority);
     } else if (event is AddTask) {
       yield* _mapAddTaskToState();
+    } else if (event is TaskUpdated) {
+      yield* _mapTaskUpdatedToState(event.task);
+    }
+  }
+
+  Stream<TaskState> _mapTaskUpdatedToState(Task task) async* {
+    if (state is DisplayListTasks) {
+      await _taskRepository.updateTask(task);
+      final listAllTask = await _taskRepository.getAllTask();
+      yield DisplayListTasks.data(listAllTask);
     }
   }
 
@@ -36,8 +47,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     }
   }
 
-  Stream<TaskState> _mapTaskChangedToState(Task taskAdd) async* {
+  Stream<TaskState> _mapTaskAddChangedToState(
+      {String taskName, int priority}) async* {
     if (state is DisplayListTasks) {
+      var taskAdd = (state as DisplayListTasks).taskAdd;
+      taskAdd = taskAdd.copyWith(taskName: taskName);
+      taskAdd = taskAdd.copyWith(priorityType: priority);
+
       yield (state as DisplayListTasks).updateTask(taskAdd);
     }
   }

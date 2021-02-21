@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/task/bloc.dart';
 import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/screen/dashboard/sc_dashboard.dart';
-import 'package:totodo/presentation/screen/dashboard/widget_bottom_sheet_add_task.dart';
 import 'package:totodo/presentation/screen/home/main_drawer.dart';
+import 'package:totodo/presentation/screen/task/sc_dashboard.dart';
+import 'package:totodo/presentation/screen/task/widget_bottom_sheet_add_task.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 
 class HomeScreen extends StatelessWidget {

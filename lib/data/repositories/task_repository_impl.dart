@@ -24,4 +24,9 @@ class TaskRepositoryImpl implements ITaskRepository {
   Future<List<Task>> getAllTask() {
     return _localTaskDataSource.getAllTask();
   }
+
+  @override
+  Future<bool> updateTask(Task task) {
+    return _localTaskDataSource.updateTask(task);
+  }
 }
