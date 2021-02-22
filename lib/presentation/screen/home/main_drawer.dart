@@ -17,18 +17,18 @@ class MainDrawer extends StatelessWidget {
     DrawerItemData("Hôm nay", "assets/ic_today_64.png"),
     DrawerItemData("7 ngày tiếp theo", "assets/ic_week_64.png"),
     DrawerItemData("Tháng này", "assets/ic_month_64.png"),
-    DrawerItemData(
-        "Project Mẫu", "assets/ic_circle_64.png", DrawerItemData.kTypeProject),
-    DrawerItemData(
-        "Nhãn Mẫu", "assets/ic_circle_64.png", DrawerItemData.kTypeLabel),
-    DrawerItemData(
-        "Ưu tiên 1", "assets/ic_circle_64.png", DrawerItemData.kTypeFilter),
-    DrawerItemData(
-        "Ưu tiên 2", "assets/ic_circle_64.png", DrawerItemData.kTypeFilter),
-    DrawerItemData(
-        "Ưu tiên 3", "assets/ic_circle_64.png", DrawerItemData.kTypeFilter),
-    DrawerItemData(
-        "Ưu tiên 4", "assets/ic_circle_64.png", DrawerItemData.kTypeFilter),
+    DrawerItemData("Project Mẫu", "assets/ic_circle_64.png",
+        type: DrawerItemData.kTypeProject),
+    DrawerItemData("Nhãn Mẫu", "assets/ic_circle_64.png",
+        type: DrawerItemData.kTypeLabel),
+    DrawerItemData("Ưu tiên 1", "assets/ic_circle_64.png",
+        type: DrawerItemData.kTypeFilter),
+    DrawerItemData("Ưu tiên 2", "assets/ic_circle_64.png",
+        type: DrawerItemData.kTypeFilter),
+    DrawerItemData("Ưu tiên 3", "assets/ic_circle_64.png",
+        type: DrawerItemData.kTypeFilter),
+    DrawerItemData("Ưu tiên 4", "assets/ic_circle_64.png",
+        type: DrawerItemData.kTypeFilter),
   ];
   @override
   Widget build(BuildContext context) {

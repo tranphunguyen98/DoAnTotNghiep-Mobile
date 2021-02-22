@@ -1,28 +1,45 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 
 @Injectable()
 class LocalTaskService {
   static const kNameBoxTask = "task";
-  Box _taskBox;
+  static const kNameBoxProject = "project";
+
+  Box _taskBoxTask;
+  Box _taskBoxProject;
+
   LocalTaskService() {
-    _taskBox = Hive.box(kNameBoxTask);
+    _taskBoxTask = Hive.box(kNameBoxTask);
+    _taskBoxProject = Hive.box(kNameBoxProject);
   }
 
   Future<bool> addTask(Task task) async {
     if (task.id == null) {
-      _taskBox.add(task.copyWith(id: DateTime.now().microsecondsSinceEpoch));
+      _taskBoxTask
+          .add(task.copyWith(id: DateTime.now().microsecondsSinceEpoch));
       return true;
     }
-    _taskBox.add(task);
+    _taskBoxTask.add(task);
+    return true;
+  }
+
+  Future<bool> addProject(Project project) async {
+    if (project.id == null) {
+      _taskBoxProject
+          .add(project.copyWith(id: DateTime.now().microsecondsSinceEpoch));
+      return true;
+    }
+    _taskBoxProject.add(project);
     return true;
   }
 
   Future<List<Task>> getAllTask() async {
     final listTask = <Task>[];
-    for (var i = 0; i < _taskBox.length; i++) {
-      listTask.add(_taskBox.getAt(i) as Task);
+    for (var i = 0; i < _taskBoxTask.length; i++) {
+      listTask.add(_taskBoxTask.getAt(i) as Task);
     }
     print("LIST TASK: ${listTask}");
     return listTask as List<Task> ?? [];
@@ -30,14 +47,14 @@ class LocalTaskService {
 
   bool updateTask(Task task) {
     int indexUpdated = -1;
-    for (var i = 0; i < _taskBox.length; i++) {
-      if ((_taskBox.getAt(i) as Task).id == task.id) {
+    for (var i = 0; i < _taskBoxTask.length; i++) {
+      if ((_taskBoxTask.getAt(i) as Task).id == task.id) {
         indexUpdated = i;
         break;
       }
     }
     if (indexUpdated > -1) {
-      _taskBox.putAt(indexUpdated, task);
+      _taskBoxTask.putAt(indexUpdated, task);
       return true;
     }
     return false;

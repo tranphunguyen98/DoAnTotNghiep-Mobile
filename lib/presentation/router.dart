@@ -7,6 +7,8 @@ import 'package:totodo/presentation/screen/setting/sc_setting.dart';
 import 'package:totodo/presentation/screen/signup/sc_signup.dart';
 import 'package:totodo/presentation/screen/splash/sc_splash.dart';
 
+import 'file:///C:/Flutter/totodo/lib/presentation/screen/project/sc_add_project.dart';
+
 class AppRouter {
   static const String kHome = '/';
   static const String kSplash = '/splash';
@@ -15,6 +17,7 @@ class AppRouter {
   static const String kChangePassword = '/changePassword';
   static const String kForgotPassword = '/forgotPassword';
   static const String kSetting = '/setting';
+  static const String kAddProject = '/addProject';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -32,6 +35,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => ChangePasswordScreen());
       case kSetting:
         return MaterialPageRoute(builder: (_) => SettingScreen());
+      case kAddProject:
+        return MaterialPageRoute(builder: (_) => AddProjectScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

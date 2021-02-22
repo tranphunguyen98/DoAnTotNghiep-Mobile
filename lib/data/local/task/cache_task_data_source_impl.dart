@@ -1,4 +1,5 @@
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 
 import 'local_task_service.dart';
@@ -25,5 +26,16 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
   @override
   Future<bool> updateTask(Task task) async {
     return _taskService.updateTask(task);
+  }
+
+  @override
+  Future<void> addProject(Project project) {
+    return _taskService.addProject(project);
+  }
+
+  @override
+  Future<void> updateProject(Project project) {
+    // TODO: implement updateProject
+    throw UnimplementedError();
   }
 }

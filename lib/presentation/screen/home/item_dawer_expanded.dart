@@ -74,9 +74,17 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
                   expandedColor: Colors.black,
                   disabledColor: Colors.black,
                 ),
-                Icon(
-                  Icons.add,
-                  color: Colors.black,
+                InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.black,
+                    ),
+                  ),
+                  onTap: () {
+                    widget.drawerItemData.onPressed(context);
+                  },
                 ),
               ]),
             ),

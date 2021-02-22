@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
+import 'package:totodo/bloc/project/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/bloc/task/bloc.dart';
@@ -58,4 +59,9 @@ Future<void> configureDependencies() async {
 
   getIt.registerLazySingleton<TaskBloc>(
       () => TaskBloc(taskRepository: getIt.get<ITaskRepository>()));
+
+  // Project
+
+  getIt.registerLazySingleton<AddProjectBloc>(
+      () => AddProjectBloc(taskRepository: getIt.get<ITaskRepository>()));
 }

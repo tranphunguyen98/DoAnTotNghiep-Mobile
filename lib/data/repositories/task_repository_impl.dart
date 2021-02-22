@@ -1,6 +1,7 @@
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
 import 'package:totodo/data/data_source/task/remote_task_data_source.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 
 class TaskRepositoryImpl implements ITaskRepository {
@@ -28,5 +29,16 @@ class TaskRepositoryImpl implements ITaskRepository {
   @override
   Future<bool> updateTask(Task task) {
     return _localTaskDataSource.updateTask(task);
+  }
+
+  @override
+  Future<void> addProject(Project project) {
+    return _localTaskDataSource.addProject(project);
+  }
+
+  @override
+  Future<void> updateProject(Project project) {
+    // TODO: implement updateProject
+    throw UnimplementedError();
   }
 }

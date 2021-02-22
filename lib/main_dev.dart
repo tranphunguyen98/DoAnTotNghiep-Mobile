@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/local/task/local_task_service.dart';
 
 import 'app_config.dart';
@@ -21,7 +22,9 @@ Future<void> main() async {
   MyApp.initSystemDefault();
   await configureDependencies();
   Hive.registerAdapter<Task>(TaskAdapter());
+  Hive.registerAdapter<Project>(ProjectAdapter());
   await Hive.openBox(LocalTaskService.kNameBoxTask);
+  await Hive.openBox(LocalTaskService.kNameBoxProject);
 
   print("Box OPEN");
   print("runApp");
