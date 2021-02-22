@@ -11,5 +11,8 @@ abstract class LocalTaskDataSource {
   Future<bool> updateTask(Task task);
 
   Future<void> addProject(Project project);
+
   Future<void> updateProject(Project project);
+
+  Future<List<Project>> getProjects();
 }

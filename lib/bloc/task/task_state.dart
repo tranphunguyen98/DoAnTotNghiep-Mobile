@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
+import 'package:totodo/utils/util.dart';
 
 abstract class TaskState extends Equatable {
   const TaskState();
@@ -61,6 +63,7 @@ class DisplayListTasks extends TaskState {
   static const kDrawerIndexNextWeek = 2;
   static const kDrawerIndexThisMonth = 3;
 
+  final List<DrawerItemData> drawerItems;
   final int indexDrawerSelected;
   final Task taskAdd;
   final List<Task> _listAllTask;
@@ -71,23 +74,37 @@ class DisplayListTasks extends TaskState {
     if (_listAllTask == null) return <Task>[];
 
     if (projectId == null && labelId == null) {
-      if (indexDrawerSelected == kDrawerIndexInbox) {
-        return _listAllTask
-            .where((element) =>
-                element.projectName == null || element.projectName.isEmpty)
-            .toList();
+      switch (indexDrawerSelected) {
+        case kDrawerIndexInbox:
+          return _listAllTask
+              .where((element) =>
+                  element.projectName == null || element.projectName.isEmpty)
+              .toList();
+        case kDrawerIndexToday:
+          return _listAllTask
+              .where(
+                (element) =>
+                    element.taskDate != null &&
+                    element.taskDate.isNotEmpty &&
+                    Util.isSameDay(
+                      DateTime.parse(element.taskDate),
+                      DateTime.now(),
+                    ),
+              )
+              .toList();
       }
     }
 
     return <Task>[];
   }
 
-  const DisplayListTasks({
+  DisplayListTasks({
     this.indexDrawerSelected = kDrawerIndexInbox,
     this.taskAdd = const Task(),
     this.loading,
     this.msg,
     List<Task> listAllTask,
+    this.drawerItems,
   }) : _listAllTask = listAllTask;
 
   factory DisplayListTasks.loading() {
@@ -109,30 +126,37 @@ class DisplayListTasks extends TaskState {
 
   @override
   List<Object> get props =>
-      [indexDrawerSelected, taskAdd, _listAllTask, loading, msg];
+      [indexDrawerSelected, taskAdd, _listAllTask, loading, msg, drawerItems];
 
   @override
   String toString() {
-    return 'DisplayListTasks{taskAdd: $taskAdd, listAllTask: ${_listAllTask?.length ?? "null"}, loading: $loading, msg: $msg}';
+    return 'DisplayListTasks: $drawerItems}';
+    // return 'DisplayListTasks{taskAdd: $taskAdd, listAllTask: ${_listAllTask?.length ?? "null"}, loading: $loading, msg: $msg}';
   }
 
   DisplayListTasks copyWith({
-    bool canAddTask,
+    List<DrawerItemData> drawerItems,
+    int indexDrawerSelected,
     Task taskAdd,
     List<Task> listAllTask,
     bool loading,
     String msg,
   }) {
-    if ((taskAdd == null || identical(taskAdd, this.taskAdd)) &&
-        (listAllTask == null || identical(listAllTask, _listAllTask)) &&
+    if ((drawerItems == null || identical(drawerItems, this.drawerItems)) &&
+        (indexDrawerSelected == null ||
+            identical(indexDrawerSelected, this.indexDrawerSelected)) &&
+        (taskAdd == null || identical(taskAdd, this.taskAdd)) &&
+        (listAllTask == null || identical(listAllTask, this._listAllTask)) &&
         (loading == null || identical(loading, this.loading)) &&
         (msg == null || identical(msg, this.msg))) {
       return this;
     }
 
     return DisplayListTasks(
+      drawerItems: drawerItems ?? this.drawerItems,
+      indexDrawerSelected: indexDrawerSelected ?? this.indexDrawerSelected,
       taskAdd: taskAdd ?? this.taskAdd,
-      listAllTask: listAllTask ?? _listAllTask,
+      listAllTask: listAllTask ?? this._listAllTask,
       loading: loading ?? this.loading,
       msg: msg ?? this.msg,
     );

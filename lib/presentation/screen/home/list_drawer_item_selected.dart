@@ -1,29 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:totodo/bloc/task/bloc.dart';
+import 'package:totodo/di/injection.dart';
 
 import 'drawer_item_data.dart';
 import 'drawer_item_selected.dart';
 
 class ListDrawerItemSelected extends StatelessWidget {
+  final TaskBloc _taskBloc = getIt<TaskBloc>();
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<List<DrawerItemData>>(
-      builder: (context, drawerItems, child) => Column(
-        children: [
-          ...drawerItems
-              .where((element) => element.type == DrawerItemData.kTypeMain)
-              .toList()
-              .asMap()
-              .entries
-              .map(
-                (e) => DrawerItemSelected(
-                  e.value,
-                  e.key,
-                ),
-              )
-              .toList()
-        ],
-      ),
+    return BlocBuilder(
+      cubit: _taskBloc,
+      builder: (context, state) {
+        if (state is DisplayListTasks) {
+          return Column(
+            children: [
+              ...state.drawerItems
+                  .where((element) => element.type == DrawerItemData.kTypeMain)
+                  .toList()
+                  .asMap()
+                  .entries
+                  .map(
+                    (e) => DrawerItemSelected(
+                      e.value,
+                      isSelected: e.key == state.indexDrawerSelected,
+                      onPressed: () {
+                        if (e.key != state.indexDrawerSelected) {
+                          _taskBloc
+                              .add(SelectedDrawerIndexChanged(index: e.key));
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                  )
+                  .toList()
+            ],
+          );
+        }
+        return Container();
+      },
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 
 import 'bloc.dart';
 
@@ -11,10 +12,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   TaskBloc({@required ITaskRepository taskRepository})
       : assert(taskRepository != null),
         _taskRepository = taskRepository,
-        super(null);
-
-  @override
-  TaskState get initialState => DisplayListTasks.loading();
+        super(DisplayListTasks.loading());
 
   @override
   Stream<TaskState> mapEventToState(TaskEvent event) async* {
@@ -26,6 +24,17 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       yield* _mapAddTaskToState();
     } else if (event is TaskUpdated) {
       yield* _mapTaskUpdatedToState(event.task);
+    } else if (event is SelectedDrawerIndexChanged) {
+      yield* _mapSelectedDrawerIndexChangedToState(
+          indexDrawerSelected: event.index);
+    }
+  }
+
+  Stream<TaskState> _mapSelectedDrawerIndexChangedToState(
+      {int indexDrawerSelected}) async* {
+    if (state is DisplayListTasks) {
+      yield (state as DisplayListTasks)
+          .copyWith(indexDrawerSelected: indexDrawerSelected);
     }
   }
 
@@ -68,8 +77,21 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
     try {
       final listAllTask = await _taskRepository.getAllTask();
+      final listProject = await _taskRepository.getProjects();
+      final drawerItems = <DrawerItemData>[];
 
-      yield DisplayListTasks.data(listAllTask);
+      drawerItems.addAll(DrawerItemData.listDrawerItemDateInit);
+
+      print("listProject ${listProject}");
+      for (final project in listProject) {
+        drawerItems.add(
+          DrawerItemData(project.nameProject, "assets/ic_circle_64.png",
+              type: DrawerItemData.kTypeProject),
+        );
+      }
+
+      yield (state as DisplayListTasks).copyWith(
+          listAllTask: listAllTask, drawerItems: drawerItems, loading: false);
     } catch (e) {
       yield DisplayListTasks.error(e.toString());
     }

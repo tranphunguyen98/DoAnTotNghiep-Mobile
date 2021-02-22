@@ -5,7 +5,7 @@ import 'package:totodo/presentation/screen/home/item_dawer_expanded.dart';
 import 'drawer_item_data.dart';
 
 class ListDrawerItemExpanded extends StatelessWidget {
-  final drawerItems = [
+  final drawerItemsExpanded = [
     DrawerItemData("Dự án", "assets/ic_project_64.png",
         type: DrawerItemData.kTypeProject, onPressed: (context) {
       Navigator.of(context).pushNamed(AppRouter.kAddProject);
@@ -21,7 +21,9 @@ class ListDrawerItemExpanded extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [...drawerItems.map((e) => ItemDrawerExpanded(e)).toList()],
+      children: [
+        ...drawerItemsExpanded.map((e) => ItemDrawerExpanded(e)).toList()
+      ],
     );
   }
 }

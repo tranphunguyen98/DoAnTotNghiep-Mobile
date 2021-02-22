@@ -39,4 +39,20 @@ class TaskUpdated extends TaskEvent {
   }
 }
 
+class SelectedDrawerIndexChanged extends TaskEvent {
+  final int index;
+  final int type;
+  final int id;
+
+  SelectedDrawerIndexChanged({this.index, this.type, this.id});
+
+  @override
+  List<Object> get props => [index, type, id];
+
+  @override
+  String toString() {
+    return 'SelectedDrawerIndexChanged{index: $index, type: $type, id: $id}';
+  }
+}
+
 class AddTask extends TaskEvent {}

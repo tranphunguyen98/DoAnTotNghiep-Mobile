@@ -38,4 +38,9 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
     // TODO: implement updateProject
     throw UnimplementedError();
   }
+
+  @override
+  Future<List<Project>> getProjects() {
+    return _taskService.getProjects();
+  }
 }

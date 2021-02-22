@@ -5,14 +5,20 @@ class DrawerItemNormal extends StatelessWidget {
   final String name;
   final IconData iconData;
   final VoidCallback onTap;
-  const DrawerItemNormal(this.name, this.iconData, this.onTap);
+  final bool isChild;
+  const DrawerItemNormal(this.name, this.iconData, this.onTap,
+      {this.isChild = false});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        padding: EdgeInsets.only(
+          top: 16.0,
+          bottom: 16.0,
+          left: isChild ? 40.0 : 16.0,
+        ),
         child: Row(
           children: [
             Icon(

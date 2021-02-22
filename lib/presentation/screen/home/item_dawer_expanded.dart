@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:totodo/bloc/task/bloc.dart';
+import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 
+import 'drawer_item_normal.dart';
 import 'drawer_item_selected.dart';
 
 class ItemDrawerExpanded extends StatefulWidget {
   final DrawerItemData drawerItemData;
-
   ItemDrawerExpanded(this.drawerItemData);
 
   @override
@@ -18,6 +20,7 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
     with SingleTickerProviderStateMixin {
   bool expandFlag = false;
   AnimationController _controller;
+  TaskBloc _taskBloc;
 
   @override
   void initState() {
@@ -25,6 +28,7 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
       vsync: this,
       duration: Duration(milliseconds: 300),
     );
+    _taskBloc = getIt<TaskBloc>();
     super.initState();
   }
 
@@ -68,11 +72,15 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
                   style: kFontSemibold,
                 ),
                 Spacer(),
-                ExpandIcon(
-                  isExpanded: expandFlag,
-                  color: Colors.black,
-                  expandedColor: Colors.black,
-                  disabledColor: Colors.black,
+                SizedBox(
+                  width: 40.0,
+                  height: 40.0,
+                  child: ExpandIcon(
+                    isExpanded: expandFlag,
+                    color: Colors.black,
+                    expandedColor: Colors.black,
+                    disabledColor: Colors.black,
+                  ),
                 ),
                 InkWell(
                   child: Padding(
@@ -90,22 +98,42 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
             ),
             SizeTransition(
               sizeFactor: _controller,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 32.0, top: 8.0, bottom: 8.0, right: 16.0),
-                child: Consumer<List<DrawerItemData>>(
-                    builder: (context, drawerItems, child) {
-                  List<DrawerItemSelected> listDrawerItem =
-                      List<DrawerItemSelected>();
-                  for (int i = 0; i < drawerItems.length; i++) {
-                    if (drawerItems[i].type == widget.drawerItemData.type) {
-                      listDrawerItem.add(DrawerItemSelected(drawerItems[i], i));
+              child: BlocBuilder(
+                cubit: _taskBloc,
+                builder: (context, state) {
+                  if (state is DisplayListTasks) {
+                    final List<DrawerItemSelected> listDrawerItem =
+                        <DrawerItemSelected>[];
+                    for (int i = 0; i < state.drawerItems.length; i++) {
+                      if (state.drawerItems[i].type ==
+                          widget.drawerItemData.type) {
+                        listDrawerItem.add(DrawerItemSelected(
+                          state.drawerItems[i],
+                          isChild: true,
+                          onPressed: () {
+                            _taskBloc.add(SelectedDrawerIndexChanged(
+                              index: i,
+                              type: widget.drawerItemData.type,
+                            ),
+                            );
+                          },
+                        ));
+                      }
                     }
+                    return Column(
+                      children: [
+                        ...listDrawerItem,
+                        DrawerItemNormal(
+                          "Thêm",
+                          Icons.add,
+                          () {},
+                          isChild: true,
+                        ),
+                      ],
+                    );
                   }
-                  return Column(
-                    children: [...listDrawerItem],
-                  );
-                }),
+                  return Container();
+                },
               ),
             ),
           ],

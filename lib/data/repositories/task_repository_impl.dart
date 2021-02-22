@@ -41,4 +41,9 @@ class TaskRepositoryImpl implements ITaskRepository {
     // TODO: implement updateProject
     throw UnimplementedError();
   }
+
+  @override
+  Future<List<Project>> getProjects() {
+    return _localTaskDataSource.getProjects();
+  }
 }

@@ -42,7 +42,16 @@ class LocalTaskService {
       listTask.add(_taskBoxTask.getAt(i) as Task);
     }
     print("LIST TASK: ${listTask}");
-    return listTask as List<Task> ?? [];
+    return listTask ?? <Task>[];
+  }
+
+  Future<List<Project>> getProjects() async {
+    final listProject = <Project>[];
+    for (var i = 0; i < _taskBoxProject.length; i++) {
+      listProject.add(_taskBoxProject.getAt(i) as Project);
+    }
+    print("LIST PROJECT: ${listProject}");
+    return listProject ?? <Project>[];
   }
 
   bool updateTask(Task task) {

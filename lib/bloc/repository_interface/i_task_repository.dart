@@ -8,4 +8,5 @@ abstract class ITaskRepository {
   Future<List<Task>> getAllTask();
   Future<void> addProject(Project project);
   Future<void> updateProject(Project project);
+  Future<List<Project>> getProjects();
 }
