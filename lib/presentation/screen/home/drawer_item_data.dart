@@ -11,8 +11,13 @@ class DrawerItemData {
   final int type;
   final dynamic data;
   final Function(BuildContext) onPressed;
-  DrawerItemData(this.name, this.icon,
-      {this.type = 0, this.onPressed, this.data});
+  DrawerItemData(
+    this.name,
+    this.icon, {
+    this.type = kTypeMain,
+    this.onPressed,
+    this.data,
+  });
 
   @override
   String toString() {

@@ -73,6 +73,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                 },
               ),
               DropdownButton<ChooseColor>(
+                isExpanded: true,
                 value: dropdownValue,
                 items: listColor.map((value) {
                   return DropdownMenuItem<ChooseColor>(

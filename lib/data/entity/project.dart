@@ -3,10 +3,10 @@ import 'package:hive/hive.dart';
 
 part 'project.g.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 3)
 class Project extends Equatable {
   @HiveField(0)
-  final int id;
+  final String id;
   @HiveField(1)
   final String nameProject;
 
@@ -18,7 +18,7 @@ class Project extends Equatable {
   });
 
   Project copyWith({
-    int id,
+    String id,
     String nameProject,
   }) {
     if ((id == null || identical(id, this.id)) &&
@@ -50,7 +50,7 @@ class Project extends Equatable {
 
   factory Project.fromJson(Map<String, dynamic> map) {
     return Project(
-      id: map['id'] as int,
+      id: map['id'] as String,
       nameProject: map['nameProject'] as String,
     );
   }

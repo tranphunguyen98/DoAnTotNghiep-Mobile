@@ -111,11 +111,13 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
                           state.drawerItems[i],
                           isChild: true,
                           onPressed: () {
-                            _taskBloc.add(SelectedDrawerIndexChanged(
-                              index: i,
-                              type: widget.drawerItemData.type,
-                            ),
+                            _taskBloc.add(
+                              SelectedDrawerIndexChanged(
+                                index: i,
+                                type: widget.drawerItemData.type,
+                              ),
                             );
+                            Navigator.of(context).pop();
                           },
                         ));
                       }

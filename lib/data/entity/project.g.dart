@@ -8,7 +8,7 @@ part of 'project.dart';
 
 class ProjectAdapter extends TypeAdapter<Project> {
   @override
-  final int typeId = 1;
+  final int typeId = 3;
 
   @override
   Project read(BinaryReader reader) {
@@ -17,7 +17,7 @@ class ProjectAdapter extends TypeAdapter<Project> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Project(
-      id: fields[0] as int,
+      id: fields[0] as String,
       nameProject: fields[1] as String,
     );
   }

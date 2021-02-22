@@ -3,12 +3,12 @@ import 'package:totodo/utils/my_const/color_const.dart';
 
 class IconOutlineButton extends StatelessWidget {
   final String title;
-  final String iconPath;
+  final IconData iconData;
   final Color colorIcon;
   final Color colorBorder;
   final void Function() onPressed;
 
-  const IconOutlineButton(this.title, this.iconPath,
+  const IconOutlineButton(this.title, this.iconData,
       {@required this.onPressed, this.colorIcon, this.colorBorder});
 
   @override
@@ -24,13 +24,18 @@ class IconOutlineButton extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
-            height: 16.0,
-            width: 16.0, // fixed width and height
-            child: Image.asset(
-              iconPath,
-              color: colorIcon ?? kColorGray1,
-            ),
+          // SizedBox(
+          //   height: 16.0,
+          //   width: 16.0, // fixed width and height
+          //   child: Image.asset(
+          //     iconPath,
+          //     color: colorIcon ?? kColorGray1,
+          //   ),
+          // ),
+          Icon(
+            iconData,
+            size: 16.0,
+            color: colorIcon ?? kColorGray1,
           ),
           SizedBox(
             width: 8.0,

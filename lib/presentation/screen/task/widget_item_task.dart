@@ -61,27 +61,53 @@ class ItemTask extends StatelessWidget {
                 ),
               ],
             ),
-            if (displayTextDate != null)
-              Padding(
-                padding: const EdgeInsets.only(left: 32.0),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.calendar_today,
-                      size: 12.0,
-                      color: Colors.green,
+            Padding(
+              padding: const EdgeInsets.only(left: 32.0),
+              child: Row(
+                children: [
+                  if (displayTextDate != null)
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today,
+                          size: 12.0,
+                          color: Colors.green,
+                        ),
+                        SizedBox(
+                          width: 4.0,
+                        ),
+                        Text(
+                          displayTextDate,
+                          style: kFontRegular.copyWith(
+                              fontSize: 12, color: Colors.green),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: 4.0,
-                    ),
-                    Text(
-                      displayTextDate ?? "NULL",
-                      style: kFontRegular.copyWith(
-                          fontSize: 12, color: Colors.green),
-                    ),
-                  ],
-                ),
+                  Spacer(),
+                  Row(
+                    children: [
+                      Text(
+                        task.projectName?.isEmpty ?? true
+                            ? "Inbox"
+                            : task.projectName,
+                        style: kFontRegular.copyWith(
+                          fontSize: 12,
+                          color: kColorGray1,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 4.0,
+                      ),
+                      Icon(
+                        Icons.circle,
+                        size: 12.0,
+                        color: kColorGray4,
+                      ),
+                    ],
+                  )
+                ],
               ),
+            ),
           ],
         ),
       ),

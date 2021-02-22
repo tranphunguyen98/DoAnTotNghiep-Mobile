@@ -18,8 +18,8 @@ class LocalTaskService {
 
   Future<bool> addTask(Task task) async {
     if (task.id == null) {
-      _taskBoxTask
-          .add(task.copyWith(id: DateTime.now().microsecondsSinceEpoch));
+      _taskBoxTask.add(
+          task.copyWith(id: DateTime.now().microsecondsSinceEpoch.toString()));
       return true;
     }
     _taskBoxTask.add(task);
@@ -28,8 +28,8 @@ class LocalTaskService {
 
   Future<bool> addProject(Project project) async {
     if (project.id == null) {
-      _taskBoxProject
-          .add(project.copyWith(id: DateTime.now().microsecondsSinceEpoch));
+      _taskBoxProject.add(project.copyWith(
+          id: DateTime.now().microsecondsSinceEpoch.toString()));
       return true;
     }
     _taskBoxProject.add(project);

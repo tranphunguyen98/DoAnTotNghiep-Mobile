@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/utils/util.dart';
@@ -67,53 +68,59 @@ class DisplayListTasks extends TaskState {
   final int indexDrawerSelected;
   final Task taskAdd;
   final List<Task> _listAllTask;
+  final List<Project> listProject;
   final bool loading;
   final String msg;
 
   List<Task> listDataDisplay({int projectId, int labelId}) {
     if (_listAllTask == null) return <Task>[];
 
-    if (projectId == null && labelId == null) {
-      switch (indexDrawerSelected) {
-        case kDrawerIndexInbox:
-          return _listAllTask
-              .where((element) =>
-                  element.projectName == null || element.projectName.isEmpty)
-              .toList();
-        case kDrawerIndexToday:
-          return _listAllTask
-              .where(
-                (element) =>
-                    element.taskDate != null &&
-                    element.taskDate.isNotEmpty &&
-                    Util.isSameDay(
-                      DateTime.parse(element.taskDate),
-                      DateTime.now(),
-                    ),
-              )
-              .toList();
-      }
+    if (indexDrawerSelected == kDrawerIndexInbox) {
+      return _listAllTask
+          .where((element) => element.projectId?.isEmpty ?? true)
+          .toList();
+    }
+
+    if (indexDrawerSelected == kDrawerIndexToday) {
+      return _listAllTask
+          .where(
+            (element) =>
+                !(element.taskDate?.isEmpty ?? true) &&
+                Util.isSameDay(
+                  DateTime.parse(element.taskDate),
+                  DateTime.now(),
+                ),
+          )
+          .toList();
+    }
+
+    if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeProject) {
+      return _listAllTask.where((element) {
+        return element.projectId ==
+            (drawerItems[indexDrawerSelected].data as Project).id;
+      }).toList();
     }
 
     return <Task>[];
   }
 
-  DisplayListTasks({
-    this.indexDrawerSelected = kDrawerIndexInbox,
-    this.taskAdd = const Task(),
-    this.loading,
-    this.msg,
-    List<Task> listAllTask,
-    this.drawerItems,
-  }) : _listAllTask = listAllTask;
+  DisplayListTasks(
+      {this.indexDrawerSelected = kDrawerIndexInbox,
+      this.taskAdd = const Task(),
+      this.loading,
+      this.msg,
+      List<Task> listAllTask,
+      this.drawerItems,
+      this.listProject})
+      : _listAllTask = listAllTask;
 
   factory DisplayListTasks.loading() {
     return DisplayListTasks(loading: true);
   }
 
-  factory DisplayListTasks.data(List<Task> listAllTask) {
-    return DisplayListTasks(listAllTask: listAllTask, loading: false);
-  }
+  // factory DisplayListTasks.data(List<Task> listAllTask) {
+  //   return DisplayListTasks(listAllTask: listAllTask, loading: false);
+  // }
 
   factory DisplayListTasks.error(String msg) {
     return DisplayListTasks(msg: msg, loading: false);
@@ -139,6 +146,7 @@ class DisplayListTasks extends TaskState {
     int indexDrawerSelected,
     Task taskAdd,
     List<Task> listAllTask,
+    List<Project> listProject,
     bool loading,
     String msg,
   }) {
@@ -147,6 +155,7 @@ class DisplayListTasks extends TaskState {
             identical(indexDrawerSelected, this.indexDrawerSelected)) &&
         (taskAdd == null || identical(taskAdd, this.taskAdd)) &&
         (listAllTask == null || identical(listAllTask, this._listAllTask)) &&
+        (listProject == null || identical(listProject, this.listProject)) &&
         (loading == null || identical(loading, this.loading)) &&
         (msg == null || identical(msg, this.msg))) {
       return this;
@@ -157,6 +166,7 @@ class DisplayListTasks extends TaskState {
       indexDrawerSelected: indexDrawerSelected ?? this.indexDrawerSelected,
       taskAdd: taskAdd ?? this.taskAdd,
       listAllTask: listAllTask ?? this._listAllTask,
+      listProject: listProject ?? this.listProject,
       loading: loading ?? this.loading,
       msg: msg ?? this.msg,
     );

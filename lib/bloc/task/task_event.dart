@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 
 abstract class TaskEvent extends Equatable {
@@ -9,19 +10,22 @@ abstract class TaskEvent extends Equatable {
 
 class OpenHomeScreen extends TaskEvent {}
 
+class OpenBottomSheetAddTask extends TaskEvent {}
+
 class TaskAddChanged extends TaskEvent {
   final String taskName;
   final int priority;
   final String taskDate;
+  final Project project;
 
-  TaskAddChanged({this.taskName, this.priority, this.taskDate});
+  TaskAddChanged({this.taskName, this.priority, this.taskDate, this.project});
 
   @override
-  List<Object> get props => [taskName, priority, taskDate];
+  List<Object> get props => [taskName, priority, taskDate, project];
 
   @override
   String toString() {
-    return 'TaskAddChanged{taskName: $taskName, priority: $priority, taskDate: $taskDate}';
+    return 'TaskAddChanged{taskName: $taskName, priority: $priority, taskDate: $taskDate, project: $project}';
   }
 }
 

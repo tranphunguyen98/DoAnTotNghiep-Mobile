@@ -27,6 +27,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     } else if (event is SelectedDrawerIndexChanged) {
       yield* _mapSelectedDrawerIndexChangedToState(
           indexDrawerSelected: event.index);
+    } else if (event is OpenBottomSheetAddTask) {
+      yield* _mapOpenBottomSheetAddTaskToState();
     }
   }
 
@@ -35,6 +37,12 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     if (state is DisplayListTasks) {
       yield (state as DisplayListTasks)
           .copyWith(indexDrawerSelected: indexDrawerSelected);
+    }
+  }
+
+  Stream<TaskState> _mapOpenBottomSheetAddTaskToState() async* {
+    if (state is DisplayListTasks) {
+      yield (state as DisplayListTasks).copyWith(taskAdd: const Task());
     }
   }
 
@@ -50,23 +58,28 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   }
 
   Stream<TaskState> _mapAddTaskToState() async* {
-    print("_mapAddTaskToState current state: ${state}");
+    // print("_mapAddTaskToState current state: ${state}");
     if (state is DisplayListTasks) {
       await _taskRepository.addTask((state as DisplayListTasks).taskAdd);
       final listAllTask = await _taskRepository.getAllTask();
-      yield DisplayListTasks.data(listAllTask);
+
+      yield (state as DisplayListTasks).copyWith(
+        listAllTask: listAllTask,
+      );
     }
   }
 
   Stream<TaskState> _mapTaskAddChangedToState(TaskAddChanged event) async* {
-    print("_mapTaskAddChangedToState ${(state as DisplayListTasks).taskAdd}");
+    // print("_mapTaskAddChangedToState ${(state as DisplayListTasks).taskAdd}");
     if (state is DisplayListTasks) {
       var taskAdd = (state as DisplayListTasks).taskAdd;
       taskAdd = taskAdd.copyWith(taskName: event.taskName);
       taskAdd = taskAdd.copyWith(priorityType: event.priority);
       taskAdd = taskAdd.copyWith(taskDate: event.taskDate);
+      taskAdd = taskAdd.copyWith(projectId: event.project?.id);
+      taskAdd = taskAdd.copyWith(projectName: event.project?.nameProject);
 
-      print("_mapTaskAddChangedToState ${taskAdd}");
+      // print("_mapTaskAddChangedToState ${taskAdd}");
 
       yield (state as DisplayListTasks).updateTask(taskAdd);
     }
@@ -86,12 +99,15 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       for (final project in listProject) {
         drawerItems.add(
           DrawerItemData(project.nameProject, "assets/ic_circle_64.png",
-              type: DrawerItemData.kTypeProject),
+              type: DrawerItemData.kTypeProject, data: project),
         );
       }
 
       yield (state as DisplayListTasks).copyWith(
-          listAllTask: listAllTask, drawerItems: drawerItems, loading: false);
+          listAllTask: listAllTask,
+          listProject: listProject,
+          drawerItems: drawerItems,
+          loading: false);
     } catch (e) {
       yield DisplayListTasks.error(e.toString());
     }

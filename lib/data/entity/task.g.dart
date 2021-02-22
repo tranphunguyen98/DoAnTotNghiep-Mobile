@@ -8,7 +8,7 @@ part of 'task.dart';
 
 class TaskAdapter extends TypeAdapter<Task> {
   @override
-  final int typeId = 0;
+  final int typeId = 2;
 
   @override
   Task read(BinaryReader reader) {
@@ -17,24 +17,25 @@ class TaskAdapter extends TypeAdapter<Task> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Task(
-      id: fields[0] as int,
+      id: fields[0] as String,
       createdDate: fields[1] as String,
       updatedDate: fields[2] as String,
       priorityType: fields[3] as int,
-      taskDate: fields[10] as String,
       taskName: fields[4] as String,
       description: fields[5] as String,
-      projectName: fields[6] as String,
       isCompleted: fields[7] as bool,
       isStarred: fields[8] as bool,
       isTrashed: fields[9] as bool,
+      taskDate: fields[10] as String,
+      projectId: fields[11] as String,
+      projectName: fields[6] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Task obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -56,7 +57,9 @@ class TaskAdapter extends TypeAdapter<Task> {
       ..writeByte(9)
       ..write(obj.isTrashed)
       ..writeByte(10)
-      ..write(obj.taskDate);
+      ..write(obj.taskDate)
+      ..writeByte(11)
+      ..write(obj.projectId);
   }
 
   @override

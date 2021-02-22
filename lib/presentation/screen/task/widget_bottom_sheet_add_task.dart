@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:totodo/bloc/task/bloc.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/common_widgets/dropdown_choice.dart';
 import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
 import 'package:totodo/presentation/common_widgets/widget_icon_outline_button.dart';
 import 'package:totodo/presentation/common_widgets/widget_item_popup_menu.dart';
-import 'package:totodo/utils/my_const/asset_const.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/util.dart';
 
@@ -17,7 +17,10 @@ class BottomSheetAddTask extends StatelessWidget {
   final TaskBloc _taskBloc = getIt<TaskBloc>();
   final TextEditingController _textNameTaskController = TextEditingController();
   final FocusNode _focusNode = FocusNode(canRequestFocus: false);
-  final List<DropdownChoice> dropdownChoices = [
+
+  final List<Project> dropdownChoicesProject = [];
+
+  final List<DropdownChoice> dropdownChoicesPriority = [
     DropdownChoice(
         iconData: Icons.flag,
         color: Colors.red,
@@ -39,6 +42,7 @@ class BottomSheetAddTask extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _taskBloc.add(OpenBottomSheetAddTask());
     return AnimatedPadding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -56,12 +60,14 @@ class BottomSheetAddTask extends StatelessWidget {
                   previous.taskAdd.priorityType !=
                       current.taskAdd.priorityType ||
                   (previous.taskAdd.taskDate ?? "") !=
-                      current.taskAdd.taskDate);
+                      current.taskAdd.taskDate ||
+                  (previous.taskAdd.projectId != current.taskAdd.projectId));
           print("canBuild ${canBuild}");
           return canBuild;
         },
         builder: (context, state) {
           print("BUILD BOTTOM SHEET");
+          _intData(state as DisplayListTasks);
           return Container(
             padding: EdgeInsets.all(16.0),
             child: Column(
@@ -77,6 +83,12 @@ class BottomSheetAddTask extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void _intData(DisplayListTasks state) {
+    dropdownChoicesProject.clear();
+    dropdownChoicesProject.add(Project(nameProject: "Inbox"));
+    dropdownChoicesProject.addAll(state.listProject);
   }
 
   Row buildRowFunction(DisplayListTasks state) {
@@ -103,12 +115,13 @@ class BottomSheetAddTask extends StatelessWidget {
           },
           elevation: 6,
           icon: CircleInkWell(
-            dropdownChoices[state.taskAdd.priorityType - 1].iconData,
-            colorIcon: dropdownChoices[state.taskAdd.priorityType - 1].color,
+            dropdownChoicesPriority[state.taskAdd.priorityType - 1].iconData,
+            colorIcon:
+                dropdownChoicesPriority[state.taskAdd.priorityType - 1].color,
             sizeIcon: 24.0,
           ),
           itemBuilder: (BuildContext context) {
-            return dropdownChoices.map((DropdownChoice choice) {
+            return dropdownChoicesPriority.map((DropdownChoice choice) {
               return PopupMenuItem<DropdownChoice>(
                 value: choice,
                 child: ItemPopupMenu(choice),
@@ -165,7 +178,7 @@ class BottomSheetAddTask extends StatelessWidget {
         IconOutlineButton(
           Util.getDisplayTextDateFromDate(state.taskAdd.taskDate ?? "") ??
               "No Date",
-          kIconToday,
+          Icons.calendar_today,
           colorIcon:
               state.taskAdd.taskDate != null ? Colors.green : kColorGray1,
           colorBorder:
@@ -196,8 +209,46 @@ class BottomSheetAddTask extends StatelessWidget {
         SizedBox(
           width: 8.0,
         ),
-        IconOutlineButton("Inbox", kIconDashboard,
-            colorIcon: Colors.blue, onPressed: () {}),
+        PopupMenuButton<Project>(
+          offset: Offset(0, -100),
+          onSelected: (Project project) {
+            if (project.id == null) {
+              _taskBloc.add(
+                  TaskAddChanged(project: Project(id: '', nameProject: '')));
+            } else {
+              _taskBloc.add(TaskAddChanged(project: project));
+            }
+          },
+          elevation: 6,
+          itemBuilder: (BuildContext context) {
+            return dropdownChoicesProject.map((Project project) {
+              return PopupMenuItem<Project>(
+                value: project,
+                child: ItemPopupMenu(
+                  DropdownChoice(
+                      title: project.nameProject,
+                      color: Colors.red,
+                      iconData: project.id?.isEmpty ?? true
+                          ? Icons.inbox
+                          : Icons.circle,
+                      onPressed: () {}),
+                ),
+              );
+            }).toList();
+          },
+          child: IconOutlineButton(
+            (state.taskAdd.projectName?.isEmpty ?? true)
+                ? "Inbox"
+                : state.taskAdd.projectName,
+            state.taskAdd.projectId?.isEmpty ?? true
+                ? Icons.calendar_today
+                : Icons.circle,
+            // colorIcon:
+            //     state.taskAdd.projectName != null ? Colors.red : kColorGray1,
+            // colorBorder:
+            //     state.taskAdd.projectName != null ? Colors.red : kColorGray1,
+          ),
+        ),
       ],
     );
   }
@@ -206,7 +257,7 @@ class BottomSheetAddTask extends StatelessWidget {
     _textNameTaskController
       ..text = state.taskAdd.taskName
       ..selection =
-          TextSelection.collapsed(offset: state.taskAdd.taskName.length);
+          TextSelection.collapsed(offset: state.taskAdd.taskName?.length ?? 0);
 
     return TextFormField(
       cursorColor: Colors.black,
@@ -229,7 +280,7 @@ class BottomSheetAddTask extends StatelessWidget {
 
   bool isSendButtonActived(TaskState state) {
     if (state is DisplayListTasks) {
-      return state.taskAdd.taskName.isNotEmpty;
+      return state.taskAdd.taskName?.isNotEmpty ?? false;
     }
     return false;
   }
