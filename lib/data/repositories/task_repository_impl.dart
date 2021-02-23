@@ -1,6 +1,7 @@
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
 import 'package:totodo/data/data_source/task/remote_task_data_source.dart';
+import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 
@@ -45,5 +46,21 @@ class TaskRepositoryImpl implements ITaskRepository {
   @override
   Future<List<Project>> getProjects() {
     return _localTaskDataSource.getProjects();
+  }
+
+  @override
+  Future<void> addLabel(Label label) {
+    return _localTaskDataSource.addLabel(label);
+  }
+
+  @override
+  Future<List<Label>> getLabels() {
+    return _localTaskDataSource.getLabels();
+  }
+
+  @override
+  Future<void> updateLabel(Label label) {
+    // TODO: implement updateLabel
+    throw UnimplementedError();
   }
 }

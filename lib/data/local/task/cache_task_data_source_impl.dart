@@ -1,4 +1,5 @@
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
+import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 
@@ -42,5 +43,21 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
   @override
   Future<List<Project>> getProjects() {
     return _taskService.getProjects();
+  }
+
+  @override
+  Future<void> addLabel(Label label) {
+    return _taskService.addLabel(label);
+  }
+
+  @override
+  Future<List<Label>> getLabels() {
+    return _taskService.getLabels();
+  }
+
+  @override
+  Future<void> updateLabel(Label label) {
+    // TODO: implement updateLabel
+    throw UnimplementedError();
   }
 }

@@ -1,6 +1,12 @@
+import 'dart:ui';
+
 import 'package:intl/intl.dart';
 
 class Util {
+  static String getHexFromColor(Color color) {
+    return '#${color.value.toRadixString(16).substring(2, 8)}';
+  }
+
   static bool isSameDay(DateTime dateTimeSource, DateTime dateTimeDestination) {
     return dateTimeSource.compareTo(
           DateTime(

@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
+import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 
@@ -91,17 +93,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     try {
       final listAllTask = await _taskRepository.getAllTask();
       final listProject = await _taskRepository.getProjects();
+      final listLabel = await _taskRepository.getLabels();
       final drawerItems = <DrawerItemData>[];
 
-      drawerItems.addAll(DrawerItemData.listDrawerItemDateInit);
-
-      print("listProject ${listProject}");
-      for (final project in listProject) {
-        drawerItems.add(
-          DrawerItemData(project.nameProject, "assets/ic_circle_64.png",
-              type: DrawerItemData.kTypeProject, data: project),
-        );
-      }
+      _initDrawerItems(drawerItems, listProject, listLabel);
 
       yield (state as DisplayListTasks).copyWith(
           listAllTask: listAllTask,
@@ -110,6 +105,25 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           loading: false);
     } catch (e) {
       yield DisplayListTasks.error(e.toString());
+    }
+  }
+
+  void _initDrawerItems(List<DrawerItemData> drawerItems,
+      List<Project> listProject, List<Label> listLabel) {
+    drawerItems.addAll(DrawerItemData.listDrawerItemDateInit);
+
+    for (final project in listProject) {
+      drawerItems.add(
+        DrawerItemData(project.nameProject, "assets/ic_circle_64.png",
+            type: DrawerItemData.kTypeProject, data: project),
+      );
+    }
+
+    for (final label in listLabel) {
+      drawerItems.add(
+        DrawerItemData(label.nameLabel, "assets/ic_circle_64.png",
+            type: DrawerItemData.kTypeLabel, data: label),
+      );
     }
   }
 }

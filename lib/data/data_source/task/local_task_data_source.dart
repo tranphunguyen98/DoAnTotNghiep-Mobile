@@ -1,3 +1,4 @@
+import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 
@@ -15,4 +16,10 @@ abstract class LocalTaskDataSource {
   Future<void> updateProject(Project project);
 
   Future<List<Project>> getProjects();
+
+  Future<void> addLabel(Label label);
+
+  Future<void> updateLabel(Label label);
+
+  Future<List<Label>> getLabels();
 }

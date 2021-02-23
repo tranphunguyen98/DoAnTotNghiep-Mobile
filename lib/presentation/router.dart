@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:totodo/presentation/screen/change_password/sc_change_password.dart';
 import 'package:totodo/presentation/screen/forgot_password/sc_forgot_password.dart';
 import 'package:totodo/presentation/screen/home/sc_home.dart';
+import 'package:totodo/presentation/screen/label/sc_add_label.dart';
 import 'package:totodo/presentation/screen/login/sc_login.dart';
 import 'package:totodo/presentation/screen/setting/sc_setting.dart';
 import 'package:totodo/presentation/screen/signup/sc_signup.dart';
@@ -18,6 +19,7 @@ class AppRouter {
   static const String kForgotPassword = '/forgotPassword';
   static const String kSetting = '/setting';
   static const String kAddProject = '/addProject';
+  static const String kAddLabel = '/addLabel';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -37,6 +39,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => SettingScreen());
       case kAddProject:
         return MaterialPageRoute(builder: (_) => AddProjectScreen());
+      case kAddLabel:
+        return MaterialPageRoute(builder: (_) => AddLabelScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
