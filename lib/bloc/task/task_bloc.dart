@@ -67,6 +67,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
       yield (state as DisplayListTasks).copyWith(
         listAllTask: listAllTask,
+        taskAdd: const Task(),
       );
     }
   }
@@ -80,7 +81,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       taskAdd = taskAdd.copyWith(taskDate: event.taskDate);
       taskAdd = taskAdd.copyWith(projectId: event.project?.id);
       taskAdd = taskAdd.copyWith(projectName: event.project?.nameProject);
-
+      taskAdd = taskAdd.copyWith(labelId: event.label?.id);
+      taskAdd = taskAdd.copyWith(labelName: event.label?.nameLabel);
       // print("_mapTaskAddChangedToState ${taskAdd}");
 
       yield (state as DisplayListTasks).updateTask(taskAdd);
@@ -101,6 +103,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       yield (state as DisplayListTasks).copyWith(
           listAllTask: listAllTask,
           listProject: listProject,
+          listLabel: listLabel,
           drawerItems: drawerItems,
           loading: false);
     } catch (e) {

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 
@@ -17,15 +18,17 @@ class TaskAddChanged extends TaskEvent {
   final int priority;
   final String taskDate;
   final Project project;
+  final Label label;
 
-  TaskAddChanged({this.taskName, this.priority, this.taskDate, this.project});
+  TaskAddChanged(
+      {this.taskName, this.priority, this.taskDate, this.project, this.label});
 
   @override
-  List<Object> get props => [taskName, priority, taskDate, project];
+  List<Object> get props => [taskName, priority, taskDate, project, label];
 
   @override
   String toString() {
-    return 'TaskAddChanged{taskName: $taskName, priority: $priority, taskDate: $taskDate, project: $project}';
+    return 'TaskAddChanged{taskName: $taskName, priority: $priority, taskDate: $taskDate, project: $project, label: $label}';
   }
 }
 

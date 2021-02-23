@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
@@ -69,6 +70,7 @@ class DisplayListTasks extends TaskState {
   final Task taskAdd;
   final List<Task> _listAllTask;
   final List<Project> listProject;
+  final List<Label> listLabel;
   final bool loading;
   final String msg;
 
@@ -101,17 +103,25 @@ class DisplayListTasks extends TaskState {
       }).toList();
     }
 
+    if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeLabel) {
+      return _listAllTask.where((element) {
+        return element.labelId ==
+            (drawerItems[indexDrawerSelected].data as Label).id;
+      }).toList();
+    }
+
     return <Task>[];
   }
 
-  DisplayListTasks(
+  const DisplayListTasks(
       {this.indexDrawerSelected = kDrawerIndexInbox,
       this.taskAdd = const Task(),
       this.loading,
       this.msg,
       List<Task> listAllTask,
       this.drawerItems,
-      this.listProject})
+      this.listProject,
+      this.listLabel})
       : _listAllTask = listAllTask;
 
   factory DisplayListTasks.loading() {
@@ -127,13 +137,21 @@ class DisplayListTasks extends TaskState {
   }
 
   DisplayListTasks updateTask(Task task) {
-    print("updateTask $task");
+    // print("updateTask $task");
     return copyWith(taskAdd: task);
   }
 
   @override
-  List<Object> get props =>
-      [indexDrawerSelected, taskAdd, _listAllTask, loading, msg, drawerItems];
+  List<Object> get props => [
+        indexDrawerSelected,
+        taskAdd,
+        _listAllTask,
+        loading,
+        msg,
+        drawerItems,
+        listProject,
+        listLabel
+      ];
 
   @override
   String toString() {
@@ -147,6 +165,7 @@ class DisplayListTasks extends TaskState {
     Task taskAdd,
     List<Task> listAllTask,
     List<Project> listProject,
+    List<Label> listLabel,
     bool loading,
     String msg,
   }) {
@@ -154,8 +173,9 @@ class DisplayListTasks extends TaskState {
         (indexDrawerSelected == null ||
             identical(indexDrawerSelected, this.indexDrawerSelected)) &&
         (taskAdd == null || identical(taskAdd, this.taskAdd)) &&
-        (listAllTask == null || identical(listAllTask, this._listAllTask)) &&
+        (listAllTask == null || identical(listAllTask, _listAllTask)) &&
         (listProject == null || identical(listProject, this.listProject)) &&
+        (listLabel == null || identical(listLabel, this.listLabel)) &&
         (loading == null || identical(loading, this.loading)) &&
         (msg == null || identical(msg, this.msg))) {
       return this;
@@ -165,8 +185,9 @@ class DisplayListTasks extends TaskState {
       drawerItems: drawerItems ?? this.drawerItems,
       indexDrawerSelected: indexDrawerSelected ?? this.indexDrawerSelected,
       taskAdd: taskAdd ?? this.taskAdd,
-      listAllTask: listAllTask ?? this._listAllTask,
+      listAllTask: listAllTask ?? _listAllTask,
       listProject: listProject ?? this.listProject,
+      listLabel: listLabel ?? this.listLabel,
       loading: loading ?? this.loading,
       msg: msg ?? this.msg,
     );

@@ -33,6 +33,10 @@ class Task extends Equatable {
   final String taskDate;
   @HiveField(11)
   final String projectId;
+  @HiveField(12)
+  final String labelName;
+  @HiveField(13)
+  final String labelId;
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
@@ -43,12 +47,14 @@ class Task extends Equatable {
     this.priorityType = kPriority4,
     this.taskName = "",
     this.description,
+    this.projectName,
     this.isCompleted = false,
     this.isStarred = false,
     this.isTrashed = false,
     this.taskDate,
     this.projectId,
-    this.projectName,
+    this.labelName,
+    this.labelId,
   });
 
   Task copyWith({
@@ -64,6 +70,8 @@ class Task extends Equatable {
     bool isTrashed,
     String taskDate,
     String projectId,
+    String labelName,
+    String labelId,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (createdDate == null || identical(createdDate, this.createdDate)) &&
@@ -76,11 +84,13 @@ class Task extends Equatable {
         (isStarred == null || identical(isStarred, this.isStarred)) &&
         (isTrashed == null || identical(isTrashed, this.isTrashed)) &&
         (taskDate == null || identical(taskDate, this.taskDate)) &&
-        (projectId == null || identical(projectId, this.taskDate))) {
+        (projectId == null || identical(projectId, this.projectId)) &&
+        (labelName == null || identical(labelName, this.labelName)) &&
+        (labelId == null || identical(labelId, this.labelId))) {
       return this;
     }
 
-    return Task(
+    return new Task(
       id: id ?? this.id,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
@@ -93,12 +103,14 @@ class Task extends Equatable {
       isTrashed: isTrashed ?? this.isTrashed,
       taskDate: taskDate ?? this.taskDate,
       projectId: projectId ?? this.projectId,
+      labelName: labelName ?? this.labelName,
+      labelId: labelId ?? this.labelId,
     );
   }
 
   @override
   String toString() {
-    return 'Task{id: $id, createdDate: $createdDate, updatedDate: $updatedDate, priorityType: $priorityType, taskName: $taskName, description: $description, projectName: $projectName, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate, projectId: $projectId}';
+    return 'Task{id: $id, createdDate: $createdDate, updatedDate: $updatedDate, priorityType: $priorityType, taskName: $taskName, description: $description, projectName: $projectName, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate, projectId: $projectId, labelName: $labelName, labelId: $labelId}';
   }
 
   @override
@@ -117,7 +129,9 @@ class Task extends Equatable {
           isStarred == other.isStarred &&
           isTrashed == other.isTrashed &&
           taskDate == other.taskDate &&
-          projectId == other.projectId);
+          projectId == other.projectId &&
+          labelName == other.labelName &&
+          labelId == other.labelId);
 
   @override
   int get hashCode =>
@@ -132,10 +146,12 @@ class Task extends Equatable {
       isStarred.hashCode ^
       isTrashed.hashCode ^
       taskDate.hashCode ^
-      projectId.hashCode;
+      projectId.hashCode ^
+      labelName.hashCode ^
+      labelId.hashCode;
 
-  factory Task.fromJson(Map<String, dynamic> map) {
-    return Task(
+  factory Task.fromMap(Map<String, dynamic> map) {
+    return new Task(
       id: map['id'] as String,
       createdDate: map['createdDate'] as String,
       updatedDate: map['updatedDate'] as String,
@@ -148,10 +164,12 @@ class Task extends Equatable {
       isTrashed: map['isTrashed'] as bool,
       taskDate: map['taskDate'] as String,
       projectId: map['projectId'] as String,
+      labelName: map['labelName'] as String,
+      labelId: map['labelId'] as String,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
     return {
       'id': this.id,
@@ -166,6 +184,8 @@ class Task extends Equatable {
       'isTrashed': this.isTrashed,
       'taskDate': this.taskDate,
       'projectId': this.projectId,
+      'labelName': this.labelName,
+      'labelId': this.labelId,
     } as Map<String, dynamic>;
   }
 

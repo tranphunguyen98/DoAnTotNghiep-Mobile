@@ -25,6 +25,7 @@ class ItemTask extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -84,30 +85,66 @@ class ItemTask extends StatelessWidget {
                       ],
                     ),
                   Spacer(),
-                  Row(
-                    children: [
-                      Text(
-                        task.projectName?.isEmpty ?? true
-                            ? "Inbox"
-                            : task.projectName,
-                        style: kFontRegular.copyWith(
-                          fontSize: 12,
-                          color: kColorGray1,
+                  if (task.labelId?.isEmpty ?? true)
+                    Row(
+                      children: [
+                        Text(
+                          task.projectName?.isEmpty ?? true
+                              ? "Inbox"
+                              : task.projectName,
+                          style: kFontRegular.copyWith(
+                            fontSize: 12,
+                            color: kColorGray1,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 4.0,
-                      ),
-                      Icon(
-                        Icons.circle,
-                        size: 12.0,
-                        color: kColorGray4,
-                      ),
-                    ],
-                  )
+                        SizedBox(
+                          width: 4.0,
+                        ),
+                        Icon(
+                          Icons.circle,
+                          size: 12.0,
+                          color: kColorGray4,
+                        ),
+                      ],
+                    )
                 ],
               ),
             ),
+            if (!(task.labelId?.isEmpty ?? true))
+              Padding(
+                padding: const EdgeInsets.only(left: 32.0),
+                child: Row(
+                  children: [
+                    Text(
+                      task.labelName,
+                      style: kFontRegular.copyWith(
+                          fontSize: 12, color: Colors.green),
+                    ),
+                    Spacer(),
+                    Row(
+                      children: [
+                        Text(
+                          task.projectName?.isEmpty ?? true
+                              ? "Inbox"
+                              : task.projectName,
+                          style: kFontRegular.copyWith(
+                            fontSize: 12,
+                            color: kColorGray1,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 4.0,
+                        ),
+                        Icon(
+                          Icons.circle,
+                          size: 12.0,
+                          color: kColorGray4,
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
           ],
         ),
       ),
