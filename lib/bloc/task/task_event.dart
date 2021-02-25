@@ -1,8 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/task.dart';
 
 abstract class TaskEvent extends Equatable {
   @override
@@ -11,40 +7,19 @@ abstract class TaskEvent extends Equatable {
 
 class OpenHomeScreen extends TaskEvent {}
 
-class OpenBottomSheetAddTask extends TaskEvent {}
-
-class TaskAddChanged extends TaskEvent {
-  final String taskName;
-  final int priority;
-  final String taskDate;
-  final Project project;
-  final Label label;
-
-  TaskAddChanged(
-      {this.taskName, this.priority, this.taskDate, this.project, this.label});
-
-  @override
-  List<Object> get props => [taskName, priority, taskDate, project, label];
-
-  @override
-  String toString() {
-    return 'TaskAddChanged{taskName: $taskName, priority: $priority, taskDate: $taskDate, project: $project, label: $label}';
-  }
-}
-
-class TaskUpdated extends TaskEvent {
-  final Task task;
-
-  TaskUpdated({@required this.task});
-
-  @override
-  List<Object> get props => [task];
-
-  @override
-  String toString() {
-    return 'TaskUpdated{task: $task}';
-  }
-}
+// class OpenBottomSheetDetailTask extends TaskEvent {
+//   final Task task;
+//
+//   OpenBottomSheetDetailTask(this.task);
+//
+//   @override
+//   List<Object> get props => [task];
+//
+//   @override
+//   String toString() {
+//     return 'OpenBottomSheetDetailTask{task: $task}';
+//   }
+// }
 
 class SelectedDrawerIndexChanged extends TaskEvent {
   final int index;
@@ -62,4 +37,8 @@ class SelectedDrawerIndexChanged extends TaskEvent {
   }
 }
 
-class AddTask extends TaskEvent {}
+class DataLabelChanged extends TaskEvent {}
+
+class DataProjectChanged extends TaskEvent {}
+
+class DataListTaskChanged extends TaskEvent {}

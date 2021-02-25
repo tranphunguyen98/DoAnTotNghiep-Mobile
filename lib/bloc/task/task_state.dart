@@ -12,53 +12,6 @@ abstract class TaskState extends Equatable {
   List<Object> get props => [];
 }
 
-// class AddTaskState extends TaskState {
-//   final Task task;
-//   final bool isSubmitting;
-//   final bool isSuccess;
-//   final String error;
-//
-//   AddTaskState update({String taskName}) {
-//     return copyWith(task: task.copyWith(taskName: taskName));
-//   }
-//
-//   const AddTaskState({
-//     this.task = const Task(),
-//     this.isSubmitting = false,
-//     this.isSuccess = false,
-//     this.error,
-//   });
-//
-//   AddTaskState copyWith({
-//     Task task,
-//     bool isSubmitting,
-//     bool isSuccess,
-//     String error,
-//   }) {
-//     if ((task == null || identical(task, this.task)) &&
-//         (isSubmitting == null || identical(isSubmitting, this.isSubmitting)) &&
-//         (isSuccess == null || identical(isSuccess, this.isSuccess)) &&
-//         (error == null || identical(error, this.error))) {
-//       return this;
-//     }
-//
-//     return AddTaskState(
-//       task: task ?? this.task,
-//       isSubmitting: isSubmitting ?? this.isSubmitting,
-//       isSuccess: isSuccess ?? this.isSuccess,
-//       error: error ?? this.error,
-//     );
-//   }
-//
-//   @override
-//   List<Object> get props => [task, isSubmitting, isSuccess];
-//
-//   @override
-//   String toString() {
-//     return 'AddTaskState{task: $task, isSubmitting: $isSubmitting, isSuccess: $isSuccess, error: $error}';
-//   }
-// }
-
 class DisplayListTasks extends TaskState {
   static const kDrawerIndexInbox = 0;
   static const kDrawerIndexToday = 1;
@@ -67,7 +20,6 @@ class DisplayListTasks extends TaskState {
 
   final List<DrawerItemData> drawerItems;
   final int indexDrawerSelected;
-  final Task taskAdd;
   final List<Task> _listAllTask;
   final List<Project> listProject;
   final List<Label> listLabel;
@@ -79,7 +31,7 @@ class DisplayListTasks extends TaskState {
 
     if (indexDrawerSelected == kDrawerIndexInbox) {
       return _listAllTask
-          .where((element) => element.projectId?.isEmpty ?? true)
+          .where((element) => element.project?.id?.isEmpty ?? true)
           .toList();
     }
 
@@ -98,15 +50,22 @@ class DisplayListTasks extends TaskState {
 
     if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeProject) {
       return _listAllTask.where((element) {
-        return element.projectId ==
+        if (element.project == null) {
+          return false;
+        }
+        return element.project?.id ==
             (drawerItems[indexDrawerSelected].data as Project).id;
       }).toList();
     }
 
     if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeLabel) {
       return _listAllTask.where((element) {
-        return element.labelId ==
-            (drawerItems[indexDrawerSelected].data as Label).id;
+        if (element.labels?.isEmpty ?? true) {
+          return false;
+        }
+
+        return element.labels
+            .contains(drawerItems[indexDrawerSelected].data as Label);
       }).toList();
     }
 
@@ -115,7 +74,6 @@ class DisplayListTasks extends TaskState {
 
   const DisplayListTasks(
       {this.indexDrawerSelected = kDrawerIndexInbox,
-      this.taskAdd = const Task(),
       this.loading,
       this.msg,
       List<Task> listAllTask,
@@ -128,23 +86,13 @@ class DisplayListTasks extends TaskState {
     return DisplayListTasks(loading: true);
   }
 
-  // factory DisplayListTasks.data(List<Task> listAllTask) {
-  //   return DisplayListTasks(listAllTask: listAllTask, loading: false);
-  // }
-
   factory DisplayListTasks.error(String msg) {
     return DisplayListTasks(msg: msg, loading: false);
-  }
-
-  DisplayListTasks updateTask(Task task) {
-    // print("updateTask $task");
-    return copyWith(taskAdd: task);
   }
 
   @override
   List<Object> get props => [
         indexDrawerSelected,
-        taskAdd,
         _listAllTask,
         loading,
         msg,
@@ -156,13 +104,12 @@ class DisplayListTasks extends TaskState {
   @override
   String toString() {
     return 'DisplayListTasks: $drawerItems}';
-    // return 'DisplayListTasks{taskAdd: $taskAdd, listAllTask: ${_listAllTask?.length ?? "null"}, loading: $loading, msg: $msg}';
+    // return 'DisplayListTasks{taskSubmit: $taskSubmit, listAllTask: ${_listAllTask?.length ?? "null"}, loading: $loading, msg: $msg}';
   }
 
   DisplayListTasks copyWith({
     List<DrawerItemData> drawerItems,
     int indexDrawerSelected,
-    Task taskAdd,
     List<Task> listAllTask,
     List<Project> listProject,
     List<Label> listLabel,
@@ -172,8 +119,7 @@ class DisplayListTasks extends TaskState {
     if ((drawerItems == null || identical(drawerItems, this.drawerItems)) &&
         (indexDrawerSelected == null ||
             identical(indexDrawerSelected, this.indexDrawerSelected)) &&
-        (taskAdd == null || identical(taskAdd, this.taskAdd)) &&
-        (listAllTask == null || identical(listAllTask, _listAllTask)) &&
+        (listAllTask == null || identical(listAllTask, this._listAllTask)) &&
         (listProject == null || identical(listProject, this.listProject)) &&
         (listLabel == null || identical(listLabel, this.listLabel)) &&
         (loading == null || identical(loading, this.loading)) &&
@@ -184,7 +130,6 @@ class DisplayListTasks extends TaskState {
     return DisplayListTasks(
       drawerItems: drawerItems ?? this.drawerItems,
       indexDrawerSelected: indexDrawerSelected ?? this.indexDrawerSelected,
-      taskAdd: taskAdd ?? this.taskAdd,
       listAllTask: listAllTask ?? _listAllTask,
       listProject: listProject ?? this.listProject,
       listLabel: listLabel ?? this.listLabel,

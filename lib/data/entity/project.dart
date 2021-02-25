@@ -3,38 +3,44 @@ import 'package:hive/hive.dart';
 
 part 'project.g.dart';
 
-@HiveType(typeId: 3)
+@HiveType(typeId: 6)
 class Project extends Equatable {
   @HiveField(0)
   final String id;
   @HiveField(1)
-  final String nameProject;
+  final String name;
+  @HiveField(2)
+  final String color;
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
   const Project({
     this.id,
-    this.nameProject,
+    this.name,
+    this.color,
   });
 
   Project copyWith({
     String id,
-    String nameProject,
+    String name,
+    String color,
   }) {
     if ((id == null || identical(id, this.id)) &&
-        (nameProject == null || identical(nameProject, this.nameProject))) {
+        (name == null || identical(name, this.name)) &&
+        (color == null || identical(color, this.color))) {
       return this;
     }
 
-    return Project(
+    return new Project(
       id: id ?? this.id,
-      nameProject: nameProject ?? this.nameProject,
+      name: name ?? this.name,
+      color: color ?? this.color,
     );
   }
 
   @override
   String toString() {
-    return 'Project{id: $id, nameProject: $nameProject}';
+    return 'Project{id: $id, name: $name, color: $color}';
   }
 
   @override
@@ -43,28 +49,31 @@ class Project extends Equatable {
       (other is Project &&
           runtimeType == other.runtimeType &&
           id == other.id &&
-          nameProject == other.nameProject);
+          name == other.name &&
+          color == other.color);
 
   @override
-  int get hashCode => id.hashCode ^ nameProject.hashCode;
+  int get hashCode => id.hashCode ^ name.hashCode ^ color.hashCode;
 
-  factory Project.fromJson(Map<String, dynamic> map) {
-    return Project(
+  factory Project.fromMap(Map<String, dynamic> map) {
+    return new Project(
       id: map['id'] as String,
-      nameProject: map['nameProject'] as String,
+      name: map['name'] as String,
+      color: map['color'] as String,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
     return {
       'id': this.id,
-      'nameProject': this.nameProject,
+      'name': this.name,
+      'color': this.color,
     } as Map<String, dynamic>;
   }
 
   //</editor-fold>
 
   @override
-  List<Object> get props => [id, nameProject];
+  List<Object> get props => [id, name, color];
 }

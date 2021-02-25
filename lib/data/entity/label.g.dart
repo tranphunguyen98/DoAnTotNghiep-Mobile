@@ -18,7 +18,7 @@ class LabelAdapter extends TypeAdapter<Label> {
     };
     return Label(
       id: fields[0] as String,
-      nameLabel: fields[1] as String,
+      name: fields[1] as String,
       color: fields[2] as String,
     );
   }
@@ -30,7 +30,7 @@ class LabelAdapter extends TypeAdapter<Label> {
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.nameLabel)
+      ..write(obj.name)
       ..writeByte(2)
       ..write(obj.color);
   }

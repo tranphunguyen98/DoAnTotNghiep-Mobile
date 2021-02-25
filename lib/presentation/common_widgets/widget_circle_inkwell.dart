@@ -26,9 +26,7 @@ class CircleInkWell extends StatelessWidget {
               height: 48,
               child: Icon(
                 iconData,
-                color: (onPressed != null)
-                    ? colorActiveIcon ?? Colors.red
-                    : colorIcon ?? kColorBlack2,
+                color: colorIcon ?? kColorBlack2,
                 size: sizeIcon,
               )),
         ),

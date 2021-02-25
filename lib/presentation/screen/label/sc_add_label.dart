@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/label/bloc.dart';
+import 'package:totodo/bloc/task/bloc.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 import 'package:totodo/utils/util.dart';
@@ -47,14 +48,15 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
         if (state is AddLabelState) {
           if (state == AddLabelState.success()) {
             print("Add Success");
+            getIt<TaskBloc>().add(DataLabelChanged());
             Navigator.of(context).pop();
           }
         }
       },
       buildWhen: (previous, current) {
         if (previous is AddLabelState && current is AddLabelState) {
-          return previous.label?.nameLabel?.isEmpty !=
-                  previous.label?.nameLabel?.isEmpty ||
+          return previous.label?.name?.isEmpty !=
+                  previous.label?.name?.isEmpty ||
               previous.msg != current.msg;
         }
         return false;
@@ -63,7 +65,7 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              "Thêm Dự Án",
+              "Thêm Nhán",
               style: kFontSemiboldWhite_18,
             ),
             actions: [

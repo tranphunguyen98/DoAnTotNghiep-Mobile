@@ -14,8 +14,8 @@ class AddProjectBloc extends Bloc<AddProjectEvent, AddProjectState> {
 
   @override
   Stream<AddProjectState> mapEventToState(AddProjectEvent event) async* {
-    if (event is NameProjectChanged) {
-      yield* _mapNameProjectChangedToState(event.nameProject);
+    if (event is AddedProjectChanged) {
+      yield* _mapNameProjectChangedToState(event.name, event.color);
     } else if (event is AddProjectSubmit) {
       yield* _mapAddProjectSubmitToState();
     } else if (event is OpenAddProjectEvent) {
@@ -24,17 +24,23 @@ class AddProjectBloc extends Bloc<AddProjectEvent, AddProjectState> {
   }
 
   Stream<AddProjectState> _mapNameProjectChangedToState(
-      String nameProject) async* {
+      String name, String color) async* {
     yield state.copyWith(
-        project: state.project.copyWith(nameProject: nameProject));
+      project: state.project.copyWith(name: name, color: color),
+      msg: '',
+    );
   }
 
   Stream<AddProjectState> _mapAddProjectSubmitToState() async* {
     try {
-      await _taskRepository.addProject(state.project);
-      yield AddProjectState.success();
+      if (state.project?.name?.isEmpty ?? true) {
+        yield state.failed("Tên nhãn rỗng!");
+      } else {
+        await _taskRepository.addProject(state.project);
+        yield AddProjectState.success();
+      }
     } catch (e) {
-      yield AddProjectState.failed(e.toString());
+      yield state.failed(e.toString());
     }
   }
 }

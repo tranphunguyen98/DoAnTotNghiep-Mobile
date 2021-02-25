@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:totodo/bloc/submit_task/bloc.dart';
 import 'package:totodo/bloc/task/bloc.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
@@ -10,75 +11,60 @@ import 'package:totodo/presentation/common_widgets/dropdown_choice.dart';
 import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
 import 'package:totodo/presentation/common_widgets/widget_icon_outline_button.dart';
 import 'package:totodo/presentation/common_widgets/widget_item_popup_menu.dart';
-import 'package:totodo/presentation/custom_ui/custom_ui.dart';
+import 'package:totodo/presentation/common_widgets/widget_label_container.dart';
+import 'package:totodo/presentation/router.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/util.dart';
 
 class BottomSheetAddTask extends StatelessWidget {
   final TaskBloc _taskBloc = getIt<TaskBloc>();
+  final TaskSubmitBloc _taskSubmitBloc = getIt<TaskSubmitBloc>();
+
   final TextEditingController _textNameTaskController = TextEditingController();
 
+  final List<DropdownChoice> dropdownChoicesPriority =
+      DropdownChoice.dropdownChoicesPriority;
   final List<Project> dropdownChoicesProject = [];
   final List<Label> dropdownChoicesLabel = [];
 
-  final List<DropdownChoice> dropdownChoicesPriority = [
-    DropdownChoice(
-        iconData: Icons.flag,
-        color: Colors.red,
-        title: "Priority 1",
-        onPressed: () {}),
-    DropdownChoice(
-        iconData: Icons.flag,
-        color: Colors.orange,
-        title: "Priority 2",
-        onPressed: () {}),
-    DropdownChoice(
-        iconData: Icons.flag,
-        color: Colors.blue,
-        title: "Priority 3",
-        onPressed: () {}),
-    DropdownChoice(
-        iconData: Icons.flag_outlined, title: "Priority 4", onPressed: () {}),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    _taskBloc.add(OpenBottomSheetAddTask());
     return AnimatedPadding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       duration: const Duration(milliseconds: 100),
       curve: Curves.decelerate,
-      child: BlocBuilder<TaskBloc, TaskState>(
-        cubit: _taskBloc,
-        buildWhen: (previous, current) {
-          print("current: ${(current as DisplayListTasks).taskAdd}");
-          bool canBuild = current is DisplayListTasks &&
-              previous is DisplayListTasks &&
-              (previous.taskAdd.taskName.isNotEmpty !=
-                      current.taskAdd.taskName.isNotEmpty ||
-                  previous.taskAdd.priorityType !=
-                      current.taskAdd.priorityType ||
-                  (previous.taskAdd.taskDate ?? "") !=
-                      current.taskAdd.taskDate ||
-                  (previous.taskAdd.projectId != current.taskAdd.projectId) ||
-                  (previous.taskAdd.labelId != current.taskAdd.labelId));
-          print("canBuild ${canBuild}");
-          return canBuild;
+      child: BlocConsumer<TaskSubmitBloc, TaskSubmitState>(
+        cubit: _taskSubmitBloc,
+        listener: (context, state) {
+          if (state.success == true) {
+            _taskBloc.add(DataListTaskChanged());
+            _taskSubmitBloc.add(OpenBottomSheetAddTask());
+          }
         },
         builder: (context, state) {
           print("BUILD BOTTOM SHEET");
-          _intData(state as DisplayListTasks);
+          _intData(_taskBloc.state as DisplayListTasks);
           return Container(
             padding: EdgeInsets.all(16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildTextFieldNameTask(state as DisplayListTasks),
-                buildRowDateAndProject(context, state as DisplayListTasks),
-                buildRowFunction(state as DisplayListTasks)
+                _buildTextNameTask(state),
+                if (state.taskSubmit.labels.isNotEmpty)
+                  Row(
+                    children: [
+                      ...state.taskSubmit.labels
+                          .map((e) => LabelContainer(
+                                label: e,
+                              ))
+                          .toList()
+                    ],
+                  ),
+                buildRowDateAndProject(context, state),
+                buildRowFunction(context, state)
               ],
             ),
           );
@@ -87,75 +73,70 @@ class BottomSheetAddTask extends StatelessWidget {
     );
   }
 
+  TextFieldNonBorder _buildTextNameTask(TaskSubmitState state) {
+    print("build text $state}");
+    _textNameTaskController
+      ..text = state.taskSubmit.name ?? ''
+      ..selection =
+          TextSelection.collapsed(offset: state.taskSubmit.name?.length ?? 0);
+
+    return TextFieldNonBorder(
+      controller: _textNameTaskController,
+      onChanged: (value) {
+        _taskSubmitBloc.add(TaskSubmitChanged(taskName: value));
+      },
+    );
+  }
+
   void _intData(DisplayListTasks state) {
+    print("State: $state}");
     dropdownChoicesProject.clear();
-    dropdownChoicesProject.add(Project(nameProject: "Inbox"));
+    dropdownChoicesProject.add(Project(name: "Inbox"));
     dropdownChoicesProject.addAll(state.listProject);
 
     dropdownChoicesLabel.clear();
-    dropdownChoicesLabel.add(
-        Label(nameLabel: "No Label", color: Util.getHexFromColor(Colors.grey)));
+    dropdownChoicesLabel
+        .add(Label(name: "No Label", color: Util.getHexFromColor(Colors.grey)));
     dropdownChoicesLabel.addAll(state.listLabel);
   }
 
   void onDropdownPriorityChanged(DropdownChoice choice) {
     if (choice.title.contains("1")) {
-      _taskBloc.add(TaskAddChanged(priority: Task.kPriority1));
+      _taskSubmitBloc.add(TaskSubmitChanged(priority: Task.kPriority1));
     } else if (choice.title.contains("2")) {
-      _taskBloc.add(TaskAddChanged(priority: Task.kPriority2));
+      _taskSubmitBloc.add(TaskSubmitChanged(priority: Task.kPriority2));
     } else if (choice.title.contains("3")) {
-      _taskBloc.add(TaskAddChanged(priority: Task.kPriority3));
+      _taskSubmitBloc.add(TaskSubmitChanged(priority: Task.kPriority3));
     } else if (choice.title.contains("4")) {
-      _taskBloc.add(TaskAddChanged(priority: Task.kPriority4));
+      _taskSubmitBloc.add(TaskSubmitChanged(priority: Task.kPriority4));
     }
   }
 
-  Row buildRowFunction(DisplayListTasks state) {
+  Row buildRowFunction(BuildContext context, TaskSubmitState state) {
     // print(state.)
     return Row(
       children: [
-        PopupMenuButton<Label>(
-          offset: Offset(0, -200),
-          onSelected: (Label label) {
-            if (label.id == null) {
-              _taskBloc
-                  .add(TaskAddChanged(label: Label(id: '', nameLabel: '')));
-            } else {
-              _taskBloc.add(TaskAddChanged(label: label));
-            }
-          },
-          elevation: 6,
-          icon: CircleInkWell(
-            Icons.local_offer_outlined,
-            colorIcon: state.taskAdd.labelId?.isEmpty ?? true
-                ? kColorBlack2
-                : Colors.red,
-            sizeIcon: 24.0,
-          ),
-          itemBuilder: (BuildContext context) {
-            return dropdownChoicesLabel.map((Label label) {
-              return PopupMenuItem<Label>(
-                value: label,
-                child: ItemPopupMenu(DropdownChoice(
-                  title: label.nameLabel,
-                  color: HexColor(label.color),
-                  iconData: Icons.local_offer_outlined,
-                )),
-              );
-            }).toList();
+        CircleInkWell(
+          Icons.local_offer_outlined,
+          colorIcon:
+              state.taskSubmit.labels.isEmpty ? kColorBlack2 : Colors.red,
+          sizeIcon: 24.0,
+          onPressed: () {
+            Navigator.of(context).pushNamed(AppRouter.kSelectLabel);
           },
         ),
         PopupMenuButton<DropdownChoice>(
-          offset: Offset(0, -300),
+          offset: Offset(0, -200),
           onSelected: (DropdownChoice choice) {
             //_textNameTaskController.text = state.taskAdd.taskName;
             onDropdownPriorityChanged(choice);
           },
           elevation: 6,
           icon: CircleInkWell(
-            dropdownChoicesPriority[state.taskAdd.priorityType - 1].iconData,
+            dropdownChoicesPriority[state.taskSubmit.priorityType - 1].iconData,
             colorIcon:
-                dropdownChoicesPriority[state.taskAdd.priorityType - 1].color,
+                dropdownChoicesPriority[state.taskSubmit.priorityType - 1]
+                    .color,
             sizeIcon: 24.0,
           ),
           itemBuilder: (BuildContext context) {
@@ -179,9 +160,10 @@ class BottomSheetAddTask extends StatelessWidget {
         CircleInkWell(
           Icons.send_outlined,
           sizeIcon: 24.0,
+          colorIcon: isSendButtonActived(state) ? Colors.red : kColorBlack2,
           onPressed: isSendButtonActived(state)
               ? () {
-                  _taskBloc.add(AddTask());
+                  _taskSubmitBloc.add(SubmitAddTask());
                 }
               : null,
         ),
@@ -189,39 +171,20 @@ class BottomSheetAddTask extends StatelessWidget {
     );
   }
 
-  Row buildRowDateAndProject(BuildContext context, DisplayListTasks state) {
+  Row buildRowDateAndProject(BuildContext context, TaskSubmitState state) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         IconOutlineButton(
-          Util.getDisplayTextDateFromDate(state.taskAdd.taskDate ?? "") ??
+          Util.getDisplayTextDateFromDate(state.taskSubmit.taskDate ?? "") ??
               "No Date",
           Icons.calendar_today,
           colorIcon:
-              state.taskAdd.taskDate != null ? Colors.green : kColorGray1,
+              state.taskSubmit.taskDate != null ? Colors.green : kColorGray1,
           colorBorder:
-              state.taskAdd.taskDate != null ? Colors.green : kColorGray1,
+              state.taskSubmit.taskDate != null ? Colors.green : kColorGray1,
           onPressed: () async {
-            // print("canRequestFocus: ${_focusNode.canRequestFocus}");
-            // _focusNode.canRequestFocus = true;
-            // print("canRequestFocus: ${_focusNode.canRequestFocus}");
-            // FocusScope.of(context).unfocus();
-            final picker = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(
-                DateTime.now().year,
-                DateTime.now().month,
-              ),
-              lastDate: DateTime(2100),
-            );
-            if (picker != null) {
-              print("date: ${picker.toIso8601String()}");
-              _taskBloc.add(TaskAddChanged(taskDate: picker.toIso8601String()));
-              //  _focusNode.canRequestFocus = false;
-              //   _focusNode.requestFocus();
-
-            }
+            await onPressedPickDate(context);
           },
         ),
         SizedBox(
@@ -231,10 +194,10 @@ class BottomSheetAddTask extends StatelessWidget {
           offset: Offset(0, -100),
           onSelected: (Project project) {
             if (project.id == null) {
-              _taskBloc.add(
-                  TaskAddChanged(project: Project(id: '', nameProject: '')));
+              _taskSubmitBloc
+                  .add(TaskSubmitChanged(project: Project(id: '', name: '')));
             } else {
-              _taskBloc.add(TaskAddChanged(project: project));
+              _taskSubmitBloc.add(TaskSubmitChanged(project: project));
             }
           },
           elevation: 6,
@@ -244,7 +207,7 @@ class BottomSheetAddTask extends StatelessWidget {
                 value: project,
                 child: ItemPopupMenu(
                   DropdownChoice(
-                      title: project.nameProject,
+                      title: project.name,
                       color: Colors.red,
                       iconData: project.id?.isEmpty ?? true
                           ? Icons.inbox
@@ -254,52 +217,70 @@ class BottomSheetAddTask extends StatelessWidget {
               );
             }).toList();
           },
-          child: IconOutlineButton(
-            (state.taskAdd.projectName?.isEmpty ?? true)
-                ? "Inbox"
-                : state.taskAdd.projectName,
-            state.taskAdd.projectId?.isEmpty ?? true
-                ? Icons.calendar_today
-                : Icons.circle,
-            // colorIcon:
-            //     state.taskAdd.projectName != null ? Colors.red : kColorGray1,
-            // colorBorder:
-            //     state.taskAdd.projectName != null ? Colors.red : kColorGray1,
+          child: IgnorePointer(
+            child: IconOutlineButton(
+              (state.taskSubmit.project?.name?.isEmpty ?? true)
+                  ? "Inbox"
+                  : state.taskSubmit.project.name,
+              state.taskSubmit.project?.id?.isEmpty ?? true
+                  ? Icons.calendar_today
+                  : Icons.circle,
+              onPressed: () {},
+              colorIcon: state.taskSubmit.project?.name != null
+                  ? Colors.red
+                  : kColorGray1,
+              colorBorder: state.taskSubmit.project?.name != null
+                  ? Colors.red
+                  : kColorGray1,
+            ),
           ),
         ),
       ],
     );
   }
 
-  TextFormField buildTextFieldNameTask(DisplayListTasks state) {
-    _textNameTaskController
-      ..text = state.taskAdd.taskName
-      ..selection =
-          TextSelection.collapsed(offset: state.taskAdd.taskName?.length ?? 0);
-
-    return TextFormField(
-      cursorColor: Colors.black,
-      controller: _textNameTaskController,
-      focusNode: FocusNode(canRequestFocus: false),
-      autofocus: true,
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        errorBorder: InputBorder.none,
-        disabledBorder: InputBorder.none,
-        hintText: 'Ví Dụ: Đọc sách',
+  Future onPressedPickDate(BuildContext context) async {
+    final picker = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
       ),
-      onChanged: (value) {
-        _taskBloc.add(TaskAddChanged(taskName: value));
-      },
+      lastDate: DateTime(2100),
     );
+    if (picker != null) {
+      print("date: ${picker.toIso8601String()}");
+      _taskSubmitBloc
+          .add(TaskSubmitChanged(taskDate: picker.toIso8601String()));
+    }
   }
 
-  bool isSendButtonActived(TaskState state) {
-    if (state is DisplayListTasks) {
-      return state.taskAdd.taskName?.isNotEmpty ?? false;
-    }
-    return false;
+  bool isSendButtonActived(TaskSubmitState state) {
+    return state.taskSubmit.name?.isNotEmpty ?? false;
+  }
+}
+
+class TextFieldNonBorder extends StatelessWidget {
+  final TextEditingController controller;
+  final Function(String value) onChanged;
+  const TextFieldNonBorder({this.controller, this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+        cursorColor: Colors.black,
+        controller: controller,
+        // focusNode: FocusNode(canRequestFocus: false),
+        autofocus: true,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
+          hintText: 'Ví Dụ: Đọc sách',
+        ),
+        onChanged: onChanged);
   }
 }

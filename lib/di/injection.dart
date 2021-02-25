@@ -6,15 +6,16 @@ import 'package:totodo/bloc/label/bloc.dart';
 import 'package:totodo/bloc/project/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
+import 'package:totodo/bloc/submit_task/bloc.dart';
 import 'package:totodo/bloc/task/bloc.dart';
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
 import 'package:totodo/data/data_source/task/remote_task_data_source.dart';
 import 'package:totodo/data/data_source/user/local_user_data_source.dart';
 import 'package:totodo/data/data_source/user/remote_user_data_source.dart';
-import 'package:totodo/data/local/task/cache_task_data_source_impl.dart';
-import 'package:totodo/data/local/task/local_task_service.dart';
-import 'package:totodo/data/local/user/cache_user_data_source_impl.dart';
-import 'package:totodo/data/local/user/local_user_service.dart';
+import 'package:totodo/data/local/source/task/cache_task_data_source_impl.dart';
+import 'package:totodo/data/local/source/task/local_task_service.dart';
+import 'package:totodo/data/local/source/user/cache_user_data_source_impl.dart';
+import 'package:totodo/data/local/source/user/local_user_service.dart';
 import 'package:totodo/data/remote/task/remote_task_data_source_impl.dart';
 import 'package:totodo/data/remote/task/remote_task_service.dart';
 import 'package:totodo/data/remote/user/remote_user_data_source_impl.dart';
@@ -60,6 +61,9 @@ Future<void> configureDependencies() async {
 
   getIt.registerLazySingleton<TaskBloc>(
       () => TaskBloc(taskRepository: getIt.get<ITaskRepository>()));
+
+  getIt.registerLazySingleton<TaskSubmitBloc>(
+      () => TaskSubmitBloc(taskRepository: getIt.get<ITaskRepository>()));
 
   // Project
 

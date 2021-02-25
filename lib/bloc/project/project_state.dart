@@ -22,8 +22,8 @@ class AddProjectState extends Equatable {
     return const AddProjectState(isSuccess: true);
   }
 
-  factory AddProjectState.failed(String msg) {
-    return AddProjectState(msg: msg);
+  AddProjectState failed(String msg) {
+    return AddProjectState(msg: msg, project: project);
   }
 
   AddProjectState copyWith({

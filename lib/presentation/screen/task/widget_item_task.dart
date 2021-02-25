@@ -1,67 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/data/entity/task.dart';
-import 'package:totodo/utils/my_const/color_const.dart';
+import 'package:totodo/presentation/custom_ui/custom_ui.dart';
+import 'package:totodo/presentation/screen/task/widget_row_checkbox_name_task.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
+import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
 
 class ItemTask extends StatelessWidget {
   final Task task;
   final Function(Task task) updateTask;
-  final listColorPriority = [
-    Colors.red,
-    Colors.orange,
-    Colors.blue,
-    kColorGray1
-  ];
+  final Function(Task task) onPressed;
 
-  ItemTask(this.task, this.updateTask);
+  ItemTask(this.task, this.updateTask, {this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     final displayTextDate = Util.getDisplayTextDateFromDate(task.taskDate);
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        onPressed(task);
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Theme(
-                  data: ThemeData(
-                    unselectedWidgetColor:
-                        listColorPriority[task.priorityType - 1],
-                  ),
-                  child: SizedBox(
-                    width: 24.0,
-                    height: 24.0,
-                    child: Checkbox(
-                      value: task.isCompleted,
-                      onChanged: (value) {
-                        updateTask(task.copyWith(isCompleted: value));
-                      },
-                      checkColor: Colors.white,
-                      activeColor: listColorPriority[task.priorityType - 1],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 8.0,
-                ),
-                Expanded(
-                  child: Text(
-                    task.taskName,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: task.isCompleted
-                        ? kFontRegularGray1_14
-                        : kFontRegularBlack2_14,
-                  ),
-                ),
-              ],
-            ),
+            RowCheckBoxAndNameTask(task: task, updateTask: updateTask),
             Padding(
               padding: const EdgeInsets.only(left: 32.0),
               child: Row(
@@ -85,13 +50,13 @@ class ItemTask extends StatelessWidget {
                       ],
                     ),
                   Spacer(),
-                  if (task.labelId?.isEmpty ?? true)
+                  if (task.labels?.isEmpty ?? true)
                     Row(
                       children: [
                         Text(
-                          task.projectName?.isEmpty ?? true
+                          task.project?.name?.isEmpty ?? true
                               ? "Inbox"
-                              : task.projectName,
+                              : task.project.name,
                           style: kFontRegular.copyWith(
                             fontSize: 12,
                             color: kColorGray1,
@@ -103,30 +68,39 @@ class ItemTask extends StatelessWidget {
                         Icon(
                           Icons.circle,
                           size: 12.0,
-                          color: kColorGray4,
+                          color: task.project?.color?.isEmpty ?? true
+                              ? kColorGray4
+                              : HexColor(task.project.color),
                         ),
                       ],
                     )
                 ],
               ),
             ),
-            if (!(task.labelId?.isEmpty ?? true))
+            if (!(task.labels?.isEmpty ?? true))
               Padding(
                 padding: const EdgeInsets.only(left: 32.0),
                 child: Row(
                   children: [
-                    Text(
-                      task.labelName,
-                      style: kFontRegular.copyWith(
-                          fontSize: 12, color: Colors.green),
-                    ),
+                    ...task.labels
+                        .map(
+                          (e) => Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Text(
+                              e.name,
+                              style: kFontRegular.copyWith(
+                                  fontSize: 12, color: HexColor(e.color)),
+                            ),
+                          ),
+                        )
+                        .toList(),
                     Spacer(),
                     Row(
                       children: [
                         Text(
-                          task.projectName?.isEmpty ?? true
+                          task.project?.name?.isEmpty ?? true
                               ? "Inbox"
-                              : task.projectName,
+                              : task.project.name,
                           style: kFontRegular.copyWith(
                             fontSize: 12,
                             color: kColorGray1,
@@ -138,7 +112,9 @@ class ItemTask extends StatelessWidget {
                         Icon(
                           Icons.circle,
                           size: 12.0,
-                          color: kColorGray4,
+                          color: task.project?.color?.isEmpty ?? true
+                              ? kColorGray4
+                              : HexColor(task.project.color),
                         ),
                       ],
                     )

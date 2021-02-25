@@ -7,9 +7,13 @@ class DrawerItemSelected extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onPressed;
   final bool isChild;
+  final Color colorIcon;
 
   const DrawerItemSelected(this.data,
-      {this.isSelected = false, this.onPressed, this.isChild = false});
+      {this.isSelected = false,
+      this.onPressed,
+      this.isChild = false,
+      this.colorIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +30,11 @@ class DrawerItemSelected extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(
-                  height: 20.0,
-                  width: 20.0, // fixed width and height
+                  height: isChild ? 14 : 20.0,
+                  width: isChild ? 14 : 20.0, // fixed width and height
                   child: Image.asset(
                     data.icon,
-                    color: Colors.blue,
+                    color: colorIcon ?? kColorPrimary,
                   ),
                 ),
                 SizedBox(width: 16.0),

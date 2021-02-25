@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 abstract class AddProjectEvent extends Equatable {
   const AddProjectEvent();
@@ -8,17 +7,18 @@ abstract class AddProjectEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class NameProjectChanged extends AddProjectEvent {
-  final String nameProject;
+class AddedProjectChanged extends AddProjectEvent {
+  final String name;
+  final String color;
 
-  const NameProjectChanged({@required this.nameProject});
+  const AddedProjectChanged({this.name, this.color});
 
   @override
-  List<Object> get props => [nameProject];
+  List<Object> get props => [name, color];
 
   @override
   String toString() {
-    return 'NameProjectChanged{nameProject: $nameProject}';
+    return 'AddedProjectChanged{nameProject: $name, color: $color}';
   }
 }
 

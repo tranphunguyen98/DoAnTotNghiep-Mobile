@@ -1,42 +1,25 @@
 import 'package:equatable/equatable.dart';
-import 'package:hive/hive.dart';
+import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/data/entity/project.dart';
 
-part 'task.g.dart';
-
-@HiveType(typeId: 2)
 class Task extends Equatable {
   static const int kPriority4 = 4;
   static const int kPriority3 = 3;
   static const int kPriority2 = 2;
   static const int kPriority1 = 1;
-  @HiveField(0)
+
   final String id;
-  @HiveField(1)
   final String createdDate;
-  @HiveField(2)
   final String updatedDate;
-  @HiveField(3)
   final int priorityType;
-  @HiveField(4)
-  final String taskName;
-  @HiveField(5)
+  final String name;
   final String description;
-  @HiveField(6)
-  final String projectName;
-  @HiveField(7)
   final bool isCompleted;
-  @HiveField(8)
   final bool isStarred;
-  @HiveField(9)
   final bool isTrashed;
-  @HiveField(10)
   final String taskDate;
-  @HiveField(11)
-  final String projectId;
-  @HiveField(12)
-  final String labelName;
-  @HiveField(13)
-  final String labelId;
+  final Project project;
+  final List<Label> labels;
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
@@ -45,16 +28,14 @@ class Task extends Equatable {
     this.createdDate,
     this.updatedDate,
     this.priorityType = kPriority4,
-    this.taskName = "",
+    this.name,
     this.description,
-    this.projectName,
     this.isCompleted = false,
     this.isStarred = false,
     this.isTrashed = false,
     this.taskDate,
-    this.projectId,
-    this.labelName,
-    this.labelId,
+    this.project,
+    this.labels = const <Label>[],
   });
 
   Task copyWith({
@@ -62,31 +43,27 @@ class Task extends Equatable {
     String createdDate,
     String updatedDate,
     int priorityType,
-    String taskName,
+    String name,
     String description,
-    String projectName,
     bool isCompleted,
     bool isStarred,
     bool isTrashed,
     String taskDate,
-    String projectId,
-    String labelName,
-    String labelId,
+    Project project,
+    List<Label> labels,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (createdDate == null || identical(createdDate, this.createdDate)) &&
         (updatedDate == null || identical(updatedDate, this.updatedDate)) &&
         (priorityType == null || identical(priorityType, this.priorityType)) &&
-        (taskName == null || identical(taskName, this.taskName)) &&
+        (name == null || identical(name, this.name)) &&
         (description == null || identical(description, this.description)) &&
-        (projectName == null || identical(projectName, this.projectName)) &&
         (isCompleted == null || identical(isCompleted, this.isCompleted)) &&
         (isStarred == null || identical(isStarred, this.isStarred)) &&
         (isTrashed == null || identical(isTrashed, this.isTrashed)) &&
         (taskDate == null || identical(taskDate, this.taskDate)) &&
-        (projectId == null || identical(projectId, this.projectId)) &&
-        (labelName == null || identical(labelName, this.labelName)) &&
-        (labelId == null || identical(labelId, this.labelId))) {
+        (project == null || identical(project, this.project)) &&
+        (labels == null || identical(labels, this.labels))) {
       return this;
     }
 
@@ -95,22 +72,20 @@ class Task extends Equatable {
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
       priorityType: priorityType ?? this.priorityType,
-      taskName: taskName ?? this.taskName,
+      name: name ?? this.name,
       description: description ?? this.description,
-      projectName: projectName ?? this.projectName,
       isCompleted: isCompleted ?? this.isCompleted,
       isStarred: isStarred ?? this.isStarred,
       isTrashed: isTrashed ?? this.isTrashed,
       taskDate: taskDate ?? this.taskDate,
-      projectId: projectId ?? this.projectId,
-      labelName: labelName ?? this.labelName,
-      labelId: labelId ?? this.labelId,
+      project: project ?? this.project,
+      labels: labels ?? this.labels,
     );
   }
 
   @override
   String toString() {
-    return 'Task{id: $id, createdDate: $createdDate, updatedDate: $updatedDate, priorityType: $priorityType, taskName: $taskName, description: $description, projectName: $projectName, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate, projectId: $projectId, labelName: $labelName, labelId: $labelId}';
+    return 'Task{id: $id, createdDate: $createdDate, updatedDate: $updatedDate, priorityType: $priorityType, name: $name, description: $description, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate, project: $project, labels: $labels}';
   }
 
   @override
@@ -122,16 +97,14 @@ class Task extends Equatable {
           createdDate == other.createdDate &&
           updatedDate == other.updatedDate &&
           priorityType == other.priorityType &&
-          taskName == other.taskName &&
+          name == other.name &&
           description == other.description &&
-          projectName == other.projectName &&
           isCompleted == other.isCompleted &&
           isStarred == other.isStarred &&
           isTrashed == other.isTrashed &&
           taskDate == other.taskDate &&
-          projectId == other.projectId &&
-          labelName == other.labelName &&
-          labelId == other.labelId);
+          project == other.project &&
+          labels == other.labels);
 
   @override
   int get hashCode =>
@@ -139,16 +112,14 @@ class Task extends Equatable {
       createdDate.hashCode ^
       updatedDate.hashCode ^
       priorityType.hashCode ^
-      taskName.hashCode ^
+      name.hashCode ^
       description.hashCode ^
-      projectName.hashCode ^
       isCompleted.hashCode ^
       isStarred.hashCode ^
       isTrashed.hashCode ^
       taskDate.hashCode ^
-      projectId.hashCode ^
-      labelName.hashCode ^
-      labelId.hashCode;
+      project.hashCode ^
+      labels.hashCode;
 
   factory Task.fromMap(Map<String, dynamic> map) {
     return new Task(
@@ -156,16 +127,14 @@ class Task extends Equatable {
       createdDate: map['createdDate'] as String,
       updatedDate: map['updatedDate'] as String,
       priorityType: map['priorityType'] as int,
-      taskName: map['taskName'] as String,
+      name: map['name'] as String,
       description: map['description'] as String,
-      projectName: map['projectName'] as String,
       isCompleted: map['isCompleted'] as bool,
       isStarred: map['isStarred'] as bool,
       isTrashed: map['isTrashed'] as bool,
       taskDate: map['taskDate'] as String,
-      projectId: map['projectId'] as String,
-      labelName: map['labelName'] as String,
-      labelId: map['labelId'] as String,
+      project: map['project'] as Project,
+      labels: map['labels'] as List<Label>,
     );
   }
 
@@ -176,16 +145,14 @@ class Task extends Equatable {
       'createdDate': this.createdDate,
       'updatedDate': this.updatedDate,
       'priorityType': this.priorityType,
-      'taskName': this.taskName,
+      'name': this.name,
       'description': this.description,
-      'projectName': this.projectName,
       'isCompleted': this.isCompleted,
       'isStarred': this.isStarred,
       'isTrashed': this.isTrashed,
       'taskDate': this.taskDate,
-      'projectId': this.projectId,
-      'labelName': this.labelName,
-      'labelId': this.labelId,
+      'project': this.project,
+      'labels': this.labels,
     } as Map<String, dynamic>;
   }
 
@@ -199,12 +166,12 @@ class Task extends Equatable {
         // updatedDate,
         priorityType,
         taskDate,
-        taskName,
+        name,
         description,
-        projectName,
         isCompleted,
         isStarred,
         isTrashed,
-        projectId,
+        project,
+        labels,
       ];
 }

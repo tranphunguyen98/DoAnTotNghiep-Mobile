@@ -3,6 +3,8 @@ import 'package:injectable/injectable.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/local/mapper/local_task_mapper.dart';
+import 'package:totodo/data/local/model/local_task.dart';
 
 @Injectable()
 class LocalTaskService {
@@ -22,20 +24,25 @@ class LocalTaskService {
 
   //<editor-fold desc="Task" defaultstate="collapsed">
   Future<bool> addTask(Task task) async {
-    if (task.id == null) {
-      _taskBoxTask.add(
-          task.copyWith(id: DateTime.now().microsecondsSinceEpoch.toString()));
+    final localTask = LocalTaskMapper().mapToLocal(task);
+
+    if (localTask.id == null) {
+      _taskBoxTask.add(localTask.copyWith(
+          id: DateTime.now().microsecondsSinceEpoch.toString()));
       return true;
     }
-    _taskBoxTask.add(task);
+    _taskBoxTask.add(localTask);
     return true;
   }
 
   Future<List<Task>> getAllTask() async {
-    // _taskBoxTask.clear();
+    final localTaskMapper = LocalTaskMapper(
+        listLabel: await getLabels(), listProject: await getProjects());
+
     final listTask = <Task>[];
     for (var i = 0; i < _taskBoxTask.length; i++) {
-      listTask.add(_taskBoxTask.getAt(i) as Task);
+      listTask.add(
+          localTaskMapper.mapFromLocal(_taskBoxTask.getAt(i) as LocalTask));
     }
     print("LIST TASK: ${listTask}");
     return listTask ?? <Task>[];
@@ -43,14 +50,17 @@ class LocalTaskService {
 
   bool updateTask(Task task) {
     int indexUpdated = -1;
+
+    final localTask = LocalTaskMapper().mapToLocal(task);
+
     for (var i = 0; i < _taskBoxTask.length; i++) {
-      if ((_taskBoxTask.getAt(i) as Task).id == task.id) {
+      if ((_taskBoxTask.getAt(i) as LocalTask).id == localTask.id) {
         indexUpdated = i;
         break;
       }
     }
     if (indexUpdated > -1) {
-      _taskBoxTask.putAt(indexUpdated, task);
+      _taskBoxTask.putAt(indexUpdated, localTask);
       return true;
     }
     return false;
@@ -74,7 +84,7 @@ class LocalTaskService {
     for (var i = 0; i < _taskBoxProject.length; i++) {
       listProject.add(_taskBoxProject.getAt(i) as Project);
     }
-    //print("LIST PROJECT: ${listProject}");
+    print("LIST PROJECT: ${listProject}");
     return listProject ?? <Project>[];
   }
 

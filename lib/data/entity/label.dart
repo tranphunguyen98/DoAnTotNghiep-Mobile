@@ -8,7 +8,7 @@ class Label extends Equatable {
   @HiveField(0)
   final String id;
   @HiveField(1)
-  final String nameLabel;
+  final String name;
   @HiveField(2)
   final String color;
 
@@ -16,7 +16,7 @@ class Label extends Equatable {
 
   const Label({
     this.id,
-    this.nameLabel,
+    this.name,
     this.color,
   });
 
@@ -26,21 +26,21 @@ class Label extends Equatable {
     String color,
   }) {
     if ((id == null || identical(id, this.id)) &&
-        (nameLabel == null || identical(nameLabel, this.nameLabel)) &&
+        (nameLabel == null || identical(nameLabel, this.name)) &&
         (color == null || identical(color, this.color))) {
       return this;
     }
 
     return Label(
       id: id ?? this.id,
-      nameLabel: nameLabel ?? this.nameLabel,
+      name: nameLabel ?? this.name,
       color: color ?? this.color,
     );
   }
 
   @override
   String toString() {
-    return 'Label{id: $id, nameLabel: $nameLabel, color: $color}';
+    return 'Label{id: $id, nameLabel: $name, color: $color}';
   }
 
   @override
@@ -49,16 +49,16 @@ class Label extends Equatable {
       (other is Label &&
           runtimeType == other.runtimeType &&
           id == other.id &&
-          nameLabel == other.nameLabel &&
+          name == other.name &&
           color == other.color);
 
   @override
-  int get hashCode => id.hashCode ^ nameLabel.hashCode ^ color.hashCode;
+  int get hashCode => id.hashCode ^ name.hashCode ^ color.hashCode;
 
   factory Label.fromJson(Map<String, dynamic> map) {
     return Label(
       id: map['id'] as String,
-      nameLabel: map['nameLabel'] as String,
+      name: map['nameLabel'] as String,
       color: map['color'] as String,
     );
   }
@@ -67,7 +67,7 @@ class Label extends Equatable {
     // ignore: unnecessary_cast
     return {
       'id': this.id,
-      'nameLabel': this.nameLabel,
+      'nameLabel': this.name,
       'color': this.color,
     } as Map<String, dynamic>;
   }
@@ -75,5 +75,5 @@ class Label extends Equatable {
   //</editor-fold>
 
   @override
-  List<Object> get props => [id, nameLabel, color];
+  List<Object> get props => [id, name, color];
 }

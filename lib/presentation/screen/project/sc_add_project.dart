@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/project/bloc.dart';
+import 'package:totodo/bloc/task/bloc.dart';
+import 'package:totodo/bloc/task/task_event.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
+import 'package:totodo/utils/util.dart';
 
 class ChooseColor {
   final Color color;
@@ -32,6 +35,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   void initState() {
     dropdownValue = listColor.first;
     _addProjectBloc.add(OpenAddProjectEvent());
+    _addProjectBloc.add(
+        AddedProjectChanged(color: Util.getHexFromColor(dropdownValue.color)));
     super.initState();
   }
 
@@ -43,6 +48,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
         if (state is AddProjectState) {
           if (state == AddProjectState.success()) {
             print("SUCCESSSS");
+            getIt<TaskBloc>().add(DataProjectChanged());
+            Navigator.of(context).pop();
           }
         }
       },
@@ -69,7 +76,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
               TextField(
                 decoration: InputDecoration(hintText: "Name"),
                 onChanged: (value) {
-                  _addProjectBloc.add(NameProjectChanged(nameProject: value));
+                  _addProjectBloc.add(AddedProjectChanged(name: value));
                 },
               ),
               DropdownButton<ChooseColor>(
@@ -91,10 +98,11 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                       ]));
                 }).toList(),
                 onChanged: (newValue) {
+                  _addProjectBloc.add(AddedProjectChanged(
+                      color: Util.getHexFromColor(newValue.color)));
                   setState(() {
                     dropdownValue = newValue;
                   });
-                  print('$newValue $dropdownValue');
                 },
               ),
             ],

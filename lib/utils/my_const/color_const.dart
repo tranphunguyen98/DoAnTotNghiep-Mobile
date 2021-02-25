@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:totodo/presentation/custom_ui/custom_ui.dart';
 
 //#011f4b • #03396c • #005b96 • #6497b1 • #b3cde0
-final HexColor kColorPrimary = HexColor("#005b96");
+final HexColor kColorPrimary = HexColor("#2ab7ca");
 final HexColor kColorPrimaryDark = HexColor("#03396c");
 final HexColor kColorPrimaryLight = HexColor("#6497b1");
 final HexColor kColorBlack = HexColor("#000000");
@@ -24,5 +24,12 @@ final HexColor kColorGoogleBtn = HexColor("#FFF1F0");
 final HexColor kColorGoogleBorderBtn = HexColor("#F14336");
 final HexColor kColorFacebookBtn = HexColor("#F5F9FF");
 final HexColor kColorFacebookBorderBtn = HexColor("#3164CE");
+
+const kListColorPriority = [
+  Colors.red,
+  Colors.orange,
+  Colors.blue,
+  Colors.blueGrey
+];
 
 final MaterialColor kColorStatusBar = MaterialColor(0x03396c, {});

@@ -1,43 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'task.dart';
+part of 'local_task.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class TaskAdapter extends TypeAdapter<Task> {
+class LocalTaskAdapter extends TypeAdapter<LocalTask> {
   @override
-  final int typeId = 2;
+  final int typeId = 5;
 
   @override
-  Task read(BinaryReader reader) {
+  LocalTask read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Task(
+    return LocalTask(
       id: fields[0] as String,
       createdDate: fields[1] as String,
       updatedDate: fields[2] as String,
       priorityType: fields[3] as int,
-      taskName: fields[4] as String,
+      name: fields[4] as String,
       description: fields[5] as String,
-      projectName: fields[6] as String,
-      isCompleted: fields[7] as bool,
-      isStarred: fields[8] as bool,
-      isTrashed: fields[9] as bool,
-      taskDate: fields[10] as String,
-      projectId: fields[11] as String,
-      labelName: fields[12] as String,
-      labelId: fields[13] as String,
+      isCompleted: fields[6] as bool,
+      isStarred: fields[7] as bool,
+      isTrashed: fields[8] as bool,
+      taskDate: fields[9] as String,
+      projectId: fields[10] as String,
+      labelIds: (fields[11] as List)?.cast<String>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, Task obj) {
+  void write(BinaryWriter writer, LocalTask obj) {
     writer
-      ..writeByte(14)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,25 +45,21 @@ class TaskAdapter extends TypeAdapter<Task> {
       ..writeByte(3)
       ..write(obj.priorityType)
       ..writeByte(4)
-      ..write(obj.taskName)
+      ..write(obj.name)
       ..writeByte(5)
       ..write(obj.description)
       ..writeByte(6)
-      ..write(obj.projectName)
-      ..writeByte(7)
       ..write(obj.isCompleted)
-      ..writeByte(8)
+      ..writeByte(7)
       ..write(obj.isStarred)
-      ..writeByte(9)
+      ..writeByte(8)
       ..write(obj.isTrashed)
-      ..writeByte(10)
+      ..writeByte(9)
       ..write(obj.taskDate)
-      ..writeByte(11)
+      ..writeByte(10)
       ..write(obj.projectId)
-      ..writeByte(12)
-      ..write(obj.labelName)
-      ..writeByte(13)
-      ..write(obj.labelId);
+      ..writeByte(11)
+      ..write(obj.labelIds);
   }
 
   @override
@@ -74,7 +68,7 @@ class TaskAdapter extends TypeAdapter<Task> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TaskAdapter &&
+      other is LocalTaskAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

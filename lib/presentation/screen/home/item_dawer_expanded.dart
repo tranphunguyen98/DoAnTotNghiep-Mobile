@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/task/bloc.dart';
+import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/di/injection.dart';
+import 'package:totodo/presentation/custom_ui/custom_ui.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 
@@ -36,6 +39,18 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Color getColorFromDrawerItem(DrawerItemData drawerItemData) {
+    if (drawerItemData.type == DrawerItemData.kTypeProject) {
+      return HexColor((drawerItemData.data as Project).color);
+    }
+
+    if (drawerItemData.type == DrawerItemData.kTypeLabel) {
+      return HexColor((drawerItemData.data as Label).color);
+    }
+
+    return Colors.blue;
   }
 
   @override
@@ -110,6 +125,8 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
                         listDrawerItem.add(DrawerItemSelected(
                           state.drawerItems[i],
                           isChild: true,
+                          colorIcon:
+                              getColorFromDrawerItem(state.drawerItems[i]),
                           onPressed: () {
                             _taskBloc.add(
                               SelectedDrawerIndexChanged(

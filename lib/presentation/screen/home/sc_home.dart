@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:totodo/bloc/submit_task/bloc.dart';
 import 'package:totodo/bloc/task/bloc.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/home/main_drawer.dart';
@@ -19,6 +20,8 @@ class HomeScreen extends StatelessWidget {
       drawer: MainDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          getIt<TaskSubmitBloc>().add(OpenBottomSheetAddTask());
+
           final future = showModalBottomSheet(
             isScrollControlled: true,
             backgroundColor: Colors.white,
@@ -30,9 +33,9 @@ class HomeScreen extends StatelessWidget {
             context: context,
             builder: (_) => BottomSheetAddTask(),
           );
-          future.then((value) {
-            // _taskBloc.add(TaskNameChanged(taskName: ""));
-          });
+          // future.then((value) {
+          //   getIt<TaskSubmitBloc>().add(OpenBottomSheetAddTask());
+          // });
         },
         child: Icon(Icons.add),
         backgroundColor: kColorPrimary,
