@@ -12,7 +12,7 @@ class ChangePasswordBloc
   ChangePasswordBloc({@required IUserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
-        super(null);
+        super(ChangePasswordState.empty());
 
   @override
   ChangePasswordState get initialState => ChangePasswordState.empty();
@@ -45,21 +45,21 @@ class ChangePasswordBloc
       ChangePasswordEvent event) async* {
     if (event is ChangePasswordSubmitEmailPasswordEvent) {
       yield* _mapChangePasswordSubmitEmailPasswordEventToState(
-          event.email, event.password);
-    } else if (event is ChangeEmailChanged) {
-      yield* _mapChangePasswordEmailChangedToState(event.email);
+          event.authorization, event.oldPassword, event.newPassword);
+    } else if (event is ChangeOldPassword) {
+      yield* _mapChangePasswordEmailChangedToState(event.oldPassword);
     } else if (event is ChangePasswordChanged) {
       yield* _mapChangePasswordPasswordChangedToState(event.password);
     }
   }
 
   Stream<ChangePasswordState> _mapChangePasswordSubmitEmailPasswordEventToState(
-      String oldPassword, String newPassword) async* {
+      String authorization, String oldPassword, String newPassword) async* {
     try {
       yield ChangePasswordState.loading();
 
-      final isSuccess =
-          await _userRepository.changePassword(oldPassword, newPassword);
+      final isSuccess = await _userRepository.changePassword(
+          authorization, oldPassword, newPassword);
 
       if (isSuccess) {
         yield ChangePasswordState.success();

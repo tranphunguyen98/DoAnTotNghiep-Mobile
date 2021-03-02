@@ -12,6 +12,7 @@ class User {
   final String refreshToken;
   final int type;
 
+  String get authorization => "authorization $accessToken";
   User(
       {this.id,
       this.name = "Lê Thị Hồng",
@@ -51,6 +52,39 @@ class User {
   @override
   String toString() {
     return 'User{id: $id, name: $name, email: $email, password: $password, avatar: $avatar, accessToken: $accessToken, refreshToken: $refreshToken, type: $type}';
+  }
+
+  User copyWith({
+    String id,
+    String name,
+    String email,
+    String password,
+    String avatar,
+    String accessToken,
+    String refreshToken,
+    int type,
+  }) {
+    if ((id == null || identical(id, this.id)) &&
+        (name == null || identical(name, this.name)) &&
+        (email == null || identical(email, this.email)) &&
+        (password == null || identical(password, this.password)) &&
+        (avatar == null || identical(avatar, this.avatar)) &&
+        (accessToken == null || identical(accessToken, this.accessToken)) &&
+        (refreshToken == null || identical(refreshToken, this.refreshToken)) &&
+        (type == null || identical(type, this.type))) {
+      return this;
+    }
+
+    return User(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      avatar: avatar ?? this.avatar,
+      accessToken: accessToken ?? this.accessToken,
+      refreshToken: refreshToken ?? this.refreshToken,
+      type: type ?? this.type,
+    );
   }
 
   static User userMock = User(

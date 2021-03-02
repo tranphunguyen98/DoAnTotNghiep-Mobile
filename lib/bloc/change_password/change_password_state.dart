@@ -2,23 +2,18 @@ import 'package:meta/meta.dart';
 
 @immutable
 class ChangePasswordState {
-  final bool isEmailValid;
-  final bool isPasswordValid;
-  final bool isConfirmPasswordValid;
-  final bool isNameValid;
+  final bool isOldPasswordValid;
+  final bool isNewPasswordValid;
   final bool isSubmitting;
   final bool isSuccess;
   final bool isFailure;
   final String error;
 
-  bool get isFormValid =>
-      isEmailValid && isPasswordValid && isConfirmPasswordValid && isNameValid;
+  bool get isFormValid => isOldPasswordValid && isNewPasswordValid;
 
   ChangePasswordState(
-      {@required this.isEmailValid,
-      @required this.isPasswordValid,
-      @required this.isConfirmPasswordValid,
-      @required this.isNameValid,
+      {@required this.isOldPasswordValid,
+      @required this.isNewPasswordValid,
       @required this.isSubmitting,
       @required this.isSuccess,
       @required this.isFailure,
@@ -26,10 +21,8 @@ class ChangePasswordState {
 
   factory ChangePasswordState.empty() {
     return ChangePasswordState(
-      isEmailValid: true,
-      isPasswordValid: true,
-      isConfirmPasswordValid: true,
-      isNameValid: true,
+      isOldPasswordValid: true,
+      isNewPasswordValid: true,
       isSubmitting: false,
       isSuccess: false,
       isFailure: false,
@@ -38,10 +31,8 @@ class ChangePasswordState {
 
   factory ChangePasswordState.loading() {
     return ChangePasswordState(
-      isEmailValid: true,
-      isPasswordValid: true,
-      isConfirmPasswordValid: true,
-      isNameValid: true,
+      isOldPasswordValid: true,
+      isNewPasswordValid: true,
       isSubmitting: true,
       isSuccess: false,
       isFailure: false,
@@ -50,10 +41,8 @@ class ChangePasswordState {
 
   factory ChangePasswordState.failure(String error) {
     return ChangePasswordState(
-        isEmailValid: true,
-        isPasswordValid: true,
-        isConfirmPasswordValid: true,
-        isNameValid: true,
+        isOldPasswordValid: true,
+        isNewPasswordValid: true,
         isSuccess: false,
         isSubmitting: false,
         isFailure: true,
@@ -62,10 +51,8 @@ class ChangePasswordState {
 
   factory ChangePasswordState.success() {
     return ChangePasswordState(
-      isEmailValid: true,
-      isPasswordValid: true,
-      isConfirmPasswordValid: true,
-      isNameValid: true,
+      isOldPasswordValid: true,
+      isNewPasswordValid: true,
       isSubmitting: false,
       isSuccess: true,
       isFailure: false,
@@ -98,11 +85,8 @@ class ChangePasswordState {
     bool isFailure,
   }) {
     return ChangePasswordState(
-      isEmailValid: isEmailValid ?? this.isEmailValid,
-      isPasswordValid: isPasswordValid ?? this.isPasswordValid,
-      isConfirmPasswordValid:
-          isConfirmPasswordValid ?? this.isConfirmPasswordValid,
-      isNameValid: isNameValid ?? this.isNameValid,
+      isOldPasswordValid: isEmailValid ?? this.isOldPasswordValid,
+      isNewPasswordValid: isPasswordValid ?? this.isNewPasswordValid,
       isSubmitting: isSubmitting ?? this.isSubmitting,
       isSuccess: isSuccess ?? this.isSuccess,
       isFailure: isFailure ?? this.isFailure,
@@ -111,6 +95,6 @@ class ChangePasswordState {
 
   @override
   String toString() {
-    return 'ChangePasswordState{isEmailValid: $isEmailValid, isPasswordValid: $isPasswordValid, isConfirmPasswordValid: $isConfirmPasswordValid, isNameValid: $isNameValid, isSubmitting: $isSubmitting, isSuccess: $isSuccess, isFailure: $isFailure}';
+    return 'ChangePasswordState{isOldPasswordValid: $isOldPasswordValid, isNewPasswordValid: $isNewPasswordValid, isSubmitting: $isSubmitting, isSuccess: $isSuccess, isFailure: $isFailure, error: $error}';
   }
 }

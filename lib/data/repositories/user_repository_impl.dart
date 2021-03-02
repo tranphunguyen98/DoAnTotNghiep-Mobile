@@ -10,8 +10,10 @@ class UserRepositoryImpl implements IUserRepository {
   UserRepositoryImpl(this._remoteUserDataSource, this._localUserDataSource);
 
   @override
-  Future<bool> changePassword(String oldPassword, String newPassword) =>
-      _remoteUserDataSource.changePassword(oldPassword, newPassword);
+  Future<bool> changePassword(
+          String authorization, String oldPassword, String newPassword) =>
+      _remoteUserDataSource.changePassword(
+          authorization, oldPassword, newPassword);
 
   @override
   Future<bool> resetPassword(String email, String otpCode, String password) =>

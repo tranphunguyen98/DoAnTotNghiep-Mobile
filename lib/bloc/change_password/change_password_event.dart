@@ -8,17 +8,17 @@ abstract class ChangePasswordEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ChangeEmailChanged extends ChangePasswordEvent {
-  final String email;
+class ChangeOldPassword extends ChangePasswordEvent {
+  final String oldPassword;
 
-  const ChangeEmailChanged({@required this.email});
+  const ChangeOldPassword({@required this.oldPassword});
 
   @override
-  List<Object> get props => [email];
+  List<Object> get props => [oldPassword];
 
   @override
   String toString() {
-    return 'EmailChanged{email: $email}';
+    return 'EmailChanged{email: $oldPassword}';
   }
 }
 
@@ -37,12 +37,15 @@ class ChangePasswordChanged extends ChangePasswordEvent {
 }
 
 class ChangePasswordSubmitEmailPasswordEvent extends ChangePasswordEvent {
-  final String email;
-  final String password;
+  final String authorization;
+  final String oldPassword;
+  final String newPassword;
 
-  ChangePasswordSubmitEmailPasswordEvent(
-      {@required this.email, @required this.password});
+  const ChangePasswordSubmitEmailPasswordEvent(
+      {@required this.authorization,
+      @required this.oldPassword,
+      @required this.newPassword});
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [authorization, oldPassword, newPassword];
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:totodo/bloc/auth_bloc/authentication_bloc.dart';
+import 'package:totodo/bloc/auth_bloc/authentication_state.dart';
 import 'package:totodo/bloc/change_password/bloc.dart';
 import 'package:totodo/presentation/common_widgets/widget_flat_button_default.dart';
 import 'package:totodo/presentation/common_widgets/widget_text_field_default.dart';
@@ -12,17 +14,19 @@ class WidgetChangePasswordForm extends StatefulWidget {
 }
 
 class _WidgetChangePasswordFormState extends State<WidgetChangePasswordForm> {
-  ChangePasswordBloc _ChangePasswordBloc;
+  ChangePasswordBloc _changePasswordBloc;
+  AuthenticationBloc _authenticationBloc;
 
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _oldPassword = TextEditingController();
+  final TextEditingController _newPassword = TextEditingController();
 
   bool get isPopulated =>
-      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+      _oldPassword.text.isNotEmpty && _newPassword.text.isNotEmpty;
 
   @override
   void initState() {
-    _ChangePasswordBloc = BlocProvider.of<ChangePasswordBloc>(context);
+    _changePasswordBloc = BlocProvider.of<ChangePasswordBloc>(context);
+    _authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
     super.initState();
   }
 
@@ -99,9 +103,9 @@ class _WidgetChangePasswordFormState extends State<WidgetChangePasswordForm> {
                       Text('Thay đổi mật khẩu', style: kFontMediumDefault_16),
                 ),
                 SizedBox(height: 20),
-                _buildTextFieldEmail(),
+                _buildTextFieldOldPassword(),
                 SizedBox(height: 20),
-                _buildTextFieldPassword(),
+                _buildTextFieldNewPassword(),
                 SizedBox(height: 20),
                 _buildButtonLogin(),
               ],
@@ -113,9 +117,9 @@ class _WidgetChangePasswordFormState extends State<WidgetChangePasswordForm> {
   }
 
   bool isRegisterButtonEnabled() {
-    return _ChangePasswordBloc.state.isFormValid &&
+    return _changePasswordBloc.state.isFormValid &&
         isPopulated &&
-        !_ChangePasswordBloc.state.isSubmitting;
+        !_changePasswordBloc.state.isSubmitting;
   }
 
   Widget _buildButtonLogin() {
@@ -124,23 +128,26 @@ class _WidgetChangePasswordFormState extends State<WidgetChangePasswordForm> {
         isEnable: true,
         onPressed: () {
           if (isRegisterButtonEnabled()) {
-            _ChangePasswordBloc.add(ChangePasswordSubmitEmailPasswordEvent(
-              email: _emailController.text,
-              password: _passwordController.text,
+            _changePasswordBloc.add(ChangePasswordSubmitEmailPasswordEvent(
+              authorization: (_authenticationBloc.state as Authenticated)
+                  .user
+                  .authorization,
+              oldPassword: _oldPassword.text,
+              newPassword: _newPassword.text,
             ));
           }
         });
   }
 
-  Widget _buildTextFieldEmail() {
+  Widget _buildTextFieldOldPassword() {
     return TextFieldDefault(
       hindText: 'Old Password',
-      controller: _emailController,
+      controller: _oldPassword,
       onChanged: (value) {
-        _ChangePasswordBloc.add(ChangeEmailChanged(email: value));
+        _changePasswordBloc.add(ChangeOldPassword(oldPassword: value));
       },
       validator: (_) {
-        return !_ChangePasswordBloc.state.isEmailValid
+        return !_changePasswordBloc.state.isOldPasswordValid
             ? 'Invalid Password'
             : null;
       },
@@ -148,15 +155,15 @@ class _WidgetChangePasswordFormState extends State<WidgetChangePasswordForm> {
     );
   }
 
-  Widget _buildTextFieldPassword() {
+  Widget _buildTextFieldNewPassword() {
     return TextFieldDefault(
       hindText: 'New Password',
-      controller: _passwordController,
+      controller: _newPassword,
       onChanged: (value) {
-        _ChangePasswordBloc.add(ChangePasswordChanged(password: value));
+        _changePasswordBloc.add(ChangePasswordChanged(password: value));
       },
       validator: (_) {
-        return !_ChangePasswordBloc.state.isPasswordValid
+        return !_changePasswordBloc.state.isNewPasswordValid
             ? 'Invalid Password'
             : null;
       },

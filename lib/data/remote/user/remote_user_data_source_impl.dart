@@ -18,14 +18,15 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   RemoteUserDataSourceImpl(this._userService);
 
   @override
-  Future<bool> changePassword(String oldPassword, String newPassword) async {
+  Future<bool> changePassword(
+      String authorization, String oldPassword, String newPassword) async {
     try {
       print("signUp! $oldPassword $newPassword");
-      final messageResponse =
-          await _userService.changePassword(oldPassword, newPassword);
+      final messageResponse = await _userService.changePassword(
+          authorization, oldPassword, newPassword);
       print("No error!");
-      print(messageResponse.msg.toString());
-      if (messageResponse.isSuccess) {
+      print(messageResponse.message.toString());
+      if (messageResponse.succeeded) {
         return true;
       }
       throw Exception("Change Password Failed!");
