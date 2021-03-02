@@ -14,8 +14,9 @@ class FlatButtonDefault extends StatelessWidget {
       width: double.infinity,
       height: 50,
       child: FlatButton(
+        disabledColor: kColorGray1_50,
         onPressed: onPressed,
-        color: isEnable ? kColorPrimary : kColorGray1_50,
+        color: onPressed != null ? kColorPrimary : kColorGray1_50,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),

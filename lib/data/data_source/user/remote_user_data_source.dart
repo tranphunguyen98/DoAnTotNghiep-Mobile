@@ -6,6 +6,7 @@ abstract class RemoteUserDataSource {
   Future<User> signInWithFacebook();
   Future<bool> signUp(String displayName, String email, String password);
   Future<bool> changePassword(String oldPassword, String newPassword);
-  Future<bool> resetPassword(String email, String password);
+  Future<bool> resetPassword(String email, String otpCode, String password);
+  Future<bool> sendOTPResetPassword(String email);
   Future<void> signOut();
 }

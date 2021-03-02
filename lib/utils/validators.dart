@@ -6,6 +6,10 @@ class Validators {
     r'^.{4,50}$',
   );
 
+  static final RegExp _otpRegExp = RegExp(
+    '[0-9]{6}',
+  );
+
   static bool isValidEmail(String email) {
     return _emailRegExp.hasMatch(email);
   }
@@ -16,5 +20,9 @@ class Validators {
 
   static bool isValidName(String name) {
     return name.isNotEmpty;
+  }
+
+  static bool isValidOTPCode(String otpCode) {
+    return _otpRegExp.hasMatch(otpCode);
   }
 }

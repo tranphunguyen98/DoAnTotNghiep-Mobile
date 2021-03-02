@@ -38,17 +38,19 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   }
 
   @override
-  Future<bool> resetPassword(String email, String password) async {
+  Future<bool> resetPassword(
+      String email, String optCode, String password) async {
     try {
-      final messageResponse = await _userService.resetPassword(email, password);
-      print(messageResponse.msg.toString());
-      if (messageResponse.isSuccess) {
+      final messageResponse =
+          await _userService.resetPassword(email, optCode, password);
+      print(messageResponse.message.toString());
+      if (messageResponse.succeeded) {
         return true;
       }
       throw Exception("Reset Password Failed!");
     } on DioError catch (e) {
-      print("Error: ${e.response.data["message"]}");
-      throw Exception(e.response.data["message"] ?? "Error Dio");
+      print("Error: ${e ?? "Error Dio"}");
+      throw Exception(e.response?.data['message'] ?? "Error Dio");
     }
   }
 
@@ -113,13 +115,31 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   @override
   Future<bool> signUp(String displayName, String email, String password) async {
     try {
-      final userResponse =
+      final messageResponse =
           await _userService.signUp(displayName, email, password);
-      print(userResponse);
-      print(userResponse.message.toString());
-      if (userResponse.succeeded) {
+      print(messageResponse);
+      print(messageResponse.message.toString());
+      if (messageResponse.succeeded) {
         return true;
       }
+      throw Exception(messageResponse.message ?? "Error Dio");
+    } on DioError catch (e, stackTrace) {
+      print(stackTrace);
+      print("Error: ${e.response.data["message"]}");
+      throw Exception(e.response.data["message"] ?? "Error Dio");
+    }
+  }
+
+  @override
+  Future<bool> sendOTPResetPassword(String email) async {
+    try {
+      final messageResponse = await _userService.sendOTPResetPassword(email);
+      print(messageResponse);
+      print(messageResponse.message.toString());
+      if (messageResponse.succeeded) {
+        return true;
+      }
+      throw Exception(messageResponse.message ?? "Error Dio");
     } on DioError catch (e, stackTrace) {
       print(stackTrace);
       print("Error: ${e.response.data["message"]}");

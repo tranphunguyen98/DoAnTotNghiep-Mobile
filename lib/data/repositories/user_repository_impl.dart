@@ -14,8 +14,8 @@ class UserRepositoryImpl implements IUserRepository {
       _remoteUserDataSource.changePassword(oldPassword, newPassword);
 
   @override
-  Future<bool> resetPassword(String email, String password) =>
-      _remoteUserDataSource.resetPassword(email, password);
+  Future<bool> resetPassword(String email, String otpCode, String password) =>
+      _remoteUserDataSource.resetPassword(email, otpCode, password);
 
   @override
   Future<User> signIn(String email, String password) =>
@@ -46,5 +46,10 @@ class UserRepositoryImpl implements IUserRepository {
     await _localUserDataSource.signOut();
     await _remoteUserDataSource.signOut();
     return true;
+  }
+
+  @override
+  Future<bool> sendOTPResetPassword(String email) {
+    return _remoteUserDataSource.sendOTPResetPassword(email);
   }
 }

@@ -15,10 +15,13 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
   ForgotPasswordBloc _forgotPasswordBloc;
 
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   bool get isPopulated =>
-      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+      _emailController.text.isNotEmpty &&
+      _passwordController.text.isNotEmpty &&
+      _otpController.text.isNotEmpty;
 
   @override
   void initState() {
@@ -30,6 +33,7 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
   Widget build(BuildContext context) {
     return BlocListener<ForgotPasswordBloc, ForgotPasswordState>(
       listener: (context, state) {
+        print("state: $state");
         if (state.isSubmitting) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
@@ -38,7 +42,7 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Registering ... '),
+                    Text('Reseting ... '),
                     CircularProgressIndicator(),
                   ],
                 ),
@@ -46,7 +50,7 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
             );
         }
 
-        if (state.isSuccess) {
+        if (state.isResetPasswordSuccess) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -54,7 +58,7 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Gửi email thành công!'),
+                    Text('Reset mật khẩu thành công'),
                     CircularProgressIndicator(),
                   ],
                 ),
@@ -83,52 +87,87 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
         }
       },
       child: BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(
-        builder: (context, state) => Container(
-          margin: EdgeInsets.symmetric(horizontal: 10),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: kColorWhite,
-          ),
-          child: Form(
-            child: Column(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Quên mật khẩu', style: kFontMediumDefault_16),
-                ),
-                SizedBox(height: 20),
-                _buildTextFieldEmail(),
-                SizedBox(height: 20),
-                _buildTextFieldPassword(),
-                SizedBox(height: 20),
-                _buildButtonLogin(),
-              ],
+        builder: (context, state) {
+          print("stateee: $state");
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: kColorWhite,
             ),
-          ),
-        ),
+            child: Form(
+              child: Column(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Reset Mật Khẩu', style: kFontMediumDefault_16),
+                  ),
+                  SizedBox(height: 20),
+                  _buildTextFieldEmail(),
+                  if (state.isSendOTPSuccess)
+                    Column(
+                      children: [
+                        SizedBox(height: 20),
+                        _buildTextFieldOtpCode(),
+                        SizedBox(height: 20),
+                        _buildTextFieldPassword(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        GestureDetector(
+                            onTap: () {
+                              _forgotPasswordBloc.add(SendOTPSubmitEvent(
+                                  email: _emailController.text));
+                            },
+                            child: Text("Gửi lại mã OTP"))
+                      ],
+                    ),
+                  SizedBox(height: 20),
+                  _buildButtonSubmit(state.isSendOTPSuccess),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  bool isRegisterButtonEnabled() {
-    return _forgotPasswordBloc.state.isFormValid &&
-        isPopulated &&
-        !_forgotPasswordBloc.state.isSubmitting;
+  bool isButtonEnabled(bool isSendOTPSuccess) {
+    if (!isSendOTPSuccess) {
+      print("abc");
+      return _forgotPasswordBloc.state.isEmailValid &&
+          _emailController.text.isNotEmpty &&
+          !_forgotPasswordBloc.state.isSubmitting;
+    } else {
+      return _forgotPasswordBloc.state.isFormValid &&
+          isPopulated &&
+          !_forgotPasswordBloc.state.isSubmitting;
+    }
   }
 
-  Widget _buildButtonLogin() {
+  Widget _buildButtonSubmit(bool isSendOTPSuccess) {
     return FlatButtonDefault(
-        text: 'Gửi Email reset mật khẩu',
-        isEnable: true,
-        onPressed: () {
-          if (isRegisterButtonEnabled()) {
-            _forgotPasswordBloc.add(ForgotPasswordSubmitEmailPasswordEvent(
-              email: _emailController.text,
-              password: _passwordController.text,
-            ));
-          }
-        });
+        text: isSendOTPSuccess ? 'Reset mật khẩu' : 'Gửi OTP tới Email',
+        onPressed: isButtonEnabled(isSendOTPSuccess)
+            ? () {
+                if (isButtonEnabled(isSendOTPSuccess)) {
+                  if (isSendOTPSuccess) {
+                    _forgotPasswordBloc
+                        .add(ForgotPasswordSubmitEmailPasswordEvent(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      otpCode: _otpController.text,
+                    ));
+                  } else {
+                    _forgotPasswordBloc.add(SendOTPSubmitEvent(
+                      email: _emailController.text,
+                    ));
+                  }
+                }
+              }
+            : null);
   }
 
   Widget _buildTextFieldEmail() {
@@ -144,9 +183,24 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
     );
   }
 
+  Widget _buildTextFieldOtpCode() {
+    return TextFieldDefault(
+      hindText: 'OTP Code',
+      controller: _otpController,
+      onChanged: (value) {
+        _forgotPasswordBloc.add(ForgotOTPCodeChanged(otpCode: value));
+      },
+      validator: (_) {
+        return !_forgotPasswordBloc.state.isOTPValid
+            ? 'OTP Code không hợp lệ'
+            : null;
+      },
+    );
+  }
+
   Widget _buildTextFieldPassword() {
     return TextFieldDefault(
-      hindText: 'Password',
+      hindText: 'New Password',
       controller: _passwordController,
       onChanged: (value) {
         _forgotPasswordBloc.add(ForgotPasswordChanged(password: value));

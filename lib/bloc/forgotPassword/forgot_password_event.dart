@@ -22,6 +22,20 @@ class ForgotEmailChanged extends ForgotPasswordEvent {
   }
 }
 
+class ForgotOTPCodeChanged extends ForgotPasswordEvent {
+  final String otpCode;
+
+  const ForgotOTPCodeChanged({@required this.otpCode});
+
+  @override
+  List<Object> get props => [otpCode];
+
+  @override
+  String toString() {
+    return 'ForgotOTPCodeChanged{email: $otpCode}';
+  }
+}
+
 class ForgotPasswordChanged extends ForgotPasswordEvent {
   final String password;
 
@@ -38,11 +52,26 @@ class ForgotPasswordChanged extends ForgotPasswordEvent {
 
 class ForgotPasswordSubmitEmailPasswordEvent extends ForgotPasswordEvent {
   final String email;
+  final String otpCode;
   final String password;
 
-  ForgotPasswordSubmitEmailPasswordEvent(
-      {@required this.email, @required this.password});
+  const ForgotPasswordSubmitEmailPasswordEvent({
+    @required this.email,
+    @required this.otpCode,
+    @required this.password,
+  });
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [email, otpCode, password];
+}
+
+class SendOTPSubmitEvent extends ForgotPasswordEvent {
+  final String email;
+
+  const SendOTPSubmitEvent({
+    @required this.email,
+  });
+
+  @override
+  List<Object> get props => [email];
 }

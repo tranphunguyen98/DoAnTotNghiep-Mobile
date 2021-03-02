@@ -12,10 +12,7 @@ class ForgotPasswordBloc
   ForgotPasswordBloc({@required IUserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
-        super(null);
-
-  @override
-  ForgotPasswordState get initialState => ForgotPasswordState.empty();
+        super(ForgotPasswordState.empty());
 
   // @override
   // Stream<ForgotPasswordState> transformEvents(
@@ -38,38 +35,66 @@ class ForgotPasswordBloc
       ForgotPasswordEvent event) async* {
     if (event is ForgotPasswordSubmitEmailPasswordEvent) {
       yield* _mapForgotPasswordSubmitEmailPasswordEventToState(
-          event.email, event.password);
+          event.email, event.otpCode, event.password);
     } else if (event is ForgotEmailChanged) {
       yield* _mapForgotPasswordEmailChangedToState(event.email);
     } else if (event is ForgotPasswordChanged) {
       yield* _mapForgotPasswordPasswordChangedToState(event.password);
+    } else if (event is ForgotOTPCodeChanged) {
+      yield* _mapForgotOTPCodeChangedToState(event.otpCode);
+    } else if (event is SendOTPSubmitEvent) {
+      yield* _mapSendOTPSubmitEventToState(event.email);
+    }
+  }
+
+  Stream<ForgotPasswordState> _mapSendOTPSubmitEventToState(
+      String email) async* {
+    try {
+      yield ForgotPasswordState.loading();
+
+      final isSuccess = await _userRepository.sendOTPResetPassword(email);
+
+      if (isSuccess) {
+        yield ForgotPasswordState.sendOTPSuccess();
+      } else {
+        yield state.copyWith(error: "Error");
+      }
+    } catch (e) {
+      yield state.copyWith(error: "Error: ${e}");
     }
   }
 
   Stream<ForgotPasswordState> _mapForgotPasswordSubmitEmailPasswordEventToState(
-      String email, String password) async* {
+      String email, String otpCode, String password) async* {
     try {
       yield ForgotPasswordState.loading();
 
-      final isSuccess = await _userRepository.resetPassword(email, password);
+      final isSuccess =
+          await _userRepository.resetPassword(email, otpCode, password);
 
       if (isSuccess) {
-        yield ForgotPasswordState.success();
+        yield state.copyWith(isResetPasswordSuccess: true);
       } else {
-        yield ForgotPasswordState.failure("Error");
+        yield state.copyWith(error: "Error");
       }
-    } catch (e) {
-      yield ForgotPasswordState.failure("Error: ${e}");
+    } catch (e, stackTrace) {
+      print(stackTrace);
+      yield state.copyWith(error: "Error: ${e}");
     }
   }
 
   Stream<ForgotPasswordState> _mapForgotPasswordEmailChangedToState(
       String email) async* {
-    yield state.update(isEmailValid: Validators.isValidEmail(email));
+    yield state.copyWith(isEmailValid: Validators.isValidEmail(email));
   }
 
   Stream<ForgotPasswordState> _mapForgotPasswordPasswordChangedToState(
       String password) async* {
-    yield state.update(isPasswordValid: Validators.isValidPassword(password));
+    yield state.copyWith(isPasswordValid: Validators.isValidPassword(password));
+  }
+
+  Stream<ForgotPasswordState> _mapForgotOTPCodeChangedToState(
+      String otpCode) async* {
+    yield state.copyWith(isOTPValid: Validators.isValidOTPCode(otpCode));
   }
 }

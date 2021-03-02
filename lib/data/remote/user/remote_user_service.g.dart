@@ -62,15 +62,21 @@ class _RemoteUserService implements RemoteUserService {
   }
 
   @override
-  Future<MessageResponse> resetPassword(email, password) async {
+  Future<MessageResponseRegister> resetPassword(
+      email, otpCode, newPassword) async {
     ArgumentError.checkNotNull(email, 'email');
-    ArgumentError.checkNotNull(password, 'password');
+    ArgumentError.checkNotNull(otpCode, 'otpCode');
+    ArgumentError.checkNotNull(newPassword, 'newPassword');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _data = {'email': email, 'password': password};
+    final _data = {
+      'email': email,
+      'otpCode': otpCode,
+      'newPassword': newPassword
+    };
     _data.removeWhere((k, v) => v == null);
     final _result = await _dio.request<Map<String, dynamic>>(
-        '/users/reset_password',
+        '/users/reset-password',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'POST',
@@ -78,7 +84,27 @@ class _RemoteUserService implements RemoteUserService {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = MessageResponse.fromJson(_result.data);
+    final value = MessageResponseRegister.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<MessageResponseRegister> sendOTPResetPassword(email) async {
+    ArgumentError.checkNotNull(email, 'email');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = {'email': email};
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/users/reset-password/request',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = MessageResponseRegister.fromJson(_result.data);
     return value;
   }
 
