@@ -29,8 +29,8 @@ class UserRepositoryImpl implements IUserRepository {
   Future<User> signInWithGoogle() => _remoteUserDataSource.signInWithGoogle();
 
   @override
-  Future<bool> signUp(String email, String password) =>
-      _remoteUserDataSource.signUp(email, password);
+  Future<bool> signUp(String displayName, String email, String password) =>
+      _remoteUserDataSource.signUp(displayName, email, password);
 
   @override
   Future<User> getUser() => _localUserDataSource.getUser();

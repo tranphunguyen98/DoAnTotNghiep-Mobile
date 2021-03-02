@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/auth_bloc/bloc.dart';
 import 'package:totodo/bloc/register/bloc.dart';
@@ -13,12 +14,14 @@ class WidgetSignUpForm extends StatefulWidget {
 
 class _WidgetSignUpFormState extends State<WidgetSignUpForm> {
   RegisterBloc _registerBloc;
+  final TextEditingController _displayNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
   bool get isPopulated =>
+      _displayNameController.text.isNotEmpty &&
       _emailController.text.isNotEmpty &&
       _passwordController.text.isNotEmpty &&
       _confirmPasswordController.text.isNotEmpty;
@@ -28,6 +31,12 @@ class _WidgetSignUpFormState extends State<WidgetSignUpForm> {
     super.initState();
 
     _registerBloc = BlocProvider.of<RegisterBloc>(context);
+
+    _displayNameController.addListener(() {
+      _registerBloc
+          .add(DisplayNameChanged(displayName: _displayNameController.text));
+    });
+
     _emailController.addListener(() {
       _registerBloc.add(EmailChanged(email: _emailController.text));
     });
@@ -80,7 +89,13 @@ class _WidgetSignUpFormState extends State<WidgetSignUpForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('${state.error}'),
+                    Flexible(
+                      child: Text(
+                        '${state.error}',
+                        maxLines: 10,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                     Icon(Icons.error),
                   ],
                 ),
@@ -107,10 +122,23 @@ class _WidgetSignUpFormState extends State<WidgetSignUpForm> {
                 ),
                 SizedBox(height: 20),
                 TextFieldDefault(
+                  hindText: 'Tên đăng nhập',
+                  controller: _displayNameController,
+                  validator: (_) {
+                    return !state.isDisplayNameValid
+                        ? 'Tên đăng nhập không hợp lệ!'
+                        : null;
+                  },
+                  onChanged: (value) {},
+                ),
+                SizedBox(
+                  height: 14,
+                ),
+                TextFieldDefault(
                   hindText: 'Email',
                   controller: _emailController,
                   validator: (_) {
-                    return !state.isEmailValid ? 'Invalid Email' : null;
+                    return !state.isEmailValid ? 'Email không hợp lệ!' : null;
                   },
                   onChanged: (value) {},
                 ),
@@ -119,7 +147,9 @@ class _WidgetSignUpFormState extends State<WidgetSignUpForm> {
                   hindText: 'Mật khẩu',
                   controller: _passwordController,
                   validator: (_) {
-                    return !state.isPasswordValid ? 'Invalid Password' : null;
+                    return !state.isPasswordValid
+                        ? 'Mật khẩu không hợp lệ!'
+                        : null;
                   },
                   onChanged: (value) {},
                   obscureText: true,
@@ -130,7 +160,7 @@ class _WidgetSignUpFormState extends State<WidgetSignUpForm> {
                   controller: _confirmPasswordController,
                   validator: (_) {
                     return !state.isConfirmPasswordValid
-                        ? 'Password does not matched'
+                        ? 'Mật khẩu không khớp!'
                         : null;
                   },
                   onChanged: (value) {},
@@ -159,6 +189,7 @@ class _WidgetSignUpFormState extends State<WidgetSignUpForm> {
   void _onFormSubmitted() {
     _registerBloc.add(
       Submitted(
+        displayName: _displayNameController.text,
         email: _emailController.text,
         password: _passwordController.text,
         confirmPassword: _confirmPasswordController.text,
@@ -168,6 +199,7 @@ class _WidgetSignUpFormState extends State<WidgetSignUpForm> {
 
   @override
   void dispose() {
+    _displayNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();

@@ -9,7 +9,7 @@ part of 'remote_user_service.dart';
 class _RemoteUserService implements RemoteUserService {
   _RemoteUserService(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'http://10.0.2.2:3006/';
+    baseUrl ??= 'http://192.168.1.7:3006/';
   }
 
   final Dio _dio;
@@ -17,12 +17,17 @@ class _RemoteUserService implements RemoteUserService {
   String baseUrl;
 
   @override
-  Future<UserResponse> signUp(email, password) async {
+  Future<MessageResponseRegister> signUp(displayName, email, password) async {
+    ArgumentError.checkNotNull(displayName, 'displayName');
     ArgumentError.checkNotNull(email, 'email');
     ArgumentError.checkNotNull(password, 'password');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _data = {'email': email, 'password': password};
+    final _data = {
+      'displayName': displayName,
+      'email': email,
+      'password': password
+    };
     _data.removeWhere((k, v) => v == null);
     final _result = await _dio.request<Map<String, dynamic>>('/users/register',
         queryParameters: queryParameters,
@@ -32,7 +37,7 @@ class _RemoteUserService implements RemoteUserService {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = UserResponse.fromJson(_result.data);
+    final value = MessageResponseRegister.fromJson(_result.data);
     return value;
   }
 

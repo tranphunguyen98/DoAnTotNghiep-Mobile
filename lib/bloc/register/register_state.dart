@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 @immutable
 class RegisterState {
   final bool isEmailValid;
+  final bool isDisplayNameValid;
   final bool isPasswordValid;
   final bool isConfirmPasswordValid;
   final bool isNameValid;
@@ -12,10 +13,15 @@ class RegisterState {
   final String error;
 
   bool get isFormValid =>
-      isEmailValid && isPasswordValid && isConfirmPasswordValid && isNameValid;
+      isDisplayNameValid &&
+      isEmailValid &&
+      isPasswordValid &&
+      isConfirmPasswordValid &&
+      isNameValid;
 
   RegisterState(
-      {@required this.isEmailValid,
+      {@required this.isDisplayNameValid,
+      @required this.isEmailValid,
       @required this.isPasswordValid,
       @required this.isConfirmPasswordValid,
       @required this.isNameValid,
@@ -26,6 +32,7 @@ class RegisterState {
 
   factory RegisterState.empty() {
     return RegisterState(
+      isDisplayNameValid: true,
       isEmailValid: true,
       isPasswordValid: true,
       isConfirmPasswordValid: true,
@@ -38,6 +45,7 @@ class RegisterState {
 
   factory RegisterState.loading() {
     return RegisterState(
+      isDisplayNameValid: true,
       isEmailValid: true,
       isPasswordValid: true,
       isConfirmPasswordValid: true,
@@ -50,6 +58,7 @@ class RegisterState {
 
   factory RegisterState.failure(String error) {
     return RegisterState(
+        isDisplayNameValid: true,
         isEmailValid: true,
         isPasswordValid: true,
         isConfirmPasswordValid: true,
@@ -62,6 +71,7 @@ class RegisterState {
 
   factory RegisterState.success() {
     return RegisterState(
+      isDisplayNameValid: true,
       isEmailValid: true,
       isPasswordValid: true,
       isConfirmPasswordValid: true,
@@ -73,11 +83,13 @@ class RegisterState {
   }
 
   RegisterState update(
-      {bool isEmailValid,
+      {bool isDisplayNameValid,
+      bool isEmailValid,
       bool isPasswordValid,
       bool isNameValid,
       bool isConfirmPasswordValid}) {
     return copyWith(
+      isDisplayNameValid: isDisplayNameValid,
       isEmailValid: isEmailValid,
       isPasswordValid: isPasswordValid,
       isConfirmPasswordValid: isConfirmPasswordValid,
@@ -89,6 +101,7 @@ class RegisterState {
   }
 
   RegisterState copyWith({
+    bool isDisplayNameValid,
     bool isEmailValid,
     bool isPasswordValid,
     bool isConfirmPasswordValid,
@@ -98,6 +111,7 @@ class RegisterState {
     bool isFailure,
   }) {
     return RegisterState(
+      isDisplayNameValid: isDisplayNameValid ?? this.isDisplayNameValid,
       isEmailValid: isEmailValid ?? this.isEmailValid,
       isPasswordValid: isPasswordValid ?? this.isPasswordValid,
       isConfirmPasswordValid:
@@ -111,6 +125,6 @@ class RegisterState {
 
   @override
   String toString() {
-    return 'RegisterState{isEmailValid: $isEmailValid, isPasswordValid: $isPasswordValid, isConfirmPasswordValid: $isConfirmPasswordValid, isNameValid: $isNameValid, isSubmitting: $isSubmitting, isSuccess: $isSuccess, isFailure: $isFailure}';
+    return 'RegisterState{isEmailValid: $isEmailValid, isDisplayNameValid: $isDisplayNameValid, isPasswordValid: $isPasswordValid, isConfirmPasswordValid: $isConfirmPasswordValid, isNameValid: $isNameValid, isSubmitting: $isSubmitting, isSuccess: $isSuccess, isFailure: $isFailure, error: $error}';
   }
 }

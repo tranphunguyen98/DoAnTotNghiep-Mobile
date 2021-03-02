@@ -20,7 +20,7 @@ class Authenticated extends AuthenticationState {
 
   @override
   String toString() {
-    return 'Authenticated{displayName: ${user.name}';
+    return 'Authenticated{displayName: $user';
   }
 }
 

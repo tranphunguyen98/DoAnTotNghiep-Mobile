@@ -1,8 +1,3 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'user.g.dart';
-
-@JsonSerializable(nullable: false)
 class User {
   static const int kTypeEmail = 0;
   static const int kTypeFacebook = 1;
@@ -27,9 +22,36 @@ class User {
       this.refreshToken,
       this.type = kTypeEmail});
 
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  factory User.fromJson(Map<String, dynamic> map) {
+    return User(
+      id: map['_id'] as String,
+      name: map['displayName'] as String,
+      email: map['email'] as String,
+      password: map['password'] as String,
+      avatar: map['avatar'] as String,
+      accessToken: map['accessToken'] as String,
+      refreshToken: map['refreshToken'] as String,
+      type: map['type'] as int,
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$UserToJson(this);
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': this.id,
+      'displayName': this.name,
+      'email': this.email,
+      'password': this.password,
+      'avatar': this.avatar,
+      'accessToken': this.accessToken,
+      'refreshToken': this.refreshToken,
+      'type': this.type,
+    } as Map<String, dynamic>;
+  }
+
+  @override
+  String toString() {
+    return 'User{id: $id, name: $name, email: $email, password: $password, avatar: $avatar, accessToken: $accessToken, refreshToken: $refreshToken, type: $type}';
+  }
 
   static User userMock = User(
       id: "1",

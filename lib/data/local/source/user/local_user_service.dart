@@ -33,6 +33,7 @@ class LocalUserService {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final userString = prefs.getString(USER_KEY);
       if (userString != null) {
+        print('userString: $userString');
         return User.fromJson(json.decode(userString) as Map<String, dynamic>);
       } else {
         return throw Exception("Can't get user");

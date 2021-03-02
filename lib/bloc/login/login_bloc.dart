@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-// import 'package:rxdart/rxdart.dart';
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/utils/validators.dart';
 
@@ -12,7 +11,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc({@required IUserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
-        super(null);
+        super(LoginState.empty());
 
   @override
   LoginState get initialState => LoginState.empty();

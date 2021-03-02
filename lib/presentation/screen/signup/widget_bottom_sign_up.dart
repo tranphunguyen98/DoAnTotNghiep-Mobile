@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:totodo/presentation/router.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
 class WidgetBottomSignUp extends StatelessWidget {
@@ -18,7 +19,7 @@ class WidgetBottomSignUp extends StatelessWidget {
           Flexible(
             child: GestureDetector(
               onTap: () {
-                // Navigator.of(context).pushNamed(AppRouter.REGISTER);
+                Navigator.of(context).pushNamed(AppRouter.kLogin);
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),

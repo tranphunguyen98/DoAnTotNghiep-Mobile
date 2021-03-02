@@ -39,7 +39,7 @@ class AuthenticationBloc
 
       if (isSignedIn) {
         final user = await _userRepository.getUser();
-        print("authen");
+        print("authen: $user ");
         yield Authenticated(user);
       } else {
         print("unauthen1");

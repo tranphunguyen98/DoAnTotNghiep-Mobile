@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/task/bloc.dart';
 import 'package:totodo/bloc/task/task_bloc.dart';
-import 'package:totodo/data/entity/user.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_normal.dart';
 import 'package:totodo/presentation/screen/home/header_main_drawer.dart';
@@ -42,9 +41,7 @@ class MainDrawer extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
-                HeaderMainDrawer(
-                  user: User.userMock,
-                ),
+                HeaderMainDrawer(),
                 ListDrawerItemSelected(),
                 ListDrawerItemExpanded(),
                 DrawerItemNormal("Cài Đặt", Icons.settings, () {

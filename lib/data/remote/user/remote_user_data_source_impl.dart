@@ -56,6 +56,7 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   Future<User> signIn(String email, String password) async {
     try {
       final userResponse = await _userService.signIn(email, password);
+      print("userResponse: $userResponse}");
       return userResponse.user;
     } on DioError catch (e) {
       print("Error: ${e.response.data["message"]}");
@@ -110,12 +111,17 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   }
 
   @override
-  Future<bool> signUp(String email, String password) async {
+  Future<bool> signUp(String displayName, String email, String password) async {
     try {
-      final userResponse = await _userService.signUp(email, password);
+      final userResponse =
+          await _userService.signUp(displayName, email, password);
+      print(userResponse);
       print(userResponse.message.toString());
-      return true;
-    } on DioError catch (e) {
+      if (userResponse.succeeded) {
+        return true;
+      }
+    } on DioError catch (e, stackTrace) {
+      print(stackTrace);
       print("Error: ${e.response.data["message"]}");
       throw Exception(e.response.data["message"] ?? "Error Dio");
     }

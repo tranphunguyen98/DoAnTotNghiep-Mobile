@@ -12,7 +12,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   RegisterBloc({@required IUserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
-        super(null);
+        super(RegisterState.empty());
 
   @override
   RegisterState get initialState => RegisterState.empty();
@@ -38,7 +38,9 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   @override
   Stream<RegisterState> mapEventToState(RegisterEvent event) async* {
-    if (event is EmailChanged) {
+    if (event is DisplayNameChanged) {
+      yield* _mapDisplayNameChangedToState(event.displayName);
+    } else if (event is EmailChanged) {
       yield* _mapEmailChangedToState(event.email);
     } else if (event is PasswordChanged) {
       yield* _mapPasswordChangedToState(event.password, event.confirmPassword);
@@ -46,9 +48,15 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       yield* _mapConfirmPasswordChangedToState(
           event.password, event.confirmPassword);
     } else if (event is Submitted) {
-      yield* _mapFormSubmittedToState(
-          event.email, event.password, event.confirmPassword);
+      yield* _mapFormSubmittedToState(event.displayName, event.email,
+          event.password, event.confirmPassword);
     }
+  }
+
+  Stream<RegisterState> _mapDisplayNameChangedToState(String name) async* {
+    yield state.update(
+      isDisplayNameValid: Validators.isValidName(name),
+    );
   }
 
   Stream<RegisterState> _mapEmailChangedToState(String email) async* {
@@ -90,7 +98,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     );
   }
 
-  Stream<RegisterState> _mapFormSubmittedToState(
+  Stream<RegisterState> _mapFormSubmittedToState(String displayName,
       String email, String password, String confirmPassword) async* {
     //need refactor
     var isValidEmail = Validators.isValidEmail(email);
@@ -113,7 +121,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       yield RegisterState.loading();
 
       try {
-        await _userRepository.signUp(email, password);
+        await _userRepository.signUp(displayName, email, password);
         yield RegisterState.success();
       } catch (e) {
         yield RegisterState.failure("Error: ${e}");
