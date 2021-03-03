@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:totodo/data/entity/check_item.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
@@ -47,6 +48,20 @@ class HandledSuccessState extends TaskSubmitEvent {}
 
 class SubmitAddTask extends TaskSubmitEvent {}
 
+class UpdateItemCheckList extends TaskSubmitEvent {
+  final CheckItem checkItem;
+
+  UpdateItemCheckList(this.checkItem);
+
+  @override
+  List<Object> get props => [checkItem];
+
+  @override
+  String toString() {
+    return 'UpdateItemCheckList{task: $checkItem}';
+  }
+}
+
 class SubmitEditTask extends TaskSubmitEvent {
   final Task task;
 
@@ -58,5 +73,19 @@ class SubmitEditTask extends TaskSubmitEvent {
   @override
   String toString() {
     return 'UpdateTask{task: $task}';
+  }
+}
+
+class DeleteCheckItem extends TaskSubmitEvent {
+  final String idCheckItem;
+
+  DeleteCheckItem(this.idCheckItem);
+
+  @override
+  List<Object> get props => [idCheckItem];
+
+  @override
+  String toString() {
+    return 'DeleteCheckItem{idCheckItem: $idCheckItem}';
   }
 }

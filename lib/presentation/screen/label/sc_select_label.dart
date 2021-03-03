@@ -46,7 +46,8 @@ class _SelectLabelScreenState extends State<SelectLabelScreen> {
                                 state.taskSubmit.labels?.contains(e) ?? false,
                             onCheckBoxChanged: (value) {
                               final newListLabel = <Label>[];
-                              newListLabel.addAll(state.taskSubmit.labels);
+                              newListLabel
+                                  .addAll(state.taskSubmit.labels ?? []);
                               if (value == true) {
                                 newListLabel.add(e);
                               } else {

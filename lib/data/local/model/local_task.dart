@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:totodo/data/entity/check_item.dart';
 
 part 'local_task.g.dart';
 
@@ -30,6 +31,8 @@ class LocalTask {
   final List<String> labelIds;
   @HiveField(12)
   final String sectionId;
+  @HiveField(13)
+  final List<CheckItem> checkList;
 
   const LocalTask({
     this.id,
@@ -45,6 +48,7 @@ class LocalTask {
     this.projectId,
     this.labelIds,
     this.sectionId,
+    this.checkList,
   });
 
   LocalTask copyWith({
@@ -61,6 +65,7 @@ class LocalTask {
     String projectId,
     List<String> labelIds,
     String sectionId,
+    List<CheckItem> checkList,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (createdDate == null || identical(createdDate, this.createdDate)) &&
@@ -74,7 +79,8 @@ class LocalTask {
         (taskDate == null || identical(taskDate, this.taskDate)) &&
         (projectId == null || identical(projectId, this.projectId)) &&
         (labelIds == null || identical(labelIds, this.labelIds)) &&
-        (sectionId == null || identical(sectionId, this.sectionId))) {
+        (sectionId == null || identical(sectionId, this.sectionId)) &&
+        (checkList == null || identical(checkList, this.checkList))) {
       return this;
     }
 
@@ -92,6 +98,7 @@ class LocalTask {
       projectId: projectId ?? this.projectId,
       labelIds: labelIds ?? this.labelIds,
       sectionId: sectionId ?? this.sectionId,
+      checkList: checkList ?? this.checkList,
     );
   }
 }

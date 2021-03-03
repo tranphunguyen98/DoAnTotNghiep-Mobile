@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:totodo/data/entity/check_item.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/local/model/local_task.dart';
@@ -45,6 +46,7 @@ Future _initHive() async {
   Hive.registerAdapter<Project>(ProjectAdapter());
   Hive.registerAdapter<Label>(LabelAdapter());
   Hive.registerAdapter<Section>(SectionAdapter());
+  Hive.registerAdapter<CheckItem>(CheckItemAdapter());
   await Hive.openBox(LocalTaskService.kNameBoxTask);
   await Hive.openBox(LocalTaskService.kNameBoxProject);
   await Hive.openBox(LocalTaskService.kNameBoxLabel);

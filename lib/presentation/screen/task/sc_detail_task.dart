@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/submit_task/bloc.dart';
 import 'package:totodo/bloc/task/bloc.dart';
+import 'package:totodo/data/entity/check_item.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
@@ -12,8 +13,11 @@ import 'package:totodo/presentation/common_widgets/widget_icon_outline_button.da
 import 'package:totodo/presentation/common_widgets/widget_item_popup_menu.dart';
 import 'package:totodo/presentation/custom_ui/hex_color.dart';
 import 'package:totodo/presentation/router.dart';
+import 'package:totodo/presentation/screen/task/widget_bottom_sheet_add_task.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
+
+import 'item_checklist.dart';
 
 class ScreenDetailTask extends StatelessWidget {
   final TaskSubmitBloc _taskSubmitBloc = getIt<TaskSubmitBloc>();
@@ -29,6 +33,8 @@ class ScreenDetailTask extends StatelessWidget {
   final List<Label> dropdownChoicesLabel = [];
 
   final TextEditingController _nameTaskController = TextEditingController();
+  final TextEditingController _checkListNameController =
+      TextEditingController();
 
   void _intData(DisplayListTasks state) {
     dropdownChoicesProject.clear();
@@ -56,6 +62,7 @@ class ScreenDetailTask extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        print("stateee: $state");
         return WillPopScope(
           onWillPop: () async {
             if (_nameTaskController.text.isNotEmpty) {
@@ -92,44 +99,10 @@ class ScreenDetailTask extends StatelessWidget {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0, top: 8.0),
-                          child: IconOutlineButton(
-                            Util.getDisplayTextDateFromDate(
-                                    state.taskSubmit.taskDate ?? "") ??
-                                "No Date",
-                            Icons.calendar_today,
-                            colorIcon: state.taskSubmit.taskDate != null
-                                ? Colors.green
-                                : kColorGray1,
-                            colorBorder: state.taskSubmit.taskDate != null
-                                ? Colors.green
-                                : kColorGray1,
-                            onPressed: () async {
-                              await onPressedPickDate(context, state);
-                            },
-                          ),
+                          child: _buildButtonDate(state, context),
                         ),
                         if (!(state.taskSubmit.labels?.isEmpty ?? true))
-                          Row(
-                            children: [
-                              ...state.taskSubmit.labels
-                                  .map((e) => Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 16.0, top: 8.0),
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 6.0, horizontal: 12.0),
-                                        decoration: BoxDecoration(
-                                          color: HexColor(e.color),
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(8.0)),
-                                        ),
-                                        child: Text(
-                                          e.name,
-                                          style: kFontRegularBlack2,
-                                        ),
-                                      ))
-                                  .toList()
-                            ],
-                          ),
+                          _buildListLabel(state),
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: _buildRowFunction(context, state),
@@ -140,24 +113,33 @@ class ScreenDetailTask extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 16.0),
-                          child: GestureDetector(
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.add,
-                                  color: kColorGray1,
-                                ),
-                                SizedBox(
-                                  width: 8.0,
-                                ),
-                                Text(
-                                  "Thêm Checklist",
-                                  style: kFontRegularGray1,
-                                )
-                              ],
-                            ),
+                          child: Text(
+                            "Checklist",
+                            style: kFontSemibold,
                           ),
-                        )
+                        ),
+                        if (!(state.taskSubmit.checkList?.isEmpty ?? true))
+                          ...state.taskSubmit.checkList
+                              .map((e) => ItemCheckList(
+                                    checkItem: e,
+                                    onItemCheckChange: (value) {
+                                      _taskSubmitBloc.add(UpdateItemCheckList(
+                                          e.copyWith(isCheck: value)));
+                                    },
+                                    onItemCheckNameChange: (value) {
+                                      if (value.isNotEmpty) {
+                                        _taskSubmitBloc.add(UpdateItemCheckList(
+                                            e.copyWith(name: value)));
+                                        FocusScope.of(context).unfocus();
+                                      }
+                                    },
+                                    onDeleteCheckItem: () {
+                                      _taskSubmitBloc
+                                          .add(DeleteCheckItem(e.id));
+                                    },
+                                  ))
+                              .toList(),
+                        _buildEditTextAddCheckList(state),
                       ],
                     ),
                   ],
@@ -166,6 +148,78 @@ class ScreenDetailTask extends StatelessWidget {
             ),
           ),
         );
+      },
+    );
+  }
+
+  Row _buildEditTextAddCheckList(TaskSubmitState state) {
+    return Row(
+      children: [
+        CircleInkWell(
+          Icons.add,
+          sizeIcon: 24.0,
+          colorIcon: kColorPrimary,
+          onPressed: () {
+            if (_checkListNameController.text.isNotEmpty) {
+              final checkList = state.taskSubmit.checkList ?? [];
+              checkList.add(CheckItem(
+                id: DateTime.now().microsecondsSinceEpoch.toString(),
+                name: _checkListNameController.text,
+              ));
+
+              _checkListNameController.text = '';
+              _taskSubmitBloc.add(SubmitEditTask(state.taskSubmit.copyWith(
+                checkList: checkList,
+              )));
+            }
+          },
+        ),
+        SizedBox(
+          width: 8.0,
+        ),
+        Expanded(
+          child: TextFieldNonBorder(
+            autoFocus: false,
+            hint: 'Thêm Checklist',
+            controller: _checkListNameController,
+          ),
+        )
+      ],
+    );
+  }
+
+  Row _buildListLabel(TaskSubmitState state) {
+    return Row(
+      children: [
+        ...state.taskSubmit.labels
+            .map((e) => Container(
+                  margin: const EdgeInsets.only(left: 16.0, top: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 6.0, horizontal: 12.0),
+                  decoration: BoxDecoration(
+                    color: HexColor(e.color),
+                    borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                  ),
+                  child: Text(
+                    e.name,
+                    style: kFontRegularBlack2,
+                  ),
+                ))
+            .toList()
+      ],
+    );
+  }
+
+  Widget _buildButtonDate(TaskSubmitState state, BuildContext context) {
+    return IconOutlineButton(
+      Util.getDisplayTextDateFromDate(state.taskSubmit.taskDate ?? "") ??
+          "No Date",
+      Icons.calendar_today,
+      colorIcon: state.taskSubmit.taskDate != null ? Colors.green : kColorGray1,
+      colorBorder:
+          state.taskSubmit.taskDate != null ? Colors.green : kColorGray1,
+      onPressed: () async {
+        await onPressedPickDate(context, state);
       },
     );
   }

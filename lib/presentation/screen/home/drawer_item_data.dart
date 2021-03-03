@@ -28,6 +28,5 @@ class DrawerItemData {
     DrawerItemData("Dashboard", "assets/ic_dashboard_64.png"),
     DrawerItemData("Hôm nay", "assets/ic_today_64.png"),
     DrawerItemData("7 ngày tiếp theo", "assets/ic_week_64.png"),
-    DrawerItemData("Tháng này", "assets/ic_month_64.png"),
   ];
 }

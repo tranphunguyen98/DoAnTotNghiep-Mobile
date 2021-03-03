@@ -17,7 +17,8 @@ class DisplayListTasks extends TaskState {
   static const kDrawerIndexInbox = 0;
   static const kDrawerIndexToday = 1;
   static const kDrawerIndexNextWeek = 2;
-  static const kDrawerIndexThisMonth = 3;
+
+  // static const kDrawerIndexThisMonth = 3;
 
   final List<DrawerItemData> drawerItems;
   final int indexDrawerSelected;
@@ -46,7 +47,9 @@ class DisplayListTasks extends TaskState {
           .where((element) => element.project?.id?.isEmpty ?? true)
           .toList();
 
-      return [Section.kSectionNoName.copyWith(listTask: listTaskInbox)];
+      if (listTaskInbox.isNotEmpty) {
+        return [Section.kSectionNoName.copyWith(listTask: listTaskInbox)];
+      }
     }
 
     if (indexDrawerSelected == kDrawerIndexToday) {
@@ -77,6 +80,39 @@ class DisplayListTasks extends TaskState {
       ];
 
       return _getListSectionWithData(listSectionNoData);
+    }
+
+    if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeProject) {
+      final listTask = _listAllTask.where((element) {
+        if (element.project == null) {
+          return false;
+        }
+        return element.project?.id ==
+            (drawerItems[indexDrawerSelected].data as Project).id;
+      }).toList();
+
+      if (listTask.isNotEmpty) {
+        return [Section.kSectionNoName.copyWith(listTask: listTask)];
+      }
+
+      return [];
+    }
+
+    if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeLabel) {
+      final listTask = _listAllTask.where((element) {
+        if (element.labels?.isEmpty ?? true) {
+          return false;
+        }
+
+        return element.labels
+            .contains(drawerItems[indexDrawerSelected].data as Label);
+      }).toList();
+
+      if (listTask.isNotEmpty) {
+        return [Section.kSectionNoName.copyWith(listTask: listTask)];
+      }
+
+      return [];
     }
 
     return <Section>[];
@@ -175,7 +211,7 @@ class DisplayListTasks extends TaskState {
         msg,
         drawerItems,
         listProject,
-        listLabel
+        listLabel,
       ];
 
   @override

@@ -31,25 +31,26 @@ class LocalTaskMapper {
       labels: localTask.labelIds?.isEmpty ?? true
           ? <Label>[]
           : getListLabelFromListId(localTask.labelIds),
+      checkList: localTask.checkList,
     );
   }
 
   LocalTask mapToLocal(Task task) {
     return LocalTask(
-      id: task.id,
-      name: task.name,
-      taskDate: task.taskDate,
-      createdDate: task.createdDate,
-      updatedDate: task.updatedDate,
-      description: task.description,
-      isCompleted: task.isCompleted,
-      isStarred: task.isStarred,
-      isTrashed: task.isTrashed,
-      priorityType: task.priorityType,
-      projectId: task.project?.id,
-      sectionId: task.sectionId,
-      labelIds: task.labels?.map((e) => e.id)?.toList(),
-    );
+        id: task.id,
+        name: task.name,
+        taskDate: task.taskDate,
+        createdDate: task.createdDate,
+        updatedDate: task.updatedDate,
+        description: task.description,
+        isCompleted: task.isCompleted,
+        isStarred: task.isStarred,
+        isTrashed: task.isTrashed,
+        priorityType: task.priorityType,
+        projectId: task.project?.id,
+        sectionId: task.sectionId,
+        labelIds: task.labels?.map((e) => e.id)?.toList(),
+        checkList: task.checkList);
   }
 
   Project getProjectFromId(String id) {

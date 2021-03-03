@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
+import 'package:totodo/data/entity/check_item.dart';
 import 'package:totodo/data/entity/task.dart';
 
 import 'bloc.dart';
@@ -28,6 +29,10 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
       yield* _mapOpenBottomSheetAddTaskToState();
     } else if (event is HandledSuccessState) {
       yield* _mapHandledSuccessStateToState();
+    } else if (event is UpdateItemCheckList) {
+      yield* _mapUpdateItemCheckListToState(event.checkItem);
+    } else if (event is DeleteCheckItem) {
+      yield* _mapDeleteCheckItemToState(event.idCheckItem);
     }
   }
 
@@ -39,6 +44,43 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
 
   Stream<TaskSubmitState> _mapHandledSuccessStateToState() async* {
     yield state.copyWith(success: false);
+  }
+
+  Stream<TaskSubmitState> _mapDeleteCheckItemToState(
+      String checkItemId) async* {
+    final checkList = state.taskSubmit.checkList;
+    checkList.removeWhere((element) => element.id == checkItemId);
+
+    final taskUpdate = state.taskSubmit.copyWith(checkList: checkList);
+
+    await _taskRepository.updateTask(taskUpdate);
+
+    yield state.copyWith(taskSubmit: taskUpdate, success: true);
+  }
+
+  Stream<TaskSubmitState> _mapUpdateItemCheckListToState(
+      CheckItem checkItem) async* {
+    final checkList = state.taskSubmit.checkList;
+
+    var indexUpdate = -1;
+    for (var i = 0; i < checkList.length; i++) {
+      if (checkList[i].id == checkItem.id) {
+        indexUpdate = i;
+        break;
+      }
+    }
+
+    if (indexUpdate >= 0) {
+      checkList[indexUpdate] = checkItem;
+    }
+
+    print("checkList: ${checkList != state.taskSubmit.checkList}");
+
+    final taskUpdate = state.taskSubmit.copyWith(checkList: checkList);
+
+    await _taskRepository.updateTask(taskUpdate);
+
+    yield state.copyWith(taskSubmit: taskUpdate, success: true);
   }
 
   Stream<TaskSubmitState> _mapOpenScreenEditTaskToState(Task task) async* {

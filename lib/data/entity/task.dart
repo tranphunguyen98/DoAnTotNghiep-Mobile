@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
+
+import 'check_item.dart';
+import 'label.dart';
+import 'project.dart';
 
 class Task extends Equatable {
   static const int kPriority4 = 4;
@@ -22,24 +24,25 @@ class Task extends Equatable {
   final Project project;
   final String sectionId;
   final List<Label> labels;
+  final List<CheckItem> checkList;
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
-  const Task({
-    @required this.id,
-    @required this.createdDate,
-    @required this.updatedDate,
-    this.priorityType = kPriority4,
-    @required this.name,
-    @required this.description,
-    this.isCompleted = false,
-    this.isStarred = false,
-    this.isTrashed = false,
-    @required this.taskDate,
-    @required this.project,
-    this.sectionId,
-    @required this.labels,
-  });
+  const Task(
+      {@required this.id,
+      @required this.createdDate,
+      @required this.updatedDate,
+      this.priorityType = kPriority4,
+      @required this.name,
+      @required this.description,
+      this.isCompleted = false,
+      this.isStarred = false,
+      this.isTrashed = false,
+      @required this.taskDate,
+      @required this.project,
+      this.sectionId,
+      @required this.labels,
+      this.checkList});
 
   Task copyWith({
     String id,
@@ -55,6 +58,7 @@ class Task extends Equatable {
     Project project,
     String sectionId,
     List<Label> labels,
+    List<CheckItem> checkList,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (createdDate == null || identical(createdDate, this.createdDate)) &&
@@ -68,7 +72,8 @@ class Task extends Equatable {
         (taskDate == null || identical(taskDate, this.taskDate)) &&
         (project == null || identical(project, this.project)) &&
         (sectionId == null || identical(sectionId, this.sectionId)) &&
-        (labels == null || identical(labels, this.labels))) {
+        (labels == null || identical(labels, this.labels)) &&
+        (checkList == null || identical(checkList, this.checkList))) {
       return this;
     }
 
@@ -86,12 +91,13 @@ class Task extends Equatable {
       project: project ?? this.project,
       sectionId: sectionId ?? this.sectionId,
       labels: labels ?? this.labels,
+      checkList: checkList ?? this.checkList,
     );
   }
 
   @override
   String toString() {
-    return 'Task{id: $id, createdDate: $createdDate, updatedDate: $updatedDate, priorityType: $priorityType, name: $name, description: $description, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate, project: $project, sectionId: $sectionId, labels: $labels}';
+    return 'Task{id: $id, createdDate: $createdDate, updatedDate: $updatedDate, priorityType: $priorityType, name: $name, description: $description, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate, project: $project, sectionId: $sectionId, labels: $labels, checkList: $checkList}';
   }
 
   @override
@@ -111,7 +117,8 @@ class Task extends Equatable {
           taskDate == other.taskDate &&
           project == other.project &&
           sectionId == other.sectionId &&
-          labels == other.labels);
+          labels == other.labels &&
+          checkList == other.checkList);
 
   @override
   int get hashCode =>
@@ -127,9 +134,10 @@ class Task extends Equatable {
       taskDate.hashCode ^
       project.hashCode ^
       sectionId.hashCode ^
-      labels.hashCode;
+      labels.hashCode ^
+      checkList.hashCode;
 
-  factory Task.fromJson(Map<String, dynamic> map) {
+  factory Task.fromMap(Map<String, dynamic> map) {
     return Task(
       id: map['id'] as String,
       createdDate: map['createdDate'] as String,
@@ -144,10 +152,11 @@ class Task extends Equatable {
       project: map['project'] as Project,
       sectionId: map['sectionId'] as String,
       labels: map['labels'] as List<Label>,
+      checkList: map['checkList'] as List<CheckItem>,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
     return {
       'id': this.id,
@@ -163,6 +172,7 @@ class Task extends Equatable {
       'project': this.project,
       'sectionId': this.sectionId,
       'labels': this.labels,
+      'checkList': this.checkList,
     } as Map<String, dynamic>;
   }
 
@@ -184,5 +194,6 @@ class Task extends Equatable {
         project,
         labels,
         sectionId,
+        checkList,
       ];
 }

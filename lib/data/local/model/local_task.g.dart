@@ -30,13 +30,14 @@ class LocalTaskAdapter extends TypeAdapter<LocalTask> {
       projectId: fields[10] as String,
       labelIds: (fields[11] as List)?.cast<String>(),
       sectionId: fields[12] as String,
+      checkList: (fields[13] as List)?.cast<CheckItem>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, LocalTask obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -62,7 +63,9 @@ class LocalTaskAdapter extends TypeAdapter<LocalTask> {
       ..writeByte(11)
       ..write(obj.labelIds)
       ..writeByte(12)
-      ..write(obj.sectionId);
+      ..write(obj.sectionId)
+      ..writeByte(13)
+      ..write(obj.checkList);
   }
 
   @override
