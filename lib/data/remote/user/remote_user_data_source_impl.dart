@@ -21,19 +21,19 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   Future<bool> changePassword(
       String authorization, String oldPassword, String newPassword) async {
     try {
-      print("signUp! $oldPassword $newPassword");
+      // print("signUp! $oldPassword $newPassword");
       final messageResponse = await _userService.changePassword(
           authorization, oldPassword, newPassword);
-      print("No error!");
-      print(messageResponse.message.toString());
+      // print("No error!");
+      // print(messageResponse.message.toString());
       if (messageResponse.succeeded) {
         return true;
       }
       throw Exception("Change Password Failed!");
     } on DioError catch (e) {
-      print("Error: $e");
+      // print("Error: $e");
 
-      print("Error: ${e.response.data["message"]}");
+      // print("Error: ${e.response.data["message"]}");
       throw Exception(e.response.data["message"] ?? "Error Dio");
     }
   }
@@ -44,13 +44,13 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
     try {
       final messageResponse =
           await _userService.resetPassword(email, optCode, password);
-      print(messageResponse.message.toString());
+      // print(messageResponse.message.toString());
       if (messageResponse.succeeded) {
         return true;
       }
       throw Exception("Reset Password Failed!");
     } on DioError catch (e) {
-      print("Error: ${e ?? "Error Dio"}");
+      // print("Error: ${e ?? "Error Dio"}");
       throw Exception(e.response?.data['message'] ?? "Error Dio");
     }
   }
@@ -59,10 +59,10 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   Future<User> signIn(String email, String password) async {
     try {
       final userResponse = await _userService.signIn(email, password);
-      print("userResponse: $userResponse}");
+      // print("userResponse: $userResponse}");
       return userResponse.user;
     } on DioError catch (e) {
-      print("Error: ${e.response.data["message"]}");
+      // print("Error: ${e.response.data["message"]}");
       throw Exception(e.response.data["message"] ?? "Error Dio");
     }
   }
@@ -96,21 +96,43 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
         print('error: ${result.errorMessage}');
         throw Exception(result.errorMessage);
         break;
+      default:
+        throw Exception("Error login with Facebook");
     }
   }
 
   @override
   Future<User> signInWithGoogle() async {
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-        idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+    try {
+      print("User: 0");
 
-    await _firebaseAuth.signInWithCredential(credential);
-    final user = await _firebaseAuth.currentUser();
-    return User(
-        email: user.email, name: user.displayName, avatar: user.photoUrl);
+      _firebaseAuth.signOut();
+      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+      print("User: 1 ${googleUser.displayName}");
+      return User(
+          type: User.kTypeGoogle,
+          email: googleUser.email,
+          name: googleUser.displayName,
+          avatar: googleUser.photoUrl);
+
+      // final GoogleSignInAuthentication googleAuth =
+      //     await googleUser.authentication;
+      // final AuthCredential credential = GoogleAuthProvider.getCredential(
+      //     idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+      // print("User: 2");
+      //
+      // await _firebaseAuth.signInWithCredential(credential);
+      // final user = await _firebaseAuth.currentUser();
+      // print("User: $user");
+      // return User(
+      //     type: User.kTypeGoogle,
+      //     email: user.email,
+      //     name: user.displayName,
+      //     avatar: user.photoUrl);
+    } catch (e, trace) {
+      print("trace: $trace");
+      rethrow;
+    }
   }
 
   @override
