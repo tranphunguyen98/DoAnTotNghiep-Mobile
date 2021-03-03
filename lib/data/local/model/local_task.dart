@@ -28,6 +28,8 @@ class LocalTask {
   final String projectId;
   @HiveField(11)
   final List<String> labelIds;
+  @HiveField(12)
+  final String sectionId;
 
   const LocalTask({
     this.id,
@@ -42,6 +44,7 @@ class LocalTask {
     this.taskDate,
     this.projectId,
     this.labelIds,
+    this.sectionId,
   });
 
   LocalTask copyWith({
@@ -57,6 +60,7 @@ class LocalTask {
     String taskDate,
     String projectId,
     List<String> labelIds,
+    String sectionId,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (createdDate == null || identical(createdDate, this.createdDate)) &&
@@ -69,7 +73,8 @@ class LocalTask {
         (isTrashed == null || identical(isTrashed, this.isTrashed)) &&
         (taskDate == null || identical(taskDate, this.taskDate)) &&
         (projectId == null || identical(projectId, this.projectId)) &&
-        (labelIds == null || identical(labelIds, this.labelIds))) {
+        (labelIds == null || identical(labelIds, this.labelIds)) &&
+        (sectionId == null || identical(sectionId, this.sectionId))) {
       return this;
     }
 
@@ -86,6 +91,7 @@ class LocalTask {
       taskDate: taskDate ?? this.taskDate,
       projectId: projectId ?? this.projectId,
       labelIds: labelIds ?? this.labelIds,
+      sectionId: sectionId ?? this.sectionId,
     );
   }
 }

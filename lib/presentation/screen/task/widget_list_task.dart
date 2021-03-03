@@ -11,6 +11,7 @@ import 'package:totodo/presentation/screen/task/widget_item_task.dart';
 class ListTask extends StatelessWidget {
   final List<Task> listTask;
   final TaskSubmitBloc _taskSubmitBloc = getIt<TaskSubmitBloc>();
+
   ListTask(this.listTask);
 
   @override
@@ -24,11 +25,12 @@ class ListTask extends StatelessWidget {
         }
       },
       child: ListView.separated(
-        padding: EdgeInsets.symmetric(vertical: 16.0),
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
         itemBuilder: (context, index) {
           return ItemTask(
-            listTask[index],
-            (task) {
+            task: listTask[index],
+            updateTask: (task) {
               _taskSubmitBloc.add(SubmitEditTask(task));
             },
             onPressed: (Task task) {
@@ -40,10 +42,10 @@ class ListTask extends StatelessWidget {
         separatorBuilder: (context, index) {
           return Divider(
             thickness: 1.0,
+            height: 1.0,
           );
         },
         itemCount: listTask.length,
-        physics: BouncingScrollPhysics(),
       ),
     );
   }

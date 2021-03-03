@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/utils/util.dart';
@@ -26,6 +27,20 @@ class DisplayListTasks extends TaskState {
   final bool loading;
   final String msg;
 
+  List<Section> listSectionDataDisplay() {
+    if (_listAllTask == null) return <Section>[];
+
+    if (indexDrawerSelected == kDrawerIndexInbox) {
+      return [Section.kSectionNoName];
+    }
+
+    if (indexDrawerSelected == kDrawerIndexToday) {
+      return [Section.kSectionOverdue, Section.kSectionToday];
+    }
+
+    return <Section>[];
+  }
+
   List<Task> listDataDisplay({int projectId, int labelId}) {
     if (_listAllTask == null) return <Task>[];
 
@@ -36,16 +51,38 @@ class DisplayListTasks extends TaskState {
     }
 
     if (indexDrawerSelected == kDrawerIndexToday) {
-      return _listAllTask
+      final listTaskToday = _listAllTask
           .where(
-            (element) =>
-                !(element.taskDate?.isEmpty ?? true) &&
-                Util.isSameDay(
-                  DateTime.parse(element.taskDate),
-                  DateTime.now(),
-                ),
-          )
-          .toList();
+        (element) =>
+            !(element.taskDate?.isEmpty ?? true) &&
+            Util.isSameDay(
+              DateTime.parse(element.taskDate),
+              DateTime.now(),
+            ),
+      )
+          .map((e) {
+        return e.copyWith(
+          sectionId: Section.kSectionToday.id,
+        );
+      }).toList();
+
+      final listTaskOverdue = _listAllTask
+          .where(
+        (element) =>
+            !(element.taskDate?.isEmpty ?? true) &&
+            Util.isOverdue(
+              DateTime.parse(element.taskDate),
+              DateTime.now(),
+            ),
+      )
+          .map((e) {
+        return e.copyWith(
+          sectionId: Section.kSectionOverdue.id,
+        );
+      }).toList();
+
+      listTaskToday.addAll(listTaskOverdue);
+      return listTaskToday;
     }
 
     if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeProject) {

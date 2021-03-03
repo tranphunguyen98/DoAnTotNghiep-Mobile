@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/task/bloc.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/task/widget_empty_task.dart';
-import 'package:totodo/presentation/screen/task/widget_list_task.dart';
+import 'package:totodo/presentation/screen/task/widget_list_section.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -26,16 +26,25 @@ class DashboardScreen extends StatelessWidget {
           print("DashboardScreen $state");
           if (state is DisplayListTasks) {
             if (state.loading) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             }
 
             if (state.listDataDisplay() != null) {
               if (state.listDataDisplay().isEmpty) {
-                return EmptyTask();
+                return const EmptyTask();
               } else {
-                return ListTask(state.listDataDisplay());
+                return ListSection(
+                    state.listDataDisplay(), state.listSectionDataDisplay());
+                // ListTask(state.listDataDisplay());
+                //   Column(
+                //   children: [
+                //     ListSection(state.listDataDisplay(),
+                //         state.listSectionDataDisplay()),
+                //
+                //   ],
+                // );
               }
             }
 

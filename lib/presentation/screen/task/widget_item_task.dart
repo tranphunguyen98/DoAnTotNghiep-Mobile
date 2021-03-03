@@ -11,7 +11,7 @@ class ItemTask extends StatelessWidget {
   final Function(Task task) updateTask;
   final Function(Task task) onPressed;
 
-  ItemTask(this.task, this.updateTask, {this.onPressed});
+  const ItemTask({this.task, this.updateTask, this.onPressed});
 
   @override
   Widget build(BuildContext context) {

@@ -8,6 +8,7 @@ import 'package:totodo/data/local/model/local_task.dart';
 
 import 'app_config.dart';
 import 'data/entity/label.dart';
+import 'data/entity/section.dart';
 import 'data/local/model/local_task.dart';
 import 'data/local/source/task/local_task_service.dart';
 import 'di/injection.dart';
@@ -43,6 +44,7 @@ Future _initHive() async {
   Hive.registerAdapter<LocalTask>(LocalTaskAdapter());
   Hive.registerAdapter<Project>(ProjectAdapter());
   Hive.registerAdapter<Label>(LabelAdapter());
+  Hive.registerAdapter<Section>(SectionAdapter());
   await Hive.openBox(LocalTaskService.kNameBoxTask);
   await Hive.openBox(LocalTaskService.kNameBoxProject);
   await Hive.openBox(LocalTaskService.kNameBoxLabel);

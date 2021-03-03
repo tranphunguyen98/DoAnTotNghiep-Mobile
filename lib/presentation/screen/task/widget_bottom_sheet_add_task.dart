@@ -53,7 +53,7 @@ class BottomSheetAddTask extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTextNameTask(state),
-                if (state.taskSubmit.labels.isNotEmpty)
+                if (!(state.taskSubmit.labels?.isEmpty ?? true))
                   Row(
                     children: [
                       ...state.taskSubmit.labels
@@ -118,8 +118,9 @@ class BottomSheetAddTask extends StatelessWidget {
       children: [
         CircleInkWell(
           Icons.local_offer_outlined,
-          colorIcon:
-              state.taskSubmit.labels.isEmpty ? kColorBlack2 : Colors.red,
+          colorIcon: state.taskSubmit.labels?.isEmpty ?? true
+              ? kColorBlack2
+              : Colors.red,
           sizeIcon: 24.0,
           onPressed: () {
             Navigator.of(context).pushNamed(AppRouter.kSelectLabel);
