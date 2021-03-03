@@ -27,87 +27,127 @@ class DisplayListTasks extends TaskState {
   final bool loading;
   final String msg;
 
+  List<Section> _getListSectionWithData(List<Section> listSectionNoData) {
+    final listSectionWithData = listSectionNoData.map((e) {
+      final listTaskWithSection = _listAllTask
+          .where((task) =>
+              !(task.taskDate?.isEmpty ?? true) && e.checkDate(task.taskDate))
+          .toList();
+      return e.copyWith(listTask: listTaskWithSection);
+    }).toList();
+    return listSectionWithData;
+  }
+
   List<Section> listSectionDataDisplay() {
     if (_listAllTask == null) return <Section>[];
 
     if (indexDrawerSelected == kDrawerIndexInbox) {
-      return [Section.kSectionNoName];
+      final listTaskInbox = _listAllTask
+          .where((element) => element.project?.id?.isEmpty ?? true)
+          .toList();
+
+      return [Section.kSectionNoName.copyWith(listTask: listTaskInbox)];
     }
 
     if (indexDrawerSelected == kDrawerIndexToday) {
-      return [Section.kSectionOverdue, Section.kSectionToday];
+      final listSectionNoData = [
+        Section.kSectionOverdue,
+        Section.kSectionToday
+      ];
+
+      return _getListSectionWithData(listSectionNoData);
+    }
+
+    if (indexDrawerSelected == kDrawerIndexNextWeek) {
+      final listSectionNoData = [
+        Section.kSectionOverdue,
+        Section.kSectionToday.copyWith(isShowIfEmpty: true),
+        Section.kSectionTomorrow,
+        ...[2, 3, 4, 5, 6]
+            .map(
+              (e) => Section(
+                  id: Util.getNameOfDay(DateTime.now().add(Duration(days: e))),
+                  name:
+                      Util.getNameOfDay(DateTime.now().add(Duration(days: e))),
+                  checkDate: (dateTime) {
+                    return Util.isAfterNumberDay(DateTime.parse(dateTime), e);
+                  }),
+            )
+            .toList(),
+      ];
+
+      return _getListSectionWithData(listSectionNoData);
     }
 
     return <Section>[];
   }
 
-  List<Task> listDataDisplay({int projectId, int labelId}) {
-    if (_listAllTask == null) return <Task>[];
-
-    if (indexDrawerSelected == kDrawerIndexInbox) {
-      return _listAllTask
-          .where((element) => element.project?.id?.isEmpty ?? true)
-          .toList();
-    }
-
-    if (indexDrawerSelected == kDrawerIndexToday) {
-      final listTaskToday = _listAllTask
-          .where(
-        (element) =>
-            !(element.taskDate?.isEmpty ?? true) &&
-            Util.isSameDay(
-              DateTime.parse(element.taskDate),
-              DateTime.now(),
-            ),
-      )
-          .map((e) {
-        return e.copyWith(
-          sectionId: Section.kSectionToday.id,
-        );
-      }).toList();
-
-      final listTaskOverdue = _listAllTask
-          .where(
-        (element) =>
-            !(element.taskDate?.isEmpty ?? true) &&
-            Util.isOverdue(
-              DateTime.parse(element.taskDate),
-              DateTime.now(),
-            ),
-      )
-          .map((e) {
-        return e.copyWith(
-          sectionId: Section.kSectionOverdue.id,
-        );
-      }).toList();
-
-      listTaskToday.addAll(listTaskOverdue);
-      return listTaskToday;
-    }
-
-    if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeProject) {
-      return _listAllTask.where((element) {
-        if (element.project == null) {
-          return false;
-        }
-        return element.project?.id ==
-            (drawerItems[indexDrawerSelected].data as Project).id;
-      }).toList();
-    }
-
-    if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeLabel) {
-      return _listAllTask.where((element) {
-        if (element.labels?.isEmpty ?? true) {
-          return false;
-        }
-
-        return element.labels
-            .contains(drawerItems[indexDrawerSelected].data as Label);
-      }).toList();
-    }
-
-    return <Task>[];
-  }
+  // List<Task> listDataDisplay({int projectId, int labelId}) {
+  //   if (_listAllTask == null) return <Task>[];
+  //
+  //
+  //   if (indexDrawerSelected == kDrawerIndexToday) {
+  //     final listTaskToday = _listAllTask
+  //         .where(
+  //       (element) =>
+  //           !(element.taskDate?.isEmpty ?? true) &&
+  //           Util.isSameDay(
+  //             DateTime.parse(element.taskDate),
+  //             DateTime.now(),
+  //           ),
+  //     )
+  //         .map((e) {
+  //       return e.copyWith(
+  //         sectionId: Section.kSectionToday.id,
+  //       );
+  //     }).toList();
+  //
+  //     final listTaskOverdue = _listAllTask
+  //         .where(
+  //       (element) =>
+  //           !(element.taskDate?.isEmpty ?? true) &&
+  //           Util.isOverdue(
+  //             DateTime.parse(element.taskDate),
+  //             DateTime.now(),
+  //           ),
+  //     )
+  //         .map((e) {
+  //       return e.copyWith(
+  //         sectionId: Section.kSectionOverdue.id,
+  //       );
+  //     }).toList();
+  //
+  //     listTaskToday.addAll(listTaskOverdue);
+  //     return listTaskToday;
+  //   }
+  //
+  //   if(indexDrawerSelected == DisplayListTasks.kDrawerIndexNextWeek) {
+  //
+  //   }
+  //
+  //   if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeProject) {
+  //     return _listAllTask.where((element) {
+  //       if (element.project == null) {
+  //         return false;
+  //       }
+  //       return element.project?.id ==
+  //           (drawerItems[indexDrawerSelected].data as Project).id;
+  //     }).toList();
+  //   }
+  //
+  //   if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeLabel) {
+  //     return _listAllTask.where((element) {
+  //       if (element.labels?.isEmpty ?? true) {
+  //         return false;
+  //       }
+  //
+  //       return element.labels
+  //           .contains(drawerItems[indexDrawerSelected].data as Label);
+  //     }).toList();
+  //   }
+  //
+  //   return <Task>[];
+  // }
 
   const DisplayListTasks(
       {this.indexDrawerSelected = kDrawerIndexInbox,

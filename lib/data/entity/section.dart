@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/utils/util.dart';
 
 part 'section.g.dart';
 
@@ -11,67 +13,57 @@ class Section extends Equatable {
   @HiveField(1)
   final String name;
   final bool isShowIfEmpty;
-  static const Section kSectionToday =
-      Section(id: "today", name: "Today", isShowIfEmpty: false);
-  static const Section kSectionOverdue =
-      Section(id: "overdue", name: "Overdue", isShowIfEmpty: false);
+  final List<Task> listTask;
+  final bool Function(String date) checkDate;
+
+  static const Section kSectionToday = Section(
+      id: "today",
+      name: "Today",
+      isShowIfEmpty: false,
+      checkDate: Util.isTodayString);
+
+  static const Section kSectionTomorrow = Section(
+      id: "tomorrow", name: "Tomorrow", checkDate: Util.isTomorrowString);
+
+  static const Section kSectionOverdue = Section(
+      id: "overdue",
+      name: "Overdue",
+      isShowIfEmpty: false,
+      checkDate: Util.isOverDueString);
+
   static const Section kSectionNoName = Section(id: "noName", name: "");
 
-  //<editor-fold desc="Data Methods" defaultstate="collapsed">
-
-  const Section({
-    @required this.id,
-    @required this.name,
-    this.isShowIfEmpty = true,
-  });
+  const Section(
+      {@required this.id,
+      @required this.name,
+      this.isShowIfEmpty = true,
+      this.listTask = const [],
+      this.checkDate});
 
   Section copyWith({
     String id,
     String name,
+    bool isShowIfEmpty,
+    List<Task> listTask,
+    bool Function(String date) checkDate,
   }) {
     if ((id == null || identical(id, this.id)) &&
-        (name == null || identical(name, this.name))) {
+        (name == null || identical(name, this.name)) &&
+        (isShowIfEmpty == null ||
+            identical(isShowIfEmpty, this.isShowIfEmpty)) &&
+        (listTask == null || identical(listTask, this.listTask)) &&
+        (checkDate == null || identical(checkDate, this.checkDate))) {
       return this;
     }
 
     return Section(
       id: id ?? this.id,
       name: name ?? this.name,
+      isShowIfEmpty: isShowIfEmpty ?? this.isShowIfEmpty,
+      listTask: listTask ?? this.listTask,
+      checkDate: checkDate ?? this.checkDate,
     );
   }
-
-  @override
-  String toString() {
-    return 'Label{id: $id, name: $name}';
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Section &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          name == other.name);
-
-  @override
-  int get hashCode => id.hashCode ^ name.hashCode;
-
-  factory Section.fromMap(Map<String, dynamic> map) {
-    return Section(
-      id: map['id'] as String,
-      name: map['name'] as String,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    // ignore: unnecessary_cast
-    return {
-      'id': this.id,
-      'name': this.name,
-    } as Map<String, dynamic>;
-  }
-
-  //</editor-fold>
 
   @override
   List<Object> get props => [

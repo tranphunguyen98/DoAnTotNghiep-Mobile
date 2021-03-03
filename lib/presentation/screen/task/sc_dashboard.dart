@@ -31,20 +31,11 @@ class DashboardScreen extends StatelessWidget {
               );
             }
 
-            if (state.listDataDisplay() != null) {
-              if (state.listDataDisplay().isEmpty) {
+            if (state.listSectionDataDisplay() != null) {
+              if (state.listSectionDataDisplay().isEmpty) {
                 return const EmptyTask();
               } else {
-                return ListSection(
-                    state.listDataDisplay(), state.listSectionDataDisplay());
-                // ListTask(state.listDataDisplay());
-                //   Column(
-                //   children: [
-                //     ListSection(state.listDataDisplay(),
-                //         state.listSectionDataDisplay()),
-                //
-                //   ],
-                // );
+                return ListSection(state.listSectionDataDisplay());
               }
             }
 

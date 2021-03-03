@@ -18,6 +18,39 @@ class Util {
         0;
   }
 
+  static bool isTomorrow(DateTime dateTimeSource) {
+    return isAfterNumberDay(dateTimeSource, 1);
+  }
+
+  static bool isAfterNumberDay(DateTime dateTime, int numberOfDay) {
+    return dateTime
+            .difference(
+              DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                DateTime.now().day,
+              ),
+            )
+            .inDays ==
+        numberOfDay;
+  }
+
+  static bool isSameDayString(
+      String dateTimeSourceString, String dateTimeDestinationString) {
+    final dateTimeSource = DateTime.parse(dateTimeSourceString);
+    final dateTimeDestination = DateTime.parse(dateTimeDestinationString);
+
+    return isSameDay(dateTimeSource, dateTimeDestination);
+  }
+
+  static bool isTodayString(String dateTimeString) {
+    return isSameDayString(dateTimeString, DateTime.now().toIso8601String());
+  }
+
+  static bool isTomorrowString(String dateTimeString) {
+    return isTomorrow(DateTime.parse(dateTimeString));
+  }
+
   static bool isOverdue(DateTime dateTimeSource, DateTime dateTimeDestination) {
     return dateTimeSource.compareTo(
           DateTime(
@@ -27,6 +60,16 @@ class Util {
           ),
         ) <
         0;
+  }
+
+  static bool isOverDueString(String dateTimeSourceString) {
+    final dateTimeSource = DateTime.parse(dateTimeSourceString);
+
+    return isOverdue(dateTimeSource, DateTime.now());
+  }
+
+  static String getNameOfDay(DateTime dateTime) {
+    return DateFormat('EEEE').format(dateTime);
   }
 
   static String getDisplayTextDateFromDate(String dateTime) {

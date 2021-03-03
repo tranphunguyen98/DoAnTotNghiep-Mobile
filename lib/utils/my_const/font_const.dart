@@ -66,3 +66,5 @@ final kFontSemiboldWhite = kFontSemibold.copyWith(color: kColorWhite);
 final kFontSemiboldWhite_10 = kFontSemiboldWhite.copyWith(fontSize: 10);
 final kFontSemiboldWhite_16 = kFontSemiboldWhite.copyWith(fontSize: 16);
 final kFontSemiboldWhite_18 = kFontSemiboldWhite.copyWith(fontSize: 18);
+
+final kFontSemiboldGray = kFontSemibold.copyWith(color: kColorGray1_50);
