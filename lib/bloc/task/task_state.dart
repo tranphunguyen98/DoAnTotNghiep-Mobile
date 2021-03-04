@@ -25,18 +25,43 @@ class DisplayListTasks extends TaskState {
   final List<Task> _listAllTask;
   final List<Project> listProject;
   final List<Label> listLabel;
+  final List<Section> listSection;
   final bool loading;
   final String msg;
 
-  List<Section> _getListSectionWithData(List<Section> listSectionNoData) {
+  List<Section> _getListSectionWithDataAndConditionDate(
+      List<Section> listSectionNoData) {
     final listSectionWithData = listSectionNoData.map((e) {
       final listTaskWithSection = _listAllTask
           .where((task) =>
-              !(task.taskDate?.isEmpty ?? true) && e.checkDate(task.taskDate))
+              !(task.taskDate?.isEmpty ?? true) && e.condition(task.taskDate))
           .toList();
       return e.copyWith(listTask: listTaskWithSection);
     }).toList();
     return listSectionWithData;
+  }
+
+  List<Section> _getListSectionWithDataAndConditionSection(
+      List<Section> listSectionNoData) {
+    final listSectionWithData = listSectionNoData.map((e) {
+      final listTaskWithSection = _listAllTask
+          .where((task) =>
+              !(task.sectionId?.isEmpty ?? true) && e.condition(task.sectionId))
+          .toList();
+      return e.copyWith(listTask: listTaskWithSection);
+    }).toList();
+    return listSectionWithData;
+  }
+
+  bool checkIsInProject() {
+    return drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeProject;
+  }
+
+  Project getProjectSelected() {
+    if (checkIsInProject()) {
+      return drawerItems[indexDrawerSelected].data as Project;
+    }
+    throw Exception('Not in project screen');
   }
 
   List<Section> listSectionDataDisplay() {
@@ -57,8 +82,13 @@ class DisplayListTasks extends TaskState {
         Section.kSectionOverdue,
         Section.kSectionToday
       ];
-
-      return _getListSectionWithData(listSectionNoData);
+      final listSectionWithData =
+          _getListSectionWithDataAndConditionDate(listSectionNoData);
+      if (listSectionWithData[0].listTask.isEmpty &&
+          listSectionWithData[1].listTask.isEmpty) {
+        return [];
+      }
+      return listSectionWithData;
     }
 
     if (indexDrawerSelected == kDrawerIndexNextWeek) {
@@ -72,30 +102,53 @@ class DisplayListTasks extends TaskState {
                   id: Util.getNameOfDay(DateTime.now().add(Duration(days: e))),
                   name:
                       Util.getNameOfDay(DateTime.now().add(Duration(days: e))),
-                  checkDate: (dateTime) {
+                  condition: (dateTime) {
                     return Util.isAfterNumberDay(DateTime.parse(dateTime), e);
                   }),
             )
             .toList(),
       ];
 
-      return _getListSectionWithData(listSectionNoData);
+      return _getListSectionWithDataAndConditionDate(listSectionNoData);
     }
 
     if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeProject) {
-      final listTask = _listAllTask.where((element) {
+      final projectSelected = drawerItems[indexDrawerSelected].data as Project;
+
+      final listSectionWithProject = listSection
+          .where((element) => element.projectId == projectSelected.id);
+
+      final listSectionWithCondition = listSectionWithProject
+          .map((e) => e.copyWith(condition: (value) {
+                return value == e.id;
+              }))
+          .toList();
+
+      final listSectionWithData =
+          _getListSectionWithDataAndConditionSection(listSectionWithCondition);
+
+      final listTaskNoSection = _listAllTask.where((element) {
         if (element.project == null) {
           return false;
         }
         return element.project?.id ==
-            (drawerItems[indexDrawerSelected].data as Project).id;
+                (drawerItems[indexDrawerSelected].data as Project).id &&
+            (element.sectionId?.isEmpty ?? true);
       }).toList();
 
-      if (listTask.isNotEmpty) {
-        return [Section.kSectionNoName.copyWith(listTask: listTask)];
+      if (listSectionWithData.isEmpty && listTaskNoSection.isEmpty) {
+        return [];
       }
 
-      return [];
+      final listSectionOfProject = <Section>[];
+      if (listTaskNoSection.isNotEmpty) {
+        listSectionOfProject
+            .add(Section.kSectionNoName.copyWith(listTask: listTaskNoSection));
+      }
+
+      listSectionOfProject.addAll(listSectionWithData);
+
+      return listSectionOfProject;
     }
 
     if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeLabel) {
@@ -190,6 +243,7 @@ class DisplayListTasks extends TaskState {
       this.loading,
       this.msg,
       List<Task> listAllTask,
+      this.listSection,
       this.drawerItems,
       this.listProject,
       this.listLabel})
@@ -212,11 +266,12 @@ class DisplayListTasks extends TaskState {
         drawerItems,
         listProject,
         listLabel,
+        listSection,
       ];
 
   @override
   String toString() {
-    return 'DisplayListTasks: $drawerItems}';
+    return 'DisplayListTasks: $listSection}';
     // return 'DisplayListTasks{taskSubmit: $taskSubmit, listAllTask: ${_listAllTask?.length ?? "null"}, loading: $loading, msg: $msg}';
   }
 
@@ -226,6 +281,7 @@ class DisplayListTasks extends TaskState {
     List<Task> listAllTask,
     List<Project> listProject,
     List<Label> listLabel,
+    List<Section> listSection,
     bool loading,
     String msg,
   }) {
@@ -235,6 +291,7 @@ class DisplayListTasks extends TaskState {
         (listAllTask == null || identical(listAllTask, this._listAllTask)) &&
         (listProject == null || identical(listProject, this.listProject)) &&
         (listLabel == null || identical(listLabel, this.listLabel)) &&
+        (listSection == null || identical(listSection, this.listSection)) &&
         (loading == null || identical(loading, this.loading)) &&
         (msg == null || identical(msg, this.msg))) {
       return this;
@@ -243,9 +300,10 @@ class DisplayListTasks extends TaskState {
     return DisplayListTasks(
       drawerItems: drawerItems ?? this.drawerItems,
       indexDrawerSelected: indexDrawerSelected ?? this.indexDrawerSelected,
-      listAllTask: listAllTask ?? _listAllTask,
+      listAllTask: listAllTask ?? this._listAllTask,
       listProject: listProject ?? this.listProject,
       listLabel: listLabel ?? this.listLabel,
+      listSection: listSection ?? this.listSection,
       loading: loading ?? this.loading,
       msg: msg ?? this.msg,
     );

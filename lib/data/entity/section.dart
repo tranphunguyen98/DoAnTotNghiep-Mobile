@@ -12,62 +12,75 @@ class Section extends Equatable {
   final String id;
   @HiveField(1)
   final String name;
+  @HiveField(2)
+  final String projectId;
+
   final bool isShowIfEmpty;
   final List<Task> listTask;
-  final bool Function(String date) checkDate;
+  final bool Function(String date) condition;
 
   static const Section kSectionToday = Section(
       id: "today",
       name: "Today",
       isShowIfEmpty: false,
-      checkDate: Util.isTodayString);
+      condition: Util.isTodayString);
 
   static const Section kSectionTomorrow = Section(
-      id: "tomorrow", name: "Tomorrow", checkDate: Util.isTomorrowString);
+      id: "tomorrow", name: "Tomorrow", condition: Util.isTomorrowString);
 
   static const Section kSectionOverdue = Section(
       id: "overdue",
       name: "Overdue",
       isShowIfEmpty: false,
-      checkDate: Util.isOverDueString);
+      condition: Util.isOverDueString);
 
   static const Section kSectionNoName = Section(id: "noName", name: "");
 
   const Section(
       {@required this.id,
-      @required this.name,
+      this.name = '',
       this.isShowIfEmpty = true,
       this.listTask = const [],
-      this.checkDate});
+      this.projectId,
+      this.condition});
 
   Section copyWith({
     String id,
     String name,
+    String projectId,
     bool isShowIfEmpty,
     List<Task> listTask,
-    bool Function(String date) checkDate,
+    bool Function(String date) condition,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (name == null || identical(name, this.name)) &&
+        (projectId == null || identical(projectId, this.projectId)) &&
         (isShowIfEmpty == null ||
             identical(isShowIfEmpty, this.isShowIfEmpty)) &&
         (listTask == null || identical(listTask, this.listTask)) &&
-        (checkDate == null || identical(checkDate, this.checkDate))) {
+        (condition == null || identical(condition, this.condition))) {
       return this;
     }
 
     return Section(
       id: id ?? this.id,
       name: name ?? this.name,
+      projectId: projectId ?? this.projectId,
       isShowIfEmpty: isShowIfEmpty ?? this.isShowIfEmpty,
       listTask: listTask ?? this.listTask,
-      checkDate: checkDate ?? this.checkDate,
+      condition: condition ?? this.condition,
     );
+  }
+
+  @override
+  String toString() {
+    return 'Section{id: $id, name: $name, projectId: $projectId}';
   }
 
   @override
   List<Object> get props => [
         id,
         name,
+        projectId,
       ];
 }

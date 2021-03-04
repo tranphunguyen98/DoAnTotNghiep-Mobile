@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/data/entity/check_item.dart';
 import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
-import 'package:totodo/presentation/screen/task/widget_bottom_sheet_add_task.dart';
+import 'package:totodo/presentation/common_widgets/widget_text_field_non_border.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
 class ItemCheckList extends StatelessWidget {

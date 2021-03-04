@@ -12,6 +12,8 @@ import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
 import 'package:totodo/presentation/common_widgets/widget_icon_outline_button.dart';
 import 'package:totodo/presentation/common_widgets/widget_item_popup_menu.dart';
 import 'package:totodo/presentation/common_widgets/widget_label_container.dart';
+import 'package:totodo/presentation/common_widgets/widget_text_field_non_border.dart';
+import 'package:totodo/presentation/custom_ui/custom_ui.dart';
 import 'package:totodo/presentation/router.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/util.dart';
@@ -29,6 +31,11 @@ class BottomSheetAddTask extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if ((_taskBloc.state as DisplayListTasks).checkIsInProject()) {
+      _taskSubmitBloc.add(TaskSubmitChanged(
+          project: (_taskBloc.state as DisplayListTasks).getProjectSelected()));
+    }
+
     return AnimatedPadding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -210,7 +217,9 @@ class BottomSheetAddTask extends StatelessWidget {
                 child: ItemPopupMenu(
                   DropdownChoice(
                       title: project.name,
-                      color: Colors.red,
+                      color: project.color?.isEmpty ?? true
+                          ? kColorGray1
+                          : HexColor(project.color),
                       iconData: project.id?.isEmpty ?? true
                           ? Icons.inbox
                           : Icons.circle,
@@ -228,12 +237,12 @@ class BottomSheetAddTask extends StatelessWidget {
                   ? Icons.calendar_today
                   : Icons.circle,
               onPressed: () {},
-              colorIcon: state.taskSubmit.project?.name != null
-                  ? Colors.red
-                  : kColorGray1,
-              colorBorder: state.taskSubmit.project?.name != null
-                  ? Colors.red
-                  : kColorGray1,
+              colorIcon: state.taskSubmit.project?.color?.isEmpty ?? true
+                  ? kColorGray1
+                  : HexColor(state.taskSubmit.project.color),
+              colorBorder: state.taskSubmit.project?.color?.isEmpty ?? true
+                  ? kColorGray1
+                  : HexColor(state.taskSubmit.project.color),
             ),
           ),
         ),
@@ -260,45 +269,5 @@ class BottomSheetAddTask extends StatelessWidget {
 
   bool isSendButtonActived(TaskSubmitState state) {
     return state.taskSubmit.name?.isNotEmpty ?? false;
-  }
-}
-
-class TextFieldNonBorder extends StatelessWidget {
-  final TextEditingController controller;
-  final Function(String value) onChanged;
-  final Function(String value) onFieldSubmitted;
-  final TextStyle textStyle;
-  final String hint;
-  final bool autoFocus;
-  final String errorText;
-  const TextFieldNonBorder(
-      {this.controller,
-      this.textStyle,
-      this.onChanged,
-      this.onFieldSubmitted,
-      this.autoFocus = true,
-      this.errorText,
-      @required this.hint});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      cursorColor: Colors.black,
-      controller: controller,
-      style: textStyle,
-      // focusNode: FocusNode(canRequestFocus: false),
-      autofocus: autoFocus,
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        errorBorder: InputBorder.none,
-        disabledBorder: InputBorder.none,
-        hintText: hint,
-        errorText: errorText,
-      ),
-      onChanged: onChanged,
-      onFieldSubmitted: onFieldSubmitted,
-    );
   }
 }

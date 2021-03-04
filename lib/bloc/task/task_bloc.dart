@@ -28,6 +28,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       yield* _mapDataProjectChangedState();
     } else if (event is DataListTaskChanged) {
       yield* _mapDataListTaskChangedState();
+    } else if (event is DataListSectionChanged) {
+      yield* _mapDataListSectionChangedToState();
     }
   }
 
@@ -46,6 +48,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       final listAllTask = await _taskRepository.getAllTask();
       final listProject = await _taskRepository.getProjects();
       final listLabel = await _taskRepository.getLabels();
+      final listSection = await _taskRepository.getSections();
       final drawerItems = <DrawerItemData>[];
 
       _initDrawerItems(drawerItems, listProject, listLabel);
@@ -54,6 +57,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           listAllTask: listAllTask,
           listProject: listProject,
           listLabel: listLabel,
+          listSection: listSection,
           drawerItems: drawerItems,
           loading: false);
     } catch (e, trance) {
@@ -96,6 +100,16 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       final listAllTask = await _taskRepository.getAllTask();
 
       yield (state as DisplayListTasks).copyWith(listAllTask: listAllTask);
+    } catch (e) {
+      yield DisplayListTasks.error(e.toString());
+    }
+  }
+
+  Stream<TaskState> _mapDataListSectionChangedToState() async* {
+    try {
+      final listSection = await _taskRepository.getSections();
+
+      yield (state as DisplayListTasks).copyWith(listSection: listSection);
     } catch (e) {
       yield DisplayListTasks.error(e.toString());
     }

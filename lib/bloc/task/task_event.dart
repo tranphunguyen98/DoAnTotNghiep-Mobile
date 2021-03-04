@@ -42,3 +42,5 @@ class DataLabelChanged extends TaskEvent {}
 class DataProjectChanged extends TaskEvent {}
 
 class DataListTaskChanged extends TaskEvent {}
+
+class DataListSectionChanged extends TaskEvent {}

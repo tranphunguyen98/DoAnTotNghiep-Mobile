@@ -35,7 +35,9 @@ class ItemTask extends StatelessWidget {
                   SizedBox(
                     width: 8.0,
                   ),
-                  if (task.labels?.isEmpty ?? true) buildRowCheckList(),
+                  if ((task.labels?.isEmpty ?? true) &&
+                      !(task.checkList?.isEmpty ?? true))
+                    buildRowCheckList(),
                   Spacer(),
                   if (task.labels?.isEmpty ?? true) buildRowProject()
                 ],

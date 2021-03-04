@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/mapper/local_task_mapper.dart';
 import 'package:totodo/data/local/model/local_task.dart';
@@ -11,15 +12,18 @@ class LocalTaskService {
   static const kNameBoxTask = "task";
   static const kNameBoxProject = "project";
   static const kNameBoxLabel = "label";
+  static const kNameBoxSection = "section";
 
   Box _taskBoxTask;
   Box _taskBoxProject;
   Box _taskBoxLabel;
+  Box _taskBoxSection;
 
   LocalTaskService() {
     _taskBoxTask = Hive.box(kNameBoxTask);
     _taskBoxProject = Hive.box(kNameBoxProject);
     _taskBoxLabel = Hive.box(kNameBoxLabel);
+    _taskBoxSection = Hive.box(kNameBoxSection);
   }
 
   //<editor-fold desc="Task" defaultstate="collapsed">
@@ -111,4 +115,44 @@ class LocalTaskService {
   }
 
   //</editor-fold>
+
+  //<editor-fold desc="Section" defaultstate="collapsed">
+  Future<bool> addSection(Section section) async {
+    if (section.id == null) {
+      _taskBoxSection.add(section.copyWith(
+          id: DateTime.now().microsecondsSinceEpoch.toString()));
+      return true;
+    }
+    _taskBoxSection.add(section);
+    return true;
+  }
+
+  Future<List<Section>> getAllSection() async {
+    final listSection = <Section>[];
+    for (var i = 0; i < _taskBoxSection.length; i++) {
+      listSection.add(_taskBoxSection.getAt(i) as Section);
+    }
+    print("LIST SECTION: $listSection");
+    return listSection ?? <Section>[];
+  }
+
+  bool updateSection(Section section) {
+    int indexUpdated = -1;
+
+    for (var i = 0; i < _taskBoxSection.length; i++) {
+      if ((_taskBoxSection.getAt(i) as Section).id == section.id) {
+        indexUpdated = i;
+        break;
+      }
+    }
+
+    if (indexUpdated > -1) {
+      _taskBoxSection.putAt(indexUpdated, section);
+      return true;
+    }
+
+    return false;
+  }
+
+//</editor-fold>
 }

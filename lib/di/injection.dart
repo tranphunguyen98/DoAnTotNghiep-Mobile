@@ -6,6 +6,7 @@ import 'package:totodo/bloc/label/bloc.dart';
 import 'package:totodo/bloc/project/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
+import 'package:totodo/bloc/section/bloc.dart';
 import 'package:totodo/bloc/submit_task/bloc.dart';
 import 'package:totodo/bloc/task/bloc.dart';
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
@@ -72,4 +73,7 @@ Future<void> configureDependencies() async {
 
   getIt.registerLazySingleton<AddLabelBloc>(
       () => AddLabelBloc(taskRepository: getIt.get<ITaskRepository>()));
+
+  getIt.registerLazySingleton<AddSectionBloc>(
+      () => AddSectionBloc(taskRepository: getIt.get<ITaskRepository>()));
 }

@@ -3,6 +3,7 @@ import 'package:totodo/data/data_source/task/local_task_data_source.dart';
 import 'package:totodo/data/data_source/task/remote_task_data_source.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 
 class TaskRepositoryImpl implements ITaskRepository {
@@ -61,6 +62,22 @@ class TaskRepositoryImpl implements ITaskRepository {
   @override
   Future<void> updateLabel(Label label) {
     // TODO: implement updateLabel
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> addSection(Section section) {
+    return _localTaskDataSource.addSection(section);
+  }
+
+  @override
+  Future<List<Section>> getSections() {
+    return _localTaskDataSource.getSections();
+  }
+
+  @override
+  Future<void> updateSection(Section section) {
+    // TODO: implement updateSection
     throw UnimplementedError();
   }
 }

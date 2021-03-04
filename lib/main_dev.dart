@@ -50,4 +50,5 @@ Future _initHive() async {
   await Hive.openBox(LocalTaskService.kNameBoxTask);
   await Hive.openBox(LocalTaskService.kNameBoxProject);
   await Hive.openBox(LocalTaskService.kNameBoxLabel);
+  await Hive.openBox(LocalTaskService.kNameBoxSection);
 }

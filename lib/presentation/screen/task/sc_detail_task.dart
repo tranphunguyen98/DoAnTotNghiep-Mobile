@@ -11,12 +11,12 @@ import 'package:totodo/presentation/common_widgets/dropdown_choice.dart';
 import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
 import 'package:totodo/presentation/common_widgets/widget_icon_outline_button.dart';
 import 'package:totodo/presentation/common_widgets/widget_item_popup_menu.dart';
+import 'package:totodo/presentation/common_widgets/widget_text_field_non_border.dart';
 import 'package:totodo/presentation/custom_ui/hex_color.dart';
-import 'package:totodo/presentation/router.dart';
-import 'package:totodo/presentation/screen/task/widget_bottom_sheet_add_task.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
 
+import '../../router.dart';
 import 'item_checklist.dart';
 
 class ScreenDetailTask extends StatelessWidget {

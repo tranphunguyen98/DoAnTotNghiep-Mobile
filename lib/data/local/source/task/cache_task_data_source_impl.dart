@@ -1,6 +1,7 @@
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 
 import 'local_task_service.dart';
@@ -58,6 +59,22 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
   @override
   Future<void> updateLabel(Label label) {
     // TODO: implement updateLabel
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> addSection(Section section) {
+    return _taskService.addSection(section);
+  }
+
+  @override
+  Future<List<Section>> getSections() {
+    return _taskService.getAllSection();
+  }
+
+  @override
+  Future<void> updateSection(Section section) {
+    // TODO: implement updateSection
     throw UnimplementedError();
   }
 }

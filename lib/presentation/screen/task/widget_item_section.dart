@@ -28,8 +28,8 @@ class ItemSection extends StatelessWidget {
                       child: Text(
                         section.name,
                         style: section.listTask.isNotEmpty
-                            ? kFontSemibold
-                            : kFontSemiboldGray,
+                            ? kFontSemiboldBlack_16
+                            : kFontSemiboldGray_16,
                       ),
                     ),
                   ],
