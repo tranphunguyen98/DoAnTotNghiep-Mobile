@@ -54,6 +54,7 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.light,
         primaryColor: kColorPrimary,
         accentColor: kColorPrimary,
+        primaryTextTheme: TextTheme(headline6: TextStyle(color: Colors.white)),
         fontFamily: 'Poppins',
       ),
       initialRoute: config.initialRoute,

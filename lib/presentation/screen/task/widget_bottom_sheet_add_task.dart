@@ -19,6 +19,10 @@ import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/util.dart';
 
 class BottomSheetAddTask extends StatelessWidget {
+  final String sectionId;
+
+  BottomSheetAddTask({this.sectionId});
+
   final TaskBloc _taskBloc = getIt<TaskBloc>();
   final TaskSubmitBloc _taskSubmitBloc = getIt<TaskSubmitBloc>();
 
@@ -33,6 +37,7 @@ class BottomSheetAddTask extends StatelessWidget {
   Widget build(BuildContext context) {
     if ((_taskBloc.state as DisplayListTasks).checkIsInProject()) {
       _taskSubmitBloc.add(TaskSubmitChanged(
+          sectionId: sectionId,
           project: (_taskBloc.state as DisplayListTasks).getProjectSelected()));
     }
 

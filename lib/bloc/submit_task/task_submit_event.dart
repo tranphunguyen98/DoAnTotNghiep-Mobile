@@ -31,16 +31,23 @@ class TaskSubmitChanged extends TaskSubmitEvent {
   final String taskDate;
   final Project project;
   final List<Label> labels;
+  final String sectionId;
 
   TaskSubmitChanged(
-      {this.taskName, this.priority, this.taskDate, this.project, this.labels});
+      {this.taskName,
+      this.priority,
+      this.taskDate,
+      this.project,
+      this.labels,
+      this.sectionId});
 
   @override
-  List<Object> get props => [taskName, priority, taskDate, project, labels];
+  List<Object> get props =>
+      [taskName, priority, taskDate, project, labels, sectionId];
 
   @override
   String toString() {
-    return 'TaskAddChanged{taskName: $taskName, priority: $priority, taskDate: $taskDate, projectId: $project, labelIds: $labels}';
+    return 'TaskAddChanged{taskName: $taskName, priority: $priority, taskDate: $taskDate, projectId: $project, labelIds: $labels, sectionId: $sectionId}';
   }
 }
 

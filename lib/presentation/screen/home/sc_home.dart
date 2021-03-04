@@ -33,7 +33,7 @@ class HomeScreen extends StatelessWidget {
               final future = showModalBottomSheet(
                 isScrollControlled: true,
                 backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
+                shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                       topRight: Radius.circular(16.0),
                       topLeft: Radius.circular(16.0)),
@@ -67,12 +67,17 @@ class HomeScreen extends StatelessWidget {
             key: scaffoldKey,
             appBar: AppBar(
               title: const Text('ToToDo'),
+              iconTheme: IconThemeData(color: kColorWhite),
               actions: [
                 PopupMenuButton<DropdownChoices>(
                   onSelected: (DropdownChoices choice) {
                     choice.onPressed(context);
                   },
                   elevation: 6,
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: kColorWhite,
+                  ),
                   itemBuilder: (BuildContext context) {
                     return dropdownChoices.map((DropdownChoices choice) {
                       return PopupMenuItem<DropdownChoices>(
@@ -104,7 +109,10 @@ class HomeScreen extends StatelessWidget {
                 //   getIt<TaskSubmitBloc>().add(OpenBottomSheetAddTask());
                 // });
               },
-              child: Icon(Icons.add),
+              child: Icon(
+                Icons.add,
+                color: kColorWhite,
+              ),
               backgroundColor: kColorPrimary,
             ),
             body: DashboardScreen(),

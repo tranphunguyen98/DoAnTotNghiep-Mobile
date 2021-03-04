@@ -112,6 +112,7 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
     taskAdd = taskAdd.copyWith(taskDate: event.taskDate);
     taskAdd = taskAdd.copyWith(project: event.project);
     taskAdd = taskAdd.copyWith(labels: event.labels);
+    taskAdd = taskAdd.copyWith(sectionId: event.sectionId);
     print("_mapTaskAddChangedToState 2 ${taskAdd}");
 
     yield state.updateTask(taskAdd);
