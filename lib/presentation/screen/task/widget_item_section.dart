@@ -86,10 +86,12 @@ class _ItemSectionState extends State<ItemSection>
 
   @override
   Widget build(BuildContext context) {
+    // return ListTask(widget.section.listTask);
     return isShowSection
         ? InkWell(
             onTap: _expand,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 if (widget.section != Section.kSectionNoName)
                   Row(
@@ -152,6 +154,7 @@ class _ItemSectionState extends State<ItemSection>
                   sizeFactor: _controller,
                   child: ListTask(widget.section.listTask),
                 ),
+                //Expanded(child: ListTask(widget.section.listTask)),
                 if (expandFlag)
                   const Divider(
                     thickness: 1.0,

@@ -24,7 +24,8 @@ class BottomSheetAddTask extends StatelessWidget {
   BottomSheetAddTask({this.sectionId});
 
   final TaskBloc _taskBloc = getIt<TaskBloc>();
-  final TaskSubmitBloc _taskSubmitBloc = getIt<TaskSubmitBloc>();
+  final TaskSubmitBloc _taskSubmitBloc = getIt<TaskSubmitBloc>()
+    ..add(OpenBottomSheetAddTask());
 
   final TextEditingController _textNameTaskController = TextEditingController();
 
