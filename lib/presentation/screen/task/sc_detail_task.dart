@@ -12,6 +12,7 @@ import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
 import 'package:totodo/presentation/common_widgets/widget_icon_outline_button.dart';
 import 'package:totodo/presentation/common_widgets/widget_item_popup_menu.dart';
 import 'package:totodo/presentation/common_widgets/widget_text_field_non_border.dart';
+import 'package:totodo/presentation/custom_ui/date_picker/custom_picker_dialog.dart';
 import 'package:totodo/presentation/custom_ui/hex_color.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
@@ -23,8 +24,12 @@ class ScreenDetailTask extends StatelessWidget {
   final TaskSubmitBloc _taskSubmitBloc = getIt<TaskSubmitBloc>();
   final TaskBloc _taskBloc = getIt<TaskBloc>();
 
-  ScreenDetailTask(Task task) {
-    _taskSubmitBloc.add(OpenScreenEditTask(task));
+  ScreenDetailTask(Task task, {String taskId}) {
+    if (task != null) {
+      _taskSubmitBloc.add(OpenScreenEditTask(task));
+    } else if (taskId != null) {
+      _taskSubmitBloc.add(OpenScreenEditTaskWithId(taskId));
+    }
   }
 
   final List<DropdownChoice> dropdownChoicesPriority =
@@ -63,6 +68,9 @@ class ScreenDetailTask extends StatelessWidget {
       },
       builder: (context, state) {
         print("stateee: $state");
+        if (state.loading == true) {
+          return const Center(child: CircularProgressIndicator());
+        }
         return WillPopScope(
           onWillPop: () async {
             if (_nameTaskController.text.isNotEmpty) {
@@ -107,12 +115,12 @@ class ScreenDetailTask extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 8.0),
                           child: _buildRowFunction(context, state),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 8.0),
                           child: Divider(),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 16.0),
+                          padding: const EdgeInsets.only(left: 16.0),
                           child: Text(
                             "Checklist",
                             style: kFontSemibold,
@@ -120,24 +128,25 @@ class ScreenDetailTask extends StatelessWidget {
                         ),
                         if (!(state.taskSubmit.checkList?.isEmpty ?? true))
                           ...state.taskSubmit.checkList
-                              .map((e) => ItemCheckList(
-                                    checkItem: e,
-                                    onItemCheckChange: (value) {
+                              .map(
+                                (e) => ItemCheckList(
+                                  checkItem: e,
+                                  onItemCheckChange: (value) {
+                                    _taskSubmitBloc.add(UpdateItemCheckList(
+                                        e.copyWith(isCheck: value)));
+                                  },
+                                  onItemCheckNameChange: (value) {
+                                    if (value.isNotEmpty) {
                                       _taskSubmitBloc.add(UpdateItemCheckList(
-                                          e.copyWith(isCheck: value)));
-                                    },
-                                    onItemCheckNameChange: (value) {
-                                      if (value.isNotEmpty) {
-                                        _taskSubmitBloc.add(UpdateItemCheckList(
-                                            e.copyWith(name: value)));
-                                        FocusScope.of(context).unfocus();
-                                      }
-                                    },
-                                    onDeleteCheckItem: () {
-                                      _taskSubmitBloc
-                                          .add(DeleteCheckItem(e.id));
-                                    },
-                                  ))
+                                          e.copyWith(name: value)));
+                                      FocusScope.of(context).unfocus();
+                                    }
+                                  },
+                                  onDeleteCheckItem: () {
+                                    _taskSubmitBloc.add(DeleteCheckItem(e.id));
+                                  },
+                                ),
+                              )
                               .toList(),
                         _buildEditTextAddCheckList(state),
                       ],
@@ -211,13 +220,20 @@ class ScreenDetailTask extends StatelessWidget {
   }
 
   Widget _buildButtonDate(TaskSubmitState state, BuildContext context) {
+    Color colorButton = kColorGray1;
+    if (state.taskSubmit.taskDate != null) {
+      if (Util.isOverDueString(state.taskSubmit.taskDate)) {
+        colorButton = Colors.red;
+      } else {
+        colorButton = Colors.green;
+      }
+    }
     return IconOutlineButton(
       Util.getDisplayTextDateFromDate(state.taskSubmit.taskDate ?? "") ??
           "No Date",
       Icons.calendar_today,
-      colorIcon: state.taskSubmit.taskDate != null ? Colors.green : kColorGray1,
-      colorBorder:
-          state.taskSubmit.taskDate != null ? Colors.green : kColorGray1,
+      colorIcon: colorButton,
+      colorBorder: colorButton,
       onPressed: () async {
         await onPressedPickDate(context, state);
       },
@@ -268,7 +284,7 @@ class ScreenDetailTask extends StatelessWidget {
                 FocusScope.of(context).unfocus();
               }
             },
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: InputBorder.none,
               focusedBorder: InputBorder.none,
               enabledBorder: InputBorder.none,
@@ -286,19 +302,19 @@ class ScreenDetailTask extends StatelessWidget {
   }
 
   Future onPressedPickDate(BuildContext context, TaskSubmitState state) async {
-    final picker = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-      ),
-      lastDate: DateTime(2100),
-    );
+    final picker = await showCustomDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+        ),
+        lastDate: DateTime(2100),
+        selectedTimeOfDay:
+            Util.getTimeOfDayFromDateString(state.taskSubmit.taskDate));
     if (picker != null) {
       print("date: ${picker.toIso8601String()}");
-      _taskSubmitBloc.add(SubmitEditTask(
-          state.taskSubmit.copyWith(taskDate: picker.toIso8601String())));
+      _taskSubmitBloc.add(TaskSubmitDateChanged(picker.toIso8601String()));
     }
   }
 
@@ -312,7 +328,7 @@ class ScreenDetailTask extends StatelessWidget {
               ? kColorGray1
               : HexColor(state.taskSubmit.project.color),
         ),
-        SizedBox(
+        const SizedBox(
           width: 4.0,
         ),
         Text(

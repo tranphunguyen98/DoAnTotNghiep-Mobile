@@ -10,7 +10,7 @@ class AddSectionState extends Equatable {
   final bool isSuccess;
 
   const AddSectionState({
-    this.section = const Section(),
+    this.section = Section.kSectionEmpty,
     this.msg,
     this.isValidNameSection = true,
     this.isSuccess = false,

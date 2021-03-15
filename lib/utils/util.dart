@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Util {
@@ -52,14 +53,7 @@ class Util {
   }
 
   static bool isOverdue(DateTime dateTimeSource, DateTime dateTimeDestination) {
-    return dateTimeSource.compareTo(
-          DateTime(
-            dateTimeDestination.year,
-            dateTimeDestination.month,
-            dateTimeDestination.day,
-          ),
-        ) <
-        0;
+    return dateTimeSource.compareTo(dateTimeDestination) < 0;
   }
 
   static bool isOverDueString(String dateTimeSourceString) {
@@ -86,5 +80,25 @@ class Util {
       }
     }
     return null;
+  }
+
+  static DateTime dateOnly(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+
+  static DateTime getDefaultTimeReminder(DateTime date) {
+    return DateTime(date.year, date.month, date.day, 9);
+  }
+
+  static DateTime getDateWithTime(DateTime date, TimeOfDay timeOfDay) {
+    return DateTime(
+        date.year, date.month, date.day, timeOfDay.hour, timeOfDay.minute);
+  }
+
+  static TimeOfDay getTimeOfDayFromDateString(String date) {
+    if (date == null) return null;
+
+    final dateTime = DateTime.parse(date);
+    return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
   }
 }

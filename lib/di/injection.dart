@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
@@ -31,6 +32,8 @@ final getIt = GetIt.instance;
 @InjectableInit()
 Future<void> configureDependencies() async {
   $initGetIt(getIt);
+  getIt.registerSingleton<FlutterLocalNotificationsPlugin>(
+      FlutterLocalNotificationsPlugin());
   getIt.registerLazySingleton<DateFormat>(() => DateFormat('MMM yyyy'));
   getIt.registerSingleton<Dio>(Dio());
 

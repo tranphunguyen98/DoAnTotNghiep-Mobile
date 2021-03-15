@@ -19,8 +19,7 @@ class TaskRepositoryImpl implements ITaskRepository {
 
   @override
   Future<Task> getDetailTask(String id) {
-    // TODO: implement getDetailTask
-    throw UnimplementedError();
+    return _localTaskDataSource.getDetailTask(id);
   }
 
   @override

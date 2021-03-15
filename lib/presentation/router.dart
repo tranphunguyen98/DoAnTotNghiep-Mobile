@@ -50,8 +50,21 @@ class AppRouter {
       case kSelectLabel:
         return MaterialPageRoute(builder: (_) => SelectLabelScreen());
       case kDetailTask:
-        final task = settings.arguments as Task;
-        return MaterialPageRoute(builder: (_) => ScreenDetailTask(task));
+        print("kDetailTask: ${settings.arguments}");
+        if (settings.arguments is Task) {
+          final task = settings.arguments as Task;
+          return MaterialPageRoute(builder: (_) => ScreenDetailTask(task));
+        } else {
+          print("kDetailTask: ${settings.arguments as String}");
+
+          final taskId = settings.arguments as String;
+          return MaterialPageRoute(
+              builder: (_) => ScreenDetailTask(
+                    null,
+                    taskId: taskId,
+                  ));
+        }
+        break;
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

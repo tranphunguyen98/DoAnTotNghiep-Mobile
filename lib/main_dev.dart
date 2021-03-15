@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -6,6 +7,7 @@ import 'package:totodo/data/entity/check_item.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/local/model/local_task.dart';
+import 'package:totodo/utils/notification_helper.dart';
 
 import 'app_config.dart';
 import 'data/entity/label.dart';
@@ -17,7 +19,6 @@ import 'presentation/my_app.dart';
 import 'presentation/router.dart';
 
 Future<void> main() async {
-  print("main");
   WidgetsFlutterBinding.ensureInitialized();
 
   //Init Hive
@@ -26,8 +27,14 @@ Future<void> main() async {
   MyApp.initSystemDefault();
   await configureDependencies();
 
-  //print("Box OPEN");
-  print("runApp");
+  initNotification();
+  final listNotification =
+      await AwesomeNotifications().listScheduledNotifications();
+  for (final notification in listNotification) {
+    print(
+        "notification: ${notification.content.body} ${notification.schedule} ");
+  }
+
   runApp(
     AppConfig(
       appName: "ToToDo Dev",

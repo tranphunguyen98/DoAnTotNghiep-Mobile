@@ -16,8 +16,7 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
 
   @override
   Future<Task> getDetailTask(String id) {
-    // TODO: implement getTaskInbox
-    throw UnimplementedError();
+    return _taskService.getTaskFromId(id);
   }
 
   @override

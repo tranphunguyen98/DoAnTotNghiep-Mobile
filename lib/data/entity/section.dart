@@ -19,11 +19,21 @@ class Section extends Equatable {
   final List<Task> listTask;
   final bool Function(String date) condition;
 
+  const Section(
+      {@required this.id,
+      this.name = '',
+      this.isShowIfEmpty = true,
+      this.listTask = const [],
+      this.projectId,
+      this.condition});
+
   static const Section kSectionToday = Section(
       id: "today",
       name: "Today",
       isShowIfEmpty: false,
       condition: Util.isTodayString);
+
+  static const Section kSectionEmpty = Section(id: '');
 
   static const Section kSectionTomorrow = Section(
       id: "tomorrow", name: "Tomorrow", condition: Util.isTomorrowString);
@@ -34,15 +44,7 @@ class Section extends Equatable {
       isShowIfEmpty: false,
       condition: Util.isOverDueString);
 
-  static const Section kSectionNoName = Section(id: "noName", name: "");
-
-  const Section(
-      {@required this.id,
-      this.name = '',
-      this.isShowIfEmpty = true,
-      this.listTask = const [],
-      this.projectId,
-      this.condition});
+  static const Section kSectionNoName = Section(id: "noName");
 
   Section copyWith({
     String id,

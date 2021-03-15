@@ -1,8 +1,10 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/data/entity/check_item.dart';
 import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/utils/notification_helper.dart';
 
 import 'bloc.dart';
 
@@ -19,6 +21,8 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
     // print("EVENT: $event");
     if (event is OpenScreenEditTask) {
       yield* _mapOpenScreenEditTaskToState(event.task);
+    } else if (event is OpenScreenEditTaskWithId) {
+      yield* _mapOpenScreenEditTaskWithIdToState(event.taskId);
     } else if (event is TaskSubmitChanged) {
       yield* _mapTaskSubmitChangeToState(event);
     } else if (event is SubmitAddTask) {
@@ -33,6 +37,8 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
       yield* _mapUpdateItemCheckListToState(event.checkItem);
     } else if (event is DeleteCheckItem) {
       yield* _mapDeleteCheckItemToState(event.idCheckItem);
+    } else if (event is TaskSubmitDateChanged) {
+      yield* _mapTaskSubmitDateChangedToState(event.taskDate);
     }
   }
 
@@ -87,6 +93,14 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
     yield state.copyWith(taskSubmit: task);
   }
 
+  Stream<TaskSubmitState> _mapOpenScreenEditTaskWithIdToState(
+      String idTask) async* {
+    print('_mapOpenScreenEditTaskWithIdToState: ${idTask}');
+    yield state.copyWith(loading: true);
+    final task = await _taskRepository.getDetailTask(idTask);
+    yield state.copyWith(taskSubmit: task, loading: false);
+  }
+
   Stream<TaskSubmitState> _mapSubmitEditTaskToState(Task task) async* {
     if (task != null) {
       await _taskRepository.updateTask(task);
@@ -100,6 +114,25 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
       yield state.copyWith(
         success: true,
       );
+    }
+  }
+
+  Stream<TaskSubmitState> _mapTaskSubmitDateChangedToState(
+      String taskDate) async* {
+    print("_mapTaskSubmitDateChangedToState $taskDate");
+    var taskSubmit = state.taskSubmit;
+    if (taskDate != taskSubmit.taskDate) {
+      await AwesomeNotifications().cancelSchedule(taskSubmit.id.hashCode);
+      if (taskDate != null) {
+        taskSubmit = taskSubmit.copyWith(taskDate: taskDate);
+        await showNotificationScheduledWithTask(taskSubmit);
+        await _taskRepository.updateTask(taskSubmit);
+        yield state.copyWith(
+          success: true,
+          taskSubmit: taskSubmit,
+        );
+      }
+      //TODO update task with noDate
     }
   }
 
@@ -119,9 +152,16 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
   }
 
   Stream<TaskSubmitState> _mapSubmitAddTaskToState() async* {
-    print("Submit task");
-    print("Submit add Task ${state.taskSubmit}");
-    await _taskRepository.addTask(state.taskSubmit);
+    final Task taskSubmit = state.taskSubmit.copyWith(
+        id: state.taskSubmit.id ??
+            DateTime.now().microsecondsSinceEpoch.toString());
+
+    print("Submit task $taskSubmit");
+    await _taskRepository.addTask(taskSubmit);
+
+    if (!(state.taskSubmit.taskDate?.isEmpty ?? true)) {
+      showNotificationScheduledWithTask(taskSubmit);
+    }
 
     yield state.copyWith(
       success: true,

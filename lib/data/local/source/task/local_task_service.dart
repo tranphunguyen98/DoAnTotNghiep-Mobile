@@ -31,10 +31,12 @@ class LocalTaskService {
     final localTask = LocalTaskMapper().mapToLocal(task);
 
     if (localTask.id == null) {
+      print("id null");
       _taskBoxTask.add(localTask.copyWith(
           id: DateTime.now().microsecondsSinceEpoch.toString()));
       return true;
     }
+    print("id: ${localTask.id}");
     _taskBoxTask.add(localTask);
     return true;
   }
@@ -48,8 +50,19 @@ class LocalTaskService {
       listTask.add(
           localTaskMapper.mapFromLocal(_taskBoxTask.getAt(i) as LocalTask));
     }
-    print("LIST TASK: ${listTask}");
+    // print("LIST TASK: ${listTask}");
     return listTask ?? <Task>[];
+  }
+
+  Future<Task> getTaskFromId(String idTask) async {
+    final localTaskMapper = LocalTaskMapper(
+        listLabel: await getLabels(), listProject: await getProjects());
+
+    final task = await _taskBoxTask.values
+            .firstWhere((element) => (element as LocalTask).id == idTask)
+        as LocalTask;
+
+    return localTaskMapper.mapFromLocal(task);
   }
 
   bool updateTask(Task task) {
@@ -88,7 +101,7 @@ class LocalTaskService {
     for (var i = 0; i < _taskBoxProject.length; i++) {
       listProject.add(_taskBoxProject.getAt(i) as Project);
     }
-    print("LIST PROJECT: ${listProject}");
+    // print("LIST PROJECT: ${listProject}");
     return listProject ?? <Project>[];
   }
 
@@ -110,7 +123,7 @@ class LocalTaskService {
     for (var i = 0; i < _taskBoxLabel.length; i++) {
       listLabel.add(_taskBoxLabel.getAt(i) as Label);
     }
-    print("LIST LABEL: ${listLabel}");
+    // print("LIST LABEL: ${listLabel}");
     return listLabel ?? <Label>[];
   }
 
@@ -132,7 +145,7 @@ class LocalTaskService {
     for (var i = 0; i < _taskBoxSection.length; i++) {
       listSection.add(_taskBoxSection.getAt(i) as Section);
     }
-    print("LIST SECTION: $listSection");
+    // print("LIST SECTION: $listSection");
     return listSection ?? <Section>[];
   }
 

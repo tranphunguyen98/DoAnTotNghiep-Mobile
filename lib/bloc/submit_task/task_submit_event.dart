@@ -25,29 +25,57 @@ class OpenScreenEditTask extends TaskSubmitEvent {
   }
 }
 
+class OpenScreenEditTaskWithId extends TaskSubmitEvent {
+  final String taskId;
+
+  OpenScreenEditTaskWithId(this.taskId);
+
+  @override
+  List<Object> get props => [taskId];
+
+  @override
+  String toString() {
+    return 'OpenScreenEditTaskWithId{taskId: $taskId}';
+  }
+}
+
+class TaskSubmitDateChanged extends TaskSubmitEvent {
+  final String taskDate;
+
+  TaskSubmitDateChanged(this.taskDate);
+
+  @override
+  List<Object> get props => [taskDate];
+
+  @override
+  String toString() {
+    return 'TaskSubmitDateChange{taskDate: $taskDate';
+  }
+}
+
 class TaskSubmitChanged extends TaskSubmitEvent {
   final String taskName;
   final int priority;
-  final String taskDate;
   final Project project;
   final List<Label> labels;
   final String sectionId;
+  final String taskDate;
 
   TaskSubmitChanged(
       {this.taskName,
       this.priority,
-      this.taskDate,
       this.project,
       this.labels,
+      this.taskDate,
       this.sectionId});
 
   @override
   List<Object> get props =>
-      [taskName, priority, taskDate, project, labels, sectionId];
+      [taskName, priority, project, labels, sectionId, taskDate];
 
   @override
   String toString() {
-    return 'TaskAddChanged{taskName: $taskName, priority: $priority, taskDate: $taskDate, projectId: $project, labelIds: $labels, sectionId: $sectionId}';
+    return 'TaskAddChanged{taskName: $taskName, priority: $priority, projectId: $project, labelIds: $labels, sectionId: $sectionId, taskDate: $taskDate}';
   }
 }
 

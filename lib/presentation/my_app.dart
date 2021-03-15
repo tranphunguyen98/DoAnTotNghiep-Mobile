@@ -1,19 +1,25 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:hive/hive.dart';
 import 'package:totodo/bloc/auth_bloc/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/di/injection.dart';
+import 'package:totodo/presentation/screen/task/sc_detail_task.dart';
 import 'package:totodo/presentation/simple_bloc_delegate.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
+import 'package:totodo/utils/my_const/notification_helper.dart';
 
 import '../app_config.dart';
 import 'router.dart';
 
 class MyApp extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _MyAppState createState() {
+    return _MyAppState();
+  }
 
   static void initSystemDefault() {
     SystemChrome.setSystemUIOverlayStyle(
@@ -26,8 +32,8 @@ class MyApp extends StatefulWidget {
   static Widget runWidget() {
     WidgetsFlutterBinding.ensureInitialized();
     Bloc.observer = SimpleBlocDelegate();
-    print("runWidget");
 
+    print("runWidget");
     return BlocProvider(
       create: (context) =>
           AuthenticationBloc(userRepository: getIt<IUserRepository>())
@@ -41,6 +47,54 @@ class _MyAppState extends State<MyApp> {
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   NavigatorState get _navigator => _navigatorKey.currentState;
+
+  @override
+  void initState() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      print("isAllowed: $isAllowed");
+      // setState(() {
+      //   notificationsAllowed = isAllowed;
+      // });
+
+      if (!isAllowed) {
+        requestUserPermission();
+      }
+    });
+
+    super.initState();
+  }
+
+  Future<void> requestUserPermission() async {
+    showDialog(
+      context: context,
+      builder: (_) => NetworkGiffyDialog(
+        buttonOkText:
+            const Text('Allow', style: TextStyle(color: Colors.white)),
+        buttonCancelText:
+            const Text('Later', style: TextStyle(color: Colors.white)),
+        buttonCancelColor: Colors.grey,
+        buttonOkColor: Colors.deepPurple,
+        buttonRadius: 0.0,
+        image:
+            Image.asset("assets/images/animated-bell.gif", fit: BoxFit.cover),
+        title: const Text('Gửi thông báo',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600)),
+        description: const Text(
+          'Cho phép gửi thông báo!',
+          textAlign: TextAlign.center,
+        ),
+        entryAnimation: EntryAnimation.DEFAULT,
+        onCancelButtonPressed: () async {
+          Navigator.of(context).pop();
+        },
+        onOkButtonPressed: () async {
+          Navigator.of(context).pop();
+          await AwesomeNotifications().requestPermissionToSendNotifications();
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,35 +126,27 @@ class _MyAppState extends State<MyApp> {
                   AppRouter.kLogin, (_) => false);
             } else if (state is Authenticated) {
               print("Authenticated 111");
+
+              AwesomeNotifications()
+                  .actionStream
+                  .listen((receivedNotification) async {
+                print("receivedNotification: ${receivedNotification.payload}");
+                await _navigatorKey.currentState.push(
+                  MaterialPageRoute(
+                    builder: (_) => ScreenDetailTask(
+                      null,
+                      taskId: receivedNotification
+                          .payload[kKeyPayloadNotificationIdTask] as String,
+                    ),
+                  ),
+                );
+              });
               _navigator.pushNamedAndRemoveUntil(AppRouter.kHome, (_) => false);
             }
           },
           child: child,
         );
       },
-      // home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-      //   builder: (context, state) {
-      //     print("state: ${state}");
-      //     if (state is Uninitialized) {
-      //       return LoginScreen();
-      //     } else if (state is Unauthenticated) {
-      //       // Future.delayed(Duration.zero, () {
-      //       //   Navigator.of(context).pushNamed(AppRouter.kLogin);
-      //       // });
-      //       return LoginScreen();
-      //     } else if (state is Authenticated) {
-      //       // Future.delayed(Duration.zero, () {
-      //       //   Navigator.of(context).pushNamed(AppRouter.kHome);
-      //       // });
-      //       print("Authenticated");
-      //       return HomeScreen();
-      //     } else {
-      //       return Container(
-      //         child: Center(child: Text('Unhandle State $state')),
-      //       );
-      //     }
-      //   },
-      // ),
     );
   }
 

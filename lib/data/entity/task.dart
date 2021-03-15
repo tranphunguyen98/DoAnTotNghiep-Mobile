@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 
 import 'check_item.dart';
 import 'label.dart';
@@ -29,19 +28,19 @@ class Task extends Equatable {
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
   const Task(
-      {@required this.id,
-      @required this.createdDate,
-      @required this.updatedDate,
+      {this.id,
+      this.createdDate,
+      this.updatedDate,
+      this.name,
+      this.description,
+      this.taskDate,
+      this.project,
+      this.labels,
       this.priorityType = kPriority4,
-      @required this.name,
-      @required this.description,
       this.isCompleted = false,
       this.isStarred = false,
       this.isTrashed = false,
-      @required this.taskDate,
-      @required this.project,
       this.sectionId,
-      @required this.labels,
       this.checkList});
 
   Task copyWith({
