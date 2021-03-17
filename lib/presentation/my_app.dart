@@ -53,8 +53,49 @@ class _MyAppState extends State<MyApp> {
         requestUserPermission();
       }
     });
-
+    AwesomeNotifications().actionStream.listen((receivedNotification) async {
+      await _navigatorKey.currentState.pushNamed(
+        AppRouter.kDetailTask,
+        arguments: receivedNotification.payload[kKeyPayloadNotificationIdTask]
+            as String,
+      );
+    });
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final config = AppConfig.of(context);
+    return MaterialApp(
+      navigatorKey: _navigatorKey,
+      debugShowCheckedModeBanner: config.debugTag,
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor: kColorPrimary,
+        accentColor: kColorPrimary,
+        primaryTextTheme:
+            const TextTheme(headline6: TextStyle(color: Colors.white)),
+        fontFamily: 'Poppins',
+      ),
+      initialRoute: config.initialRoute,
+      onGenerateRoute: AppRouter.generateRoute,
+      builder: (context, child) {
+        return BlocListener<AuthenticationBloc, AuthenticationState>(
+          listener: (context, state) {
+            if (state is Uninitialized) {
+              _navigator.pushNamedAndRemoveUntil(
+                  AppRouter.kSplash, (_) => false);
+            } else if (state is Unauthenticated) {
+              _navigator.pushNamedAndRemoveUntil(
+                  AppRouter.kLogin, (_) => false);
+            } else if (state is Authenticated) {
+              _navigator.pushNamedAndRemoveUntil(AppRouter.kHome, (_) => false);
+            }
+          },
+          child: child,
+        );
+      },
+    );
   }
 
   Future<void> requestUserPermission() async {
@@ -84,52 +125,6 @@ class _MyAppState extends State<MyApp> {
           await AwesomeNotifications().requestPermissionToSendNotifications();
         },
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final config = AppConfig.of(context);
-    // print("build MyApp");
-    //getIt.get<IUserRepository>().signOut();
-    return MaterialApp(
-      navigatorKey: _navigatorKey,
-      debugShowCheckedModeBanner: config.debugTag,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: kColorPrimary,
-        accentColor: kColorPrimary,
-        primaryTextTheme:
-            const TextTheme(headline6: TextStyle(color: Colors.white)),
-        fontFamily: 'Poppins',
-      ),
-      initialRoute: config.initialRoute,
-      onGenerateRoute: AppRouter.generateRoute,
-      builder: (context, child) {
-        return BlocListener<AuthenticationBloc, AuthenticationState>(
-          listener: (context, state) {
-            if (state is Uninitialized) {
-              _navigator.pushNamedAndRemoveUntil(
-                  AppRouter.kSplash, (_) => false);
-            } else if (state is Unauthenticated) {
-              _navigator.pushNamedAndRemoveUntil(
-                  AppRouter.kLogin, (_) => false);
-            } else if (state is Authenticated) {
-              AwesomeNotifications()
-                  .actionStream
-                  .listen((receivedNotification) async {
-                await _navigatorKey.currentState.pushNamed(
-                  AppRouter.kDetailTask,
-                  arguments: receivedNotification
-                      .payload[kKeyPayloadNotificationIdTask] as String,
-                );
-              });
-              _navigator.pushNamedAndRemoveUntil(AppRouter.kHome, (_) => false);
-            }
-          },
-          child: child,
-        );
-      },
     );
   }
 

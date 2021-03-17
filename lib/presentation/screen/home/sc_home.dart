@@ -48,8 +48,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Build Home");
-
     return BlocBuilder<TaskBloc, TaskState>(
       cubit: _taskBloc,
       buildWhen: (previous, current) {
