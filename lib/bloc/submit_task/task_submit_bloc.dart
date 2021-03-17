@@ -80,7 +80,7 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
       checkList[indexUpdate] = checkItem;
     }
 
-    print("checkList: ${checkList != state.taskSubmit.checkList}");
+    // print("checkList: ${checkList != state.taskSubmit.checkList}");
 
     final taskUpdate = state.taskSubmit.copyWith(checkList: checkList);
 
@@ -95,7 +95,7 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
 
   Stream<TaskSubmitState> _mapOpenScreenEditTaskWithIdToState(
       String idTask) async* {
-    print('_mapOpenScreenEditTaskWithIdToState: ${idTask}');
+    // print('_mapOpenScreenEditTaskWithIdToState: ${idTask}');
     yield state.copyWith(loading: true);
     final task = await _taskRepository.getDetailTask(idTask);
     yield state.copyWith(taskSubmit: task, loading: false);
@@ -104,7 +104,7 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
   Stream<TaskSubmitState> _mapSubmitEditTaskToState(Task task) async* {
     if (task != null) {
       await _taskRepository.updateTask(task);
-      print("UPDATE ${state.taskSubmit} --------------- $task");
+      // print("UPDATE ${state.taskSubmit} --------------- $task");
       yield state.copyWith(
         taskSubmit: task,
         success: true,
@@ -119,7 +119,7 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
 
   Stream<TaskSubmitState> _mapTaskSubmitDateChangedToState(
       String taskDate) async* {
-    print("_mapTaskSubmitDateChangedToState $taskDate");
+    // print("_mapTaskSubmitDateChangedToState $taskDate");
     var taskSubmit = state.taskSubmit;
     if (taskDate != taskSubmit.taskDate) {
       await AwesomeNotifications().cancelSchedule(taskSubmit.id.hashCode);
@@ -138,7 +138,7 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
 
   Stream<TaskSubmitState> _mapTaskSubmitChangeToState(
       TaskSubmitChanged event) async* {
-    print("_mapTaskAddChangedToState ${state.taskSubmit}");
+    // print("_mapTaskAddChangedToState ${state.taskSubmit}");
     var taskAdd = state.taskSubmit;
     taskAdd = taskAdd.copyWith(name: event.taskName);
     taskAdd = taskAdd.copyWith(priorityType: event.priority);
@@ -146,7 +146,7 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
     taskAdd = taskAdd.copyWith(project: event.project);
     taskAdd = taskAdd.copyWith(labels: event.labels);
     taskAdd = taskAdd.copyWith(sectionId: event.sectionId);
-    print("_mapTaskAddChangedToState 2 ${taskAdd}");
+    // print("_mapTaskAddChangedToState 2 ${taskAdd}");
 
     yield state.updateTask(taskAdd);
   }
@@ -156,7 +156,7 @@ class TaskSubmitBloc extends Bloc<TaskSubmitEvent, TaskSubmitState> {
         id: state.taskSubmit.id ??
             DateTime.now().microsecondsSinceEpoch.toString());
 
-    print("Submit task $taskSubmit");
+    // print("Submit task $taskSubmit");
     await _taskRepository.addTask(taskSubmit);
 
     if (!(state.taskSubmit.taskDate?.isEmpty ?? true)) {

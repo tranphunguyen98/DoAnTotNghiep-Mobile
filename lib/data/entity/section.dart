@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:totodo/data/entity/task.dart';
-import 'package:totodo/utils/util.dart';
+import 'package:totodo/utils/date_helper.dart';
 
 part 'section.g.dart';
 
@@ -31,18 +31,18 @@ class Section extends Equatable {
       id: "today",
       name: "Today",
       isShowIfEmpty: false,
-      condition: Util.isTodayString);
+      condition: DateHelper.isTodayString);
 
   static const Section kSectionEmpty = Section(id: '');
 
   static const Section kSectionTomorrow = Section(
-      id: "tomorrow", name: "Tomorrow", condition: Util.isTomorrowString);
+      id: "tomorrow", name: "Tomorrow", condition: DateHelper.isTomorrowString);
 
   static const Section kSectionOverdue = Section(
       id: "overdue",
       name: "Overdue",
       isShowIfEmpty: false,
-      condition: Util.isOverDueString);
+      condition: DateHelper.isOverDueString);
 
   static const Section kSectionNoName = Section(id: "noName");
 

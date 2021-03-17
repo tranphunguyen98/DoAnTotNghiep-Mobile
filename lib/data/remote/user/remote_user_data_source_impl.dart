@@ -74,7 +74,7 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
 
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
-        print(result.accessToken.token);
+        // print(result.accessToken.token);
         final graphResponse = await getIt<Dio>().get(
             'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email,picture&access_token=${result.accessToken.token}');
 
@@ -89,11 +89,11 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
         );
         break;
       case FacebookLoginStatus.cancelledByUser:
-        print('cancelledByUser');
+        // print('cancelledByUser');
         throw Exception('Cancelled By User');
         break;
       case FacebookLoginStatus.error:
-        print('error: ${result.errorMessage}');
+        // print('error: ${result.errorMessage}');
         throw Exception(result.errorMessage);
         break;
       default:
@@ -104,11 +104,11 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   @override
   Future<User> signInWithGoogle() async {
     try {
-      print("User: 0");
+      // print("User: 0");
 
       _firebaseAuth.signOut();
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-      print("User: 1 ${googleUser.displayName}");
+      // print("User: 1 ${googleUser.displayName}");
       return User(
           type: User.kTypeGoogle,
           email: googleUser.email,
@@ -129,8 +129,8 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
       //     email: user.email,
       //     name: user.displayName,
       //     avatar: user.photoUrl);
-    } catch (e, trace) {
-      print("trace: $trace");
+    } catch (e) {
+      // print("trace: $trace");
       rethrow;
     }
   }
@@ -140,15 +140,11 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
     try {
       final messageResponse =
           await _userService.signUp(displayName, email, password);
-      print(messageResponse);
-      print(messageResponse.message.toString());
       if (messageResponse.succeeded) {
         return true;
       }
       throw Exception(messageResponse.message ?? "Error Dio");
-    } on DioError catch (e, stackTrace) {
-      print(stackTrace);
-      print("Error: ${e.response.data["message"]}");
+    } on DioError catch (e) {
       throw Exception(e.response.data["message"] ?? "Error Dio");
     }
   }
@@ -157,15 +153,11 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   Future<bool> sendOTPResetPassword(String email) async {
     try {
       final messageResponse = await _userService.sendOTPResetPassword(email);
-      print(messageResponse);
-      print(messageResponse.message.toString());
       if (messageResponse.succeeded) {
         return true;
       }
       throw Exception(messageResponse.message ?? "Error Dio");
-    } on DioError catch (e, stackTrace) {
-      print(stackTrace);
-      print("Error: ${e.response.data["message"]}");
+    } on DioError catch (e) {
       throw Exception(e.response.data["message"] ?? "Error Dio");
     }
   }

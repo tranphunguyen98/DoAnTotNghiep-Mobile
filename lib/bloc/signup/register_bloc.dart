@@ -1,9 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-// import 'package:rxdart/rxdart.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
-import 'package:totodo/utils/validators.dart';
 
+import '../../utils/validators.dart';
+import '../repository_interface/i_user_repository.dart';
 import 'bloc.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
@@ -14,26 +13,30 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         _userRepository = userRepository,
         super(RegisterState.empty());
 
-  @override
-  RegisterState get initialState => RegisterState.empty();
-
   // @override
-  // Stream<RegisterState> transformEvents(Stream<RegisterEvent> events,
-  //     Stream<RegisterState> Function(RegisterEvent) next) {
+  // Stream<Transition<RegisterEvent, RegisterState>> transformEvents(
+  //   Stream<RegisterEvent> events,
+  //   Stream<Transition<RegisterEvent, RegisterState>> Function(RegisterEvent)
+  //       transitionFn,
+  // ) {
   //   final nonDebounceStream = events.where((event) {
-  //     return (event is! EmailChanged &&
+  //     return event is! EmailChanged &&
   //         event is! PasswordChanged &&
-  //         event is! ConfirmPasswordChanged);
+  //         event is! DisplayNameChanged &&
+  //         event is! ConfirmPasswordChanged;
   //   });
   //
   //   final debounceStream = events.where((event) {
-  //     return (event is EmailChanged ||
+  //     return event is EmailChanged ||
   //         event is PasswordChanged ||
-  //         event is ConfirmPasswordChanged);
-  //   }).debounceTime(Duration(milliseconds: 300));
+  //         event is ConfirmPasswordChanged ||
+  //         event is DisplayNameChanged;
+  //   }).debounceTime(const Duration(milliseconds: 2000));
   //
-  //   return super
-  //       .transformEvents(nonDebounceStream.mergeWith([debounceStream]), next);
+  //   return super.transformEvents(
+  //     MergeStream([nonDebounceStream, debounceStream]),
+  //     transitionFn,
+  //   );
   // }
 
   @override
@@ -67,7 +70,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   Stream<RegisterState> _mapPasswordChangedToState(
       String password, String confirmPassword) async* {
-    var isPasswordValid = Validators.isValidPassword(password);
+    final isPasswordValid = Validators.isValidPassword(password);
     var isMatched = true;
 
     if (confirmPassword.isNotEmpty) {
@@ -80,7 +83,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   Stream<RegisterState> _mapConfirmPasswordChangedToState(
       String password, String confirmPassword) async* {
-    var isConfirmPasswordValid = Validators.isValidPassword(confirmPassword);
+    final isConfirmPasswordValid = Validators.isValidPassword(confirmPassword);
     var isMatched = true;
 
     if (password.isNotEmpty) {
@@ -92,25 +95,20 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     );
   }
 
-  Stream<RegisterState> _mapNameChangedToState(String name) async* {
-    yield state.update(
-      isNameValid: Validators.isValidName(name),
-    );
-  }
-
   Stream<RegisterState> _mapFormSubmittedToState(String displayName,
       String email, String password, String confirmPassword) async* {
-    //need refactor
-    var isValidEmail = Validators.isValidEmail(email);
+    final isValidEmail = Validators.isValidEmail(email);
+    final isValidPassword = Validators.isValidPassword(password);
+    final isValidConfirmPassword = Validators.isValidPassword(confirmPassword);
+    final isValidDisplayName = Validators.isValidName(displayName);
 
-    var isValidPassword = Validators.isValidPassword(password);
-    var isValidConfirmPassword = Validators.isValidPassword(confirmPassword);
     var isMatched = true;
     if (isValidPassword && isValidConfirmPassword) {
       isMatched = password == confirmPassword;
     }
 
-    var newState = state.update(
+    final newState = state.update(
+        isNameValid: isValidDisplayName,
         isEmailValid: isValidEmail,
         isPasswordValid: isValidPassword,
         isConfirmPasswordValid: isValidConfirmPassword && isMatched);
@@ -124,7 +122,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         await _userRepository.signUp(displayName, email, password);
         yield RegisterState.success();
       } catch (e) {
-        yield RegisterState.failure("Error: ${e}");
+        yield RegisterState.failure("Error: $e");
       }
     }
   }

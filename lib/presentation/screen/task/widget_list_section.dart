@@ -23,16 +23,16 @@ class ListSection extends StatelessWidget {
     final smallerIndex = newIndex < oldIndex ? newIndex : oldIndex;
     final biggerIndex = newIndex > oldIndex ? newIndex : oldIndex;
     for (int i = biggerIndex; i >= smallerIndex; i--) {
-      print("i:$i : ${listWidgetSection[i] is HeaderSection}");
+      // print("i:$i : ${listWidgetSection[i] is HeaderSection}");
       if (listWidgetSection[i] is HeaderSection) {
-        print("key: ${(listWidgetSection[i] as HeaderSection).sectionId}");
-        print("name: ${(listWidgetSection[i] as HeaderSection).sectionName}");
-        if (listWidgetSection[oldIndex] is ItemTask) {
-          print("task: ${(listWidgetSection[oldIndex] as ItemTask).task.name}");
-        } else {
-          print(
-              "section: ${(listWidgetSection[oldIndex] as HeaderSection).sectionName}");
-        }
+        // print("key: ${(listWidgetSection[i] as HeaderSection).sectionId}");
+        // print("name: ${(listWidgetSection[i] as HeaderSection).sectionName}");
+        // if (listWidgetSection[oldIndex] is ItemTask) {
+        //   print("task: ${(listWidgetSection[oldIndex] as ItemTask).task.name}");
+        // } else {
+        //   print(
+        //       "section: ${(listWidgetSection[oldIndex] as HeaderSection).sectionName}");
+        // }
         return (listWidgetSection[i] as HeaderSection).sectionId;
       }
     }
@@ -43,9 +43,7 @@ class ListSection extends StatelessWidget {
       int newIndex, int oldIndex, List<Widget> listWidgetSection) {
     final smallerIndex = newIndex < oldIndex ? newIndex : oldIndex;
     for (var i = smallerIndex - 1; i >= 0; i--) {
-      print("ii $i ${listWidgetSection[i] is HeaderSection}");
       if (listWidgetSection[i] is HeaderSection) {
-        print("header: ${(listWidgetSection[i] as HeaderSection).sectionName}");
         return (listWidgetSection[i] as HeaderSection).sectionId;
       }
     }
@@ -65,7 +63,6 @@ class ListSection extends StatelessWidget {
         },
         child: ReorderableListView(
           onReorder: (oldIndex, newIndex) {
-            print("old: $oldIndex : new: $newIndex");
 
             // These two lines are workarounds for ReorderableListView problems
             if (newIndex > listWidgetSection.length) {
@@ -73,17 +70,13 @@ class ListSection extends StatelessWidget {
             }
             if (oldIndex < newIndex) newIndex--;
 
-            print("old: $oldIndex : new: $newIndex");
             final idSectionBelow =
                 getIdSectionBellow(newIndex, oldIndex, listWidgetSection);
             final idSectionAbove =
                 getIdSectionAbove(newIndex, oldIndex, listWidgetSection);
 
-            print("Bellow: $idSectionBelow");
-            print("Above: $idSectionAbove");
 
             if (idSectionBelow != null) {
-              print("OLD: $oldIndex NEW: $newIndex");
               if (oldIndex > newIndex) {
                 _taskSubmitBloc.add(
                   SubmitEditTask(

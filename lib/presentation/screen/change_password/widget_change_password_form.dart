@@ -42,8 +42,8 @@ class _WidgetChangePasswordFormState extends State<WidgetChangePasswordForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Đang thay đổi mật khẩu ... '),
-                    CircularProgressIndicator(),
+                    const Text('Đang thay đổi mật khẩu ... '),
+                    const CircularProgressIndicator(),
                   ],
                 ),
               ),
@@ -58,13 +58,13 @@ class _WidgetChangePasswordFormState extends State<WidgetChangePasswordForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Thay đổi mật khẩu thành công!'),
-                    CircularProgressIndicator(),
+                    const Text('Thay đổi mật khẩu thành công!'),
+                    const CircularProgressIndicator(),
                   ],
                 ),
               ),
             );
-          Future.delayed(Duration(milliseconds: 1000), () {
+          Future.delayed(const Duration(milliseconds: 1000), () {
             Navigator.of(context).pop();
           });
         }
@@ -77,8 +77,8 @@ class _WidgetChangePasswordFormState extends State<WidgetChangePasswordForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('${state.error}'),
-                    Icon(Icons.error),
+                    Text(state.error),
+                    const Icon(Icons.error),
                   ],
                 ),
                 backgroundColor: Colors.red,
@@ -88,8 +88,8 @@ class _WidgetChangePasswordFormState extends State<WidgetChangePasswordForm> {
       },
       child: BlocBuilder<ChangePasswordBloc, ChangePasswordState>(
         builder: (context, state) => Container(
-          margin: EdgeInsets.symmetric(horizontal: 10),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: kColorWhite,
@@ -102,11 +102,11 @@ class _WidgetChangePasswordFormState extends State<WidgetChangePasswordForm> {
                   child:
                       Text('Thay đổi mật khẩu', style: kFontMediumDefault_16),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildTextFieldOldPassword(),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildTextFieldNewPassword(),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildButtonLogin(),
               ],
             ),
@@ -151,7 +151,7 @@ class _WidgetChangePasswordFormState extends State<WidgetChangePasswordForm> {
             ? 'Invalid Password'
             : null;
       },
-      obscureText: true,
+      isObscure: true,
     );
   }
 
@@ -167,7 +167,7 @@ class _WidgetChangePasswordFormState extends State<WidgetChangePasswordForm> {
             ? 'Invalid Password'
             : null;
       },
-      obscureText: true,
+      isObscure: true,
     );
   }
 }

@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:totodo/data/response/message_response.dart';
-import 'package:totodo/data/response/message_response_register.dart';
-import 'package:totodo/data/response/user_response.dart';
+
+import '../../response/message_response_register.dart';
+import '../../response/user_response.dart';
 
 part 'remote_user_service.g.dart';
 
 //10.0.2.2
-@RestApi(baseUrl: "http://192.168.1.7:3006/")
+@RestApi(baseUrl: "http://192.168.1.183:3006/")
 abstract class RemoteUserService {
   factory RemoteUserService(Dio dio, {String baseUrl}) = _RemoteUserService;
 
@@ -29,6 +29,6 @@ abstract class RemoteUserService {
   @POST("/users/change-password")
   Future<MessageResponseRegister> changePassword(
       @Header("authorization") String authorization,
-      @Field() String old_password,
+      @Field() String oldPassword,
       @Field() String password);
 }

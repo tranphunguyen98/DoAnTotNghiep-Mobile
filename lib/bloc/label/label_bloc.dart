@@ -33,7 +33,7 @@ class AddLabelBloc extends Bloc<AddLabelEvent, AddLabelState> {
 
   Stream<AddLabelState> _mapAddLabelSubmitToState() async* {
     try {
-      print("_mapAddLabelSubmitToState ${state.label}");
+      // print("_mapAddLabelSubmitToState ${state.label}");
       if (state.label?.name?.isEmpty ?? true) {
         yield state.failed("Tên nhãn rỗng!");
       } else {

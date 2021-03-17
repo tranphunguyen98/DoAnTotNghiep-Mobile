@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
-import 'package:totodo/utils/validators.dart';
 
+import '../../utils/validators.dart';
+import '../repository_interface/i_user_repository.dart';
 import 'bloc.dart';
 
 class ForgotPasswordBloc
@@ -60,7 +60,7 @@ class ForgotPasswordBloc
         yield state.copyWith(error: "Error");
       }
     } catch (e) {
-      yield state.copyWith(error: "Error: ${e}");
+      yield state.copyWith(error: "Error: $e");
     }
   }
 
@@ -77,9 +77,8 @@ class ForgotPasswordBloc
       } else {
         yield state.copyWith(error: "Error");
       }
-    } catch (e, stackTrace) {
-      print(stackTrace);
-      yield state.copyWith(error: "Error: ${e}");
+    } catch (e) {
+      yield state.copyWith(error: "Error: $e");
     }
   }
 

@@ -1,23 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/submit_task/bloc.dart';
-import 'package:totodo/bloc/task/bloc.dart';
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/task.dart';
-import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/common_widgets/dropdown_choice.dart';
-import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
-import 'package:totodo/presentation/common_widgets/widget_icon_outline_button.dart';
-import 'package:totodo/presentation/common_widgets/widget_item_popup_menu.dart';
-import 'package:totodo/presentation/common_widgets/widget_label_container.dart';
-import 'package:totodo/presentation/common_widgets/widget_text_field_non_border.dart';
-import 'package:totodo/presentation/custom_ui/custom_ui.dart';
-import 'package:totodo/presentation/custom_ui/date_picker/custom_picker_dialog.dart';
-import 'package:totodo/presentation/router.dart';
-import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/util.dart';
+
+import '../../../bloc/submit_task/bloc.dart';
+import '../../../bloc/task/bloc.dart';
+import '../../../data/entity/label.dart';
+import '../../../data/entity/project.dart';
+import '../../../data/entity/task.dart';
+import '../../../di/injection.dart';
+import '../../../utils/date_helper.dart';
+import '../../../utils/my_const/color_const.dart';
+import '../../common_widgets/dropdown_choice.dart';
+import '../../common_widgets/widget_circle_inkwell.dart';
+import '../../common_widgets/widget_icon_outline_button.dart';
+import '../../common_widgets/widget_item_popup_menu.dart';
+import '../../common_widgets/widget_label_container.dart';
+import '../../common_widgets/widget_text_field_non_border.dart';
+import '../../custom_ui/custom_ui.dart';
+import '../../custom_ui/date_picker/custom_picker_dialog.dart';
+import '../../router.dart';
 
 class BottomSheetAddTask extends StatelessWidget {
   final String sectionId;
@@ -51,7 +53,6 @@ class BottomSheetAddTask extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        print("BUILD BOTTOM SHEET");
         _intData(_taskBloc.state as DisplayListTasks);
         return Container(
           padding: const EdgeInsets.all(16.0),
@@ -103,7 +104,7 @@ class BottomSheetAddTask extends StatelessWidget {
 
     dropdownChoicesLabel.clear();
     dropdownChoicesLabel
-        .add(Label(name: "No Label", color: Util.getHexFromColor(Colors.grey)));
+        .add(Label(name: "No Label", color: getHexFromColor(Colors.grey)));
     dropdownChoicesLabel.addAll(state.listLabel);
   }
 
@@ -153,11 +154,11 @@ class BottomSheetAddTask extends StatelessWidget {
             }).toList();
           },
         ),
-        CircleInkWell(
+        const CircleInkWell(
           Icons.alarm,
           sizeIcon: 24.0,
         ),
-        CircleInkWell(
+        const CircleInkWell(
           Icons.mode_comment_outlined,
           sizeIcon: 24.0,
         ),
@@ -181,7 +182,8 @@ class BottomSheetAddTask extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         IconOutlineButton(
-          Util.getDisplayTextDateFromDate(state.taskSubmit.taskDate ?? "") ??
+          DateHelper.getDisplayTextDateFromDate(
+                  state.taskSubmit.taskDate ?? "") ??
               "No Date",
           Icons.calendar_today,
           colorIcon:
@@ -212,14 +214,14 @@ class BottomSheetAddTask extends StatelessWidget {
                 value: project,
                 child: ItemPopupMenu(
                   DropdownChoice(
-                      title: project.name,
-                      color: project.color?.isEmpty ?? true
-                          ? kColorGray1
-                          : HexColor(project.color),
-                      iconData: project.id?.isEmpty ?? true
-                          ? Icons.inbox
-                          : Icons.circle,
-                      onPressed: () {}),
+                    title: project.name,
+                    color: project.color?.isEmpty ?? true
+                        ? kColorGray1
+                        : HexColor(project.color),
+                    iconData: project.id?.isEmpty ?? true
+                        ? Icons.inbox
+                        : Icons.circle,
+                  ),
                 ),
               );
             }).toList();
@@ -247,7 +249,6 @@ class BottomSheetAddTask extends StatelessWidget {
   }
 
   Future onPressedPickDate(BuildContext context, TaskSubmitState state) async {
-    print('taskDate: ${state.taskSubmit.taskDate}');
     final picker = await showCustomDatePicker(
         context: context,
         initialDate: DateTime.now(),
@@ -257,9 +258,8 @@ class BottomSheetAddTask extends StatelessWidget {
         ),
         lastDate: DateTime(2100),
         selectedTimeOfDay:
-            Util.getTimeOfDayFromDateString(state.taskSubmit.taskDate));
+            DateHelper.getTimeOfDayFromDateString(state.taskSubmit.taskDate));
     if (picker != null) {
-      print("date: ${picker.toIso8601String()}");
       _taskSubmitBloc
           .add(TaskSubmitChanged(taskDate: picker.toIso8601String()));
     }

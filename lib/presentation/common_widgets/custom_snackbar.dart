@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
-class CustomSnackBar {
-  static void showLoading(BuildContext context) {
-    Scaffold.of(context)
+class SnackBarHelper {
+  static void showLoading(BuildContext context, {String msg}) {
+    ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text('Processing ...'),
-              CircularProgressIndicator()
+              Text(msg ?? 'Processing ...'),
+              const CircularProgressIndicator()
             ],
           ),
         ),
@@ -19,11 +19,11 @@ class CustomSnackBar {
   }
 
   static void hideLoading(BuildContext context) {
-    Scaffold.of(context)..hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 
   static void failure(BuildContext context, {String msg = "Failure"}) {
-    Scaffold.of(context)
+    ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
@@ -37,7 +37,7 @@ class CustomSnackBar {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 20,
               )),
-              Icon(Icons.error),
+              const Icon(Icons.error),
             ],
           ),
           backgroundColor: Colors.red,
@@ -46,7 +46,7 @@ class CustomSnackBar {
   }
 
   static void success(BuildContext context, String msg) {
-    Scaffold.of(context)
+    ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(

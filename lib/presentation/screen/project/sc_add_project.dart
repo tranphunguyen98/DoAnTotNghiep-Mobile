@@ -4,7 +4,7 @@ import 'package:totodo/bloc/project/bloc.dart';
 import 'package:totodo/bloc/task/bloc.dart';
 import 'package:totodo/bloc/task/task_event.dart';
 import 'package:totodo/di/injection.dart';
-import 'package:totodo/utils/my_const/font_const.dart';
+import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
 
 class ChooseColor {
@@ -35,8 +35,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   void initState() {
     dropdownValue = listColor.first;
     _addProjectBloc.add(OpenAddProjectEvent());
-    _addProjectBloc.add(
-        AddedProjectChanged(color: Util.getHexFromColor(dropdownValue.color)));
+    _addProjectBloc
+        .add(AddedProjectChanged(color: getHexFromColor(dropdownValue.color)));
     super.initState();
   }
 
@@ -47,7 +47,6 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
       listener: (context, state) {
         if (state is AddProjectState) {
           if (state == AddProjectState.success()) {
-            print("SUCCESSSS");
             getIt<TaskBloc>().add(DataProjectChanged());
             Navigator.of(context).pop();
           }
@@ -61,7 +60,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.send),
+              icon: const Icon(Icons.send),
               onPressed: () {
                 _addProjectBloc.add(AddProjectSubmit());
               },
@@ -74,7 +73,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               TextField(
-                decoration: InputDecoration(hintText: "Name"),
+                decoration: const InputDecoration(hintText: "Name"),
                 onChanged: (value) {
                   _addProjectBloc.add(AddedProjectChanged(name: value));
                 },
@@ -91,7 +90,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                           size: 16.0,
                           color: value.color,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 16.0,
                         ),
                         Text(value.label),
@@ -99,7 +98,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                 }).toList(),
                 onChanged: (newValue) {
                   _addProjectBloc.add(AddedProjectChanged(
-                      color: Util.getHexFromColor(newValue.color)));
+                      color: getHexFromColor(newValue.color)));
                   setState(() {
                     dropdownValue = newValue;
                   });

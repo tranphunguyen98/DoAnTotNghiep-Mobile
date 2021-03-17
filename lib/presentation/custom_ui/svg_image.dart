@@ -16,9 +16,9 @@ class CustomSvgImage extends StatelessWidget {
       this.applyColorFilter = true});
 
   CustomSvgImage.toolbarIcon(this.path) {
-    this.width = 20;
-    this.height = 20;
-    this.applyColorFilter = true;
+    width = 20;
+    height = 20;
+    applyColorFilter = true;
   }
 
   @override

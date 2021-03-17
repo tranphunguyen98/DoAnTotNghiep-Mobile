@@ -20,12 +20,11 @@ class WidgetBtnGoogle extends StatelessWidget {
               border: Border.all(
                 width: 0.2,
                 color: kColorGoogleBorderBtn,
-              ),
-              shape: BoxShape.rectangle),
+              )),
           child: Row(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: SvgPicture.asset(
                   'assets/ic_google.svg',
                   width: 24,

@@ -24,7 +24,7 @@ class MainDrawer extends StatelessWidget {
       builder: (context, state) {
         if (state is DisplayListTasks) {
           if (state.loading) {
-            return Drawer(
+            return const Drawer(
               child: const Center(
                 child: CircularProgressIndicator(),
               ),

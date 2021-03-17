@@ -12,7 +12,7 @@ class SettingScreen extends StatelessWidget {
     final _authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text("Cài đặt"),
+          title: const Text("Cài đặt"),
         ),
         body: Column(
           children: [

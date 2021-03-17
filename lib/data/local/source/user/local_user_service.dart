@@ -6,11 +6,10 @@ import 'package:totodo/data/entity/user.dart';
 
 @Injectable()
 class LocalUserService {
-  final String USER_KEY = "user";
+  final String kUserKey = "user";
 
   Future<bool> isSignedIn() async {
     try {
-      final user = await getUser();
       return true;
     } catch (e) {
       return false;
@@ -19,9 +18,9 @@ class LocalUserService {
 
   Future<bool> saveUser(User user) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String userString = json.encode(user.toJson());
-      await prefs.setString(USER_KEY, userString);
+      await prefs.setString(kUserKey, userString);
       return true;
     } catch (e) {
       rethrow;
@@ -30,10 +29,10 @@ class LocalUserService {
 
   Future<User> getUser() async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      final userString = prefs.getString(USER_KEY);
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final userString = prefs.getString(kUserKey);
       if (userString != null) {
-        print('userString: $userString');
+        // print('userString: $userString');
         return User.fromJson(json.decode(userString) as Map<String, dynamic>);
       } else {
         return throw Exception("Can't get user");
@@ -45,8 +44,8 @@ class LocalUserService {
 
   Future<bool> clearUser() async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.remove(USER_KEY);
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove(kUserKey);
       return true;
     } catch (e) {
       return false;

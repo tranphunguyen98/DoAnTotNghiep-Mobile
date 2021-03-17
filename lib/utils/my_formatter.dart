@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 extension HHmm on Duration {
   String formatHHmm() {
     //1:34:00.000000
-    final str = this.toString();
+    final str = toString();
 
     final texts = str.split(":");
     final textHour = texts[0].padLeft(2, '0');
@@ -16,7 +16,7 @@ extension HHmm on Duration {
 extension FormatNumber on int {
   String formatDecimalThousand() {
     //1403 -> 1,403
-    var f = new NumberFormat.decimalPattern("en_US");
+    final f = NumberFormat.decimalPattern("en_US");
     return f.format(this);
   }
 }

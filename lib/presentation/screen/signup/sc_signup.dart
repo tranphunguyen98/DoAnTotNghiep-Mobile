@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/register/bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
-import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/screen/login/widget_top_welcome.dart';
-import 'package:totodo/presentation/screen/signup/widget_bottom_sign_up.dart';
-import 'package:totodo/presentation/screen/signup/widget_sign_up_form.dart';
-import 'package:totodo/utils/my_const/color_const.dart';
+
+import '../../../bloc/repository_interface/i_user_repository.dart';
+import '../../../bloc/signup/bloc.dart';
+import '../../../di/injection.dart';
+import '../../../utils/my_const/color_const.dart';
+import '../login/widget_top_welcome.dart';
+import 'widget_bottom_sign_up.dart';
+import 'widget_sign_up_form.dart';
 
 class SignUpScreen extends StatelessWidget {
   @override
@@ -20,7 +21,14 @@ class SignUpScreen extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               WidgetTopWelcome(),
-              WidgetSignUpForm(),
+              AnimatedPadding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                duration: const Duration(milliseconds: 100),
+                curve: Curves.decelerate,
+                child: WidgetSignUpForm(),
+              ),
               WidgetBottomSignUp(),
             ],
           ),

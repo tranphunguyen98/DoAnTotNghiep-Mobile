@@ -42,7 +42,6 @@ Future<void> showNotificationAtScheduleCron({
 }
 
 Future<void> showNotificationScheduledWithTask(Task task) async {
-  print("schedule: ${task.taskDate}");
   showNotificationAtScheduleCron(
     id: task.id.hashCode,
     body: task.name,

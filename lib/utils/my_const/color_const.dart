@@ -32,4 +32,4 @@ const kListColorPriority = [
   Colors.blueGrey
 ];
 
-final MaterialColor kColorStatusBar = MaterialColor(0x03396c, {});
+const MaterialColor kColorStatusBar = MaterialColor(0x03396c, {});

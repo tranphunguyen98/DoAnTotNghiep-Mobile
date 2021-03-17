@@ -26,14 +26,14 @@ class Label extends Equatable {
     String color,
   }) {
     if ((id == null || identical(id, this.id)) &&
-        (nameLabel == null || identical(nameLabel, this.name)) &&
+        (nameLabel == null || identical(nameLabel, name)) &&
         (color == null || identical(color, this.color))) {
       return this;
     }
 
     return Label(
       id: id ?? this.id,
-      name: nameLabel ?? this.name,
+      name: nameLabel ?? name,
       color: color ?? this.color,
     );
   }
@@ -66,9 +66,9 @@ class Label extends Equatable {
   Map<String, dynamic> toJson() {
     // ignore: unnecessary_cast
     return {
-      'id': this.id,
-      'nameLabel': this.name,
-      'color': this.color,
+      'id': id,
+      'nameLabel': name,
+      'color': color,
     } as Map<String, dynamic>;
   }
 

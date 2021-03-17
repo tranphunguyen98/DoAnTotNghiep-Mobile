@@ -1,104 +1,36 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
+import 'package:totodo/di/injection.dart';
 
-class Util {
-  static String getHexFromColor(Color color) {
-    return '#${color.value.toRadixString(16).substring(2, 8)}';
-  }
+String getHexFromColor(Color color) {
+  return '#${color.value.toRadixString(16).substring(2, 8)}';
+}
 
-  static bool isSameDay(DateTime dateTimeSource, DateTime dateTimeDestination) {
-    return dateTimeSource.compareTo(
-          DateTime(
-            dateTimeDestination.year,
-            dateTimeDestination.month,
-            dateTimeDestination.day,
-          ),
-        ) ==
-        0;
-  }
+void log(String name, Object msg) {
+  getIt<Logger>().d('${DateFormat("HH:mm:ss").format(DateTime.now())}: $name\n'
+      '$msg');
+}
 
-  static bool isTomorrow(DateTime dateTimeSource) {
-    return isAfterNumberDay(dateTimeSource, 1);
-  }
+void dismissKeyboard(BuildContext context) {
+  final FocusScopeNode currentFocus = FocusScope.of(context);
 
-  static bool isAfterNumberDay(DateTime dateTime, int numberOfDay) {
-    return dateTime
-            .difference(
-              DateTime(
-                DateTime.now().year,
-                DateTime.now().month,
-                DateTime.now().day,
-              ),
-            )
-            .inDays ==
-        numberOfDay;
-  }
-
-  static bool isSameDayString(
-      String dateTimeSourceString, String dateTimeDestinationString) {
-    final dateTimeSource = DateTime.parse(dateTimeSourceString);
-    final dateTimeDestination = DateTime.parse(dateTimeDestinationString);
-
-    return isSameDay(dateTimeSource, dateTimeDestination);
-  }
-
-  static bool isTodayString(String dateTimeString) {
-    return isSameDayString(dateTimeString, DateTime.now().toIso8601String());
-  }
-
-  static bool isTomorrowString(String dateTimeString) {
-    return isTomorrow(DateTime.parse(dateTimeString));
-  }
-
-  static bool isOverdue(DateTime dateTimeSource, DateTime dateTimeDestination) {
-    return dateTimeSource.compareTo(dateTimeDestination) < 0;
-  }
-
-  static bool isOverDueString(String dateTimeSourceString) {
-    final dateTimeSource = DateTime.parse(dateTimeSourceString);
-
-    return isOverdue(dateTimeSource, DateTime.now());
-  }
-
-  static String getNameOfDay(DateTime dateTime) {
-    return DateFormat('EEEE').format(dateTime);
-  }
-
-  static String getDisplayTextDateFromDate(String dateTime) {
-    if (dateTime != null && dateTime.isNotEmpty) {
-      final date = DateTime.parse(dateTime);
-      if (isSameDay(date, DateTime.now())) {
-        return "To Day";
-      }
-      // else if (isOverdue(date, DateTime.now())) {
-      //   return "Overdue";
-      // }
-      else {
-        return DateFormat("dd/MM/yyyy").format(date);
-      }
-    }
-    return null;
-  }
-
-  static DateTime dateOnly(DateTime date) {
-    return DateTime(date.year, date.month, date.day);
-  }
-
-  static DateTime getDefaultTimeReminder(DateTime date) {
-    return DateTime(date.year, date.month, date.day, 9);
-  }
-
-  static DateTime getDateWithTime(DateTime date, TimeOfDay timeOfDay) {
-    return DateTime(
-        date.year, date.month, date.day, timeOfDay.hour, timeOfDay.minute);
-  }
-
-  static TimeOfDay getTimeOfDayFromDateString(String date) {
-    if (date == null) return null;
-
-    final dateTime = DateTime.parse(date);
-    return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
+  if (!currentFocus.hasPrimaryFocus) {
+    currentFocus.unfocus();
   }
 }
+
+// Function debounce(Function() func, int milliseconds) {
+//   Timer timer;
+//   return () {
+//     // or (arg) if you need an argument
+//     if (timer != null) {
+//       timer.cancel();
+//     }
+//
+//     timer =
+//         Timer(Duration(milliseconds: milliseconds), func); // or () => func(arg)
+//   };
+// }

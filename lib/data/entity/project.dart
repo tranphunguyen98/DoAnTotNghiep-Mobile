@@ -31,7 +31,7 @@ class Project extends Equatable {
       return this;
     }
 
-    return new Project(
+    return Project(
       id: id ?? this.id,
       name: name ?? this.name,
       color: color ?? this.color,
@@ -56,7 +56,7 @@ class Project extends Equatable {
   int get hashCode => id.hashCode ^ name.hashCode ^ color.hashCode;
 
   factory Project.fromMap(Map<String, dynamic> map) {
-    return new Project(
+    return Project(
       id: map['id'] as String,
       name: map['name'] as String,
       color: map['color'] as String,
@@ -66,9 +66,9 @@ class Project extends Equatable {
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
     return {
-      'id': this.id,
-      'name': this.name,
-      'color': this.color,
+      'id': id,
+      'name': name,
+      'color': color,
     } as Map<String, dynamic>;
   }
 

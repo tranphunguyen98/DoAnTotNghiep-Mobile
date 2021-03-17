@@ -158,20 +158,20 @@ class Task extends Equatable {
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
     return {
-      'id': this.id,
-      'createdDate': this.createdDate,
-      'updatedDate': this.updatedDate,
-      'priorityType': this.priorityType,
-      'name': this.name,
-      'description': this.description,
-      'isCompleted': this.isCompleted,
-      'isStarred': this.isStarred,
-      'isTrashed': this.isTrashed,
-      'taskDate': this.taskDate,
-      'project': this.project,
-      'sectionId': this.sectionId,
-      'labels': this.labels,
-      'checkList': this.checkList,
+      'id': id,
+      'createdDate': createdDate,
+      'updatedDate': updatedDate,
+      'priorityType': priorityType,
+      'name': name,
+      'description': description,
+      'isCompleted': isCompleted,
+      'isStarred': isStarred,
+      'isTrashed': isTrashed,
+      'taskDate': taskDate,
+      'project': project,
+      'sectionId': sectionId,
+      'labels': labels,
+      'checkList': checkList,
     } as Map<String, dynamic>;
   }
 

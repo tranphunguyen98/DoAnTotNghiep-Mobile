@@ -1,30 +1,30 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
-import 'package:totodo/bloc/label/bloc.dart';
-import 'package:totodo/bloc/project/bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
-import 'package:totodo/bloc/section/bloc.dart';
-import 'package:totodo/bloc/submit_task/bloc.dart';
-import 'package:totodo/bloc/task/bloc.dart';
-import 'package:totodo/data/data_source/task/local_task_data_source.dart';
-import 'package:totodo/data/data_source/task/remote_task_data_source.dart';
-import 'package:totodo/data/data_source/user/local_user_data_source.dart';
-import 'package:totodo/data/data_source/user/remote_user_data_source.dart';
-import 'package:totodo/data/local/source/task/cache_task_data_source_impl.dart';
-import 'package:totodo/data/local/source/task/local_task_service.dart';
-import 'package:totodo/data/local/source/user/cache_user_data_source_impl.dart';
-import 'package:totodo/data/local/source/user/local_user_service.dart';
-import 'package:totodo/data/remote/task/remote_task_data_source_impl.dart';
-import 'package:totodo/data/remote/task/remote_task_service.dart';
-import 'package:totodo/data/remote/user/remote_user_data_source_impl.dart';
-import 'package:totodo/data/remote/user/remote_user_service.dart';
-import 'package:totodo/data/repositories/task_repository_impl.dart';
-import 'package:totodo/data/repositories/user_repository_impl.dart';
+import 'package:logger/logger.dart';
 
+import '../bloc/label/bloc.dart';
+import '../bloc/project/bloc.dart';
+import '../bloc/repository_interface/i_task_repository.dart';
+import '../bloc/repository_interface/i_user_repository.dart';
+import '../bloc/section/bloc.dart';
+import '../bloc/submit_task/bloc.dart';
+import '../bloc/task/bloc.dart';
+import '../data/data_source/task/local_task_data_source.dart';
+import '../data/data_source/task/remote_task_data_source.dart';
+import '../data/data_source/user/local_user_data_source.dart';
+import '../data/data_source/user/remote_user_data_source.dart';
+import '../data/local/source/task/cache_task_data_source_impl.dart';
+import '../data/local/source/task/local_task_service.dart';
+import '../data/local/source/user/cache_user_data_source_impl.dart';
+import '../data/local/source/user/local_user_service.dart';
+import '../data/remote/task/remote_task_data_source_impl.dart';
+import '../data/remote/task/remote_task_service.dart';
+import '../data/remote/user/remote_user_data_source_impl.dart';
+import '../data/remote/user/remote_user_service.dart';
+import '../data/repositories/task_repository_impl.dart';
+import '../data/repositories/user_repository_impl.dart';
 import 'injection.config.dart';
 
 final getIt = GetIt.instance;
@@ -32,9 +32,9 @@ final getIt = GetIt.instance;
 @InjectableInit()
 Future<void> configureDependencies() async {
   $initGetIt(getIt);
-  getIt.registerSingleton<FlutterLocalNotificationsPlugin>(
-      FlutterLocalNotificationsPlugin());
+
   getIt.registerLazySingleton<DateFormat>(() => DateFormat('MMM yyyy'));
+  getIt.registerSingleton<Logger>(Logger());
   getIt.registerSingleton<Dio>(Dio());
 
   // User

@@ -31,12 +31,10 @@ class LocalTaskService {
     final localTask = LocalTaskMapper().mapToLocal(task);
 
     if (localTask.id == null) {
-      print("id null");
       _taskBoxTask.add(localTask.copyWith(
           id: DateTime.now().microsecondsSinceEpoch.toString()));
       return true;
     }
-    print("id: ${localTask.id}");
     _taskBoxTask.add(localTask);
     return true;
   }

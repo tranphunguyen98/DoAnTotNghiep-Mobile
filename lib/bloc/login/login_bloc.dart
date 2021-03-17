@@ -13,8 +13,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         _userRepository = userRepository,
         super(LoginState.empty());
 
-  @override
-  LoginState get initialState => LoginState.empty();
 
   // @override
   // Stream<LoginState> transformEvents(
@@ -61,7 +59,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         yield LoginState.failure("Error");
       }
     } catch (e) {
-      yield LoginState.failure("Error: ${e}");
+      yield LoginState.failure("Error: $e");
     }
   }
 
@@ -79,7 +77,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         yield LoginState.failure("Error");
       }
     } catch (e) {
-      yield LoginState.failure("Error: ${e}");
+      yield LoginState.failure("Error: $e");
     }
   }
 
@@ -98,7 +96,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         yield LoginState.failure("Error");
       }
     } catch (e) {
-      yield LoginState.failure("Error: ${e}");
+      yield LoginState.failure("Error: $e");
     }
   }
 

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/presentation/custom_ui/custom_ui.dart';
 import 'package:totodo/presentation/screen/task/widget_row_checkbox_name_task.dart';
+import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
-import 'package:totodo/utils/util.dart';
 
 // class ItemTaskReorder extends StatelessWidget {
 //   const ItemTaskReorder({
@@ -136,13 +136,13 @@ class ItemTask extends StatelessWidget {
                   child: Row(
                     children: [
                       if (task.taskDate != null) buildRowDate(task.taskDate),
-                      SizedBox(
+                      const SizedBox(
                         width: 8.0,
                       ),
                       if ((task.labels?.isEmpty ?? true) &&
                           !(task.checkList?.isEmpty ?? true))
                         buildRowCheckList(),
-                      Spacer(),
+                      const Spacer(),
                       if (task.labels?.isEmpty ?? true) buildRowProject()
                     ],
                   ),
@@ -166,7 +166,7 @@ class ItemTask extends StatelessWidget {
                               ),
                             )
                             .toList(),
-                        Spacer(),
+                        const Spacer(),
                         buildRowProject(),
                       ],
                     ),
@@ -191,14 +191,14 @@ class ItemTask extends StatelessWidget {
           size: 12.0,
           color: kColorGray1,
         ),
-        SizedBox(
+        const SizedBox(
           width: 4.0,
         ),
         Text(
           "${task.checkList.where((element) => element.isCheck).length}/${task.checkList.length}",
           style: kFontRegularGray1_12,
         ),
-        SizedBox(
+        const SizedBox(
           width: 8.0,
         ),
       ],
@@ -215,7 +215,7 @@ class ItemTask extends StatelessWidget {
             color: kColorGray1,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 4.0,
         ),
         Icon(
@@ -230,8 +230,9 @@ class ItemTask extends StatelessWidget {
   }
 
   Row buildRowDate(String taskDate) {
-    final displayTextDate = Util.getDisplayTextDateFromDate(task.taskDate);
-    final isOverDue = Util.isOverDueString(task.taskDate);
+    final displayTextDate =
+        DateHelper.getDisplayTextDateFromDate(task.taskDate);
+    final isOverDue = DateHelper.isOverDueString(task.taskDate);
     return Row(
       children: [
         Icon(
@@ -239,7 +240,7 @@ class ItemTask extends StatelessWidget {
           size: 12.0,
           color: isOverDue ? Colors.red : Colors.green,
         ),
-        SizedBox(
+        const SizedBox(
           width: 4.0,
         ),
         Text(

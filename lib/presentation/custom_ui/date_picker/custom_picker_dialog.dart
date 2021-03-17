@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:totodo/presentation/custom_ui/date_picker/date_picker_header.dart';
 import 'package:totodo/presentation/custom_ui/date_picker/item_function_reminder.dart';
-import 'package:totodo/utils/util.dart';
+import 'package:totodo/utils/date_helper.dart';
 
 const Size _calendarPortraitDialogSize = Size(330.0, 600.0);
 const Size _calendarLandscapeDialogSize = Size(496.0, 346.0);
@@ -116,9 +116,9 @@ Future<DateTime> showCustomDatePicker({
   assert(initialDate != null);
   assert(firstDate != null);
   assert(lastDate != null);
-  initialDate = Util.dateOnly(initialDate);
-  firstDate = Util.dateOnly(firstDate);
-  lastDate = Util.dateOnly(lastDate);
+  initialDate = DateHelper.dateOnly(initialDate);
+  firstDate = DateHelper.dateOnly(firstDate);
+  lastDate = DateHelper.dateOnly(lastDate);
   assert(!lastDate.isBefore(firstDate),
       'lastDate $lastDate must be on or after firstDate $firstDate.');
   assert(!initialDate.isBefore(firstDate),
@@ -196,10 +196,10 @@ class _DatePickerDialog extends StatefulWidget {
   })  : assert(initialDate != null),
         assert(firstDate != null),
         assert(lastDate != null),
-        initialDate = Util.dateOnly(initialDate),
-        firstDate = Util.dateOnly(firstDate),
-        lastDate = Util.dateOnly(lastDate),
-        currentDate = Util.dateOnly(currentDate ?? DateTime.now()),
+        initialDate = DateHelper.dateOnly(initialDate),
+        firstDate = DateHelper.dateOnly(firstDate),
+        lastDate = DateHelper.dateOnly(lastDate),
+        currentDate = DateHelper.dateOnly(currentDate ?? DateTime.now()),
         assert(initialEntryMode != null),
         assert(initialCalendarMode != null),
         super(key: key) {
@@ -304,7 +304,7 @@ class _DatePickerDialogState extends State<_DatePickerDialog> {
     }
     Navigator.pop(
         context,
-        Util.getDateWithTime(_selectedDate,
+        DateHelper.getDateWithTime(_selectedDate,
             _selectedTimeOfDay ?? const TimeOfDay(hour: 9, minute: 0)));
   }
 
@@ -391,12 +391,12 @@ class _DatePickerDialogState extends State<_DatePickerDialog> {
         spacing: 8,
         children: <Widget>[
           TextButton(
-            child: Text(widget.cancelText ?? localizations.cancelButtonLabel),
             onPressed: _handleCancel,
+            child: Text(widget.cancelText ?? localizations.cancelButtonLabel),
           ),
           TextButton(
-            child: Text(widget.confirmText ?? localizations.okButtonLabel),
             onPressed: _handleOk,
+            child: Text(widget.confirmText ?? localizations.okButtonLabel),
           ),
         ],
       ),

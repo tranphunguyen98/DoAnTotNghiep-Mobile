@@ -13,7 +13,7 @@ import 'drawer_item_selected.dart';
 
 class ItemDrawerExpanded extends StatefulWidget {
   final DrawerItemData drawerItemData;
-  ItemDrawerExpanded(this.drawerItemData);
+  const ItemDrawerExpanded(this.drawerItemData);
 
   @override
   _ItemDrawerExpandedState createState() => _ItemDrawerExpandedState();
@@ -29,7 +29,7 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
   void initState() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
     );
     _taskBloc = getIt<TaskBloc>();
     super.initState();
@@ -72,25 +72,26 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
         child: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Row(children: [
                 Image.asset(
                   widget.drawerItemData.icon,
                   width: 20,
                   height: 20,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 16.0,
                 ),
                 Text(
                   widget.drawerItemData.name,
                   style: kFontSemibold,
                 ),
-                Spacer(),
+                const Spacer(),
                 SizedBox(
                   width: 40.0,
                   height: 40.0,
                   child: ExpandIcon(
+                    onPressed: (value) {},
                     isExpanded: expandFlag,
                     color: Colors.black,
                     expandedColor: Colors.black,
@@ -98,16 +99,16 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
                   ),
                 ),
                 InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
+                  onTap: () {
+                    widget.drawerItemData.onPressed(context);
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(4.0),
                     child: Icon(
                       Icons.add,
                       color: Colors.black,
                     ),
                   ),
-                  onTap: () {
-                    widget.drawerItemData.onPressed(context);
-                  },
                 ),
               ]),
             ),

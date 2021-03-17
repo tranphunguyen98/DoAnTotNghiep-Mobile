@@ -15,7 +15,7 @@ class User {
   String get authorization => "authorization $accessToken";
   User(
       {this.id,
-      this.name = "Lê Thị Hồng",
+      this.name,
       this.email,
       this.password,
       this.avatar,
@@ -38,15 +38,15 @@ class User {
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': this.id,
-      'displayName': this.name,
-      'email': this.email,
-      'password': this.password,
-      'avatar': this.avatar,
-      'accessToken': this.accessToken,
-      'refreshToken': this.refreshToken,
-      'type': this.type,
-    } as Map<String, dynamic>;
+      '_id': id,
+      'displayName': name,
+      'email': email,
+      'password': password,
+      'avatar': avatar,
+      'accessToken': accessToken,
+      'refreshToken': refreshToken,
+      'type': type,
+    };
   }
 
   @override

@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:totodo/utils/util.dart';
 
 class SimpleBlocDelegate extends BlocObserver {
   @override
@@ -22,11 +22,5 @@ class SimpleBlocDelegate extends BlocObserver {
     //     'onTransition',
     //     '\tcurrentState=${transition.currentState}\n'
     //         '\tnextState=${transition.nextState}');
-  }
-
-  void log(String name, Object msg) {
-    print(
-        '===== ${DateFormat("HH:mm:ss-dd MMM, yyyy").format(DateTime.now())}: $name\n'
-        '$msg');
   }
 }

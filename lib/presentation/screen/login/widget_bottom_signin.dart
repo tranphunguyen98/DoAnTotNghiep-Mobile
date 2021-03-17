@@ -7,7 +7,7 @@ class WidgetBottomSignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 24),
+      padding: const EdgeInsets.only(top: 24),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

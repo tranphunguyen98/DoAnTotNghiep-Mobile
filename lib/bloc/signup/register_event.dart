@@ -40,7 +40,7 @@ class PasswordChanged extends RegisterEvent {
   final String password;
   final String confirmPassword;
 
-  PasswordChanged({@required this.password, @required this.confirmPassword});
+  const PasswordChanged({@required this.password, @required this.confirmPassword});
 
   @override
   List<Object> get props => [];
@@ -55,7 +55,7 @@ class ConfirmPasswordChanged extends RegisterEvent {
   final String password;
   final String confirmPassword;
 
-  ConfirmPasswordChanged(
+  const ConfirmPasswordChanged(
       {@required this.password, @required this.confirmPassword});
 
   @override

@@ -1,4 +1,3 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -28,12 +27,7 @@ Future<void> main() async {
   await configureDependencies();
 
   initNotification();
-  final listNotification =
-      await AwesomeNotifications().listScheduledNotifications();
-  for (final notification in listNotification) {
-    print(
-        "notification: ${notification.content.body} ${notification.schedule} ");
-  }
+  // await AwesomeNotifications().cancelAllSchedules();
 
   runApp(
     AppConfig(

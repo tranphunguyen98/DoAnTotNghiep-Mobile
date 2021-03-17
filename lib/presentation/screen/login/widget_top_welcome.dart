@@ -7,16 +7,16 @@ class WidgetTopWelcome extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         SizedBox(
           width: 100,
           child: WidgetLogoToToDo(),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Text('Xin chào bạn', style: kFontMediumWhite_22),
         Text('Đăng nhập để theo dõi kế hoạch của bạn',
             style: kFontMediumWhite_14),
-        SizedBox(height: 30),
+        const SizedBox(height: 30),
       ],
     );
   }

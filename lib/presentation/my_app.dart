@@ -7,7 +7,6 @@ import 'package:hive/hive.dart';
 import 'package:totodo/bloc/auth_bloc/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/screen/task/sc_detail_task.dart';
 import 'package:totodo/presentation/simple_bloc_delegate.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/notification_helper.dart';
@@ -23,7 +22,7 @@ class MyApp extends StatefulWidget {
 
   static void initSystemDefault() {
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
+      const SystemUiOverlayStyle(
         statusBarColor: kColorStatusBar,
       ),
     );
@@ -33,7 +32,6 @@ class MyApp extends StatefulWidget {
     WidgetsFlutterBinding.ensureInitialized();
     Bloc.observer = SimpleBlocDelegate();
 
-    print("runWidget");
     return BlocProvider(
       create: (context) =>
           AuthenticationBloc(userRepository: getIt<IUserRepository>())
@@ -51,11 +49,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      print("isAllowed: $isAllowed");
-      // setState(() {
-      //   notificationsAllowed = isAllowed;
-      // });
-
       if (!isAllowed) {
         requestUserPermission();
       }
@@ -72,7 +65,6 @@ class _MyAppState extends State<MyApp> {
             const Text('Allow', style: TextStyle(color: Colors.white)),
         buttonCancelText:
             const Text('Later', style: TextStyle(color: Colors.white)),
-        buttonCancelColor: Colors.grey,
         buttonOkColor: Colors.deepPurple,
         buttonRadius: 0.0,
         image:
@@ -84,7 +76,6 @@ class _MyAppState extends State<MyApp> {
           'Cho phép gửi thông báo!',
           textAlign: TextAlign.center,
         ),
-        entryAnimation: EntryAnimation.DEFAULT,
         onCancelButtonPressed: () async {
           Navigator.of(context).pop();
         },
@@ -99,7 +90,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final config = AppConfig.of(context);
-    print("build MyApp");
+    // print("build MyApp");
     //getIt.get<IUserRepository>().signOut();
     return MaterialApp(
       navigatorKey: _navigatorKey,
@@ -108,7 +99,8 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.light,
         primaryColor: kColorPrimary,
         accentColor: kColorPrimary,
-        primaryTextTheme: TextTheme(headline6: TextStyle(color: Colors.white)),
+        primaryTextTheme:
+            const TextTheme(headline6: TextStyle(color: Colors.white)),
         fontFamily: 'Poppins',
       ),
       initialRoute: config.initialRoute,
@@ -117,28 +109,19 @@ class _MyAppState extends State<MyApp> {
         return BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is Uninitialized) {
-              print("Uninitialized");
               _navigator.pushNamedAndRemoveUntil(
                   AppRouter.kSplash, (_) => false);
             } else if (state is Unauthenticated) {
-              print("Unauthenticated");
               _navigator.pushNamedAndRemoveUntil(
                   AppRouter.kLogin, (_) => false);
             } else if (state is Authenticated) {
-              print("Authenticated 111");
-
               AwesomeNotifications()
                   .actionStream
                   .listen((receivedNotification) async {
-                print("receivedNotification: ${receivedNotification.payload}");
-                await _navigatorKey.currentState.push(
-                  MaterialPageRoute(
-                    builder: (_) => ScreenDetailTask(
-                      null,
-                      taskId: receivedNotification
-                          .payload[kKeyPayloadNotificationIdTask] as String,
-                    ),
-                  ),
+                await _navigatorKey.currentState.pushNamed(
+                  AppRouter.kDetailTask,
+                  arguments: receivedNotification
+                      .payload[kKeyPayloadNotificationIdTask] as String,
                 );
               });
               _navigator.pushNamedAndRemoveUntil(AppRouter.kHome, (_) => false);

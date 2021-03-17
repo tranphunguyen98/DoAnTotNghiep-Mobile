@@ -19,7 +19,7 @@ class RegisterState {
       isConfirmPasswordValid &&
       isNameValid;
 
-  RegisterState(
+  const RegisterState(
       {@required this.isDisplayNameValid,
       @required this.isEmailValid,
       @required this.isPasswordValid,
@@ -31,7 +31,7 @@ class RegisterState {
       this.error = ""});
 
   factory RegisterState.empty() {
-    return RegisterState(
+    return const RegisterState(
       isDisplayNameValid: true,
       isEmailValid: true,
       isPasswordValid: true,
@@ -44,7 +44,7 @@ class RegisterState {
   }
 
   factory RegisterState.loading() {
-    return RegisterState(
+    return const RegisterState(
       isDisplayNameValid: true,
       isEmailValid: true,
       isPasswordValid: true,
@@ -70,7 +70,7 @@ class RegisterState {
   }
 
   factory RegisterState.success() {
-    return RegisterState(
+    return const RegisterState(
       isDisplayNameValid: true,
       isEmailValid: true,
       isPasswordValid: true,

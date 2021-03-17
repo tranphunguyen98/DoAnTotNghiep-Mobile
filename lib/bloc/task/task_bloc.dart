@@ -60,9 +60,9 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           listSection: listSection,
           drawerItems: drawerItems,
           loading: false);
-    } catch (e, trance) {
-      print("error:( ${e.toString()}");
-      print("error:( ${trance}");
+    } catch (e) {
+      // print("error:( ${e.toString()}");
+      // print("error:( ${trance}");
       yield DisplayListTasks.error(e.toString());
     }
   }

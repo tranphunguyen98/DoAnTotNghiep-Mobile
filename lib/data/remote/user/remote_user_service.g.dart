@@ -9,7 +9,7 @@ part of 'remote_user_service.dart';
 class _RemoteUserService implements RemoteUserService {
   _RemoteUserService(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'http://192.168.1.7:3006/';
+    baseUrl ??= 'http://192.168.1.183:3006/';
   }
 
   final Dio _dio;

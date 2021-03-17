@@ -24,14 +24,14 @@ class ItemLabelCheckBox extends StatelessWidget {
                 Icons.local_offer_outlined,
                 color: HexColor(label.color),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 16.0,
               ),
               Text(
                 label.name,
                 style: kFontRegularBlack2,
               ),
-              Spacer(),
+              const Spacer(),
               Checkbox(value: isChecked, onChanged: onCheckBoxChanged),
             ],
           ),

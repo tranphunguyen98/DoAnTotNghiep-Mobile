@@ -37,11 +37,11 @@ class IconOutlineButton extends StatelessWidget {
             size: 16.0,
             color: colorIcon ?? kColorGray1,
           ),
-          SizedBox(
+          const SizedBox(
             width: 8.0,
           ),
           Text(
-            this.title,
+            title,
             style: TextStyle(
               color: kColorGray1,
             ),

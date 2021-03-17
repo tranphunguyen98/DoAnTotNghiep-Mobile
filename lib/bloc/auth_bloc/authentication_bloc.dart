@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 
+import '../repository_interface/i_user_repository.dart';
 import 'bloc.dart';
 
 class AuthenticationBloc
@@ -14,19 +14,13 @@ class AuthenticationBloc
         super(null);
 
   @override
-  AuthenticationState get initialState => Uninitialized();
-
-  @override
   Stream<AuthenticationState> mapEventToState(
       AuthenticationEvent event) async* {
     if (event is AppStarted) {
       yield* _mapAppStartedToState();
     } else if (event is SignedUp) {
-      print("signedUp");
       yield* _mapSignedUpToState();
     } else if (event is LoggedIn) {
-      print("LoggedIn11111");
-
       yield* _mapLoggedInToState();
     } else if (event is LoggedOut) {
       yield* _mapLoggedOutToState();
@@ -39,21 +33,16 @@ class AuthenticationBloc
 
       if (isSignedIn) {
         final user = await _userRepository.getUser();
-        print("authen: $user ");
         yield Authenticated(user);
       } else {
-        print("unauthen1");
-
         yield Unauthenticated();
       }
     } catch (_) {
-      print("unauthen");
       yield Unauthenticated();
     }
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
-    print("_mapLoggedInToState");
     yield Authenticated(await _userRepository.getUser());
   }
 

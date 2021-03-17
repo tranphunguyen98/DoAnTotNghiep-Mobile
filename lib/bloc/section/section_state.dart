@@ -28,7 +28,6 @@ class AddSectionState extends Equatable {
     return AddSectionState(msg: msg, section: section);
   }
 
-  @override
   AddSectionState copyWith({
     Section section,
     bool isValidNameSection,
@@ -51,6 +50,7 @@ class AddSectionState extends Equatable {
     );
   }
 
+  @override
   String toString() {
     return 'AddSectionState{section: $section, msg: $msg, isSuccess: $isSuccess}';
   }

@@ -14,15 +14,12 @@ class ChangePasswordBloc
         _userRepository = userRepository,
         super(ChangePasswordState.empty());
 
-  @override
-  ChangePasswordState get initialState => ChangePasswordState.empty();
-
-  @override
-  Stream<Transition<ChangePasswordEvent, ChangePasswordState>> transformEvents(
-      Stream<ChangePasswordEvent> events, transitionFn) {
-    // TODO: implement transformEvents
-    return super.transformEvents(events, transitionFn);
-  }
+  // @override
+  // Stream<Transition<ChangePasswordEvent, ChangePasswordState>> transformEvents(
+  //     Stream<ChangePasswordEvent> events, transitionFn) {
+  // TODO: implement transformEvents Debouce
+  //   return super.transformEvents(events, transitionFn);
+  // }
 
   // @override
   // Stream<ChangePasswordState> transformEvents(
@@ -67,7 +64,7 @@ class ChangePasswordBloc
         yield ChangePasswordState.failure("Error");
       }
     } catch (e) {
-      yield ChangePasswordState.failure("Error: ${e}");
+      yield ChangePasswordState.failure("Error: $e");
     }
   }
 

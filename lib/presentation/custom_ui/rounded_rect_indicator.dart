@@ -30,19 +30,19 @@ class _RectPainter extends BoxPainter {
 
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {
-    var width = cfg.size.width;
-    var height = cfg.size.height;
+    final width = cfg.size.width;
+    final height = cfg.size.height;
 
     var left = 0.0;
-    var top = height - indicatorPaddingBottom;
+    final top = height - indicatorPaddingBottom;
     var right = width;
-    var bottom = height - weight - indicatorPaddingBottom;
+    final bottom = height - weight - indicatorPaddingBottom;
 
     //calculate offset
     left = left + offset.dx + padding;
     right = right + offset.dx - padding;
 
-    var rect = RRect.fromLTRBAndCorners(left, top, right, bottom,
+    final rect = RRect.fromLTRBAndCorners(left, top, right, bottom,
         topLeft: Radius.circular(radius),
         bottomLeft: Radius.circular(radius),
         bottomRight: Radius.circular(radius),

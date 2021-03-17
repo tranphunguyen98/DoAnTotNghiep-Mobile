@@ -33,7 +33,7 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
   Widget build(BuildContext context) {
     return BlocListener<ForgotPasswordBloc, ForgotPasswordState>(
       listener: (context, state) {
-        print("state: $state");
+        // print("state: $state");
         if (state.isSubmitting) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
@@ -42,8 +42,8 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Reseting ... '),
-                    CircularProgressIndicator(),
+                    const Text('Reseting ... '),
+                    const CircularProgressIndicator(),
                   ],
                 ),
               ),
@@ -58,13 +58,13 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Reset mật khẩu thành công'),
-                    CircularProgressIndicator(),
+                    const Text('Reset mật khẩu thành công'),
+                    const CircularProgressIndicator(),
                   ],
                 ),
               ),
             );
-          Future.delayed(Duration(milliseconds: 1000), () {
+          Future.delayed(const Duration(milliseconds: 1000), () {
             Navigator.of(context).pop();
           });
         }
@@ -77,8 +77,8 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('${state.error}'),
-                    Icon(Icons.error),
+                    Text(state.error),
+                    const Icon(Icons.error),
                   ],
                 ),
                 backgroundColor: Colors.red,
@@ -88,10 +88,9 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
       },
       child: BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(
         builder: (context, state) {
-          print("stateee: $state");
           return Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: kColorWhite,
@@ -103,16 +102,16 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
                     alignment: Alignment.centerLeft,
                     child: Text('Reset Mật Khẩu', style: kFontMediumDefault_16),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildTextFieldEmail(),
                   if (state.isSendOTPSuccess)
                     Column(
                       children: [
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         _buildTextFieldOtpCode(),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         _buildTextFieldPassword(),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         GestureDetector(
@@ -120,10 +119,10 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
                               _forgotPasswordBloc.add(SendOTPSubmitEvent(
                                   email: _emailController.text));
                             },
-                            child: Text("Gửi lại mã OTP"))
+                            child: const Text("Gửi lại mã OTP"))
                       ],
                     ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildButtonSubmit(state.isSendOTPSuccess),
                 ],
               ),
@@ -136,7 +135,6 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
 
   bool isButtonEnabled(bool isSendOTPSuccess) {
     if (!isSendOTPSuccess) {
-      print("abc");
       return _forgotPasswordBloc.state.isEmailValid &&
           _emailController.text.isNotEmpty &&
           !_forgotPasswordBloc.state.isSubmitting;
@@ -210,7 +208,7 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
             ? 'Invalid Password'
             : null;
       },
-      obscureText: true,
+      isObscure: true,
     );
   }
 }

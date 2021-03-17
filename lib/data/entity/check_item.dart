@@ -67,9 +67,9 @@ class CheckItem extends Equatable {
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
     return {
-      'id': this.id,
-      'name': this.name,
-      'isCheck': this.isCheck,
+      'id': id,
+      'name': name,
+      'isCheck': isCheck,
     } as Map<String, dynamic>;
   }
 

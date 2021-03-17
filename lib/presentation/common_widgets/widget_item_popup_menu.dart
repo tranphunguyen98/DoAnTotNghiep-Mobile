@@ -6,7 +6,7 @@ import 'package:totodo/utils/my_const/font_const.dart';
 class ItemPopupMenu extends StatelessWidget {
   final DropdownChoice dropdownChoices;
 
-  ItemPopupMenu(this.dropdownChoices);
+  const ItemPopupMenu(this.dropdownChoices);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class ItemPopupMenu extends StatelessWidget {
           size: 24.0,
           color: dropdownChoices.color ?? kColorGray1,
         ),
-        SizedBox(
+        const SizedBox(
           width: 8.0,
         ),
         Text(

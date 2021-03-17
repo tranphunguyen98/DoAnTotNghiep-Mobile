@@ -97,7 +97,7 @@ class HomeScreen extends StatelessWidget {
                 final future = showModalBottomSheet(
                   isScrollControlled: true,
                   backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
+                  shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                         topRight: Radius.circular(16.0),
                         topLeft: Radius.circular(16.0)),
@@ -109,11 +109,11 @@ class HomeScreen extends StatelessWidget {
                 //   getIt<TaskSubmitBloc>().add(OpenBottomSheetAddTask());
                 // });
               },
+              backgroundColor: kColorPrimary,
               child: Icon(
                 Icons.add,
                 color: kColorWhite,
               ),
-              backgroundColor: kColorPrimary,
             ),
             body: DashboardScreen(),
           );

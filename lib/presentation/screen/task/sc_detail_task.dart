@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/submit_task/bloc.dart';
-import 'package:totodo/bloc/task/bloc.dart';
-import 'package:totodo/data/entity/check_item.dart';
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/task.dart';
-import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/common_widgets/dropdown_choice.dart';
-import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
-import 'package:totodo/presentation/common_widgets/widget_icon_outline_button.dart';
-import 'package:totodo/presentation/common_widgets/widget_item_popup_menu.dart';
-import 'package:totodo/presentation/common_widgets/widget_text_field_non_border.dart';
-import 'package:totodo/presentation/custom_ui/date_picker/custom_picker_dialog.dart';
-import 'package:totodo/presentation/custom_ui/hex_color.dart';
-import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
 
+import '../../../bloc/submit_task/bloc.dart';
+import '../../../bloc/task/bloc.dart';
+import '../../../data/entity/check_item.dart';
+import '../../../data/entity/label.dart';
+import '../../../data/entity/project.dart';
+import '../../../data/entity/task.dart';
+import '../../../di/injection.dart';
+import '../../../utils/date_helper.dart';
+import '../../../utils/my_const/my_const.dart';
+import '../../common_widgets/dropdown_choice.dart';
+import '../../common_widgets/widget_circle_inkwell.dart';
+import '../../common_widgets/widget_icon_outline_button.dart';
+import '../../common_widgets/widget_item_popup_menu.dart';
+import '../../common_widgets/widget_text_field_non_border.dart';
+import '../../custom_ui/date_picker/custom_picker_dialog.dart';
+import '../../custom_ui/hex_color.dart';
 import '../../router.dart';
 import 'item_checklist.dart';
 
@@ -47,8 +48,8 @@ class ScreenDetailTask extends StatelessWidget {
     dropdownChoicesProject.addAll(state.listProject);
 
     dropdownChoicesLabel.clear();
-    dropdownChoicesLabel
-        .add(Label(name: "No Label", color: Util.getHexFromColor(Colors.grey)));
+    dropdownChoicesLabel.add(Label(
+        name: "No Label", color: getHexFromColor(Colors.grey)));
     dropdownChoicesLabel.addAll(state.listLabel);
   }
 
@@ -67,7 +68,6 @@ class ScreenDetailTask extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        print("stateee: $state");
         if (state.loading == true) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -183,7 +183,7 @@ class ScreenDetailTask extends StatelessWidget {
             }
           },
         ),
-        SizedBox(
+        const SizedBox(
           width: 8.0,
         ),
         Expanded(
@@ -222,14 +222,14 @@ class ScreenDetailTask extends StatelessWidget {
   Widget _buildButtonDate(TaskSubmitState state, BuildContext context) {
     Color colorButton = kColorGray1;
     if (state.taskSubmit.taskDate != null) {
-      if (Util.isOverDueString(state.taskSubmit.taskDate)) {
+      if (DateHelper.isOverDueString(state.taskSubmit.taskDate)) {
         colorButton = Colors.red;
       } else {
         colorButton = Colors.green;
       }
     }
     return IconOutlineButton(
-      Util.getDisplayTextDateFromDate(state.taskSubmit.taskDate ?? "") ??
+      DateHelper.getDisplayTextDateFromDate(state.taskSubmit.taskDate ?? "") ??
           "No Date",
       Icons.calendar_today,
       colorIcon: colorButton,
@@ -265,16 +265,14 @@ class ScreenDetailTask extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 8.0,
         ),
         Expanded(
           child: TextFormField(
             controller: _nameTaskController,
             onChanged: (value) {},
-            onSaved: (value) {
-              print("value $value");
-            },
+            onSaved: (value) {},
             onFieldSubmitted: (value) {
               if (value.isEmpty) {
                 _nameTaskController.text = state.taskSubmit.name;
@@ -311,9 +309,8 @@ class ScreenDetailTask extends StatelessWidget {
         ),
         lastDate: DateTime(2100),
         selectedTimeOfDay:
-            Util.getTimeOfDayFromDateString(state.taskSubmit.taskDate));
+            DateHelper.getTimeOfDayFromDateString(state.taskSubmit.taskDate));
     if (picker != null) {
-      print("date: ${picker.toIso8601String()}");
       _taskSubmitBloc.add(TaskSubmitDateChanged(picker.toIso8601String()));
     }
   }
@@ -360,7 +357,7 @@ class ScreenDetailTask extends StatelessWidget {
           },
         ),
         PopupMenuButton<DropdownChoice>(
-          offset: Offset(0, -300),
+          offset: const Offset(0, -300),
           onSelected: (DropdownChoice choice) {
             onDropdownPriorityChanged(choice);
             _taskSubmitBloc.add(SubmitEditTask());
@@ -382,16 +379,16 @@ class ScreenDetailTask extends StatelessWidget {
             }).toList();
           },
         ),
-        CircleInkWell(
+        const CircleInkWell(
           Icons.alarm,
           sizeIcon: 24.0,
         ),
-        CircleInkWell(
+        const CircleInkWell(
           Icons.mode_comment_outlined,
           sizeIcon: 24.0,
         ),
-        Spacer(),
-        CircleInkWell(Icons.more_vert, sizeIcon: 24.0),
+        const Spacer(),
+        const CircleInkWell(Icons.more_vert, sizeIcon: 24.0),
       ],
     );
   }

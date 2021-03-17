@@ -17,7 +17,7 @@ class EmptyTask extends StatelessWidget {
             'assets/empty.svg',
             height: 200,
           ),
-          SizedBox(
+          const SizedBox(
             height: 32.0,
           ),
           Text(

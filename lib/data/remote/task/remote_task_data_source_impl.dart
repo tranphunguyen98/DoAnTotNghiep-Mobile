@@ -21,7 +21,7 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
 
   @override
   Future<List<Task>> getAllTask() async {
-    return Future.delayed(Duration(seconds: 1), () {
+    return Future.delayed(const Duration(seconds: 1), () {
       return [];
     });
   }

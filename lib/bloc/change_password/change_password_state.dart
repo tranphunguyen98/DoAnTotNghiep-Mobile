@@ -11,7 +11,7 @@ class ChangePasswordState {
 
   bool get isFormValid => isOldPasswordValid && isNewPasswordValid;
 
-  ChangePasswordState(
+  const ChangePasswordState(
       {@required this.isOldPasswordValid,
       @required this.isNewPasswordValid,
       @required this.isSubmitting,
@@ -20,7 +20,7 @@ class ChangePasswordState {
       this.error = ""});
 
   factory ChangePasswordState.empty() {
-    return ChangePasswordState(
+    return const ChangePasswordState(
       isOldPasswordValid: true,
       isNewPasswordValid: true,
       isSubmitting: false,
@@ -30,7 +30,7 @@ class ChangePasswordState {
   }
 
   factory ChangePasswordState.loading() {
-    return ChangePasswordState(
+    return const ChangePasswordState(
       isOldPasswordValid: true,
       isNewPasswordValid: true,
       isSubmitting: true,
@@ -50,7 +50,7 @@ class ChangePasswordState {
   }
 
   factory ChangePasswordState.success() {
-    return ChangePasswordState(
+    return const ChangePasswordState(
       isOldPasswordValid: true,
       isNewPasswordValid: true,
       isSubmitting: false,
@@ -85,8 +85,8 @@ class ChangePasswordState {
     bool isFailure,
   }) {
     return ChangePasswordState(
-      isOldPasswordValid: isEmailValid ?? this.isOldPasswordValid,
-      isNewPasswordValid: isPasswordValid ?? this.isNewPasswordValid,
+      isOldPasswordValid: isEmailValid ?? isOldPasswordValid,
+      isNewPasswordValid: isPasswordValid ?? isNewPasswordValid,
       isSubmitting: isSubmitting ?? this.isSubmitting,
       isSuccess: isSuccess ?? this.isSuccess,
       isFailure: isFailure ?? this.isFailure,

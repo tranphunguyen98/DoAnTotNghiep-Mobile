@@ -13,7 +13,7 @@ class ForgotPasswordState {
 
   bool get isFormValid => isEmailValid && isPasswordValid && isOTPValid;
 
-  ForgotPasswordState(
+  const ForgotPasswordState(
       {@required this.isEmailValid,
       @required this.isPasswordValid,
       @required this.isSubmitting,
@@ -24,7 +24,7 @@ class ForgotPasswordState {
       this.error = ""});
 
   factory ForgotPasswordState.empty() {
-    return ForgotPasswordState(
+    return const ForgotPasswordState(
       isEmailValid: true,
       isPasswordValid: true,
       isOTPValid: true,
@@ -37,7 +37,7 @@ class ForgotPasswordState {
   }
 
   factory ForgotPasswordState.loading() {
-    return ForgotPasswordState(
+    return const ForgotPasswordState(
       isEmailValid: true,
       isPasswordValid: true,
       isOTPValid: true,
@@ -50,7 +50,7 @@ class ForgotPasswordState {
   }
 
   factory ForgotPasswordState.sendOTPSuccess() {
-    return ForgotPasswordState(
+    return const ForgotPasswordState(
         isEmailValid: true,
         isPasswordValid: true,
         isSubmitting: false,

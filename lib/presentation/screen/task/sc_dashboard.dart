@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/task/bloc.dart';
-import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/screen/task/widget_empty_task.dart';
-import 'package:totodo/presentation/screen/task/widget_list_section.dart';
-import 'package:totodo/utils/my_const/font_const.dart';
+
+import '../../../bloc/task/bloc.dart';
+import '../../../di/injection.dart';
+import '../../../utils/my_const/font_const.dart';
+import 'widget_empty_task.dart';
+import 'widget_list_section.dart';
 
 class DashboardScreen extends StatelessWidget {
   @override
@@ -23,7 +24,6 @@ class DashboardScreen extends StatelessWidget {
         //   return false;
         // },
         builder: (context, state) {
-          print("DashboardScreen $state");
           if (state is DisplayListTasks) {
             if (state.loading) {
               return const Center(
@@ -40,7 +40,6 @@ class DashboardScreen extends StatelessWidget {
             }
 
             if (state.msg != null) {
-              print("Error: ${state.msg}");
               return Container(
                 child: Center(
                   child: Padding(

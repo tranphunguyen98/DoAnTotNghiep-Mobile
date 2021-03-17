@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:totodo/presentation/custom_ui/custom_ui.dart';
+
+import '../custom_ui/custom_ui.dart';
 
 class WidgetBtnBack extends StatelessWidget {
-  EdgeInsets padding;
+  final EdgeInsets padding;
 
-  WidgetBtnBack({this.padding = const EdgeInsets.only(left: 12, right: 10)});
+  const WidgetBtnBack(
+      {this.padding = const EdgeInsets.only(left: 12, right: 10)});
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,7 @@ import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
-import 'package:totodo/utils/util.dart';
+import 'package:totodo/utils/date_helper.dart';
 
 abstract class TaskState extends Equatable {
   const TaskState();
@@ -99,11 +99,13 @@ class DisplayListTasks extends TaskState {
         ...[2, 3, 4, 5, 6]
             .map(
               (e) => Section(
-                  id: Util.getNameOfDay(DateTime.now().add(Duration(days: e))),
-                  name:
-                      Util.getNameOfDay(DateTime.now().add(Duration(days: e))),
+                  id: DateHelper.getNameOfDay(
+                      DateTime.now().add(Duration(days: e))),
+                  name: DateHelper.getNameOfDay(
+                      DateTime.now().add(Duration(days: e))),
                   condition: (dateTime) {
-                    return Util.isAfterNumberDay(DateTime.parse(dateTime), e);
+                    return DateHelper.isAfterNumberDay(
+                        DateTime.parse(dateTime), e);
                   }),
             )
             .toList(),
@@ -250,7 +252,7 @@ class DisplayListTasks extends TaskState {
       : _listAllTask = listAllTask;
 
   factory DisplayListTasks.loading() {
-    return DisplayListTasks(loading: true);
+    return const DisplayListTasks(loading: true);
   }
 
   factory DisplayListTasks.error(String msg) {
@@ -288,7 +290,7 @@ class DisplayListTasks extends TaskState {
     if ((drawerItems == null || identical(drawerItems, this.drawerItems)) &&
         (indexDrawerSelected == null ||
             identical(indexDrawerSelected, this.indexDrawerSelected)) &&
-        (listAllTask == null || identical(listAllTask, this._listAllTask)) &&
+        (listAllTask == null || identical(listAllTask, _listAllTask)) &&
         (listProject == null || identical(listProject, this.listProject)) &&
         (listLabel == null || identical(listLabel, this.listLabel)) &&
         (listSection == null || identical(listSection, this.listSection)) &&
@@ -300,7 +302,7 @@ class DisplayListTasks extends TaskState {
     return DisplayListTasks(
       drawerItems: drawerItems ?? this.drawerItems,
       indexDrawerSelected: indexDrawerSelected ?? this.indexDrawerSelected,
-      listAllTask: listAllTask ?? this._listAllTask,
+      listAllTask: listAllTask ?? _listAllTask,
       listProject: listProject ?? this.listProject,
       listLabel: listLabel ?? this.listLabel,
       listSection: listSection ?? this.listSection,

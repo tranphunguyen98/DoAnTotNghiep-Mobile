@@ -31,7 +31,7 @@ class ItemFunctionReminder extends StatelessWidget {
               color: isActive ? kColorPrimary : kColorGray1,
               size: 20.0,
             ),
-            SizedBox(
+            const SizedBox(
               width: 16.0,
             ),
             Text(

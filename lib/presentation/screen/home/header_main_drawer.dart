@@ -11,7 +11,6 @@ class HeaderMainDrawer extends StatelessWidget {
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
       builder: (context, state) {
         if (state is Authenticated) {
-          print(state.user ?? "null user");
           final user = state.user;
           return SizedBox(
             height: 120.0,
@@ -25,7 +24,7 @@ class HeaderMainDrawer extends StatelessWidget {
                     size: 40,
                     imageUrl: user.avatar,
                   ),
-                  SizedBox(width: 16.0),
+                  const SizedBox(width: 16.0),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,

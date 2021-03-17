@@ -33,7 +33,7 @@ class _SelectLabelScreenState extends State<SelectLabelScreen> {
         ),
       ),
       body: listAllLabel.isEmpty
-          ? EmptyTask("Danh sách Nhãn rỗng!")
+          ? const EmptyTask("Danh sách Nhãn rỗng!")
           : BlocBuilder<TaskSubmitBloc, TaskSubmitState>(
               cubit: _taskSubmitBloc,
               builder: (context, state) {

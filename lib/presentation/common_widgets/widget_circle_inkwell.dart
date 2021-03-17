@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:totodo/utils/my_const/color_const.dart';
+
+import '../../utils/my_const/color_const.dart';
 
 class CircleInkWell extends StatelessWidget {
   final double sizeIcon;
@@ -8,7 +9,7 @@ class CircleInkWell extends StatelessWidget {
   final IconData iconData;
   final VoidCallback onPressed;
 
-  CircleInkWell(this.iconData,
+  const CircleInkWell(this.iconData,
       {this.colorIcon,
       this.sizeIcon = 32.0,
       this.onPressed,

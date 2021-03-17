@@ -40,7 +40,7 @@ class LoginSubmitEmailPasswordEvent extends LoginEvent {
   final String email;
   final String password;
 
-  LoginSubmitEmailPasswordEvent(
+  const LoginSubmitEmailPasswordEvent(
       {@required this.email, @required this.password});
 
   @override

@@ -43,18 +43,18 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
         }
 
         if (state.isFailure) {
-          CustomSnackBar.failure(context, msg: state.error);
+          SnackBarHelper.failure(context, msg: state.error);
         }
 
         if (state.isSubmitting) {
-          CustomSnackBar.showLoading(context);
+          SnackBarHelper.showLoading(context);
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
           return Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: kColorWhite,
@@ -67,11 +67,11 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
                     child: Text('Đăng nhập tài khoản',
                         style: kFontMediumDefault_16),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildTextFieldEmail(),
-                  SizedBox(height: 14),
+                  const SizedBox(height: 14),
                   _buildTextFieldPassword(),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context)
@@ -85,11 +85,11 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildButtonLogin(),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   _buildTextOr(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildSocialLogin(),
                 ],
               ),
@@ -110,7 +110,7 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
               _loginBloc.add(LoginWithGoogleEvent());
             },
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           WidgetBtnFacebook(
             onPressed: () async {
               _loginBloc.add(LoginWithFacebookEvent());
@@ -125,7 +125,6 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
     return Stack(
       children: <Widget>[
         Align(
-          alignment: Alignment.center,
           child: Divider(
             color: kColorBlack_30,
           ),
@@ -177,7 +176,7 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
       validator: (_) {
         return !_loginBloc.state.isPasswordValid ? 'Invalid Password' : null;
       },
-      obscureText: true,
+      isObscure: true,
     );
   }
 

@@ -13,6 +13,7 @@ class FlatButtonDefault extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       height: 50,
+      //TODO replace FlatButton with TextButton
       child: FlatButton(
         disabledColor: kColorGray1_50,
         onPressed: onPressed,

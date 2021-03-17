@@ -34,8 +34,8 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
   void initState() {
     dropdownValue = listColor.first;
     _addLabelBloc.add(OpenAddLabelEvent());
-    _addLabelBloc.add(
-        AddedLabelChanged(color: Util.getHexFromColor(dropdownValue.color)));
+    _addLabelBloc
+        .add(AddedLabelChanged(color: getHexFromColor(dropdownValue.color)));
     super.initState();
   }
 
@@ -70,7 +70,7 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
             ),
             actions: [
               IconButton(
-                icon: Icon(Icons.send),
+                icon: const Icon(Icons.send),
                 onPressed: () {
                   _addLabelBloc.add(AddLabelSubmit());
                 },
@@ -104,7 +104,7 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
                             size: 16.0,
                             color: value.color,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 16.0,
                           ),
                           Text(value.label),
@@ -112,7 +112,7 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
                   }).toList(),
                   onChanged: (newValue) {
                     _addLabelBloc.add(AddedLabelChanged(
-                        color: Util.getHexFromColor(newValue.color)));
+                        color: getHexFromColor(newValue.color)));
                     setState(() {
                       dropdownValue = newValue;
                     });

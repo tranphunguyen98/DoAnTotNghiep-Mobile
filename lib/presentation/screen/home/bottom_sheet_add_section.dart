@@ -33,7 +33,7 @@ class BottomSheetAddSection extends StatelessWidget {
         builder: (context, state) {
           //_intData(_taskBloc.state as DisplayListTasks);
           return Container(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +66,7 @@ class BottomSheetAddSection extends StatelessWidget {
               errorText:
                   state.isValidNameSection ? null : 'Tên không được rỗng'),
         ),
-        SizedBox(
+        const SizedBox(
           width: 8,
         ),
         CircleInkWell(

@@ -37,7 +37,7 @@ class DrawerItemSelected extends StatelessWidget {
                     color: colorIcon ?? kColorPrimary,
                   ),
                 ),
-                SizedBox(width: 16.0),
+                const SizedBox(width: 16.0),
                 Text(
                   data.name,
                   style: kFontSemibold,

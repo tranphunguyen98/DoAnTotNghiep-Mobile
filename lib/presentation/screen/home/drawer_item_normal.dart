@@ -25,7 +25,7 @@ class DrawerItemNormal extends StatelessWidget {
               iconData,
               size: 20,
             ),
-            SizedBox(width: 16.0),
+            const SizedBox(width: 16.0),
             Text(
               name,
               style: kFontSemibold,

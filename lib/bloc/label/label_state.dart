@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/data/entity/label.dart';
+
+import '../../data/entity/label.dart';
 
 @immutable
 class AddLabelState extends Equatable {
@@ -50,6 +51,5 @@ class AddLabelState extends Equatable {
   }
 
   @override
-  // TODO: implement props
   List<Object> get props => [label, msg, isSuccess];
 }

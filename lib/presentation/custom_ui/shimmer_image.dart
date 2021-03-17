@@ -25,20 +25,20 @@ class ShimmerImage extends StatelessWidget {
         Shimmer.fromColors(
           baseColor: Colors.grey[200],
           highlightColor: Colors.grey[100],
-          child: this.aspectRatio != null
+          child: aspectRatio != null
               ? AspectRatio(
                   aspectRatio: aspectRatio,
                   child: Container(
                     child: _buildIcon(),
                   ),
                 )
-              : Container(
-                  width: this.width,
-                  height: this.height,
+              : SizedBox(
+                  width: width,
+                  height: height,
                   child: _buildIcon(),
                 ),
         ),
-        this.aspectRatio != null
+        aspectRatio != null
             ? AspectRatio(
                 aspectRatio: aspectRatio,
                 child: Image.network(
@@ -48,8 +48,8 @@ class ShimmerImage extends StatelessWidget {
               )
             : Image.network(
                 url,
-                width: this.width,
-                height: this.height,
+                width: width,
+                height: height,
                 fit: fit ?? BoxFit.contain,
               ),
       ],
