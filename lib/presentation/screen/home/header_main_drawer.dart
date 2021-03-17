@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/auth_bloc/authentication_bloc.dart';
-import 'package:totodo/bloc/auth_bloc/authentication_state.dart';
-import 'package:totodo/presentation/common_widgets/widget_circle_avatar_network.dart';
-import 'package:totodo/utils/my_const/my_const.dart';
+
+import '../../../bloc/auth_bloc/authentication_bloc.dart';
+import '../../../bloc/auth_bloc/authentication_state.dart';
+import '../../../utils/my_const/my_const.dart';
+import '../../common_widgets/widget_circle_avatar_network.dart';
 
 class HeaderMainDrawer extends StatelessWidget {
   @override

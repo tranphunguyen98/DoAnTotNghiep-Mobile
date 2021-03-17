@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/submit_task/bloc.dart';
-import 'package:totodo/bloc/task/bloc.dart';
-import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/screen/home/bottom_sheet_add_section.dart';
-import 'package:totodo/presentation/screen/home/main_drawer.dart';
-import 'package:totodo/presentation/screen/task/sc_dashboard.dart';
-import 'package:totodo/presentation/screen/task/widget_bottom_sheet_add_task.dart';
-import 'package:totodo/utils/my_const/color_const.dart';
 
+import '../../../bloc/submit_task/bloc.dart';
+import '../../../bloc/task/bloc.dart';
+import '../../../di/injection.dart';
+import '../../../utils/my_const/color_const.dart';
+import '../task/sc_dashboard.dart';
+import '../task/widget_bottom_sheet_add_task.dart';
+import 'bottom_sheet_add_section.dart';
 import 'dropdown_choice.dart';
+import 'main_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
   final TaskBloc _taskBloc = getIt<TaskBloc>()..add(OpenHomeScreen());

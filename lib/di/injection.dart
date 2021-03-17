@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
 import '../bloc/label/bloc.dart';
-import '../bloc/project/bloc.dart';
 import '../bloc/repository_interface/i_task_repository.dart';
 import '../bloc/repository_interface/i_user_repository.dart';
 import '../bloc/section/bloc.dart';
@@ -70,9 +69,6 @@ Future<void> configureDependencies() async {
       () => TaskSubmitBloc(taskRepository: getIt.get<ITaskRepository>()));
 
   // Project
-
-  getIt.registerLazySingleton<AddProjectBloc>(
-      () => AddProjectBloc(taskRepository: getIt.get<ITaskRepository>()));
 
   getIt.registerLazySingleton<AddLabelBloc>(
       () => AddLabelBloc(taskRepository: getIt.get<ITaskRepository>()));

@@ -15,6 +15,18 @@ class SimpleBlocDelegate extends BlocObserver {
   }
 
   @override
+  void onCreate(Cubit cubit) {
+    log('onCreate', cubit);
+    super.onCreate(cubit);
+  }
+
+  @override
+  void onClose(Cubit cubit) {
+    log('onClose', cubit);
+    super.onClose(cubit);
+  }
+
+  @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
     log('onTransition', '');

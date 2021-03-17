@@ -6,6 +6,7 @@ import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/mapper/local_task_mapper.dart';
 import 'package:totodo/data/local/model/local_task.dart';
+import 'package:totodo/utils/util.dart';
 
 @Injectable()
 class LocalTaskService {
@@ -99,7 +100,7 @@ class LocalTaskService {
     for (var i = 0; i < _taskBoxProject.length; i++) {
       listProject.add(_taskBoxProject.getAt(i) as Project);
     }
-    // print("LIST PROJECT: ${listProject}");
+    log("LIST PROJECT: $listProject");
     return listProject ?? <Project>[];
   }
 

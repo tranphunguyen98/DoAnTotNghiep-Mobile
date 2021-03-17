@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/task/bloc.dart';
-import 'package:totodo/bloc/task/task_bloc.dart';
-import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/screen/home/drawer_item_normal.dart';
-import 'package:totodo/presentation/screen/home/header_main_drawer.dart';
-import 'package:totodo/presentation/screen/home/list_drawer_item_selected.dart';
 
+import '../../../bloc/task/bloc.dart';
+import '../../../bloc/task/task_bloc.dart';
+import '../../../di/injection.dart';
 import '../../router.dart';
-import 'list_drawer_item_expanded_1.dart';
+import 'drawer_item_normal.dart';
+import 'header_main_drawer.dart';
+import 'list_drawer_item_expanded.dart';
+import 'list_drawer_item_selected.dart';
 
 class MainDrawer extends StatelessWidget {
   @override
@@ -25,7 +25,7 @@ class MainDrawer extends StatelessWidget {
         if (state is DisplayListTasks) {
           if (state.loading) {
             return const Drawer(
-              child: const Center(
+              child: Center(
                 child: CircularProgressIndicator(),
               ),
             );

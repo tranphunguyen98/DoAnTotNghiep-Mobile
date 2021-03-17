@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/task/bloc.dart';
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/custom_ui/custom_ui.dart';
-import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
-import 'package:totodo/utils/my_const/font_const.dart';
+import 'package:totodo/utils/my_const/color_const.dart';
+import 'package:totodo/utils/util.dart';
 
+import '../../../bloc/task/bloc.dart';
+import '../../../data/entity/label.dart';
+import '../../../data/entity/project.dart';
+import '../../../di/injection.dart';
+import '../../../utils/my_const/font_const.dart';
+import '../../custom_ui/custom_ui.dart';
+import 'drawer_item_data.dart';
 import 'drawer_item_normal.dart';
 import 'drawer_item_selected.dart';
 
 class ItemDrawerExpanded extends StatefulWidget {
   final DrawerItemData drawerItemData;
+
   const ItemDrawerExpanded(this.drawerItemData);
 
   @override
@@ -22,8 +25,11 @@ class ItemDrawerExpanded extends StatefulWidget {
 class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
     with SingleTickerProviderStateMixin {
   bool expandFlag = false;
+  bool isFirstTimeOpen = true;
+
   AnimationController _controller;
   TaskBloc _taskBloc;
+  BuildContext _context;
 
   @override
   void initState() {
@@ -31,6 +37,7 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
+    _context = context;
     _taskBloc = getIt<TaskBloc>();
     super.initState();
   }
@@ -41,7 +48,7 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
     super.dispose();
   }
 
-  Color getColorFromDrawerItem(DrawerItemData drawerItemData) {
+  Color _getColorFromDrawerItem(DrawerItemData drawerItemData) {
     if (drawerItemData.type == DrawerItemData.kTypeProject) {
       return HexColor((drawerItemData.data as Project).color);
     }
@@ -55,29 +62,24 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
 
   @override
   Widget build(BuildContext context) {
+    log("build expanded");
     return Material(
       child: InkWell(
         onTap: () {
-          setState(
-            () {
-              expandFlag = !expandFlag;
-              if (expandFlag) {
-                _controller.forward();
-              } else {
-                _controller.reverse();
-              }
-            },
-          );
+          setState(() {
+            _changeExpand();
+          });
         },
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Row(children: [
-                Image.asset(
+                Icon(
                   widget.drawerItemData.icon,
-                  width: 20,
-                  height: 20,
+                  color: widget.drawerItemData.color ?? kColorBlack2,
+                  size: 24,
                 ),
                 const SizedBox(
                   width: 16.0,
@@ -91,7 +93,11 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
                   width: 40.0,
                   height: 40.0,
                   child: ExpandIcon(
-                    onPressed: (value) {},
+                    onPressed: (value) {
+                      setState(() {
+                        _changeExpand();
+                      });
+                    },
                     isExpanded: expandFlag,
                     color: Colors.black,
                     expandedColor: Colors.black,
@@ -118,35 +124,19 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
                 cubit: _taskBloc,
                 builder: (context, state) {
                   if (state is DisplayListTasks) {
-                    final List<DrawerItemSelected> listDrawerItem =
-                        <DrawerItemSelected>[];
-                    for (int i = 0; i < state.drawerItems.length; i++) {
-                      if (state.drawerItems[i].type ==
-                          widget.drawerItemData.type) {
-                        listDrawerItem.add(DrawerItemSelected(
-                          state.drawerItems[i],
-                          isChild: true,
-                          colorIcon:
-                              getColorFromDrawerItem(state.drawerItems[i]),
-                          onPressed: () {
-                            _taskBloc.add(
-                              SelectedDrawerIndexChanged(
-                                index: i,
-                                type: widget.drawerItemData.type,
-                              ),
-                            );
-                            Navigator.of(context).pop();
-                          },
-                        ));
-                      }
-                    }
+                    log("listDrawerItem expanded");
+
+                    final listDrawerItem = _getListDrawerItem(state);
+
                     return Column(
                       children: [
                         ...listDrawerItem,
                         DrawerItemNormal(
                           "Thêm",
                           Icons.add,
-                          () {},
+                          () {
+                            widget.drawerItemData.onPressed(context);
+                          },
                           isChild: true,
                         ),
                       ],
@@ -160,5 +150,51 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
         ),
       ),
     );
+  }
+
+  List<DrawerItemSelected> _getListDrawerItem(DisplayListTasks state) {
+    final List<DrawerItemSelected> listDrawerItem = <DrawerItemSelected>[];
+
+    for (int i = 0; i < state.drawerItems.length; i++) {
+      if (state.drawerItems[i].type == widget.drawerItemData.type) {
+        //expand item when open drawer
+        if (isFirstTimeOpen &&
+            i == (_taskBloc.state as DisplayListTasks).indexDrawerSelected) {
+          isFirstTimeOpen = false;
+          _changeExpand();
+        }
+
+        final isSelected =
+            (i == (_taskBloc.state as DisplayListTasks).indexDrawerSelected) &&
+                expandFlag;
+        listDrawerItem.add(
+          DrawerItemSelected(
+            state.drawerItems[i],
+            isChild: true,
+            colorIcon: _getColorFromDrawerItem(state.drawerItems[i]),
+            isSelected: isSelected,
+            onPressed: () {
+              _taskBloc.add(
+                SelectedDrawerIndexChanged(
+                  index: i,
+                  type: widget.drawerItemData.type,
+                ),
+              );
+              Navigator.of(context).pop();
+            },
+          ),
+        );
+      }
+    }
+    return listDrawerItem;
+  }
+
+  void _changeExpand() {
+    expandFlag = !expandFlag;
+    if (expandFlag) {
+      _controller.forward();
+    } else {
+      _controller.reverse();
+    }
   }
 }

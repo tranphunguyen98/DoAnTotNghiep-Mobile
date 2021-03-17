@@ -121,14 +121,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
     for (final project in listProject) {
       drawerItems.add(
-        DrawerItemData(project.name, "assets/ic_circle_64.png",
+        DrawerItemData(project.name, Icons.circle,
             type: DrawerItemData.kTypeProject, data: project),
       );
     }
 
     for (final label in listLabel) {
       drawerItems.add(
-        DrawerItemData(label.name, "assets/ic_circle_64.png",
+        DrawerItemData(label.name, Icons.circle,
             type: DrawerItemData.kTypeLabel, data: label),
       );
     }

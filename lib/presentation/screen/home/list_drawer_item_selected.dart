@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/task/bloc.dart';
-import 'package:totodo/di/injection.dart';
 
+import '../../../bloc/task/bloc.dart';
+import '../../../di/injection.dart';
 import 'drawer_item_data.dart';
 import 'drawer_item_selected.dart';
 

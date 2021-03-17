@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
-import 'package:totodo/utils/my_const/my_const.dart';
+
+import '../../../utils/my_const/my_const.dart';
+import 'drawer_item_data.dart';
 
 class DrawerItemSelected extends StatelessWidget {
   final DrawerItemData data;
@@ -20,7 +21,7 @@ class DrawerItemSelected extends StatelessWidget {
     return Ink(
         color: isSelected ? Colors.black12 : Colors.transparent,
         child: InkWell(
-          onTap: onPressed,
+          onTap: isSelected ? () {} : onPressed,
           child: Padding(
             padding: EdgeInsets.only(
               top: 16.0,
@@ -29,14 +30,9 @@ class DrawerItemSelected extends StatelessWidget {
             ),
             child: Row(
               children: [
-                SizedBox(
-                  height: isChild ? 14 : 20.0,
-                  width: isChild ? 14 : 20.0, // fixed width and height
-                  child: Image.asset(
-                    data.icon,
-                    color: colorIcon ?? kColorPrimary,
-                  ),
-                ),
+                Icon(data.icon,
+                    color: data.color ?? colorIcon ?? kColorGray1,
+                    size: isChild ? 14 : 24),
                 const SizedBox(width: 16.0),
                 Text(
                   data.name,

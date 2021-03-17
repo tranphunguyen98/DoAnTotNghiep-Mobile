@@ -7,8 +7,10 @@ class AddProjectState extends Equatable {
   final Project project;
   final String msg;
   final bool isSuccess;
+  final bool isProjectNameValid;
 
   const AddProjectState({
+    this.isProjectNameValid = true,
     this.project = const Project(),
     this.msg,
     this.isSuccess = false,
@@ -30,10 +32,13 @@ class AddProjectState extends Equatable {
     Project project,
     String msg,
     bool isSuccess,
+    bool isProjectNameValid,
   }) {
     if ((project == null || identical(project, this.project)) &&
         (msg == null || identical(msg, this.msg)) &&
-        (isSuccess == null || identical(isSuccess, this.isSuccess))) {
+        (isSuccess == null || identical(isSuccess, this.isSuccess)) &&
+        (isProjectNameValid == null ||
+            identical(isProjectNameValid, this.isProjectNameValid))) {
       return this;
     }
 
@@ -41,14 +46,15 @@ class AddProjectState extends Equatable {
       project: project ?? this.project,
       msg: msg ?? this.msg,
       isSuccess: isSuccess ?? this.isSuccess,
+      isProjectNameValid: isProjectNameValid ?? this.isProjectNameValid,
     );
   }
 
   @override
   String toString() {
-    return 'AddProjectState{project: $project, msg: $msg, isSuccess: $isSuccess}';
+    return 'AddProjectState{project: $project, msg: $msg, isSuccess: $isSuccess, isProjectNameValid: $isProjectNameValid}';
   }
 
   @override
-  List<Object> get props => [project, msg, isSuccess];
+  List<Object> get props => [project, msg, isSuccess, isProjectNameValid];
 }

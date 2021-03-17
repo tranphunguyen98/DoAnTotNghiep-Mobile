@@ -23,5 +23,3 @@ class AddedProjectChanged extends AddProjectEvent {
 }
 
 class AddProjectSubmit extends AddProjectEvent {}
-
-class OpenAddProjectEvent extends AddProjectEvent {}

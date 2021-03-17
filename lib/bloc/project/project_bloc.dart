@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
+import 'package:totodo/utils/util.dart';
+import 'package:totodo/utils/validators.dart';
 
 import 'bloc.dart';
 
@@ -18,16 +20,16 @@ class AddProjectBloc extends Bloc<AddProjectEvent, AddProjectState> {
       yield* _mapNameProjectChangedToState(event.name, event.color);
     } else if (event is AddProjectSubmit) {
       yield* _mapAddProjectSubmitToState();
-    } else if (event is OpenAddProjectEvent) {
-      yield const AddProjectState();
     }
   }
 
   Stream<AddProjectState> _mapNameProjectChangedToState(
       String name, String color) async* {
+    final projectNew = state.project.copyWith(name: name, color: color);
+    log('$name $color $projectNew');
     yield state.copyWith(
-      project: state.project.copyWith(name: name, color: color),
-      msg: '',
+      project: projectNew,
+      isProjectNameValid: Validators.isValidName(projectNew.name ?? ''),
     );
   }
 

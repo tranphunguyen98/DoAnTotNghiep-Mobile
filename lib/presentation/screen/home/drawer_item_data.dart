@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class DrawerItemData {
   static const int kTypeMain = 0;
@@ -7,13 +8,16 @@ class DrawerItemData {
   static const int kTypeFilter = 3;
 
   final String name;
-  final String icon;
+  final IconData icon;
+  final Color color;
   final int type;
   final dynamic data;
   final Function(BuildContext) onPressed;
+
   DrawerItemData(
     this.name,
     this.icon, {
+    this.color,
     this.type = kTypeMain,
     this.onPressed,
     this.data,
@@ -25,8 +29,8 @@ class DrawerItemData {
   }
 
   static List<DrawerItemData> listDrawerItemDateInit = [
-    DrawerItemData("Dashboard", "assets/ic_dashboard_64.png"),
-    DrawerItemData("Hôm nay", "assets/ic_today_64.png"),
-    DrawerItemData("7 ngày tiếp theo", "assets/ic_week_64.png"),
+    DrawerItemData("Dashboard", Icons.inbox, color: Colors.blue),
+    DrawerItemData("Hôm nay", Icons.today, color: Colors.green),
+    DrawerItemData("7 ngày tiếp theo", Icons.date_range, color: Colors.red),
   ];
 }

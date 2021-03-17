@@ -11,7 +11,7 @@ String getHexFromColor(Color color) {
 
 void log(String name, [Object msg]) {
   getIt<Logger>().d(
-      'AppTotodo: ${DateFormat("HH:mm:ss").format(DateTime.now())}: $name ${msg ?? ''}');
+      'AppTotodo: ${DateFormat("HH:mm:ss").format(DateTime.now())}: $name ${msg.toString() ?? ''}');
 }
 
 void dismissKeyboard(BuildContext context) {

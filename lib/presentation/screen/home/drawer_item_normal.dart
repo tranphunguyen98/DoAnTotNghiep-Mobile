@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:totodo/utils/my_const/my_const.dart';
+
+import '../../../utils/my_const/my_const.dart';
 
 class DrawerItemNormal extends StatelessWidget {
   final String name;
@@ -17,15 +18,15 @@ class DrawerItemNormal extends StatelessWidget {
         padding: EdgeInsets.only(
           top: 16.0,
           bottom: 16.0,
-          left: isChild ? 40.0 : 16.0,
+          left: isChild ? 38.0 : 16.0,
         ),
         child: Row(
           children: [
             Icon(
               iconData,
-              size: 20,
+              size: isChild ? 20 : 24,
             ),
-            const SizedBox(width: 16.0),
+            SizedBox(width: isChild ? 14.0 : 16.0),
             Text(
               name,
               style: kFontSemibold,
