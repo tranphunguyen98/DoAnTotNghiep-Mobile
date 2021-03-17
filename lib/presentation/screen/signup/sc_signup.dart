@@ -21,14 +21,7 @@ class SignUpScreen extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               WidgetTopWelcome(),
-              AnimatedPadding(
-                padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
-                ),
-                duration: const Duration(milliseconds: 100),
-                curve: Curves.decelerate,
-                child: WidgetSignUpForm(),
-              ),
+              WidgetSignUpForm(),
               WidgetBottomSignUp(),
             ],
           ),

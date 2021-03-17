@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:totodo/utils/my_const/my_const.dart';
+
+import '../../../utils/my_const/my_const.dart';
 
 class WidgetBtnFacebook extends StatelessWidget {
   final VoidCallback onPressed;

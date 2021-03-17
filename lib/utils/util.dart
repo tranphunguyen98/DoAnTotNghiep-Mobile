@@ -9,9 +9,10 @@ String getHexFromColor(Color color) {
   return '#${color.value.toRadixString(16).substring(2, 8)}';
 }
 
-void log(String name, Object msg) {
-  getIt<Logger>().d('${DateFormat("HH:mm:ss").format(DateTime.now())}: $name\n'
-      '$msg');
+void log(String name, [Object msg]) {
+  getIt<Logger>()
+      .d('AppTotodo: ${DateFormat("HH:mm:ss").format(DateTime.now())}: $name\n'
+          '${msg ?? ''}');
 }
 
 void dismissKeyboard(BuildContext context) {

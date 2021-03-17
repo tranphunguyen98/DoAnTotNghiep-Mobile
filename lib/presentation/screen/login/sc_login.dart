@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/login/bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
-import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/screen/login/widget_bottom_signin.dart';
-import 'package:totodo/presentation/screen/login/widget_login_form.dart';
-import 'package:totodo/presentation/screen/login/widget_top_welcome.dart';
-import 'package:totodo/utils/my_const/color_const.dart';
+
+import '../../../bloc/login/bloc.dart';
+import '../../../bloc/repository_interface/i_user_repository.dart';
+import '../../../di/injection.dart';
+import '../../../utils/my_const/color_const.dart';
+import 'widget_bottom_signin.dart';
+import 'widget_login_form.dart';
+import 'widget_top_welcome.dart';
 
 class LoginScreen extends StatelessWidget {
   @override

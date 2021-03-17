@@ -209,6 +209,7 @@ class _WidgetSignUpFormState extends State<WidgetSignUpForm> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     EasyDebounce.cancel(kIdDebounce);
+    _registerBloc.close();
     super.dispose();
   }
 }

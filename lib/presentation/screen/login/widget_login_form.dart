@@ -1,12 +1,13 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/auth_bloc/bloc.dart';
-import 'package:totodo/bloc/login/bloc.dart';
-import 'package:totodo/presentation/common_widgets/custom_snackbar.dart';
-import 'package:totodo/presentation/common_widgets/widget_flat_button_default.dart';
-import 'package:totodo/presentation/common_widgets/widget_text_field_default.dart';
-import 'package:totodo/utils/my_const/my_const.dart';
 
+import '../../../bloc/auth_bloc/bloc.dart';
+import '../../../bloc/login/bloc.dart';
+import '../../../utils/my_const/my_const.dart';
+import '../../common_widgets/custom_snackbar.dart';
+import '../../common_widgets/widget_flat_button_default.dart';
+import '../../common_widgets/widget_text_field_default.dart';
 import '../../router.dart';
 import 'widget_btn_facebook.dart';
 import 'widget_btn_google.dart';
@@ -19,6 +20,8 @@ class WidgetLoginForm extends StatefulWidget {
 class _WidgetLoginFormState extends State<WidgetLoginForm> {
   AuthenticationBloc _authenticationBloc;
   LoginBloc _loginBloc;
+
+  final String _kIdDebounce = 'idLoginDebounce';
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -39,6 +42,7 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.isSuccess) {
+          SnackBarHelper.hideLoading(context);
           _authenticationBloc.add(LoggedIn());
         }
 
@@ -101,7 +105,7 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
   }
 
   Widget _buildSocialLogin() {
-    return Container(
+    return SizedBox(
       height: 40,
       child: Row(
         children: <Widget>[
@@ -154,15 +158,17 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
   Widget _buildButtonLogin() {
     return FlatButtonDefault(
       text: 'Đăng Nhập',
-      isEnable: true,
-      onPressed: () {
-        if (isRegisterButtonEnabled()) {
-          _loginBloc.add(LoginSubmitEmailPasswordEvent(
-            email: _emailController.text,
-            password: _passwordController.text,
-          ));
-        }
-      },
+      isEnable: isRegisterButtonEnabled(),
+      onPressed: isRegisterButtonEnabled()
+          ? () {
+              _loginBloc.add(
+                LoginSubmitEmailPasswordEvent(
+                  email: _emailController.text,
+                  password: _passwordController.text,
+                ),
+              );
+            }
+          : null,
     );
   }
 
@@ -171,7 +177,13 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
       hindText: 'Mật khẩu',
       controller: _passwordController,
       onChanged: (value) {
-        _loginBloc.add(LoginPasswordChanged(password: value));
+        EasyDebounce.debounce(
+          _kIdDebounce,
+          const Duration(milliseconds: 300),
+          () => _loginBloc.add(
+            LoginPasswordChanged(password: value),
+          ),
+        );
       },
       validator: (_) {
         return !_loginBloc.state.isPasswordValid ? 'Invalid Password' : null;
@@ -185,7 +197,13 @@ class _WidgetLoginFormState extends State<WidgetLoginForm> {
       hindText: 'Email',
       controller: _emailController,
       onChanged: (value) {
-        _loginBloc.add(LoginEmailChanged(email: value));
+        EasyDebounce.debounce(
+          _kIdDebounce,
+          const Duration(milliseconds: 300),
+          () => _loginBloc.add(
+            LoginEmailChanged(email: value),
+          ),
+        );
       },
       validator: (_) {
         return !_loginBloc.state.isEmailValid ? 'Invalid Email' : null;

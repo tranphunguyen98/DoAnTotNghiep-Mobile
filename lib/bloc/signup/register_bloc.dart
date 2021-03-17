@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:totodo/utils/util.dart';
 
 import '../../utils/validators.dart';
 import '../repository_interface/i_user_repository.dart';
@@ -11,8 +12,15 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   RegisterBloc({@required IUserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
-        super(RegisterState.empty());
+        super(RegisterState.empty()) {
+    log('RegisterState created!!');
+  }
 
+  @override
+  Future<void> close() {
+    log('RegisterState Close!!');
+    return super.close();
+  }
   // @override
   // Stream<Transition<RegisterEvent, RegisterState>> transformEvents(
   //   Stream<RegisterEvent> events,

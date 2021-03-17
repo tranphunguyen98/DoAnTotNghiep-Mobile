@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:totodo/presentation/common_widgets/widget_logo_totodo.dart';
-import 'package:totodo/utils/my_const/font_const.dart';
+
+import '../../../utils/my_const/font_const.dart';
+import '../../common_widgets/widget_logo_totodo.dart';
 
 class WidgetTopWelcome extends StatelessWidget {
   @override

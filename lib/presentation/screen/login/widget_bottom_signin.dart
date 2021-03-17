@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:totodo/utils/my_const/my_const.dart';
 
+import '../../../utils/my_const/my_const.dart';
 import '../../router.dart';
 
 class WidgetBottomSignIn extends StatelessWidget {
@@ -9,28 +9,23 @@ class WidgetBottomSignIn extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(top: 24),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Flexible(
-            child: Text(
-              'Chưa có mật khẩu?',
-              style: kFontRegularWhite_12,
-            ),
+          Text(
+            'Chưa có mật khẩu?',
+            style: kFontRegularWhite_12,
           ),
-          Flexible(
-            child: GestureDetector(
-              onTap: () {
-                Future.delayed(Duration.zero, () {
-                  Navigator.of(context).pushNamed(AppRouter.kSignUp);
-                });
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Text(
-                  'Đăng ký',
-                  style: kFontRegularWhite_12.copyWith(
-                    decoration: TextDecoration.underline,
-                  ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(AppRouter.kSignUp);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Text(
+                'Đăng ký',
+                style: kFontRegularWhite_12.copyWith(
+                  decoration: TextDecoration.underline,
                 ),
               ),
             ),
