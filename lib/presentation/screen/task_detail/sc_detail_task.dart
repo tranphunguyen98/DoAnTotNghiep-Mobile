@@ -275,7 +275,8 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
   Future onPressedPickDate(BuildContext context, TaskDetailState state) async {
     final picker = await showCustomDatePicker(
         context: context,
-        initialDate: DateTime.now(),
+        initialDate: DateTime.parse(
+            state.taskEdit.taskDate ?? DateTime.now().toIso8601String()),
         firstDate: DateTime(
           DateTime.now().year,
           DateTime.now().month,

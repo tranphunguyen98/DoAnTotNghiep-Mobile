@@ -280,7 +280,8 @@ class _DatePickerDialogState extends State<_DatePickerDialog> {
   Future<void> _handlePickTime() async {
     final picker = await showTimePicker(
       context: context,
-      initialTime: const TimeOfDay(hour: 0, minute: 0),
+      initialTime:
+          widget.selectedTimeOfDay ?? const TimeOfDay(hour: 9, minute: 0),
     );
     setState(() {
       _selectedTimeOfDay = picker;

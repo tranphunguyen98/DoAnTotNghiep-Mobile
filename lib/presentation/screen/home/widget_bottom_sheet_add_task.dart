@@ -268,7 +268,8 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
   Future onPressedPickDate(TaskAddState state) async {
     final picker = await showCustomDatePicker(
         context: context,
-        initialDate: DateTime.now(),
+        initialDate: DateTime.parse(
+            state.taskAdd.taskDate ?? DateTime.now().toIso8601String()),
         firstDate: DateTime(
           DateTime.now().year,
           DateTime.now().month,
