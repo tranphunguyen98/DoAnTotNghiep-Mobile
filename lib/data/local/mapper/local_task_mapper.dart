@@ -23,7 +23,7 @@ class LocalTaskMapper {
       isCompleted: localTask.isCompleted,
       isStarred: localTask.isStarred,
       isTrashed: localTask.isTrashed,
-      priorityType: localTask.priorityType,
+      priority: localTask.priority,
       project: localTask.projectId?.isEmpty ?? true
           ? null
           : getProjectFromId(localTask.projectId),
@@ -46,7 +46,7 @@ class LocalTaskMapper {
         isCompleted: task.isCompleted,
         isStarred: task.isStarred,
         isTrashed: task.isTrashed,
-        priorityType: task.priorityType,
+        priority: task.priority,
         projectId: task.project?.id,
         sectionId: task.sectionId,
         labelIds: task.labels?.map((e) => e.id)?.toList(),

@@ -9,7 +9,6 @@ import 'package:totodo/data/local/model/local_task.dart';
 import 'package:totodo/utils/notification_helper.dart';
 
 import 'app_config.dart';
-import 'data/entity/label.dart';
 import 'data/entity/section.dart';
 import 'data/local/model/local_task.dart';
 import 'data/local/source/task/local_task_service.dart';

@@ -79,4 +79,9 @@ class TaskRepositoryImpl implements ITaskRepository {
     // TODO: implement updateSection
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> clearData() {
+    return _localTaskDataSource.clearData();
+  }
 }

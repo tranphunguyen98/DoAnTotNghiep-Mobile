@@ -33,7 +33,7 @@ class Section extends Equatable {
       isShowIfEmpty: false,
       condition: DateHelper.isTodayString);
 
-  static const Section kSectionEmpty = Section(id: '');
+  static const Section kSectionEmpty = Section(id: null);
 
   static const Section kSectionTomorrow = Section(
       id: "tomorrow", name: "Tomorrow", condition: DateHelper.isTomorrowString);

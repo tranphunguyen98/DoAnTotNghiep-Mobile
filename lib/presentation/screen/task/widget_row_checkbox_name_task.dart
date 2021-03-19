@@ -18,7 +18,7 @@ class RowCheckBoxAndNameTask extends StatelessWidget {
       children: [
         Theme(
           data: ThemeData(
-            unselectedWidgetColor: kListColorPriority[task.priorityType - 1],
+            unselectedWidgetColor: kListColorPriority[task.priority - 1],
           ),
           child: SizedBox(
             width: 24.0,
@@ -29,7 +29,7 @@ class RowCheckBoxAndNameTask extends StatelessWidget {
                 updateTask(task.copyWith(isCompleted: value));
               },
               checkColor: Colors.white,
-              activeColor: kListColorPriority[task.priorityType - 1],
+              activeColor: kListColorPriority[task.priority - 1],
             ),
           ),
         ),

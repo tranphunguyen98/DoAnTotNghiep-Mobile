@@ -29,10 +29,10 @@ class SimpleBlocDelegate extends BlocObserver {
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
-    log('onTransition', '');
-    // log(
-    //     'onTransition',
-    //     '\tcurrentState=${transition.currentState}\n'
-    //         '\tnextState=${transition.nextState}');
+    // log('onTransition', '');
+    log(
+        'onTransition',
+        '\tcurrentState=${transition.currentState}\n'
+            '\tnextState=${transition.nextState}');
   }
 }

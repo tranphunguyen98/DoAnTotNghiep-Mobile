@@ -20,7 +20,7 @@ class LocalTaskAdapter extends TypeAdapter<LocalTask> {
       id: fields[0] as String,
       createdDate: fields[1] as String,
       updatedDate: fields[2] as String,
-      priorityType: fields[3] as int,
+      priority: fields[3] as int,
       name: fields[4] as String,
       description: fields[5] as String,
       isCompleted: fields[6] as bool,
@@ -45,7 +45,7 @@ class LocalTaskAdapter extends TypeAdapter<LocalTask> {
       ..writeByte(2)
       ..write(obj.updatedDate)
       ..writeByte(3)
-      ..write(obj.priorityType)
+      ..write(obj.priority)
       ..writeByte(4)
       ..write(obj.name)
       ..writeByte(5)

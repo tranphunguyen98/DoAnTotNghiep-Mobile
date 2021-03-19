@@ -100,7 +100,7 @@ class LocalTaskService {
     for (var i = 0; i < _taskBoxProject.length; i++) {
       listProject.add(_taskBoxProject.getAt(i) as Project);
     }
-    log("LIST PROJECT: $listProject");
+    // log("LIST PROJECT: $listProject");
     return listProject ?? <Project>[];
   }
 
@@ -144,11 +144,11 @@ class LocalTaskService {
     for (var i = 0; i < _taskBoxSection.length; i++) {
       listSection.add(_taskBoxSection.getAt(i) as Section);
     }
-    // print("LIST SECTION: $listSection");
+    log("LIST SECTION: $listSection");
     return listSection ?? <Section>[];
   }
 
-  bool updateSection(Section section) {
+  void updateSection(Section section) {
     int indexUpdated = -1;
 
     for (var i = 0; i < _taskBoxSection.length; i++) {
@@ -160,11 +160,15 @@ class LocalTaskService {
 
     if (indexUpdated > -1) {
       _taskBoxSection.putAt(indexUpdated, section);
-      return true;
     }
-
-    return false;
   }
 
 //</editor-fold>
+
+  Future<void> clearData() async {
+    _taskBoxTask.clear();
+    _taskBoxLabel.clear();
+    _taskBoxProject.clear();
+    _taskBoxSection.clear();
+  }
 }

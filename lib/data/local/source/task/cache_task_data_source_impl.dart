@@ -73,7 +73,12 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
 
   @override
   Future<void> updateSection(Section section) {
-    // TODO: implement updateSection
+    // TODO: implement updateLabel
     throw UnimplementedError();
+  }
+
+  @override
+  Future<void> clearData() {
+    return _taskService.clearData();
   }
 }

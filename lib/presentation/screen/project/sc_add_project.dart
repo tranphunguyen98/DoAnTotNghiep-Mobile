@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 
 import '../../../bloc/project/bloc.dart';
-import '../../../bloc/task/bloc.dart';
-import '../../../bloc/task/task_event.dart';
 import '../../../di/injection.dart';
 import '../../../utils/my_const/my_const.dart';
 import '../../../utils/util.dart';
@@ -49,7 +48,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
       listener: (context, state) {
         if (state is AddProjectState) {
           if (state == AddProjectState.success()) {
-            getIt<TaskBloc>().add(DataProjectChanged());
+            getIt<HomeBloc>().add(DataProjectChanged());
             Navigator.of(context).pop();
           }
         }

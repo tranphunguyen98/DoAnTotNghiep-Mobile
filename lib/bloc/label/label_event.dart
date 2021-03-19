@@ -23,5 +23,3 @@ class AddedLabelChanged extends AddLabelEvent {
 }
 
 class AddLabelSubmit extends AddLabelEvent {}
-
-class OpenAddLabelEvent extends AddLabelEvent {}

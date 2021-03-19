@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:totodo/bloc/home/bloc.dart';
+import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/di/injection.dart';
+import 'package:totodo/presentation/custom_ui/custom_ui.dart';
+import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
+import 'package:totodo/presentation/screen/home/drawer_item_normal.dart';
+import 'package:totodo/presentation/screen/home/drawer_item_selected.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
-import 'package:totodo/utils/util.dart';
-
-import '../../../bloc/task/bloc.dart';
-import '../../../data/entity/label.dart';
-import '../../../data/entity/project.dart';
-import '../../../di/injection.dart';
-import '../../../utils/my_const/font_const.dart';
-import '../../custom_ui/custom_ui.dart';
-import 'drawer_item_data.dart';
-import 'drawer_item_normal.dart';
-import 'drawer_item_selected.dart';
+import 'package:totodo/utils/my_const/my_const.dart';
 
 class ItemDrawerExpanded extends StatefulWidget {
   final DrawerItemData drawerItemData;
@@ -28,8 +26,7 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
   bool isFirstTimeOpen = true;
 
   AnimationController _controller;
-  TaskBloc _taskBloc;
-  BuildContext _context;
+  final HomeBloc _homeBloc = getIt<HomeBloc>();
 
   @override
   void initState() {
@@ -37,8 +34,6 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _context = context;
-    _taskBloc = getIt<TaskBloc>();
     super.initState();
   }
 
@@ -62,7 +57,6 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
 
   @override
   Widget build(BuildContext context) {
-    log("build expanded");
     return Material(
       child: InkWell(
         onTap: () {
@@ -120,29 +114,23 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
             ),
             SizeTransition(
               sizeFactor: _controller,
-              child: BlocBuilder(
-                cubit: _taskBloc,
+              child: BlocBuilder<HomeBloc, HomeState>(
+                cubit: _homeBloc,
                 builder: (context, state) {
-                  if (state is DisplayListTasks) {
-                    log("listDrawerItem expanded");
-
-                    final listDrawerItem = _getListDrawerItem(state);
-
-                    return Column(
-                      children: [
-                        ...listDrawerItem,
-                        DrawerItemNormal(
-                          "Thêm",
-                          Icons.add,
-                          () {
-                            widget.drawerItemData.onPressed(context);
-                          },
-                          isChild: true,
-                        ),
-                      ],
-                    );
-                  }
-                  return Container();
+                  final listDrawerItem = _getListDrawerItem(state);
+                  return Column(
+                    children: [
+                      ...listDrawerItem,
+                      DrawerItemNormal(
+                        "Thêm",
+                        Icons.add,
+                        () {
+                          widget.drawerItemData.onPressed(context);
+                        },
+                        isChild: true,
+                      ),
+                    ],
+                  );
                 },
               ),
             ),
@@ -152,21 +140,19 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
     );
   }
 
-  List<DrawerItemSelected> _getListDrawerItem(DisplayListTasks state) {
+  List<DrawerItemSelected> _getListDrawerItem(HomeState state) {
     final List<DrawerItemSelected> listDrawerItem = <DrawerItemSelected>[];
 
     for (int i = 0; i < state.drawerItems.length; i++) {
       if (state.drawerItems[i].type == widget.drawerItemData.type) {
         //expand item when open drawer
-        if (isFirstTimeOpen &&
-            i == (_taskBloc.state as DisplayListTasks).indexDrawerSelected) {
+        if (isFirstTimeOpen && i == _homeBloc.state.indexDrawerSelected) {
           isFirstTimeOpen = false;
           _changeExpand();
         }
 
         final isSelected =
-            (i == (_taskBloc.state as DisplayListTasks).indexDrawerSelected) &&
-                expandFlag;
+            (i == _homeBloc.state.indexDrawerSelected) && expandFlag;
         listDrawerItem.add(
           DrawerItemSelected(
             state.drawerItems[i],
@@ -174,7 +160,7 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
             colorIcon: _getColorFromDrawerItem(state.drawerItems[i]),
             isSelected: isSelected,
             onPressed: () {
-              _taskBloc.add(
+              _homeBloc.add(
                 SelectedDrawerIndexChanged(
                   index: i,
                   type: widget.drawerItemData.type,

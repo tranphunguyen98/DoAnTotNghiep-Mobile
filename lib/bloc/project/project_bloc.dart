@@ -25,11 +25,13 @@ class AddProjectBloc extends Bloc<AddProjectEvent, AddProjectState> {
 
   Stream<AddProjectState> _mapNameProjectChangedToState(
       String name, String color) async* {
+    //TODO separate to name and color
     final projectNew = state.project.copyWith(name: name, color: color);
     log('$name $color $projectNew');
     yield state.copyWith(
       project: projectNew,
-      isProjectNameValid: Validators.isValidName(projectNew.name ?? ''),
+      isProjectNameValid:
+          name != null ? Validators.isValidName(projectNew.name ?? '') : null,
     );
   }
 

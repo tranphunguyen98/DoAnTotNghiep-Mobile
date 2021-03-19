@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import '../data/entity/task.dart';
+import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/data/entity/task.dart';
+
 import 'screen/change_password/sc_change_password.dart';
 import 'screen/forgot_password/sc_forgot_password.dart';
 import 'screen/home/sc_home.dart';
 import 'screen/label/sc_add_label.dart';
-import 'screen/label/sc_select_label.dart';
 import 'screen/login/sc_login.dart';
 import 'screen/project/sc_add_project.dart';
+import 'screen/select_label/sc_select_label.dart';
 import 'screen/setting/sc_setting.dart';
 import 'screen/signup/sc_signup.dart';
 import 'screen/splash/sc_splash.dart';
-import 'screen/task/sc_detail_task.dart';
+import 'screen/task_detail/sc_detail_task.dart';
 
 class AppRouter {
-  static const String kHome = '/';
+  static const String kHome = '/home';
   static const String kSplash = '/splash';
   static const String kLogin = '/login';
   static const String kSignUp = '/signUp';
@@ -48,7 +50,13 @@ class AppRouter {
       case kAddLabel:
         return MaterialPageRoute(builder: (_) => AddLabelScreen());
       case kSelectLabel:
-        return MaterialPageRoute(builder: (_) => SelectLabelScreen());
+        if (settings.arguments is List<Label>) {
+          final listLabelSelected = settings.arguments as List<Label>;
+          return MaterialPageRoute(
+              builder: (_) => SelectLabelScreen(listLabelSelected));
+        }
+        return MaterialPageRoute(builder: (_) => const SelectLabelScreen());
+        break;
       case kDetailTask:
         // print("kDetailTask: ${settings.arguments}");
         if (settings.arguments is Task) {

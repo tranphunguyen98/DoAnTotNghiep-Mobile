@@ -1,17 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:totodo/data/entity/check_item.dart';
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 
-abstract class TaskSubmitEvent extends Equatable {
+abstract class TaskDetailEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-class OpenBottomSheetAddTask extends TaskSubmitEvent {}
-
-class OpenScreenEditTask extends TaskSubmitEvent {
+class OpenScreenEditTask extends TaskDetailEvent {
   final Task task;
 
   OpenScreenEditTask(this.task);
@@ -25,7 +21,7 @@ class OpenScreenEditTask extends TaskSubmitEvent {
   }
 }
 
-class OpenScreenEditTaskWithId extends TaskSubmitEvent {
+class OpenScreenEditTaskWithId extends TaskDetailEvent {
   final String taskId;
 
   OpenScreenEditTaskWithId(this.taskId);
@@ -39,7 +35,7 @@ class OpenScreenEditTaskWithId extends TaskSubmitEvent {
   }
 }
 
-class TaskSubmitDateChanged extends TaskSubmitEvent {
+class TaskSubmitDateChanged extends TaskDetailEvent {
   final String taskDate;
 
   TaskSubmitDateChanged(this.taskDate);
@@ -53,37 +49,7 @@ class TaskSubmitDateChanged extends TaskSubmitEvent {
   }
 }
 
-class TaskSubmitChanged extends TaskSubmitEvent {
-  final String taskName;
-  final int priority;
-  final Project project;
-  final List<Label> labels;
-  final String sectionId;
-  final String taskDate;
-
-  TaskSubmitChanged(
-      {this.taskName,
-      this.priority,
-      this.project,
-      this.labels,
-      this.taskDate,
-      this.sectionId});
-
-  @override
-  List<Object> get props =>
-      [taskName, priority, project, labels, sectionId, taskDate];
-
-  @override
-  String toString() {
-    return 'TaskAddChanged{taskName: $taskName, priority: $priority, projectId: $project, labelIds: $labels, sectionId: $sectionId, taskDate: $taskDate}';
-  }
-}
-
-class HandledSuccessState extends TaskSubmitEvent {}
-
-class SubmitAddTask extends TaskSubmitEvent {}
-
-class UpdateItemCheckList extends TaskSubmitEvent {
+class UpdateItemCheckList extends TaskDetailEvent {
   final CheckItem checkItem;
 
   UpdateItemCheckList(this.checkItem);
@@ -97,7 +63,7 @@ class UpdateItemCheckList extends TaskSubmitEvent {
   }
 }
 
-class SubmitEditTask extends TaskSubmitEvent {
+class SubmitEditTask extends TaskDetailEvent {
   final Task task;
 
   SubmitEditTask([this.task]);
@@ -107,11 +73,11 @@ class SubmitEditTask extends TaskSubmitEvent {
 
   @override
   String toString() {
-    return 'UpdateTask{task: $task}';
+    return 'SubmitEditTask{task: $task}';
   }
 }
 
-class DeleteCheckItem extends TaskSubmitEvent {
+class DeleteCheckItem extends TaskDetailEvent {
   final String idCheckItem;
 
   DeleteCheckItem(this.idCheckItem);

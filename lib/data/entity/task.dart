@@ -13,7 +13,7 @@ class Task extends Equatable {
   final String id;
   final String createdDate;
   final String updatedDate;
-  final int priorityType;
+  final int priority;
   final String name;
   final String description;
   final bool isCompleted;
@@ -36,7 +36,7 @@ class Task extends Equatable {
       this.taskDate,
       this.project,
       this.labels,
-      this.priorityType = kPriority4,
+      this.priority = kPriority4,
       this.isCompleted = false,
       this.isStarred = false,
       this.isTrashed = false,
@@ -47,7 +47,7 @@ class Task extends Equatable {
     String id,
     String createdDate,
     String updatedDate,
-    int priorityType,
+    int priority,
     String name,
     String description,
     bool isCompleted,
@@ -62,7 +62,7 @@ class Task extends Equatable {
     if ((id == null || identical(id, this.id)) &&
         (createdDate == null || identical(createdDate, this.createdDate)) &&
         (updatedDate == null || identical(updatedDate, this.updatedDate)) &&
-        (priorityType == null || identical(priorityType, this.priorityType)) &&
+        (priority == null || identical(priority, this.priority)) &&
         (name == null || identical(name, this.name)) &&
         (description == null || identical(description, this.description)) &&
         (isCompleted == null || identical(isCompleted, this.isCompleted)) &&
@@ -80,7 +80,7 @@ class Task extends Equatable {
       id: id ?? this.id,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
-      priorityType: priorityType ?? this.priorityType,
+      priority: priority ?? this.priority,
       name: name ?? this.name,
       description: description ?? this.description,
       isCompleted: isCompleted ?? this.isCompleted,
@@ -96,7 +96,7 @@ class Task extends Equatable {
 
   @override
   String toString() {
-    return 'Task{id: $id, createdDate: $createdDate, updatedDate: $updatedDate, priorityType: $priorityType, name: $name, description: $description, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate, project: $project, sectionId: $sectionId, labels: $labels, checkList: $checkList}';
+    return 'Task{id: $id, createdDate: $createdDate, updatedDate: $updatedDate, priority: $priority, name: $name, description: $description, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate, project: $project, sectionId: $sectionId, labels: $labels, checkList: $checkList}';
   }
 
   @override
@@ -107,7 +107,7 @@ class Task extends Equatable {
           id == other.id &&
           createdDate == other.createdDate &&
           updatedDate == other.updatedDate &&
-          priorityType == other.priorityType &&
+          priority == other.priority &&
           name == other.name &&
           description == other.description &&
           isCompleted == other.isCompleted &&
@@ -124,7 +124,7 @@ class Task extends Equatable {
       id.hashCode ^
       createdDate.hashCode ^
       updatedDate.hashCode ^
-      priorityType.hashCode ^
+      priority.hashCode ^
       name.hashCode ^
       description.hashCode ^
       isCompleted.hashCode ^
@@ -141,7 +141,7 @@ class Task extends Equatable {
       id: map['id'] as String,
       createdDate: map['createdDate'] as String,
       updatedDate: map['updatedDate'] as String,
-      priorityType: map['priorityType'] as int,
+      priority: map['priority'] as int,
       name: map['name'] as String,
       description: map['description'] as String,
       isCompleted: map['isCompleted'] as bool,
@@ -161,7 +161,7 @@ class Task extends Equatable {
       'id': id,
       'createdDate': createdDate,
       'updatedDate': updatedDate,
-      'priorityType': priorityType,
+      'priority': priority,
       'name': name,
       'description': description,
       'isCompleted': isCompleted,
@@ -181,9 +181,10 @@ class Task extends Equatable {
   @override
   List<Object> get props => [
         id,
+        checkList,
         // createdDate,
         // updatedDate,
-        priorityType,
+        priority,
         taskDate,
         name,
         description,
@@ -193,6 +194,5 @@ class Task extends Equatable {
         project,
         labels,
         sectionId,
-        checkList,
       ];
 }

@@ -35,6 +35,7 @@ class _WidgetForgotPasswordFormState extends State<WidgetForgotPasswordForm> {
       listener: (context, state) {
         // print("state: $state");
         if (state.isSubmitting) {
+
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(

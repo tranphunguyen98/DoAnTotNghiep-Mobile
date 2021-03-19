@@ -12,7 +12,7 @@ class LocalTask {
   @HiveField(2)
   final String updatedDate;
   @HiveField(3)
-  final int priorityType;
+  final int priority;
   @HiveField(4)
   final String name;
   @HiveField(5)
@@ -38,7 +38,7 @@ class LocalTask {
     this.id,
     this.createdDate,
     this.updatedDate,
-    this.priorityType,
+    this.priority,
     this.name,
     this.description,
     this.isCompleted,
@@ -55,7 +55,7 @@ class LocalTask {
     String id,
     String createdDate,
     String updatedDate,
-    int priorityType,
+    int priority,
     String name,
     String description,
     bool isCompleted,
@@ -70,7 +70,7 @@ class LocalTask {
     if ((id == null || identical(id, this.id)) &&
         (createdDate == null || identical(createdDate, this.createdDate)) &&
         (updatedDate == null || identical(updatedDate, this.updatedDate)) &&
-        (priorityType == null || identical(priorityType, this.priorityType)) &&
+        (priority == null || identical(priority, this.priority)) &&
         (name == null || identical(name, this.name)) &&
         (description == null || identical(description, this.description)) &&
         (isCompleted == null || identical(isCompleted, this.isCompleted)) &&
@@ -88,7 +88,7 @@ class LocalTask {
       id: id ?? this.id,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
-      priorityType: priorityType ?? this.priorityType,
+      priority: priority ?? this.priority,
       name: name ?? this.name,
       description: description ?? this.description,
       isCompleted: isCompleted ?? this.isCompleted,

@@ -1,55 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:totodo/bloc/home/bloc.dart';
+import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 
 import '../../../bloc/section/bloc.dart';
-import '../../../bloc/task/bloc.dart';
 import '../../../di/injection.dart';
 import '../../../utils/my_const/my_const.dart';
 import '../../common_widgets/widget_circle_inkwell.dart';
 import '../../common_widgets/widget_text_field_non_border.dart';
 
 class BottomSheetAddSection extends StatelessWidget {
-  final _addSectionBloc = getIt<AddSectionBloc>();
-  final _taskBloc = getIt<TaskBloc>();
+  final _addSectionBloc =
+      AddSectionBloc(taskRepository: getIt<ITaskRepository>());
+  final _homeBloc = getIt<HomeBloc>();
   final _textNameSectionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     _addSectionBloc.add(ProjectIdSectionAddChanged(
-        projectId:
-            (_taskBloc.state as DisplayListTasks).getProjectSelected().id));
-    return AnimatedPadding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      duration: const Duration(milliseconds: 100),
-      curve: Curves.decelerate,
-      child: BlocConsumer<AddSectionBloc, AddSectionState>(
-        cubit: _addSectionBloc,
-        listener: (context, state) {
-          if (state.isSuccess == true) {
-            _taskBloc.add(DataListSectionChanged());
-          }
-        },
-        builder: (context, state) {
-          //_intData(_taskBloc.state as DisplayListTasks);
-          return Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTextNameTask(state, context),
-              ],
-            ),
-          );
-        },
-      ),
+        projectId: (_homeBloc.state).getProjectSelected().id));
+    return BlocConsumer<AddSectionBloc, AddSectionState>(
+      cubit: _addSectionBloc,
+      listener: (context, state) {
+        if (state.isSuccess == true) {
+          _homeBloc.add(DataListSectionChanged());
+        }
+      },
+      builder: (context, state) {
+        //_intData(_HomeBloc.state as HomeState);
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTextNameTask(state, context),
+            ],
+          ),
+        );
+      },
     );
   }
 
   Widget _buildTextNameTask(AddSectionState state, BuildContext context) {
-    print("build text $state}");
     // _textNameTaskController
     //   ..text = state.section.name ?? ''
     //   ..selection =

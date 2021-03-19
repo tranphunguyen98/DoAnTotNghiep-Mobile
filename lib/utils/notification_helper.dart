@@ -3,7 +3,8 @@ import 'package:awesome_notifications/awesome_notifications.dart'
     hide DateUtils;
 import 'package:totodo/data/entity/task.dart';
 
-import 'my_const/notification_helper.dart';
+const String kKeyPayloadNotificationIdTask = 'idTask';
+const String kKeyButtonActionComplete = 'complete';
 
 void initNotification() {
   AwesomeNotifications().initialize(

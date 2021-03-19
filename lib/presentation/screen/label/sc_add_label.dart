@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/bloc/label/bloc.dart';
-import 'package:totodo/bloc/task/bloc.dart';
+import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 import 'package:totodo/utils/util.dart';
@@ -19,7 +20,8 @@ class AddLabelScreen extends StatefulWidget {
 }
 
 class _AddLabelScreenState extends State<AddLabelScreen> {
-  final AddLabelBloc _addLabelBloc = getIt<AddLabelBloc>();
+  final AddLabelBloc _addLabelBloc =
+      AddLabelBloc(taskRepository: getIt<ITaskRepository>());
   final List<ChooseColor> listColor = [
     ChooseColor(Colors.grey, "Grey"),
     ChooseColor(Colors.red, "Red"),
@@ -33,7 +35,6 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
   @override
   void initState() {
     dropdownValue = listColor.first;
-    _addLabelBloc.add(OpenAddLabelEvent());
     _addLabelBloc
         .add(AddedLabelChanged(color: getHexFromColor(dropdownValue.color)));
     super.initState();
@@ -44,11 +45,9 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
     return BlocConsumer(
       cubit: _addLabelBloc,
       listener: (context, state) {
-        print("AddLabelScreen $state}");
         if (state is AddLabelState) {
           if (state == AddLabelState.success()) {
-            print("Add Success");
-            getIt<TaskBloc>().add(DataLabelChanged());
+            getIt<HomeBloc>().add(DataLabelChanged());
             Navigator.of(context).pop();
           }
         }
@@ -64,6 +63,7 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
+            iconTheme: const IconThemeData(color: Colors.white),
             title: Text(
               "Thêm Nhán",
               style: kFontSemiboldWhite_18,

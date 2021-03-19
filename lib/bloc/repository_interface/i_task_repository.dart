@@ -20,4 +20,6 @@ abstract class ITaskRepository {
   Future<void> addSection(Section section);
   Future<void> updateSection(Section section);
   Future<List<Section>> getSections();
+
+  Future<void> clearData();
 }
