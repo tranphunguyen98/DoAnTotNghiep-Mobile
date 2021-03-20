@@ -134,6 +134,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  charter:
+    dependency: "direct main"
+    description:
+      name: charter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1-alpha-3"
   checked_yaml:
     dependency: transitive
     description:
@@ -238,7 +245,7 @@ packages:
       name: equatable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.1"
+    version: "2.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -316,6 +323,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.10.11"
+  fl_chart:
+    dependency: "direct main"
+    description:
+      name: fl_chart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.20.1"
   flare_dart:
     dependency: transitive
     description:
@@ -618,6 +632,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.1.4"
+  modern_charts:
+    dependency: "direct main"
+    description:
+      name: modern_charts
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.19"
   nested:
     dependency: transitive
     description:
@@ -716,6 +737,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.0"
+  percent_indicator:
+    dependency: "direct main"
+    description:
+      name: percent_indicator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.9+1"
   petitparser:
     dependency: transitive
     description:

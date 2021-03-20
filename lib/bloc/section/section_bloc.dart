@@ -18,8 +18,7 @@ class AddSectionBloc extends Bloc<AddSectionEvent, AddSectionState> {
       yield* _mapNameSectionChangedToState(event.name);
     } else if (event is ProjectIdSectionAddChanged) {
       yield* _mapProjectIdSectionAddChangedToState(event.projectId);
-    }
-    if (event is AddSectionSubmit) {
+    } else if (event is AddSectionSubmit) {
       yield* _mapAddSectionSubmitToState();
     } else if (event is OpenAddSectionEvent) {
       yield const AddSectionState();

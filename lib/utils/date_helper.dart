@@ -47,7 +47,12 @@ class DateHelper {
   }
 
   static bool isOverdue(DateTime dateTimeSource, DateTime dateTimeDestination) {
-    return dateTimeSource.compareTo(dateTimeDestination) < 0;
+    return dateTimeSource.compareTo(DateTime(
+          dateTimeDestination.year,
+          dateTimeDestination.month,
+          dateTimeDestination.day,
+        )) <
+        0;
   }
 
   static bool isOverDueString(String dateTimeSourceString) {

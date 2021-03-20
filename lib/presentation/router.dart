@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/presentation/screen/profile/sc_profile.dart';
 
 import 'screen/change_password/sc_change_password.dart';
 import 'screen/forgot_password/sc_forgot_password.dart';
@@ -26,6 +27,7 @@ class AppRouter {
   static const String kAddLabel = '/addLabel';
   static const String kDetailTask = '/detailTask';
   static const String kSelectLabel = '/selectLabel';
+  static const String kProfile = '/profile';
 
   static const String kArgumentTask = '/argumentTask';
 
@@ -49,6 +51,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => AddProjectScreen());
       case kAddLabel:
         return MaterialPageRoute(builder: (_) => AddLabelScreen());
+      case kProfile:
+        return MaterialPageRoute(builder: (_) => ProfileScreen());
       case kSelectLabel:
         if (settings.arguments is List<Label>) {
           final listLabelSelected = settings.arguments as List<Label>;
