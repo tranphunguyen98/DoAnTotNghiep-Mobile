@@ -142,5 +142,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             type: DrawerItemData.kTypeLabel, data: label),
       );
     }
+
+    drawerItems.addAll(DrawerItemData.listDrawerItemFilterInit);
   }
 }

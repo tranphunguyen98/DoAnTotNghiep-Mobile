@@ -25,8 +25,6 @@ class ListDrawerItemExpanded extends StatelessWidget {
         type: DrawerItemData.kTypeFilter),
   ];
 
-  void onAddProject() {}
-
   @override
   Widget build(BuildContext context) {
     return Column(

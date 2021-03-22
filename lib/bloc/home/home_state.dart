@@ -45,6 +45,10 @@ class HomeState extends Equatable {
       return _getListSectionLabel();
     }
 
+    if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeFilter) {
+      return _getListSectionFilter();
+    }
+
     return <Section>[];
   }
 
@@ -278,5 +282,17 @@ class HomeState extends Equatable {
     final listSectionWithData =
         _getListSectionWithDataAndConditionSection(listSectionWithCondition);
     return listSectionWithData;
+  }
+
+  List<Section> _getListSectionFilter() {
+    final listTask = _listAllTask.where((task) {
+      return task.priority == drawerItems[indexDrawerSelected].data as int;
+    }).toList();
+
+    if (listTask.isNotEmpty) {
+      return [Section.kSectionNoName.copyWith(listTask: listTask)];
+    }
+
+    return [];
   }
 }

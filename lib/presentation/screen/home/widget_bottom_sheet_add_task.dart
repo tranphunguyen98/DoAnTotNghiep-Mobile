@@ -187,53 +187,6 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
           width: 8.0,
         ),
         _buildPopupProject(),
-        // PopupMenuButton<Project>(
-        //   offset: const Offset(0, -100),
-        //   onSelected: (Project project) {
-        //     if (project.id == null) {
-        //       _taskAddBloc.add(
-        //           TaskAddChanged(project: const Project(id: '', name: '')));
-        //     } else {
-        //       _taskAddBloc.add(TaskAddChanged(project: project));
-        //     }
-        //   },
-        //   elevation: 6,
-        //   itemBuilder: (BuildContext context) {
-        //     return dropdownChoicesProject.map((Project project) {
-        //       return PopupMenuItem<Project>(
-        //         value: project,
-        //         child: ItemPopupMenu(
-        //           DropdownChoice(
-        //             title: project.name,
-        //             color: project.color?.isEmpty ?? true
-        //                 ? kColorGray1
-        //                 : HexColor(project.color),
-        //             iconData: project.id?.isEmpty ?? true
-        //                 ? Icons.inbox
-        //                 : Icons.circle,
-        //           ),
-        //         ),
-        //       );
-        //     }).toList();
-        //   },
-        //   child: IgnorePointer(
-        //     child: IconOutlineButton(
-        //       (addState.taskAdd.project?.name?.isEmpty ?? true)
-        //           ? "Inbox"
-        //           : addState.taskAdd.project.name,
-        //       addState.taskAdd.project?.id?.isEmpty ?? true
-        //           ? Icons.calendar_today
-        //           : Icons.circle,
-        //       onPressed: () {},
-        //       colorIcon: addState.taskAdd.project?.color?.isEmpty ?? true
-        //           ? kColorGray1
-        //           : HexColor(addState.taskAdd.project.color),
-        //       colorBorder: addState.taskAdd.project?.color?.isEmpty ?? true
-        //           ? kColorGray1
-        //           : HexColor(addState.taskAdd.project.color),
-        //     ),
-        //   ),
-        // ),
       ],
     );
   }
