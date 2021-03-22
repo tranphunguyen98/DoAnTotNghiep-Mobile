@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keep_keyboard_popup_menu/keep_keyboard_popup_menu.dart';
 import 'package:totodo/bloc/add_task/bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/data/entity/label.dart';
@@ -10,28 +11,25 @@ import 'package:totodo/presentation/common_widgets/dropdown_choice.dart';
 import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
 import 'package:totodo/presentation/common_widgets/widget_icon_outline_button.dart';
 import 'package:totodo/presentation/common_widgets/widget_item_popup_menu.dart';
-import 'package:totodo/presentation/common_widgets/widget_label_container.dart';
 import 'package:totodo/presentation/common_widgets/widget_text_field_non_border.dart';
 import 'package:totodo/presentation/custom_ui/custom_ui.dart';
 import 'package:totodo/presentation/custom_ui/date_picker/custom_picker_dialog.dart';
+import 'package:totodo/presentation/router.dart';
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
 
-import '../../router.dart';
-
 class BottomSheetAddTask extends StatefulWidget {
   final String sectionId;
+  final Project projectSelected;
 
-  const BottomSheetAddTask({this.sectionId});
+  const BottomSheetAddTask({this.sectionId, this.projectSelected});
 
   @override
   _BottomSheetAddTaskState createState() => _BottomSheetAddTaskState();
 }
 
 class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
-  final HomeBloc _homeBloc = getIt<HomeBloc>();
-
   final TextEditingController _textNameTaskController = TextEditingController();
 
   final List<DropdownChoice> dropdownChoicesPriority =
@@ -39,13 +37,16 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
   final List<Project> dropdownChoicesProject = [];
   final List<Label> dropdownChoicesLabel = [];
 
-  TaskAddBloc _taskAdd;
+  TaskAddBloc _taskAddBloc;
+  bool visible = true;
+  TaskAddState addState;
+
+  double get kMenuScreenPadding => 8.0;
 
   @override
   void initState() {
-    _taskAdd = BlocProvider.of<TaskAddBloc>(context);
+    _taskAddBloc = BlocProvider.of<TaskAddBloc>(context);
     _initDataTask();
-    _intDataUI(_homeBloc.state);
     super.initState();
   }
 
@@ -53,32 +54,30 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
   Widget build(BuildContext context) {
     return BlocConsumer<TaskAddBloc, TaskAddState>(
       listener: (context, state) {
-        if (state.success == true) {
-          _homeBloc.add(DataListTaskChanged());
+        if (state.success) {
+          getIt<HomeBloc>().add(DataListTaskChanged());
         }
       },
       builder: (context, state) {
-        return SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTextNameTask(state),
-                if (!(state.taskAdd.labels?.isEmpty ?? true))
-                  Row(
-                    children: [
-                      ...state.taskAdd.labels
-                          .map((e) => LabelContainer(
-                                label: e,
-                              ))
-                          .toList()
-                    ],
-                  ),
-                buildRowDateAndProject(state),
-                buildRowFunction(state)
-              ],
+        log("state: $state");
+        addState = state;
+        _intDataUI();
+        return Visibility(
+          visible: visible,
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildTextNameTask(),
+                  if (!(state.taskAdd.labels?.isEmpty ?? true))
+                    _buildListChipLabel(),
+                  buildRowDateAndProject(),
+                  buildRowFunction()
+                ],
+              ),
             ),
           ),
         );
@@ -86,95 +85,66 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
     );
   }
 
+  @override
+  void dispose() {
+    _textNameTaskController.dispose();
+    getIt<HomeBloc>().add(DataListTaskChanged());
+    super.dispose();
+  }
+
   void _initDataTask() {
-    if ((_homeBloc.state).checkIsInProject()) {
-      _taskAdd.add(
+    if (widget.projectSelected != null) {
+      _taskAddBloc.add(
         TaskAddChanged(
           sectionId: widget.sectionId,
-          project: (_homeBloc.state).getProjectSelected(),
+          project: widget.projectSelected,
         ),
       );
     }
   }
 
-  TextFieldNonBorder _buildTextNameTask(TaskAddState state) {
-    _textNameTaskController
-      ..text = state.taskAdd.name ?? ''
-      ..selection =
-          TextSelection.collapsed(offset: state.taskAdd.name?.length ?? 0);
-
+  TextFieldNonBorder _buildTextNameTask() {
     return TextFieldNonBorder(
       hint: 'Ví dụ: Đọc sách',
       controller: _textNameTaskController,
       onChanged: (value) {
-        _taskAdd.add(TaskAddChanged(taskName: value));
+        _taskAddBloc.add(TaskAddChanged(taskName: value));
       },
     );
   }
 
-  void _intDataUI(HomeState state) {
-    // print("State: $state}");
+  void _intDataUI() {
     dropdownChoicesProject.clear();
     dropdownChoicesProject.add(const Project(name: "Inbox"));
-    dropdownChoicesProject.addAll(state.listProject);
+    dropdownChoicesProject.addAll(addState.projects ?? []);
 
     dropdownChoicesLabel.clear();
     dropdownChoicesLabel
-        .add(Label(name: "No Label", color: getHexFromColor(Colors.grey)));
-    dropdownChoicesLabel.addAll(state.listLabel);
+        .add(Label(name: "Thêm Label", color: getHexFromColor(Colors.grey)));
+    dropdownChoicesLabel.addAll(addState.labels ?? []);
   }
 
   void _onDropdownPriorityChanged(DropdownChoice choice) {
     if (choice.title.contains("1")) {
-      _taskAdd.add(TaskAddChanged(priority: Task.kPriority1));
+      _taskAddBloc.add(TaskAddChanged(priority: Task.kPriority1));
     } else if (choice.title.contains("2")) {
-      _taskAdd.add(TaskAddChanged(priority: Task.kPriority2));
+      _taskAddBloc.add(TaskAddChanged(priority: Task.kPriority2));
     } else if (choice.title.contains("3")) {
-      _taskAdd.add(TaskAddChanged(priority: Task.kPriority3));
+      _taskAddBloc.add(TaskAddChanged(priority: Task.kPriority3));
     } else if (choice.title.contains("4")) {
-      _taskAdd.add(TaskAddChanged(priority: Task.kPriority4));
+      _taskAddBloc.add(TaskAddChanged(priority: Task.kPriority4));
     }
   }
 
-  Row buildRowFunction(TaskAddState state) {
+  Row buildRowFunction() {
     return Row(
       children: [
+        _buildLabel(),
+        _buildPriority(),
         CircleInkWell(
-          Icons.local_offer_outlined,
-          colorIcon:
-              state.taskAdd.labels?.isEmpty ?? true ? kColorBlack2 : Colors.red,
-          sizeIcon: 24.0,
-          onPressed: () async {
-            final result = await Navigator.of(context).pushNamed(
-                AppRouter.kSelectLabel,
-                arguments: state.taskAdd.labels);
-            if (result != null && result is List<Label>) {
-              _taskAdd.add(TaskAddChanged(labels: result));
-            }
-          },
-        ),
-        PopupMenuButton<DropdownChoice>(
-          offset: const Offset(0, -200),
-          onSelected: _onDropdownPriorityChanged,
-          elevation: 6,
-          icon: CircleInkWell(
-            dropdownChoicesPriority[state.taskAdd.priority - 1].iconData,
-            colorIcon:
-                dropdownChoicesPriority[state.taskAdd.priority - 1].color,
-            sizeIcon: 24.0,
-          ),
-          itemBuilder: (BuildContext context) {
-            return dropdownChoicesPriority.map((DropdownChoice choice) {
-              return PopupMenuItem<DropdownChoice>(
-                value: choice,
-                child: ItemPopupMenu(choice),
-              );
-            }).toList();
-          },
-        ),
-        const CircleInkWell(
           Icons.alarm,
           sizeIcon: 24.0,
+          onPressed: () {},
         ),
         const CircleInkWell(
           Icons.mode_comment_outlined,
@@ -184,10 +154,11 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
         CircleInkWell(
           Icons.send_outlined,
           sizeIcon: 24.0,
-          colorIcon: isSendButtonEnable(state) ? Colors.red : kColorBlack2,
-          onPressed: isSendButtonEnable(state)
+          colorIcon: isSendButtonEnable() ? Colors.red : kColorBlack2,
+          onPressed: isSendButtonEnable()
               ? () {
-                  _taskAdd.add(SubmitAddTask());
+                  _taskAddBloc.add(SubmitAddTask());
+                  _textNameTaskController.clear();
                 }
               : null,
         ),
@@ -195,94 +166,304 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
     );
   }
 
-  Row buildRowDateAndProject(TaskAddState state) {
+  Row buildRowDateAndProject() {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         IconOutlineButton(
-          DateHelper.getDisplayTextDateFromDate(state.taskAdd.taskDate ?? "") ??
+          DateHelper.getDisplayTextDateFromDate(
+                  addState.taskAdd.taskDate ?? "") ??
               "No Date",
           Icons.calendar_today,
           colorIcon:
-              state.taskAdd.taskDate != null ? Colors.green : kColorGray1,
+              addState.taskAdd.taskDate != null ? Colors.green : kColorGray1,
           colorBorder:
-              state.taskAdd.taskDate != null ? Colors.green : kColorGray1,
+              addState.taskAdd.taskDate != null ? Colors.green : kColorGray1,
           onPressed: () async {
-            await onPressedPickDate(state);
+            await onPressedPickDate();
           },
         ),
         const SizedBox(
           width: 8.0,
         ),
-        PopupMenuButton<Project>(
-          offset: const Offset(0, -100),
-          onSelected: (Project project) {
-            if (project.id == null) {
-              _taskAdd.add(
-                  TaskAddChanged(project: const Project(id: '', name: '')));
-            } else {
-              _taskAdd.add(TaskAddChanged(project: project));
-            }
-          },
-          elevation: 6,
-          itemBuilder: (BuildContext context) {
-            return dropdownChoicesProject.map((Project project) {
-              return PopupMenuItem<Project>(
-                value: project,
-                child: ItemPopupMenu(
-                  DropdownChoice(
-                    title: project.name,
-                    color: project.color?.isEmpty ?? true
-                        ? kColorGray1
-                        : HexColor(project.color),
-                    iconData: project.id?.isEmpty ?? true
-                        ? Icons.inbox
-                        : Icons.circle,
-                  ),
-                ),
-              );
-            }).toList();
-          },
-          child: IgnorePointer(
-            child: IconOutlineButton(
-              (state.taskAdd.project?.name?.isEmpty ?? true)
-                  ? "Inbox"
-                  : state.taskAdd.project.name,
-              state.taskAdd.project?.id?.isEmpty ?? true
-                  ? Icons.calendar_today
-                  : Icons.circle,
-              onPressed: () {},
-              colorIcon: state.taskAdd.project?.color?.isEmpty ?? true
-                  ? kColorGray1
-                  : HexColor(state.taskAdd.project.color),
-              colorBorder: state.taskAdd.project?.color?.isEmpty ?? true
-                  ? kColorGray1
-                  : HexColor(state.taskAdd.project.color),
-            ),
-          ),
-        ),
+        _buildPopupProject(),
+        // PopupMenuButton<Project>(
+        //   offset: const Offset(0, -100),
+        //   onSelected: (Project project) {
+        //     if (project.id == null) {
+        //       _taskAddBloc.add(
+        //           TaskAddChanged(project: const Project(id: '', name: '')));
+        //     } else {
+        //       _taskAddBloc.add(TaskAddChanged(project: project));
+        //     }
+        //   },
+        //   elevation: 6,
+        //   itemBuilder: (BuildContext context) {
+        //     return dropdownChoicesProject.map((Project project) {
+        //       return PopupMenuItem<Project>(
+        //         value: project,
+        //         child: ItemPopupMenu(
+        //           DropdownChoice(
+        //             title: project.name,
+        //             color: project.color?.isEmpty ?? true
+        //                 ? kColorGray1
+        //                 : HexColor(project.color),
+        //             iconData: project.id?.isEmpty ?? true
+        //                 ? Icons.inbox
+        //                 : Icons.circle,
+        //           ),
+        //         ),
+        //       );
+        //     }).toList();
+        //   },
+        //   child: IgnorePointer(
+        //     child: IconOutlineButton(
+        //       (addState.taskAdd.project?.name?.isEmpty ?? true)
+        //           ? "Inbox"
+        //           : addState.taskAdd.project.name,
+        //       addState.taskAdd.project?.id?.isEmpty ?? true
+        //           ? Icons.calendar_today
+        //           : Icons.circle,
+        //       onPressed: () {},
+        //       colorIcon: addState.taskAdd.project?.color?.isEmpty ?? true
+        //           ? kColorGray1
+        //           : HexColor(addState.taskAdd.project.color),
+        //       colorBorder: addState.taskAdd.project?.color?.isEmpty ?? true
+        //           ? kColorGray1
+        //           : HexColor(addState.taskAdd.project.color),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
 
-  Future onPressedPickDate(TaskAddState state) async {
-    final picker = await showCustomDatePicker(
-        context: context,
-        initialDate: DateTime.parse(
-            state.taskAdd.taskDate ?? DateTime.now().toIso8601String()),
-        firstDate: DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-        ),
-        lastDate: DateTime(2100),
-        selectedTimeOfDay:
-            DateHelper.getTimeOfDayFromDateString(state.taskAdd.taskDate));
-    if (picker != null) {
-      _taskAdd.add(TaskAddChanged(taskDate: picker.toIso8601String()));
-    }
+  Widget _buildPopupProject() {
+    return WithKeepKeyboardPopupMenu(
+      calculatePopupPosition: (menuSize, overlayRect, buttonRect) {
+        if (dropdownChoicesProject.length < 5) {
+          return _customCalculatePopupPosition(
+              menuSize, overlayRect, buttonRect,
+              offsetY: -100);
+        }
+        return _customCalculatePopupPosition(menuSize, overlayRect, buttonRect,
+            offsetY: 8);
+      },
+      menuItemBuilder: (context, closePopup) => [
+        ...dropdownChoicesProject.map((Project project) {
+          return KeepKeyboardPopupMenuItem(
+              onTap: () async {
+                if (project.id == null) {
+                  _taskAddBloc.add(
+                      TaskAddChanged(project: const Project(id: '', name: '')));
+                } else {
+                  _taskAddBloc.add(TaskAddChanged(project: project));
+                }
+                closePopup();
+              },
+              child: ItemPopupMenu(
+                DropdownChoice(
+                  title: project.name,
+                  color: project.color?.isEmpty ?? true
+                      ? kColorGray1
+                      : HexColor(project.color),
+                  iconData:
+                      project.id?.isEmpty ?? true ? Icons.inbox : Icons.circle,
+                ),
+              ));
+        }).toList(),
+      ],
+      childBuilder: (context, openPopup) => IconOutlineButton(
+        (addState.taskAdd.project?.name?.isEmpty ?? true)
+            ? "Inbox"
+            : addState.taskAdd.project.name,
+        addState.taskAdd.project?.id?.isEmpty ?? true
+            ? Icons.calendar_today
+            : Icons.circle,
+        onPressed: openPopup,
+        colorIcon: addState.taskAdd.project?.color?.isEmpty ?? true
+            ? kColorGray1
+            : HexColor(addState.taskAdd.project.color),
+        colorBorder: addState.taskAdd.project?.color?.isEmpty ?? true
+            ? kColorGray1
+            : HexColor(addState.taskAdd.project.color),
+      ),
+    );
   }
 
-  bool isSendButtonEnable(TaskAddState state) {
-    return state.taskAdd.name?.isNotEmpty ?? false;
+  Future onPressedPickDate() async {
+    setState(() {
+      visible = false;
+    });
+
+    Future.delayed(const Duration(milliseconds: 100), () async {
+      final picker = await showCustomDatePicker(
+          context: context,
+          initialDate: DateTime.parse(
+              addState.taskAdd.taskDate ?? DateTime.now().toIso8601String()),
+          firstDate: DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+          ),
+          lastDate: DateTime(2100),
+          selectedTimeOfDay:
+              DateHelper.getTimeOfDayFromDateString(addState.taskAdd.taskDate));
+      setState(() {
+        visible = true;
+      });
+      if (picker != null) {
+        _taskAddBloc.add(TaskAddChanged(taskDate: picker.toIso8601String()));
+      }
+    });
+  }
+
+  bool isSendButtonEnable() {
+    return addState.taskAdd.name?.isNotEmpty ?? false;
+  }
+
+  Widget _buildLabel() {
+    return WithKeepKeyboardPopupMenu(
+      calculatePopupPosition: (menuSize, overlayRect, buttonRect) {
+        if (dropdownChoicesLabel.length < 5) {
+          return _customCalculatePopupPosition(
+              menuSize, overlayRect, buttonRect,
+              offsetY: -100);
+        }
+        return _customCalculatePopupPosition(menuSize, overlayRect, buttonRect,
+            offsetY: 8);
+      },
+      menuItemBuilder: (context, closePopup) => [
+        ...dropdownChoicesLabel.map((Label label) {
+          return KeepKeyboardPopupMenuItem(
+            onTap: () async {
+              if (label.id == null) {
+                closePopup();
+                await Navigator.of(context).pushNamed(AppRouter.kAddLabel);
+                _taskAddBloc.add(OnDataTaskAddChanged());
+              }
+              _addLabel(label);
+              closePopup();
+            },
+            child: ItemPopupMenu(
+              DropdownChoice(
+                title: label.name,
+                color: label.color?.isEmpty ?? true
+                    ? kColorGray1
+                    : HexColor(label.color),
+                iconData:
+                    label.id == null ? Icons.add : Icons.local_offer_outlined,
+              ),
+            ),
+          );
+        }).toList(),
+      ],
+      childBuilder: (context, openPopup) => CircleInkWell(
+        Icons.local_offer_outlined,
+        onPressed: openPopup,
+        sizeIcon: 24.0,
+        colorIcon: addState.taskAdd.labels?.isEmpty ?? true
+            ? kColorBlack2
+            : Colors.red,
+      ),
+    );
+  }
+
+  Widget _buildPriority() {
+    return WithKeepKeyboardPopupMenu(
+      calculatePopupPosition: (menuSize, overlayRect, buttonRect) {
+        return _customCalculatePopupPosition(menuSize, overlayRect, buttonRect,
+            offsetY: -100);
+      },
+      menuItemBuilder: (context, closePopup) => [
+        ...dropdownChoicesPriority.map((DropdownChoice choice) {
+          return KeepKeyboardPopupMenuItem(
+              onTap: () async {
+                _onDropdownPriorityChanged(choice);
+                closePopup();
+              },
+              child: ItemPopupMenu(choice));
+        }).toList(),
+      ],
+      childBuilder: (context, openPopup) => CircleInkWell(
+        dropdownChoicesPriority[addState.taskAdd.priority - 1].iconData,
+        colorIcon: dropdownChoicesPriority[addState.taskAdd.priority - 1].color,
+        sizeIcon: 24.0,
+        onPressed: openPopup,
+      ),
+    );
+  }
+
+  void _addLabel(Label label) {
+    //TODO add new event
+    final labels = <Label>[];
+    labels.addAll(addState.taskAdd.labels ?? []);
+    if (!labels.contains(label) && label.id != null) {
+      labels.add(label);
+    }
+    _taskAddBloc.add(TaskAddChanged(labels: labels));
+  }
+
+  Offset _customCalculatePopupPosition(
+      Size menuSize, Rect overlayRect, Rect buttonRect,
+      {double offsetY}) {
+    double y = buttonRect.top;
+
+    double x;
+    if (buttonRect.left - overlayRect.left >
+        overlayRect.right - buttonRect.right) {
+      // If button is closer to the right edge, grow to the left.
+      x = buttonRect.right - menuSize.width;
+    } else {
+      x = buttonRect.left;
+    }
+
+    // Avoid going outside an area defined as the rectangle 8.0 pixels from the
+    // edge of the screen in every direction.
+    if (x < kMenuScreenPadding + overlayRect.left)
+      x = kMenuScreenPadding + overlayRect.left;
+    else if (x + menuSize.width > overlayRect.right - kMenuScreenPadding)
+      x = overlayRect.right - menuSize.width - kMenuScreenPadding;
+    if (y < kMenuScreenPadding + overlayRect.top)
+      y = kMenuScreenPadding + overlayRect.top;
+    else if (y + menuSize.height > overlayRect.bottom - kMenuScreenPadding)
+      y = overlayRect.bottom - menuSize.height - kMenuScreenPadding;
+    return Offset(x, y + offsetY);
+  }
+
+  Widget _buildListChipLabel() {
+    return Wrap(
+      children: [
+        ...addState.taskAdd.labels
+            .map(
+              (label) => Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Chip(
+                  label: Text(
+                    label.name,
+                    style: kFontRegularWhite_14,
+                  ),
+                  deleteIcon: const Icon(
+                    Icons.cancel,
+                    color: Colors.white,
+                  ),
+                  onDeleted: () {
+                    _removeLabel(label);
+                  },
+                  backgroundColor: HexColor(label.color),
+                ),
+              ),
+            )
+            .toList()
+      ],
+    );
+  }
+
+  void _removeLabel(Label label) {
+    final labels = <Label>[];
+    labels.addAll(addState.taskAdd.labels ?? []);
+    if (labels.contains(label)) {
+      labels.remove(label);
+    }
+    _taskAddBloc.add(TaskAddChanged(labels: labels));
   }
 }

@@ -38,7 +38,7 @@ class UpdateTaskEvent extends HomeEvent {
   }
 }
 
-class DataLabelChanged extends HomeEvent {}
+class DataListLabelChanged extends HomeEvent {}
 
 class DataProjectChanged extends HomeEvent {}
 

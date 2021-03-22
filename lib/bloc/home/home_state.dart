@@ -48,7 +48,7 @@ class HomeState extends Equatable {
     return <Section>[];
   }
 
-  bool checkIsInProject() {
+  bool isInProject() {
     if (drawerItems != null) {
       return drawerItems[indexDrawerSelected].type ==
           DrawerItemData.kTypeProject;
@@ -57,7 +57,7 @@ class HomeState extends Equatable {
   }
 
   Project getProjectSelected() {
-    if (checkIsInProject()) {
+    if (isInProject()) {
       return drawerItems[indexDrawerSelected].data as Project;
     }
     throw Exception('Not in project screen');

@@ -26,7 +26,7 @@ class LocalTaskAdapter extends TypeAdapter<LocalTask> {
       isCompleted: fields[6] as bool,
       isStarred: fields[7] as bool,
       isTrashed: fields[8] as bool,
-      taskDate: fields[9] as String,
+      dueDate: fields[9] as String,
       projectId: fields[10] as String,
       labelIds: (fields[11] as List)?.cast<String>(),
       sectionId: fields[12] as String,
@@ -57,7 +57,7 @@ class LocalTaskAdapter extends TypeAdapter<LocalTask> {
       ..writeByte(8)
       ..write(obj.isTrashed)
       ..writeByte(9)
-      ..write(obj.taskDate)
+      ..write(obj.dueDate)
       ..writeByte(10)
       ..write(obj.projectId)
       ..writeByte(11)

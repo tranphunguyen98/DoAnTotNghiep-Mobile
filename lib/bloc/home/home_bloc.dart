@@ -25,7 +25,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           indexDrawerSelected: event.index);
     } else if (event is UpdateTaskEvent) {
       yield* _mapUpdateTaskEventToState(event.task);
-    } else if (event is DataLabelChanged) {
+    } else if (event is DataListLabelChanged) {
       yield* _mapDataLabelChangedState();
     } else if (event is DataProjectChanged) {
       yield* _mapDataProjectChangedState();

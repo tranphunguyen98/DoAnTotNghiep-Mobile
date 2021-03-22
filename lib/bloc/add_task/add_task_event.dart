@@ -34,3 +34,5 @@ class TaskAddChanged extends TaskAddEvent {
 }
 
 class SubmitAddTask extends TaskAddEvent {}
+
+class OnDataTaskAddChanged extends TaskAddEvent {}

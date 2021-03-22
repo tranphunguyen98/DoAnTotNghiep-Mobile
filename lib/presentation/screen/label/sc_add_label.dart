@@ -47,8 +47,8 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
       listener: (context, state) {
         if (state is AddLabelState) {
           if (state == AddLabelState.success()) {
-            getIt<HomeBloc>().add(DataLabelChanged());
-            Navigator.of(context).pop();
+            getIt<HomeBloc>().add(DataListLabelChanged());
+            Navigator.of(context).pop(state.label);
           }
         }
       },

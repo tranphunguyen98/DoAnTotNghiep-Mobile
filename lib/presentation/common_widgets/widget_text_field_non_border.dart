@@ -8,10 +8,13 @@ class TextFieldNonBorder extends StatelessWidget {
   final String hint;
   final bool autoFocus;
   final String errorText;
+  final FocusNode focusNode;
+
   const TextFieldNonBorder(
       {this.controller,
       this.textStyle,
       this.onChanged,
+      this.focusNode,
       this.onFieldSubmitted,
       this.autoFocus = true,
       this.errorText,
@@ -23,7 +26,7 @@ class TextFieldNonBorder extends StatelessWidget {
       cursorColor: Colors.black,
       controller: controller,
       style: textStyle,
-      // focusNode: FocusNode(canRequestFocus: false),
+      focusNode: focusNode,
       autofocus: autoFocus,
       decoration: InputDecoration(
         border: InputBorder.none,

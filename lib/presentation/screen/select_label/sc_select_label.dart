@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/presentation/router.dart';
+import 'package:totodo/utils/my_const/my_const.dart';
 
 import '../../../bloc/select_label/bloc.dart';
-import '../../../di/injection.dart';
-import '../../../utils/my_const/my_const.dart';
-import '../../router.dart';
 import '../label/widget_item_label_check_box.dart';
 import '../task/widget_empty_task.dart';
 
@@ -14,20 +12,18 @@ class SelectLabelScreen extends StatefulWidget {
   final List<Label> listLabelSelected;
 
   const SelectLabelScreen([this.listLabelSelected]);
-
   @override
   _SelectLabelScreenState createState() => _SelectLabelScreenState();
 }
 
 class _SelectLabelScreenState extends State<SelectLabelScreen> {
-  final _selectLabelBloc =
-      SelectLabelBloc(taskRepository: getIt<ITaskRepository>());
+  SelectLabelBloc _selectLabelBloc;
 
   @override
   void initState() {
+    _selectLabelBloc = BlocProvider.of<SelectLabelBloc>(context);
     _selectLabelBloc
         .add(InitDataSelectLabel(listLabelSelected: widget.listLabelSelected));
-
     super.initState();
   }
 
@@ -42,7 +38,6 @@ class _SelectLabelScreenState extends State<SelectLabelScreen> {
         ),
       ),
       body: BlocBuilder<SelectLabelBloc, SelectLabelState>(
-        cubit: _selectLabelBloc,
         builder: (context, state) {
           if (state.listAllLabel.isEmpty) {
             return const EmptyTask("Danh sách Nhãn rỗng!");

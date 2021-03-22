@@ -19,7 +19,7 @@ class CheckItemAdapter extends TypeAdapter<CheckItem> {
     return CheckItem(
       id: fields[0] as String,
       name: fields[1] as String,
-      isCheck: fields[2] as bool,
+      isDone: fields[2] as bool,
     );
   }
 
@@ -32,7 +32,7 @@ class CheckItemAdapter extends TypeAdapter<CheckItem> {
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.isCheck);
+      ..write(obj.isDone);
   }
 
   @override

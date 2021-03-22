@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/add_task/add_task_bloc.dart';
+import 'package:totodo/bloc/add_task/add_task_event.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/di/injection.dart';
@@ -55,8 +56,12 @@ class _FloatingActionButtonHomeState extends State<FloatingActionButtonHome> {
       builder: (_) => BlocProvider<TaskAddBloc>(
         create: (context) => TaskAddBloc(
           taskRepository: getIt<ITaskRepository>(),
-        ),
-        child: const BottomSheetAddTask(),
+        )..add(OnDataTaskAddChanged()),
+        child: _homeBloc.state.isInProject()
+            ? BottomSheetAddTask(
+                projectSelected: _homeBloc.state.getProjectSelected(),
+              )
+            : BottomSheetAddTask(),
       ),
     );
   }

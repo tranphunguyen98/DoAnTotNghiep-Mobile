@@ -576,6 +576,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.5.1"
+  keep_keyboard_popup_menu:
+    dependency: "direct main"
+    description:
+      name: keep_keyboard_popup_menu
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.3"
   keyboard_visibility:
     dependency: "direct main"
     description:

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
+import 'package:totodo/bloc/select_label/bloc.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/profile/sc_profile.dart';
 
 import 'screen/change_password/sc_change_password.dart';
@@ -53,14 +57,25 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => AddLabelScreen());
       case kProfile:
         return MaterialPageRoute(builder: (_) => ProfileScreen());
+
       case kSelectLabel:
         if (settings.arguments is List<Label>) {
           final listLabelSelected = settings.arguments as List<Label>;
           return MaterialPageRoute(
-              builder: (_) => SelectLabelScreen(listLabelSelected));
+              builder: (_) => BlocProvider<SelectLabelBloc>(
+                  create: (context) => SelectLabelBloc(
+                        taskRepository: getIt<ITaskRepository>(),
+                      ),
+                  child: SelectLabelScreen(listLabelSelected)));
         }
-        return MaterialPageRoute(builder: (_) => const SelectLabelScreen());
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider<SelectLabelBloc>(
+                create: (context) => SelectLabelBloc(
+                      taskRepository: getIt<ITaskRepository>(),
+                    ),
+                child: SelectLabelScreen()));
         break;
+        return MaterialPageRoute(builder: (_) => SelectLabelScreen());
       case kDetailTask:
         // print("kDetailTask: ${settings.arguments}");
         if (settings.arguments is Task) {

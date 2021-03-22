@@ -158,7 +158,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
           onPressed: () {
             if (_checkListNameController.text.isNotEmpty) {
               final checkList = <CheckItem>[];
-              checkList.addAll(state.taskEdit.checkList);
+              checkList.addAll(state.taskEdit.checkList ?? []);
               checkList.add(CheckItem(
                 id: DateTime.now().microsecondsSinceEpoch.toString(),
                 name: _checkListNameController.text,

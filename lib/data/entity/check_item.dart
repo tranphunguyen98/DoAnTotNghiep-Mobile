@@ -11,14 +11,14 @@ class CheckItem extends Equatable {
   @HiveField(1)
   final String name;
   @HiveField(2)
-  final bool isCheck;
+  final bool isDone;
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
   const CheckItem({
     @required this.id,
     @required this.name,
-    this.isCheck = false,
+    this.isDone = false,
   });
 
   CheckItem copyWith({
@@ -28,20 +28,20 @@ class CheckItem extends Equatable {
   }) {
     if ((id == null || identical(id, this.id)) &&
         (name == null || identical(name, this.name)) &&
-        (isCheck == null || identical(isCheck, this.isCheck))) {
+        (isCheck == null || identical(isCheck, this.isDone))) {
       return this;
     }
 
     return CheckItem(
       id: id ?? this.id,
       name: name ?? this.name,
-      isCheck: isCheck ?? this.isCheck,
+      isDone: isCheck ?? this.isDone,
     );
   }
 
   @override
   String toString() {
-    return 'CheckItem{id: $id, name: $name, isCheck: $isCheck}';
+    return 'CheckItem{id: $id, name: $name, isCheck: $isDone}';
   }
 
   @override
@@ -51,16 +51,16 @@ class CheckItem extends Equatable {
           runtimeType == other.runtimeType &&
           id == other.id &&
           name == other.name &&
-          isCheck == other.isCheck);
+          isDone == other.isDone);
 
   @override
-  int get hashCode => id.hashCode ^ name.hashCode ^ isCheck.hashCode;
+  int get hashCode => id.hashCode ^ name.hashCode ^ isDone.hashCode;
 
   factory CheckItem.fromMap(Map<String, dynamic> map) {
     return CheckItem(
       id: map['id'] as String,
       name: map['name'] as String,
-      isCheck: map['isCheck'] as bool,
+      isDone: map['isCheck'] as bool,
     );
   }
 
@@ -69,12 +69,12 @@ class CheckItem extends Equatable {
     return {
       'id': id,
       'name': name,
-      'isCheck': isCheck,
+      'isCheck': isDone,
     } as Map<String, dynamic>;
   }
 
   //</editor-fold>
 
   @override
-  List<Object> get props => [id, name, isCheck];
+  List<Object> get props => [id, name, isDone];
 }

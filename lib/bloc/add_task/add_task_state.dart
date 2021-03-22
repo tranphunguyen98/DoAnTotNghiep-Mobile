@@ -1,14 +1,20 @@
 import 'package:equatable/equatable.dart';
+import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 
 class TaskAddState extends Equatable {
   final Task taskAdd;
+  final List<Project> projects;
+  final List<Label> labels;
   final bool loading;
   final String msg;
   final bool success;
 
   const TaskAddState({
     this.taskAdd = const Task(),
+    this.projects,
+    this.labels,
     this.loading = false,
     this.msg,
     this.success = false,
@@ -18,19 +24,23 @@ class TaskAddState extends Equatable {
   }
 
   TaskAddState updateTask(Task task) {
-    return copyWith(taskSubmit: task);
+    return copyWith(taskAdd: task);
   }
 
   @override
-  List<Object> get props => [taskAdd, loading, msg, success];
+  List<Object> get props => [taskAdd, loading, msg, success, labels, projects];
 
   TaskAddState copyWith({
-    Task taskSubmit,
+    Task taskAdd,
+    List<Project> projects,
+    List<Label> labels,
     bool loading,
     String msg,
     bool success,
   }) {
-    if ((taskSubmit == null || identical(taskSubmit, this.taskAdd)) &&
+    if ((taskAdd == null || identical(taskAdd, this.taskAdd)) &&
+        (projects == null || identical(projects, this.projects)) &&
+        (labels == null || identical(labels, this.labels)) &&
         (loading == null || identical(loading, this.loading)) &&
         (msg == null || identical(msg, this.msg)) &&
         (success == null || identical(success, this.success))) {
@@ -38,7 +48,9 @@ class TaskAddState extends Equatable {
     }
 
     return TaskAddState(
-      taskAdd: taskSubmit ?? taskAdd,
+      taskAdd: taskAdd ?? this.taskAdd,
+      projects: projects ?? this.projects,
+      labels: labels ?? this.labels,
       loading: loading ?? this.loading,
       msg: msg ?? this.msg,
       success: success ?? this.success,
@@ -47,6 +59,6 @@ class TaskAddState extends Equatable {
 
   @override
   String toString() {
-    return 'TaskAddState{taskSubmit: $taskAdd, loading: $loading, msg: $msg, success: $success}';
+    return 'TaskAddState{taskAdd: $taskAdd, projects: $projects, labels: $labels, loading: $loading, msg: $msg, success: $success}';
   }
 }

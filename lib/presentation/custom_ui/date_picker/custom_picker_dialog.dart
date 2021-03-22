@@ -15,7 +15,7 @@ import 'package:totodo/utils/date_helper.dart';
 
 const Size _calendarPortraitDialogSize = Size(330.0, 600.0);
 const Size _calendarLandscapeDialogSize = Size(496.0, 346.0);
-const Size _inputPortraitDialogSize = Size(330.0, 270.0);
+const Size _inputPortraitDialogSize = Size(330.0, 400.0);
 const Size _inputLandscapeDialogSize = Size(496, 160.0);
 const Duration _dialogSizeAnimationDuration = Duration(milliseconds: 200);
 const double _inputFormPortraitHeight = 98.0;
@@ -460,32 +460,6 @@ class _DatePickerDialogState extends State<_DatePickerDialog> {
         break;
     }
 
-    final Widget columnFunctionReminder = Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ItemFunctionReminder(
-          iconData: Icons.query_builder,
-          title: _selectedTimeOfDay == null
-              ? 'Chưa có thời gian'
-              : localizations.formatTimeOfDay(_selectedTimeOfDay),
-          isActive: _selectedTimeOfDay != null,
-          onPressed: _handlePickTime,
-          onRemoveTime: _removeTime,
-        ),
-        // ItemFunctionReminder(
-        //   iconData: Icons.alarm,
-        //   title: 'Chưa có nhắc nhở',
-        //   onPressed: () {},
-        // ),
-        ItemFunctionReminder(
-          iconData: Icons.replay,
-          title: 'Không lặp lại',
-          onPressed: () {},
-          onRemoveTime: () {},
-        ),
-      ],
-    );
-
     final Widget header = DatePickerHeader(
       helpText: widget.helpText ?? localizations.datePickerHelpText,
       titleText: dateText,
@@ -520,6 +494,7 @@ class _DatePickerDialogState extends State<_DatePickerDialog> {
                   children: <Widget>[
                     header,
                     Expanded(child: picker),
+                    // if (_entryMode == DatePickerEntryMode.calendar)
                     ItemFunctionReminder(
                       iconData: Icons.query_builder,
                       title: _selectedTimeOfDay == null
@@ -529,6 +504,7 @@ class _DatePickerDialogState extends State<_DatePickerDialog> {
                       onPressed: _handlePickTime,
                       onRemoveTime: _removeTime,
                     ),
+                    // if (_entryMode == DatePickerEntryMode.calendar)
                     ItemFunctionReminder(
                       iconData: Icons.replay,
                       title: 'Không lặp lại',

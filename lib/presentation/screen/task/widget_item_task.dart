@@ -95,7 +95,7 @@ class ItemTask extends StatelessWidget {
           width: 4.0,
         ),
         Text(
-          "${task.checkList.where((element) => element.isCheck).length}/${task.checkList.length}",
+          "${task.checkList.where((element) => element.isDone).length}/${task.checkList.length}",
           style: kFontRegularGray1_12,
         ),
         const SizedBox(

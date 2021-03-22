@@ -41,7 +41,7 @@ class PopupMenuButtonMore extends StatelessWidget {
 
   List<DropdownChoices> getDropdownChoices(HomeState state) {
     final dropdownChoices = <DropdownChoices>[];
-    if (state.checkIsInProject()) {
+    if (state.isInProject()) {
       dropdownChoices.addAll([
         DropdownChoices(
             title: "Chỉnh sửa dự án",

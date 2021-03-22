@@ -32,7 +32,7 @@ class ItemCheckList extends StatelessWidget {
             width: 24.0,
             height: 24.0,
             child: Checkbox(
-              value: checkItem.isCheck,
+              value: checkItem.isDone,
               onChanged: onItemCheckChange,
               checkColor: Colors.white,
             ),
@@ -45,7 +45,7 @@ class ItemCheckList extends StatelessWidget {
                 hint: 'Name CheckList',
                 controller: _nameCheckListController,
                 autoFocus: false,
-                textStyle: checkItem.isCheck
+                textStyle: checkItem.isDone
                     ? kFontRegularGray1_14
                     : kFontRegularBlack2_14,
                 onFieldSubmitted: (value) {

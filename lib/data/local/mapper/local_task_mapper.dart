@@ -16,7 +16,7 @@ class LocalTaskMapper {
     return Task(
       id: localTask.id,
       name: localTask.name,
-      taskDate: localTask.taskDate,
+      taskDate: localTask.dueDate,
       createdDate: localTask.createdDate,
       updatedDate: localTask.updatedDate,
       description: localTask.description,
@@ -39,7 +39,7 @@ class LocalTaskMapper {
     return LocalTask(
         id: task.id,
         name: task.name,
-        taskDate: task.taskDate,
+        dueDate: task.taskDate,
         createdDate: task.createdDate,
         updatedDate: task.updatedDate,
         description: task.description,

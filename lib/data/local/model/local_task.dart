@@ -24,7 +24,7 @@ class LocalTask {
   @HiveField(8)
   final bool isTrashed;
   @HiveField(9)
-  final String taskDate;
+  final String dueDate;
   @HiveField(10)
   final String projectId;
   @HiveField(11)
@@ -44,7 +44,7 @@ class LocalTask {
     this.isCompleted,
     this.isStarred,
     this.isTrashed,
-    this.taskDate,
+    this.dueDate,
     this.projectId,
     this.labelIds,
     this.sectionId,
@@ -76,7 +76,7 @@ class LocalTask {
         (isCompleted == null || identical(isCompleted, this.isCompleted)) &&
         (isStarred == null || identical(isStarred, this.isStarred)) &&
         (isTrashed == null || identical(isTrashed, this.isTrashed)) &&
-        (taskDate == null || identical(taskDate, this.taskDate)) &&
+        (taskDate == null || identical(taskDate, this.dueDate)) &&
         (projectId == null || identical(projectId, this.projectId)) &&
         (labelIds == null || identical(labelIds, this.labelIds)) &&
         (sectionId == null || identical(sectionId, this.sectionId)) &&
@@ -94,7 +94,7 @@ class LocalTask {
       isCompleted: isCompleted ?? this.isCompleted,
       isStarred: isStarred ?? this.isStarred,
       isTrashed: isTrashed ?? this.isTrashed,
-      taskDate: taskDate ?? this.taskDate,
+      dueDate: taskDate ?? this.dueDate,
       projectId: projectId ?? this.projectId,
       labelIds: labelIds ?? this.labelIds,
       sectionId: sectionId ?? this.sectionId,
