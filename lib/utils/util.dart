@@ -5,8 +5,16 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:totodo/di/injection.dart';
 
+import 'my_const/color_const.dart';
+
 String getHexFromColor(Color color) {
   return '#${color.value.toRadixString(16).substring(2, 8)}';
+}
+
+Color getColorDefaultFromValue(String value) {
+  final dataColor = kListColorDefault
+      .firstWhere((element) => element[keyListColorValue] as String == value);
+  return dataColor[keyListColorColor] as Color;
 }
 
 void log(String name, [Object msg]) {

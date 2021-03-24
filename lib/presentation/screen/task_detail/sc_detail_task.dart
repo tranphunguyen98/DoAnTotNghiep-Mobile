@@ -13,7 +13,6 @@ import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
 import 'package:totodo/presentation/common_widgets/widget_icon_outline_button.dart';
 import 'package:totodo/presentation/common_widgets/widget_item_popup_menu.dart';
 import 'package:totodo/presentation/common_widgets/widget_text_field_non_border.dart';
-import 'package:totodo/presentation/custom_ui/custom_ui.dart';
 import 'package:totodo/presentation/custom_ui/date_picker/custom_picker_dialog.dart';
 import 'package:totodo/presentation/router.dart';
 import 'package:totodo/presentation/screen/task_detail/item_checklist.dart';
@@ -296,7 +295,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
           size: 12.0,
           color: state.taskEdit.project?.color?.isEmpty ?? true
               ? kColorGray1
-              : HexColor(state.taskEdit.project.color),
+              : getColorDefaultFromValue(state.taskEdit.project.color),
         ),
         const SizedBox(
           width: 4.0,

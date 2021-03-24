@@ -5,6 +5,7 @@ import 'package:totodo/presentation/screen/task/widget_row_checkbox_name_task.da
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
+import 'package:totodo/utils/util.dart';
 
 class ItemTask extends StatelessWidget {
   final Task task;
@@ -61,7 +62,8 @@ class ItemTask extends StatelessWidget {
                                 child: Text(
                                   e.name,
                                   style: kFontRegular.copyWith(
-                                      fontSize: 12, color: HexColor(e.color)),
+                                      fontSize: 12,
+                                      color: getColorDefaultFromValue(e.color)),
                                 ),
                               ),
                             )
@@ -123,7 +125,7 @@ class ItemTask extends StatelessWidget {
           size: 12.0,
           color: task.project?.color?.isEmpty ?? true
               ? kColorGray4
-              : HexColor(task.project.color),
+              : getColorDefaultFromValue(task.project.color),
         ),
       ],
     );

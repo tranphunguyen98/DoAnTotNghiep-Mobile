@@ -4,8 +4,8 @@ import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/bloc/label/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/di/injection.dart';
+import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
-import 'package:totodo/utils/util.dart';
 
 class ChooseColor {
   final Color color;
@@ -22,21 +22,14 @@ class AddLabelScreen extends StatefulWidget {
 class _AddLabelScreenState extends State<AddLabelScreen> {
   final AddLabelBloc _addLabelBloc =
       AddLabelBloc(taskRepository: getIt<ITaskRepository>());
-  final List<ChooseColor> listColor = [
-    ChooseColor(Colors.grey, "Grey"),
-    ChooseColor(Colors.red, "Red"),
-    ChooseColor(Colors.orange, "Orange"),
-    ChooseColor(Colors.yellow, "Yellow"),
-    ChooseColor(Colors.green, "Green"),
-  ];
 
-  ChooseColor dropdownValue;
+  Map<String, Object> dropdownValue;
 
   @override
   void initState() {
-    dropdownValue = listColor.first;
-    _addLabelBloc
-        .add(AddedLabelChanged(color: getHexFromColor(dropdownValue.color)));
+    dropdownValue = kListColorDefault.first;
+    _addLabelBloc.add(
+        AddedLabelChanged(color: dropdownValue[keyListColorValue] as String));
     super.initState();
   }
 
@@ -92,27 +85,27 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
                     _addLabelBloc.add(AddedLabelChanged(nameLabel: value));
                   },
                 ),
-                DropdownButton<ChooseColor>(
+                DropdownButton<Map<String, Object>>(
                   isExpanded: true,
                   value: dropdownValue,
-                  items: listColor.map((value) {
-                    return DropdownMenuItem<ChooseColor>(
+                  items: kListColorDefault.map((value) {
+                    return DropdownMenuItem<Map<String, Object>>(
                         value: value,
                         child: Row(children: [
                           Icon(
                             Icons.circle,
                             size: 16.0,
-                            color: value.color,
+                            color: value[keyListColorColor] as Color,
                           ),
                           const SizedBox(
                             width: 16.0,
                           ),
-                          Text(value.label),
+                          Text(value[keyListColorLabel] as String),
                         ]));
                   }).toList(),
                   onChanged: (newValue) {
                     _addLabelBloc.add(AddedLabelChanged(
-                        color: getHexFromColor(newValue.color)));
+                        color: newValue[keyListColorValue] as String));
                     setState(() {
                       dropdownValue = newValue;
                     });

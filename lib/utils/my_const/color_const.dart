@@ -33,3 +33,105 @@ const kListColorPriority = [
 ];
 
 const MaterialColor kColorStatusBar = MaterialColor(0x03396c, {});
+
+const String keyListColorLabel = 'label';
+const String keyListColorColor = 'color';
+const String keyListColorValue = 'value';
+const List<Map<String, Object>> kListColorDefault = [
+  {
+    "label": "Berry Red",
+    "color": Color.fromARGB(255, 184, 37, 95),
+    "value": "berry-red"
+  },
+  {"label": "Red", "color": Color.fromARGB(255, 219, 64, 53), "value": "red"},
+  {
+    "label": "Orange",
+    "color": Color.fromARGB(255, 255, 153, 51),
+    "value": "orange"
+  },
+  {
+    "label": "Yellow",
+    "color": Color.fromARGB(255, 250, 208, 0),
+    "value": "yellow"
+  },
+  {
+    "label": "Olive Green",
+    "color": Color.fromARGB(255, 175, 184, 59),
+    "value": "olive-green"
+  },
+  {
+    "label": "Lime Green",
+    "color": Color.fromARGB(255, 126, 204, 73),
+    "value": "lime-green"
+  },
+  {
+    "label": "Green",
+    "color": Color.fromARGB(255, 41, 148, 56),
+    "value": "green"
+  },
+  {
+    "label": "Mint Green",
+    "color": Color.fromARGB(255, 106, 204, 188),
+    "value": "mint-green"
+  },
+  {
+    "label": "Teal",
+    "color": Color.fromARGB(255, 21, 143, 173),
+    "value": "teal"
+  },
+  {
+    "label": "Sky Blue",
+    "color": Color.fromARGB(255, 20, 170, 245),
+    "value": "sky-blue"
+  },
+  {
+    "label": "Light Blue",
+    "color": Color.fromARGB(255, 150, 195, 235),
+    "value": "light-blue"
+  },
+  {
+    "label": "Blue",
+    "color": Color.fromARGB(255, 64, 115, 255),
+    "value": "blue"
+  },
+  {
+    "label": "Grape",
+    "color": Color.fromARGB(255, 136, 77, 255),
+    "value": "grape"
+  },
+  {
+    "label": "Violet",
+    "color": Color.fromARGB(255, 175, 56, 235),
+    "value": "violet"
+  },
+  {
+    "label": "Lavender",
+    "color": Color.fromARGB(255, 235, 150, 235),
+    "value": "lavender"
+  },
+  {
+    "label": "Magenta",
+    "color": Color.fromARGB(255, 224, 81, 148),
+    "value": "magenta"
+  },
+  {
+    "label": "Salmon",
+    "color": Color.fromARGB(255, 255, 141, 133),
+    "value": "salmon"
+  },
+  {
+    "label": "Charcoal",
+    "color": Color.fromARGB(255, 128, 128, 128),
+    "value": "charcoal"
+  },
+  {
+    "label": "Grey",
+    "color": Color.fromARGB(255, 184, 184, 184),
+    "value": "grey"
+  },
+  {
+    "label": "Taupe",
+    "color": Color.fromARGB(255, 204, 172, 147),
+    "value": "taupe"
+  }
+];

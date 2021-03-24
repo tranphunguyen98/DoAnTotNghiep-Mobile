@@ -10,7 +10,6 @@ import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/simple_bloc_delegate.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/notification_helper.dart';
-import 'package:totodo/utils/util.dart';
 
 import '../app_config.dart';
 import 'router.dart';
@@ -81,7 +80,6 @@ class _MyAppState extends State<MyApp> {
       initialRoute: config.initialRoute,
       onGenerateRoute: AppRouter.generateRoute,
       builder: (context, child) {
-        log('child: $child');
         return BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is Uninitialized) {

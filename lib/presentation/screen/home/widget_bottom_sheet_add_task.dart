@@ -12,7 +12,6 @@ import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
 import 'package:totodo/presentation/common_widgets/widget_icon_outline_button.dart';
 import 'package:totodo/presentation/common_widgets/widget_item_popup_menu.dart';
 import 'package:totodo/presentation/common_widgets/widget_text_field_non_border.dart';
-import 'package:totodo/presentation/custom_ui/custom_ui.dart';
 import 'package:totodo/presentation/custom_ui/date_picker/custom_picker_dialog.dart';
 import 'package:totodo/presentation/router.dart';
 import 'package:totodo/utils/date_helper.dart';
@@ -219,7 +218,7 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
                   title: project.name,
                   color: project.color?.isEmpty ?? true
                       ? kColorGray1
-                      : HexColor(project.color),
+                      : getColorDefaultFromValue(project.color),
                   iconData:
                       project.id?.isEmpty ?? true ? Icons.inbox : Icons.circle,
                 ),
@@ -236,10 +235,10 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
         onPressed: openPopup,
         colorIcon: addState.taskAdd.project?.color?.isEmpty ?? true
             ? kColorGray1
-            : HexColor(addState.taskAdd.project.color),
+            : getColorDefaultFromValue(addState.taskAdd.project.color),
         colorBorder: addState.taskAdd.project?.color?.isEmpty ?? true
             ? kColorGray1
-            : HexColor(addState.taskAdd.project.color),
+            : getColorDefaultFromValue(addState.taskAdd.project.color),
       ),
     );
   }
@@ -302,7 +301,7 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
                 title: label.name,
                 color: label.color?.isEmpty ?? true
                     ? kColorGray1
-                    : HexColor(label.color),
+                    : getColorDefaultFromValue(label.color),
                 iconData:
                     label.id == null ? Icons.add : Icons.local_offer_outlined,
               ),
@@ -402,7 +401,7 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
                   onDeleted: () {
                     _removeLabel(label);
                   },
-                  backgroundColor: HexColor(label.color),
+                  backgroundColor: getColorDefaultFromValue(label.color),
                 ),
               ),
             )

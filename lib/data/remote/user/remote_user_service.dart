@@ -31,4 +31,16 @@ abstract class RemoteUserService {
       @Header("authorization") String authorization,
       @Field() String oldPassword,
       @Field() String password);
+
+  ///idAccountOwner": "string",
+  //   "type": 1,
+  //   "displayName": "string",
+  //   "avatar": "string"
+  // @POST("/users/save-account-oauth")
+  // Future<MessageResponseRegister> saveAccountAuth(
+  //   @Field() String idAccountOwner,
+  //   @Field() int type,
+  //   @Field() String displayName,
+  //   @Field() String avatar,
+  // );
 }

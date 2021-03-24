@@ -52,7 +52,8 @@ class _WidgetSignUpFormState extends State<WidgetSignUpForm> {
         }
 
         if (state.isFailure) {
-          SnackBarHelper.failure(context, msg: 'Đăng ký thất bại!');
+          SnackBarHelper.failure(context,
+              msg: 'Đăng ký thất bại: ${state.error}');
         }
       },
       child: BlocBuilder<RegisterBloc, RegisterState>(

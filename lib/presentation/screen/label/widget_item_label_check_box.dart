@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/presentation/custom_ui/custom_ui.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
+import 'package:totodo/utils/util.dart';
 
 class ItemLabelCheckBox extends StatelessWidget {
   final Label label;
@@ -22,7 +22,7 @@ class ItemLabelCheckBox extends StatelessWidget {
             children: [
               Icon(
                 Icons.local_offer_outlined,
-                color: HexColor(label.color),
+                color: getColorDefaultFromValue(label.color),
               ),
               const SizedBox(
                 width: 16.0,

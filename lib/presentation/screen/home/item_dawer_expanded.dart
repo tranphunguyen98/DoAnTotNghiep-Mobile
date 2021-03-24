@@ -4,12 +4,12 @@ import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/custom_ui/custom_ui.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_normal.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_selected.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
+import 'package:totodo/utils/util.dart';
 
 class ItemDrawerExpanded extends StatefulWidget {
   final DrawerItemData drawerItemData;
@@ -45,11 +45,11 @@ class _ItemDrawerExpandedState extends State<ItemDrawerExpanded>
 
   Color _getColorFromDrawerItem(DrawerItemData drawerItemData) {
     if (drawerItemData.type == DrawerItemData.kTypeProject) {
-      return HexColor((drawerItemData.data as Project).color);
+      return getColorDefaultFromValue((drawerItemData.data as Project).color);
     }
 
     if (drawerItemData.type == DrawerItemData.kTypeLabel) {
-      return HexColor((drawerItemData.data as Label).color);
+      return getColorDefaultFromValue((drawerItemData.data as Label).color);
     }
 
     return Colors.blue;
