@@ -24,6 +24,9 @@ class Task extends Equatable {
   final String sectionId;
   final List<Label> labels;
   final List<CheckItem> checkList;
+  final String completedDate;
+  final String crontabSchedule; // cron expression - reminder
+  final List<String> preciseSchedules; // precise datetime - reminder
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
@@ -41,7 +44,10 @@ class Task extends Equatable {
       this.isStarred = false,
       this.isTrashed = false,
       this.sectionId,
-      this.checkList});
+      this.checkList,
+      this.completedDate,
+      this.preciseSchedules,
+      this.crontabSchedule});
 
   Task copyWith({
     String id,
@@ -58,6 +64,9 @@ class Task extends Equatable {
     String sectionId,
     List<Label> labels,
     List<CheckItem> checkList,
+    String completedDate,
+    String crontabSchedule,
+    List<String> preciseSchedules,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (createdDate == null || identical(createdDate, this.createdDate)) &&
@@ -72,11 +81,17 @@ class Task extends Equatable {
         (project == null || identical(project, this.project)) &&
         (sectionId == null || identical(sectionId, this.sectionId)) &&
         (labels == null || identical(labels, this.labels)) &&
-        (checkList == null || identical(checkList, this.checkList))) {
+        (checkList == null || identical(checkList, this.checkList)) &&
+        (completedDate == null ||
+            identical(completedDate, this.completedDate)) &&
+        (crontabSchedule == null ||
+            identical(crontabSchedule, this.crontabSchedule)) &&
+        (preciseSchedules == null ||
+            identical(preciseSchedules, this.preciseSchedules))) {
       return this;
     }
 
-    return Task(
+    return new Task(
       id: id ?? this.id,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
@@ -91,12 +106,15 @@ class Task extends Equatable {
       sectionId: sectionId ?? this.sectionId,
       labels: labels ?? this.labels,
       checkList: checkList ?? this.checkList,
+      completedDate: completedDate ?? this.completedDate,
+      crontabSchedule: crontabSchedule ?? this.crontabSchedule,
+      preciseSchedules: preciseSchedules ?? this.preciseSchedules,
     );
   }
 
   @override
   String toString() {
-    return 'Task{id: $id, createdDate: $createdDate, updatedDate: $updatedDate, priority: $priority, name: $name, description: $description, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate, project: $project, sectionId: $sectionId, labels: $labels, checkList: $checkList}';
+    return 'Task{id: $id, createdDate: $createdDate, updatedDate: $updatedDate, priority: $priority, name: $name, description: $description, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate, project: $project, sectionId: $sectionId, labels: $labels, checkList: $checkList, completedDate: $completedDate, crontabSchedule: $crontabSchedule, preciseSchedules: $preciseSchedules}';
   }
 
   @override
@@ -117,7 +135,10 @@ class Task extends Equatable {
           project == other.project &&
           sectionId == other.sectionId &&
           labels == other.labels &&
-          checkList == other.checkList);
+          checkList == other.checkList &&
+          completedDate == other.completedDate &&
+          crontabSchedule == other.crontabSchedule &&
+          preciseSchedules == other.preciseSchedules);
 
   @override
   int get hashCode =>
@@ -134,10 +155,13 @@ class Task extends Equatable {
       project.hashCode ^
       sectionId.hashCode ^
       labels.hashCode ^
-      checkList.hashCode;
+      checkList.hashCode ^
+      completedDate.hashCode ^
+      crontabSchedule.hashCode ^
+      preciseSchedules.hashCode;
 
   factory Task.fromMap(Map<String, dynamic> map) {
-    return Task(
+    return new Task(
       id: map['id'] as String,
       createdDate: map['createdDate'] as String,
       updatedDate: map['updatedDate'] as String,
@@ -152,26 +176,32 @@ class Task extends Equatable {
       sectionId: map['sectionId'] as String,
       labels: map['labels'] as List<Label>,
       checkList: map['checkList'] as List<CheckItem>,
+      completedDate: map['completedDate'] as String,
+      crontabSchedule: map['crontabSchedule'] as String,
+      preciseSchedules: map['preciseSchedules'] as List<String>,
     );
   }
 
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
     return {
-      'id': id,
-      'createdDate': createdDate,
-      'updatedDate': updatedDate,
-      'priority': priority,
-      'name': name,
-      'description': description,
-      'isCompleted': isCompleted,
-      'isStarred': isStarred,
-      'isTrashed': isTrashed,
-      'taskDate': taskDate,
-      'project': project,
-      'sectionId': sectionId,
-      'labels': labels,
-      'checkList': checkList,
+      'id': this.id,
+      'createdDate': this.createdDate,
+      'updatedDate': this.updatedDate,
+      'priority': this.priority,
+      'name': this.name,
+      'description': this.description,
+      'isCompleted': this.isCompleted,
+      'isStarred': this.isStarred,
+      'isTrashed': this.isTrashed,
+      'taskDate': this.taskDate,
+      'project': this.project,
+      'sectionId': this.sectionId,
+      'labels': this.labels,
+      'checkList': this.checkList,
+      'completedDate': this.completedDate,
+      'crontabSchedule': this.crontabSchedule,
+      'preciseSchedules': this.preciseSchedules,
     } as Map<String, dynamic>;
   }
 
@@ -194,5 +224,8 @@ class Task extends Equatable {
         project,
         labels,
         sectionId,
+        completedDate,
+        crontabSchedule,
+        preciseSchedules,
       ];
 }

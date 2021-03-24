@@ -10,71 +10,69 @@ class StatisticEveryDayOfWeek extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
-        if (!(state.listDataStaticProject?.isEmpty ?? true)) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Tỉ lệ hoàn thành các ngày trong tuần',
-                style: kFontMediumBlack_14,
-              ),
-              const SizedBox(
-                height: 16.0,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '66.67%',
-                    style: kFontMediumBlack_22,
-                  ),
-                  const SizedBox(
-                    width: 32.0,
-                  ),
-                  Expanded(child: ChartTaskWeek()),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: Divider(
-                  height: 32.0,
-                  color: Colors.grey[300],
+        if (state.loading) return Container();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Tỉ lệ hoàn thành các ngày trong tuần',
+              style: kFontMediumBlack_14,
+            ),
+            const SizedBox(
+              height: 16.0,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${((state.completedTaskInWeek / state.allTaskInWeek) * 100).toStringAsFixed(2)}%',
+                  style: kFontMediumBlack_22,
                 ),
-              ),
-              _buildRowStatistic(),
-              Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: Divider(
-                  height: 32.0,
-                  color: Colors.grey[300],
+                const SizedBox(
+                  width: 32.0,
                 ),
+                Expanded(
+                    child: ChartTaskWeek(state.listDataStatisticLast7Days)),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Divider(
+                height: 32.0,
+                color: Colors.grey[300],
               ),
-              GridView.builder(
-                itemCount: state.listDataStaticProject.length,
-                padding: const EdgeInsets.only(right: 16.0),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 32,
-                    childAspectRatio: 5),
-                itemBuilder: (context, index) {
-                  return ItemStatisticProject(
-                      state.listDataStaticProject[index]);
-                },
+            ),
+            _buildRowStatistic(state),
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Divider(
+                height: 32.0,
+                color: Colors.grey[300],
               ),
-              SizedBox(
-                height: 16.0,
-              )
-            ],
-          );
-        }
-        return Container();
+            ),
+            GridView.builder(
+              itemCount: state.listDataStaticProject.length,
+              padding: const EdgeInsets.only(right: 16.0),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 32,
+                  childAspectRatio: 5),
+              itemBuilder: (context, index) {
+                return ItemStatisticProject(state.listDataStaticProject[index]);
+              },
+            ),
+            const SizedBox(
+              height: 16.0,
+            )
+          ],
+        );
       },
     );
   }
 
-  Widget _buildRowStatistic() {
+  Widget _buildRowStatistic(ProfileState state) {
     return Row(
       children: [
         SizedBox(
@@ -91,7 +89,7 @@ class StatisticEveryDayOfWeek extends StatelessWidget {
               height: 4.0,
             ),
             Text(
-              '67',
+              '${state.completedTaskInWeek}',
               style: kFontSemiboldBlack_16,
             )
           ],
@@ -108,7 +106,7 @@ class StatisticEveryDayOfWeek extends StatelessWidget {
               height: 4.0,
             ),
             Text(
-              '67',
+              '${state.allTaskInWeek - state.completedTaskInWeek}',
               style: kFontSemiboldBlack_16,
             )
           ],

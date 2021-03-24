@@ -3,14 +3,9 @@ import 'package:intl/intl.dart';
 
 class DateHelper {
   static bool isSameDay(DateTime dateTimeSource, DateTime dateTimeDestination) {
-    return dateTimeSource.compareTo(
-          DateTime(
-            dateTimeDestination.year,
-            dateTimeDestination.month,
-            dateTimeDestination.day,
-          ),
-        ) ==
-        0;
+    return dateTimeSource.year == dateTimeDestination.year &&
+        dateTimeSource.month == dateTimeDestination.month &&
+        dateTimeSource.day == dateTimeDestination.day;
   }
 
   static bool isTomorrow(DateTime dateTimeSource) {
@@ -32,13 +27,18 @@ class DateHelper {
 
   static bool isSameDayString(
       String dateTimeSourceString, String dateTimeDestinationString) {
-    final dateTimeSource = DateTime.parse(dateTimeSourceString);
-    final dateTimeDestination = DateTime.parse(dateTimeDestinationString);
+    try {
+      final dateTimeSource = DateTime.parse(dateTimeSourceString);
+      final dateTimeDestination = DateTime.parse(dateTimeDestinationString);
 
-    return isSameDay(dateTimeSource, dateTimeDestination);
+      return isSameDay(dateTimeSource, dateTimeDestination);
+    } catch (e) {
+      throw Exception('Day is not valid');
+    }
   }
 
   static bool isTodayString(String dateTimeString) {
+    if (dateTimeString == null) return false;
     return isSameDayString(dateTimeString, DateTime.now().toIso8601String());
   }
 

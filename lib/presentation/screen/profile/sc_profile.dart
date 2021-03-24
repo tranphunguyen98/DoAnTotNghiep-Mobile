@@ -23,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       create: (context) => ProfileBloc(
         taskRepository: getIt<ITaskRepository>(),
         userRepository: getIt<IUserRepository>(),
-      )..add(OpenProfileScreen()),
+      )..add(InitDataStatistic()),
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(

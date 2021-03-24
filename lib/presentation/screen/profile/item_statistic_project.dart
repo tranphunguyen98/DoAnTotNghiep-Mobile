@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:totodo/presentation/screen/profile/data_ui/item_data_statistic_project.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
-
-import 'item_data_statistic_project.dart';
 
 class ItemStatisticProject extends StatelessWidget {
   final ItemDataStatisticProject itemData;

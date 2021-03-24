@@ -33,6 +33,12 @@ class LocalTask {
   final String sectionId;
   @HiveField(13)
   final List<CheckItem> checkList;
+  @HiveField(14)
+  final String completedDate;
+  @HiveField(15)
+  final String crontabSchedule; // cron expression - reminder
+  @HiveField(16)
+  final List<String> preciseSchedules; // precise datetime - reminder
 
   const LocalTask({
     this.id,
@@ -49,6 +55,9 @@ class LocalTask {
     this.labelIds,
     this.sectionId,
     this.checkList,
+    this.completedDate,
+    this.crontabSchedule,
+    this.preciseSchedules,
   });
 
   LocalTask copyWith({
@@ -61,11 +70,14 @@ class LocalTask {
     bool isCompleted,
     bool isStarred,
     bool isTrashed,
-    String taskDate,
+    String dueDate,
     String projectId,
     List<String> labelIds,
     String sectionId,
     List<CheckItem> checkList,
+    String completedDate,
+    String crontabSchedule,
+    List<String> preciseSchedules,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (createdDate == null || identical(createdDate, this.createdDate)) &&
@@ -76,11 +88,17 @@ class LocalTask {
         (isCompleted == null || identical(isCompleted, this.isCompleted)) &&
         (isStarred == null || identical(isStarred, this.isStarred)) &&
         (isTrashed == null || identical(isTrashed, this.isTrashed)) &&
-        (taskDate == null || identical(taskDate, this.dueDate)) &&
+        (dueDate == null || identical(dueDate, this.dueDate)) &&
         (projectId == null || identical(projectId, this.projectId)) &&
         (labelIds == null || identical(labelIds, this.labelIds)) &&
         (sectionId == null || identical(sectionId, this.sectionId)) &&
-        (checkList == null || identical(checkList, this.checkList))) {
+        (checkList == null || identical(checkList, this.checkList)) &&
+        (completedDate == null ||
+            identical(completedDate, this.completedDate)) &&
+        (crontabSchedule == null ||
+            identical(crontabSchedule, this.crontabSchedule)) &&
+        (preciseSchedules == null ||
+            identical(preciseSchedules, this.preciseSchedules))) {
       return this;
     }
 
@@ -94,11 +112,14 @@ class LocalTask {
       isCompleted: isCompleted ?? this.isCompleted,
       isStarred: isStarred ?? this.isStarred,
       isTrashed: isTrashed ?? this.isTrashed,
-      dueDate: taskDate ?? this.dueDate,
+      dueDate: dueDate ?? this.dueDate,
       projectId: projectId ?? this.projectId,
       labelIds: labelIds ?? this.labelIds,
       sectionId: sectionId ?? this.sectionId,
       checkList: checkList ?? this.checkList,
+      completedDate: completedDate ?? this.completedDate,
+      crontabSchedule: crontabSchedule ?? this.crontabSchedule,
+      preciseSchedules: preciseSchedules ?? this.preciseSchedules,
     );
   }
 }

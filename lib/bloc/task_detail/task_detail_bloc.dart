@@ -83,11 +83,22 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
     yield state.copyWith(taskEdit: task, loading: false);
   }
 
-  Stream<TaskDetailState> _mapSubmitEditTaskToState(Task task) async* {
-    if (task != null) {
-      await _taskRepository.updateTask(task);
+  Stream<TaskDetailState> _mapSubmitEditTaskToState(Task updateTask) async* {
+    if (updateTask != null) {
+      if (state.taskEdit.isCompleted != updateTask.isCompleted) {
+        if (updateTask.isCompleted) {
+          await _taskRepository.updateTask(updateTask.copyWith(
+              completedDate: DateTime.now().toIso8601String()));
+        } else {
+          await _taskRepository
+              .updateTask(updateTask.copyWith(completedDate: ''));
+        }
+      } else {
+        await _taskRepository.updateTask(updateTask);
+      }
+
       yield state.copyWith(
-        taskEdit: task,
+        taskEdit: updateTask,
       );
     } else {
       await _taskRepository.updateTask(state.taskEdit);

@@ -24,6 +24,9 @@ class LocalTaskMapper {
       isStarred: localTask.isStarred,
       isTrashed: localTask.isTrashed,
       priority: localTask.priority,
+      completedDate: localTask.completedDate,
+      crontabSchedule: localTask.crontabSchedule,
+      preciseSchedules: localTask.preciseSchedules,
       project: localTask.projectId?.isEmpty ?? true
           ? null
           : getProjectFromId(localTask.projectId),
@@ -49,6 +52,10 @@ class LocalTaskMapper {
         priority: task.priority,
         projectId: task.project?.id,
         sectionId: task.sectionId,
+        preciseSchedules: task.preciseSchedules,
+        crontabSchedule: task.crontabSchedule,
+        completedDate:
+            task.completedDate.isNotEmpty ? task.completedDate : null,
         labelIds: task.labels?.map((e) => e.id)?.toList(),
         checkList: task.checkList);
   }
