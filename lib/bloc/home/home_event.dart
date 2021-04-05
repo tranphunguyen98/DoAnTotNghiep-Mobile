@@ -24,6 +24,20 @@ class SelectedDrawerIndexChanged extends HomeEvent {
   }
 }
 
+class SelectedBottomNavigationIndexChanged extends HomeEvent {
+  final int index;
+
+  SelectedBottomNavigationIndexChanged(this.index);
+
+  @override
+  List<Object> get props => [index];
+
+  @override
+  String toString() {
+    return 'SelectedBottomNavigationIndexChanged{index: $index}';
+  }
+}
+
 class UpdateTaskEvent extends HomeEvent {
   final Task task;
 

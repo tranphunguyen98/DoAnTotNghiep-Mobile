@@ -10,11 +10,15 @@ class HomeState extends Equatable {
   static const kDrawerIndexInbox = 0;
   static const kDrawerIndexToday = 1;
   static const kDrawerIndexNextWeek = 2;
+  static const kBottomNavigationTask = 0;
+  static const kBottomNavigationHabit = 1;
+  static const kBottomNavigationSetting = 2;
 
   // static const kDrawerIndexThisMonth = 3;
 
   final List<DrawerItemData> drawerItems;
   final int indexDrawerSelected;
+  final int indexNavigationBarSelected;
   final List<Task> _listAllTask;
   final List<Project> listProject;
   final List<Label> listLabel;
@@ -69,6 +73,7 @@ class HomeState extends Equatable {
 
   const HomeState(
       {this.indexDrawerSelected = kDrawerIndexInbox,
+      this.indexNavigationBarSelected = kBottomNavigationTask,
       this.loading,
       this.msg,
       List<Task> listAllTask,
@@ -89,6 +94,7 @@ class HomeState extends Equatable {
   @override
   List<Object> get props => [
         indexDrawerSelected,
+        indexNavigationBarSelected,
         _listAllTask,
         loading,
         msg,
@@ -100,12 +106,13 @@ class HomeState extends Equatable {
 
   @override
   String toString() {
-    return 'HomeState{drawerItems: $drawerItems, indexDrawerSelected: $indexDrawerSelected, listProject: $listProject, listLabel: $listLabel, listSection: $listSection, loading: $loading, msg: $msg}';
+    return 'HomeState{drawerItems: $drawerItems, indexDrawerSelected: $indexDrawerSelected, indexNavigationBarSelected: $indexNavigationBarSelected, _listAllTask: $_listAllTask, listProject: $listProject, listLabel: $listLabel, listSection: $listSection, loading: $loading, msg: $msg}';
   }
 
   HomeState copyWith({
     List<DrawerItemData> drawerItems,
     int indexDrawerSelected,
+    int indexNavigationBarSelected,
     List<Task> listAllTask,
     List<Project> listProject,
     List<Label> listLabel,
@@ -116,6 +123,9 @@ class HomeState extends Equatable {
     if ((drawerItems == null || identical(drawerItems, this.drawerItems)) &&
         (indexDrawerSelected == null ||
             identical(indexDrawerSelected, this.indexDrawerSelected)) &&
+        (indexNavigationBarSelected == null ||
+            identical(
+                indexNavigationBarSelected, this.indexNavigationBarSelected)) &&
         (listAllTask == null || identical(listAllTask, _listAllTask)) &&
         (listProject == null || identical(listProject, this.listProject)) &&
         (listLabel == null || identical(listLabel, this.listLabel)) &&
@@ -128,6 +138,8 @@ class HomeState extends Equatable {
     return HomeState(
       drawerItems: drawerItems ?? this.drawerItems,
       indexDrawerSelected: indexDrawerSelected ?? this.indexDrawerSelected,
+      indexNavigationBarSelected:
+          indexNavigationBarSelected ?? this.indexNavigationBarSelected,
       listAllTask: listAllTask ?? _listAllTask,
       listProject: listProject ?? this.listProject,
       listLabel: listLabel ?? this.listLabel,

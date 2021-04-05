@@ -23,6 +23,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } else if (event is SelectedDrawerIndexChanged) {
       yield* _mapSelectedDrawerIndexChangedToState(
           indexDrawerSelected: event.index);
+    } else if (event is SelectedBottomNavigationIndexChanged) {
+      yield* _mapSelectedBottomNavigationIndexChangedToState(event.index);
     } else if (event is UpdateTaskEvent) {
       yield* _mapUpdateTaskEventToState(event.task);
     } else if (event is DataListLabelChanged) {
@@ -39,6 +41,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _mapSelectedDrawerIndexChangedToState(
       {int indexDrawerSelected}) async* {
     yield state.copyWith(indexDrawerSelected: indexDrawerSelected);
+  }
+
+  Stream<HomeState> _mapSelectedBottomNavigationIndexChangedToState(
+      int indexSelected) async* {
+    yield state.copyWith(indexNavigationBarSelected: indexSelected);
   }
 
   Stream<HomeState> _mapOpenHomeScreenToState() async* {

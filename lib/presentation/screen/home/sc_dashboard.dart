@@ -12,12 +12,12 @@ import 'package:totodo/utils/my_const/my_const.dart';
 
 import '../../router.dart';
 
-class DashboardScreen extends StatefulWidget {
+class TaskScreen extends StatefulWidget {
   @override
-  _DashboardScreenState createState() => _DashboardScreenState();
+  _TaskScreenState createState() => _TaskScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _TaskScreenState extends State<TaskScreen> {
   final HomeBloc _homeBloc = getIt<HomeBloc>();
 
   @override

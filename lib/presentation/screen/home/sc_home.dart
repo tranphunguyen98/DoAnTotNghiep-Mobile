@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/di/injection.dart';
+import 'package:totodo/presentation/screen/home/home_body.dart';
+import 'package:totodo/presentation/screen/home/main_bottom_navigation_bar.dart';
 import 'package:totodo/presentation/screen/home/popup_menu_button_more.dart';
 import 'package:totodo/utils/util.dart';
 
 import '../../../utils/my_const/color_const.dart';
 import 'floating_action_button_home.dart';
 import 'main_drawer.dart';
-import 'sc_dashboard.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -25,7 +26,8 @@ class HomeScreen extends StatelessWidget {
       ),
       drawer: MainDrawer(),
       floatingActionButton: FloatingActionButtonHome(),
-      body: DashboardScreen(),
+      bottomNavigationBar: MainBottomNavigationBar(),
+      body: HomeBody(),
     );
   }
 }
