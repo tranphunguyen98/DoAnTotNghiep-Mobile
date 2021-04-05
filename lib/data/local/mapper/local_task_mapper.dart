@@ -55,7 +55,7 @@ class LocalTaskMapper {
         preciseSchedules: task.preciseSchedules,
         crontabSchedule: task.crontabSchedule,
         completedDate:
-            task.completedDate.isNotEmpty ? task.completedDate : null,
+            task.completedDate?.isNotEmpty ?? true ? null : task.completedDate,
         labelIds: task.labels?.map((e) => e.id)?.toList(),
         checkList: task.checkList);
   }

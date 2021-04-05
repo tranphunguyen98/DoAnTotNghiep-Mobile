@@ -118,8 +118,9 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
     dropdownChoicesProject.addAll(addState.projects ?? []);
 
     dropdownChoicesLabel.clear();
-    dropdownChoicesLabel
-        .add(Label(name: "Thêm Label", color: getHexFromColor(Colors.grey)));
+    dropdownChoicesLabel.add(Label(
+        name: "Thêm Label",
+        color: kListColorDefault.first[keyListColorValue] as String));
     dropdownChoicesLabel.addAll(addState.labels ?? []);
   }
 
@@ -248,25 +249,23 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
       visible = false;
     });
 
-    Future.delayed(const Duration(milliseconds: 100), () async {
-      final picker = await showCustomDatePicker(
-          context: context,
-          initialDate: DateTime.parse(
-              addState.taskAdd.taskDate ?? DateTime.now().toIso8601String()),
-          firstDate: DateTime(
-            DateTime.now().year,
-            DateTime.now().month,
-          ),
-          lastDate: DateTime(2100),
-          selectedTimeOfDay:
-              DateHelper.getTimeOfDayFromDateString(addState.taskAdd.taskDate));
-      setState(() {
-        visible = true;
-      });
-      if (picker != null) {
-        _taskAddBloc.add(TaskAddChanged(taskDate: picker.toIso8601String()));
-      }
+    final picker = await showCustomDatePicker(
+        context: context,
+        initialDate: DateTime.parse(
+            addState.taskAdd.taskDate ?? DateTime.now().toIso8601String()),
+        firstDate: DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+        ),
+        lastDate: DateTime(2100),
+        selectedTimeOfDay:
+            DateHelper.getTimeOfDayFromDateString(addState.taskAdd.taskDate));
+    setState(() {
+      visible = true;
     });
+    if (picker != null) {
+      _taskAddBloc.add(TaskAddChanged(taskDate: picker.toIso8601String()));
+    }
   }
 
   bool isSendButtonEnable() {

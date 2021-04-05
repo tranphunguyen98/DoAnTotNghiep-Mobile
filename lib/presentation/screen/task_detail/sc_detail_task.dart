@@ -69,6 +69,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
         return WillPopScope(
           onWillPop: () async {
             _saveNameTask(state);
+            _homeBloc.add(DataListTaskChanged());
             Navigator.pop(context);
             return true;
           },

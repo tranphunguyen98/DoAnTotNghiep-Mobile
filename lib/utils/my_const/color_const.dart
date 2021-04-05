@@ -37,7 +37,13 @@ const MaterialColor kColorStatusBar = MaterialColor(0x03396c, {});
 const String keyListColorLabel = 'label';
 const String keyListColorColor = 'color';
 const String keyListColorValue = 'value';
+
 const List<Map<String, Object>> kListColorDefault = [
+  {
+    "label": "Grey",
+    "color": Color.fromARGB(255, 184, 184, 184),
+    "value": "grey"
+  },
   {
     "label": "Berry Red",
     "color": Color.fromARGB(255, 184, 37, 95),
@@ -125,13 +131,13 @@ const List<Map<String, Object>> kListColorDefault = [
     "value": "charcoal"
   },
   {
-    "label": "Grey",
-    "color": Color.fromARGB(255, 184, 184, 184),
-    "value": "grey"
-  },
-  {
     "label": "Taupe",
     "color": Color.fromARGB(255, 204, 172, 147),
     "value": "taupe"
+  },
+  {
+    "label": "Dark",
+    "color": Color.fromARGB(255, 44, 43, 53),
+    "value": "dark",
   }
 ];
