@@ -65,6 +65,7 @@ final kFontMediumBlack = kFontMedium.copyWith(color: kColorBlack2);
 final kFontMediumBlack_12 = kFontMediumBlack.copyWith(fontSize: 12);
 final kFontMediumBlack_14 = kFontMediumBlack.copyWith(fontSize: 14);
 final kFontMediumBlack_16 = kFontMediumBlack.copyWith(fontSize: 16);
+final kFontMediumBlack_18 = kFontMediumBlack.copyWith(fontSize: 18);
 final kFontMediumBlack_22 = kFontMediumBlack.copyWith(fontSize: 22);
 
 //SEMI_BOLD

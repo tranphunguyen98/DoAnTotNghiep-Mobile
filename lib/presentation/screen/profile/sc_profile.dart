@@ -67,12 +67,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-        // Column(
-        //   crossAxisAlignment: CrossAxisAlignment.stretch,
-        //   children: [
-        //     HeaderProfile(),
-        //   ],
-        // ),
       ),
     );
   }

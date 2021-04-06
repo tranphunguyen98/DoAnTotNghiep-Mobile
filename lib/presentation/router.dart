@@ -8,6 +8,7 @@ import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/profile/sc_profile.dart';
 
 import 'screen/change_password/sc_change_password.dart';
+import 'screen/create_habit/sc_list_habit_creating.dart';
 import 'screen/forgot_password/sc_forgot_password.dart';
 import 'screen/home/sc_home.dart';
 import 'screen/label/sc_add_label.dart';
@@ -32,6 +33,7 @@ class AppRouter {
   static const String kDetailTask = '/detailTask';
   static const String kSelectLabel = '/selectLabel';
   static const String kProfile = '/profile';
+  static const String kCreatingHabitList = '/creatingHabitList';
 
   static const String kArgumentTask = '/argumentTask';
 
@@ -57,6 +59,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => AddLabelScreen());
       case kProfile:
         return MaterialPageRoute(builder: (_) => ProfileScreen());
+      case kCreatingHabitList:
+        return MaterialPageRoute(builder: (_) => ListHabitCreatingScreen());
 
       case kSelectLabel:
         if (settings.arguments is List<Label>) {

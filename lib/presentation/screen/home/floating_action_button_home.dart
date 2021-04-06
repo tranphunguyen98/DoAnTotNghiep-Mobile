@@ -5,6 +5,7 @@ import 'package:totodo/bloc/add_task/add_task_event.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/di/injection.dart';
+import 'package:totodo/presentation/router.dart';
 import 'package:totodo/presentation/screen/home/widget_bottom_sheet_add_task.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
@@ -26,13 +27,24 @@ class _FloatingActionButtonHomeState extends State<FloatingActionButtonHome> {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       cubit: _homeBloc,
-      buildWhen: (previous, current) => previous.loading != current.loading,
+      buildWhen: (previous, current) =>
+          previous.loading != current.loading ||
+          previous.indexNavigationBarSelected !=
+              current.indexNavigationBarSelected,
       builder: (context, state) {
         return FloatingActionButton(
           onPressed: state.loading
               ? null
               : () {
-                  _showBottomSheetAddTask(context);
+                  if (state.indexNavigationBarSelected ==
+                      HomeState.kBottomNavigationTask) {
+                    _showBottomSheetAddTask(context);
+                  }
+                  if (state.indexNavigationBarSelected ==
+                      HomeState.kBottomNavigationHabit) {
+                    Navigator.of(context)
+                        .pushNamed(AppRouter.kCreatingHabitList);
+                  }
                 },
           backgroundColor: kColorPrimary,
           child: Icon(
