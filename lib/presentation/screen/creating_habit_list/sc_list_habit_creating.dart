@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:totodo/presentation/screen/create_habit/list_habit_creating.dart';
+import 'package:totodo/presentation/router.dart';
+import 'package:totodo/presentation/screen/creating_habit_list/list_habit_creating.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 
@@ -56,7 +57,9 @@ class ListHabitCreatingScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               color: kColorWhite,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRouter.kCreateHabit);
+                },
                 child: Text(
                   'Tạo Thói Quen Mới',
                   style: kFontMediumWhite_12,

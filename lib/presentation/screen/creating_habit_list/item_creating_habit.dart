@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:totodo/presentation/router.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 
@@ -16,7 +17,9 @@ class ItemCreatingHabit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context).pushNamed(AppRouter.kCreateHabit);
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
         child: Row(

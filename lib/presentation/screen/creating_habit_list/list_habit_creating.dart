@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:totodo/presentation/screen/create_habit/creating_habit_list.dart';
+import 'package:totodo/presentation/screen/creating_habit_list/item_creating_habit.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
 class CreatingHabitList extends StatelessWidget {
