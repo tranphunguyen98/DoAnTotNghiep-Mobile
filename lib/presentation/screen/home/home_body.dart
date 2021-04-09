@@ -3,9 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/common_widgets/widget_container_error.dart';
+import 'package:totodo/presentation/screen/habit/habit_screen.dart';
 import 'package:totodo/presentation/screen/home/sc_dashboard.dart';
-
-import 'file:///C:/Flutter/totodo/lib/presentation/screen/habit/habit_screen.dart';
 
 class HomeBody extends StatefulWidget {
   @override

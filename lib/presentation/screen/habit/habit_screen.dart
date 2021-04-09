@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:totodo/presentation/screen/habit/list_day_last_7_days_radio.dart';
+import 'package:totodo/presentation/screen/habit/list_habit.dart';
 
 class HabitScreen extends StatefulWidget {
   @override
@@ -8,6 +10,16 @@ class HabitScreen extends StatefulWidget {
 class _HabitScreenState extends State<HabitScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Column(
+      children: [
+        SizedBox(
+          height: 4.0,
+        ),
+        ListDayLast7DayRadio(
+          onRadioValueChanged: (value) {},
+        ),
+        Expanded(child: ListHabit()),
+      ],
+    );
   }
 }
