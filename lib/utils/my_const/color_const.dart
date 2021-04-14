@@ -19,6 +19,7 @@ final HexColor kColorGray4_40 = HexColor("#66666666");
 final HexColor kColorGray5 = HexColor("#C1C1C1");
 final HexColor kColorGray6 = HexColor("#707070");
 final HexColor kColorGray7 = HexColor("#DDDDDD");
+final HexColor kColorGreenLight = HexColor("#75cd9b");
 
 final HexColor kColorGoogleBtn = HexColor("#FFF1F0");
 final HexColor kColorGoogleBorderBtn = HexColor("#F14336");

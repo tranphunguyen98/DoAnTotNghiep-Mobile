@@ -5,3 +5,4 @@ const String kIconCircle = "assets/ic_circle_64.png";
 const String kIconMeditation = "assets/habit/ic_meditation_64.png";
 const String kIconPushUp = "assets/habit/ic_push_up_64.png";
 const String kImageMotivation = "assets/habit/motivation.jpg";
+const String kImageTag = "assets/habit/ic_tag_256.png";
