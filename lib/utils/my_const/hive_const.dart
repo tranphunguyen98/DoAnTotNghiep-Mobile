@@ -1,0 +1,13 @@
+const int kHiveTypeTask = 0;
+const int kHiveTypeLabel = 1;
+const int kHiveTypeProject = 2;
+const int kHiveTypeSection = 3;
+const int kHiveTypeCheckItem = 4;
+const int kHiveTypeDiaryItem = 5;
+const int kHiveTypeHabitFrequency = 6;
+const int kHiveTypeHabitIcon = 7;
+const int kHiveTypeHabitImage = 8;
+const int kHiveTypeHabitMotivation = 9;
+const int kHiveTypeProgressItem = 10;
+const int kHiveTypeHabitRemind = 11;
+const int kHiveTypeHabit = 12;

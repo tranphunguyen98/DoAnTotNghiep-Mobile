@@ -8,7 +8,7 @@ part of 'label.dart';
 
 class LabelAdapter extends TypeAdapter<Label> {
   @override
-  final int typeId = 4;
+  final int typeId = 1;
 
   @override
   Label read(BinaryReader reader) {

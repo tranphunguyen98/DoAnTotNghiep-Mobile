@@ -8,7 +8,7 @@ part of 'local_task.dart';
 
 class LocalTaskAdapter extends TypeAdapter<LocalTask> {
   @override
-  final int typeId = 5;
+  final int typeId = 0;
 
   @override
   LocalTask read(BinaryReader reader) {
@@ -31,13 +31,16 @@ class LocalTaskAdapter extends TypeAdapter<LocalTask> {
       labelIds: (fields[11] as List)?.cast<String>(),
       sectionId: fields[12] as String,
       checkList: (fields[13] as List)?.cast<CheckItem>(),
+      completedDate: fields[14] as String,
+      crontabSchedule: fields[15] as String,
+      preciseSchedules: (fields[16] as List)?.cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, LocalTask obj) {
     writer
-      ..writeByte(14)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -65,7 +68,13 @@ class LocalTaskAdapter extends TypeAdapter<LocalTask> {
       ..writeByte(12)
       ..write(obj.sectionId)
       ..writeByte(13)
-      ..write(obj.checkList);
+      ..write(obj.checkList)
+      ..writeByte(14)
+      ..write(obj.completedDate)
+      ..writeByte(15)
+      ..write(obj.crontabSchedule)
+      ..writeByte(16)
+      ..write(obj.preciseSchedules);
   }
 
   @override

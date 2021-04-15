@@ -81,7 +81,7 @@ class TaskRepositoryImpl implements ITaskRepository {
   }
 
   @override
-  Future<void> clearData() {
+  Future<void> clearDataOffline() {
     return _localTaskDataSource.clearData();
   }
 }

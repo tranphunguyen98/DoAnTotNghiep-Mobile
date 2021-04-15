@@ -3,6 +3,8 @@ import 'package:totodo/presentation/router.dart';
 import 'package:totodo/presentation/screen/creating_habit_list/list_habit_creating.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
+import 'package:totodo/utils/my_const/map_const.dart';
+import 'package:totodo/utils/util.dart';
 
 class ListHabitCreatingScreen extends StatelessWidget {
   @override
@@ -43,11 +45,21 @@ class ListHabitCreatingScreen extends StatelessWidget {
             Expanded(
               child: TabBarView(
                 children: [
-                  CreatingHabitList(),
-                  CreatingHabitList(),
-                  CreatingHabitList(),
-                  CreatingHabitList(),
-                  CreatingHabitList(),
+                  CreatingHabitList(
+                    listHabit: kListHabitDefault,
+                  ),
+                  CreatingHabitList(
+                    listHabit: kListHabitDefault,
+                  ),
+                  CreatingHabitList(
+                    listHabit: kListHabitDefault,
+                  ),
+                  CreatingHabitList(
+                    listHabit: kListHabitDefault,
+                  ),
+                  CreatingHabitList(
+                    listHabit: kListHabitDefault,
+                  ),
                 ],
               ),
             ),
@@ -57,8 +69,13 @@ class ListHabitCreatingScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               color: kColorWhite,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(AppRouter.kCreateHabit);
+                onPressed: () async {
+                  final success = await Navigator.of(context)
+                      .pushNamed(AppRouter.kCreateHabit);
+                  log('success', success);
+                  if (success is bool && success) {
+                    Navigator.of(context).pop();
+                  }
                 },
                 child: Text(
                   'Tạo Thói Quen Mới',

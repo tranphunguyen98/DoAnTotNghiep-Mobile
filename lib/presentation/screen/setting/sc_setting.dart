@@ -27,7 +27,7 @@ class SettingScreen extends StatelessWidget {
               }),
             DrawerItemNormal("Đăng xuất", Icons.logout, () {
               _authenticationBloc.add(LoggedOut());
-              getIt<ITaskRepository>().clearData();
+              getIt<ITaskRepository>().clearDataOffline();
               Future.delayed(Duration.zero, () {
                 Navigator.of(context).pushNamed(AppRouter.kLogin);
               });

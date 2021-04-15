@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:totodo/bloc/create_habit/bloc.dart';
+import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/bloc/select_label/bloc.dart';
+import 'package:totodo/data/entity/habit/habit.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/di/injection.dart';
+import 'package:totodo/presentation/screen/create_habit/creating_habit_step.dart';
 import 'package:totodo/presentation/screen/create_habit/sc_create_habit.dart';
 import 'package:totodo/presentation/screen/detail_habit/sc_habit_detail.dart';
 import 'package:totodo/presentation/screen/profile/sc_profile.dart';
@@ -65,10 +70,11 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => ProfileScreen());
       case kCreatingHabitList:
         return MaterialPageRoute(builder: (_) => ListHabitCreatingScreen());
-      case kCreateHabit:
-        return MaterialPageRoute(builder: (_) => CreateHabitScreen());
       case kDetailHabit:
         return MaterialPageRoute(builder: (_) => HabitDetailScreen());
+      case kCreateHabit:
+        return _buildCreateHabitScreen(settings);
+
       case kSelectLabel:
         if (settings.arguments is List<Label>) {
           final listLabelSelected = settings.arguments as List<Label>;
@@ -93,14 +99,13 @@ class AppRouter {
           final task = settings.arguments as Task;
           return MaterialPageRoute(builder: (_) => ScreenDetailTask(task));
         } else {
-          // print("kDetailTask: ${settings.arguments as String}");
-
           final taskId = settings.arguments as String;
           return MaterialPageRoute(
-              builder: (_) => ScreenDetailTask(
-                    null,
-                    taskId: taskId,
-                  ));
+            builder: (_) => ScreenDetailTask(
+              null,
+              taskId: taskId,
+            ),
+          );
         }
         break;
       default:
@@ -112,5 +117,24 @@ class AppRouter {
           ),
         );
     }
+  }
+
+  static MaterialPageRoute _buildCreateHabitScreen(RouteSettings settings) {
+    CreateHabitScreen createHabitScreen;
+
+    if (settings.arguments is Habit) {
+      createHabitScreen = CreateHabitScreen(settings.arguments as Habit);
+    } else {
+      createHabitScreen = const CreateHabitScreen();
+    }
+
+    return MaterialPageRoute(
+      builder: (_) => BlocProvider(
+        create: (context) =>
+            CreateHabitBloc(habitRepository: getIt<IHabitRepository>()),
+        child: ChangeNotifierProvider<CreatingHabitStep>(
+            create: (context) => CreatingHabitStep(), child: createHabitScreen),
+      ),
+    );
   }
 }

@@ -10,6 +10,7 @@ class TextFieldNonBorder extends StatelessWidget {
   final String errorText;
   final FocusNode focusNode;
   final Color background;
+  final TextInputType keyboardType;
 
   const TextFieldNonBorder(
       {this.controller,
@@ -20,6 +21,7 @@ class TextFieldNonBorder extends StatelessWidget {
       this.autoFocus = true,
       this.errorText,
       this.background,
+      this.keyboardType,
       @required this.hint});
 
   @override
@@ -28,6 +30,7 @@ class TextFieldNonBorder extends StatelessWidget {
       cursorColor: Colors.black,
       controller: controller,
       style: textStyle,
+      keyboardType: keyboardType,
       focusNode: focusNode,
       autofocus: autoFocus,
       decoration: InputDecoration(

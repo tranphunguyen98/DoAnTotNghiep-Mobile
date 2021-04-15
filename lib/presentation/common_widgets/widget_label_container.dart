@@ -35,7 +35,7 @@ class LabelContainer extends StatelessWidget {
           right: 4.0,
           child: CircleInkWell(
             Icons.close,
-            sizeIcon: 24.0,
+            size: 24.0,
             onPressed: () {
               onDeleteLabel(label);
             },

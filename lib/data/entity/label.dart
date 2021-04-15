@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
+import 'package:totodo/utils/my_const/hive_const.dart';
 
 part 'label.g.dart';
 
-@HiveType(typeId: 4)
+@HiveType(typeId: kHiveTypeLabel)
 class Label extends Equatable {
   @HiveField(0)
   final String id;

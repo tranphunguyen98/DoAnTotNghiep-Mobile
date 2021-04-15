@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
+import 'package:totodo/utils/my_const/hive_const.dart';
 
 part 'project.g.dart';
 
-@HiveType(typeId: 6)
+@HiveType(typeId: kHiveTypeProject)
 class Project extends Equatable {
   @HiveField(0)
   final String id;

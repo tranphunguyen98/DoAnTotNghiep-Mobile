@@ -1,9 +1,10 @@
 import 'package:hive/hive.dart';
 import 'package:totodo/data/entity/check_item.dart';
+import 'package:totodo/utils/my_const/hive_const.dart';
 
 part 'local_task.g.dart';
 
-@HiveType(typeId: 5)
+@HiveType(typeId: kHiveTypeTask)
 class LocalTask {
   @HiveField(0)
   final String id;

@@ -110,13 +110,13 @@ class _RemoteUserService implements RemoteUserService {
 
   @override
   Future<MessageResponseRegister> changePassword(
-      authorization, old_password, password) async {
+      authorization, oldPassword, password) async {
     ArgumentError.checkNotNull(authorization, 'authorization');
-    ArgumentError.checkNotNull(old_password, 'old_password');
+    ArgumentError.checkNotNull(oldPassword, 'oldPassword');
     ArgumentError.checkNotNull(password, 'password');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _data = {'old_password': old_password, 'password': password};
+    final _data = {'oldPassword': oldPassword, 'password': password};
     _data.removeWhere((k, v) => v == null);
     final _result = await _dio.request<Map<String, dynamic>>(
         '/users/change-password',

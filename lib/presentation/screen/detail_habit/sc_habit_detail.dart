@@ -187,8 +187,8 @@ class Header extends StatelessWidget {
             CircleInkWell(
               Icons.keyboard_arrow_up,
               onPressed: () {},
-              colorIcon: kColorWhite,
-              sizeIcon: 36.0,
+              color: kColorWhite,
+              size: 36.0,
             ),
           ],
         ),

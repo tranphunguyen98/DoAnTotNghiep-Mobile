@@ -4,17 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:totodo/di/injection.dart';
+import 'package:totodo/utils/my_const/map_const.dart';
 
 import 'my_const/color_const.dart';
 
 String getHexFromColor(Color color) {
   return '#${color.value.toRadixString(16).substring(2, 8)}';
-}
-
-Color getColorDefaultFromValue(String value) {
-  final dataColor = kListColorDefault
-      .firstWhere((element) => element[keyListColorValue] as String == value);
-  return dataColor[keyListColorColor] as Color;
 }
 
 void log(String name, [Object msg]) {
@@ -28,6 +23,18 @@ void dismissKeyboard(BuildContext context) {
   if (!currentFocus.hasPrimaryFocus) {
     currentFocus.unfocus();
   }
+}
+
+Color getColorDefaultFromValue(String value) {
+  final dataColor = kListColorDefault
+      .firstWhere((element) => element[keyListColorValue] as String == value);
+  return dataColor[keyListColorColor] as Color;
+}
+
+Map<String, dynamic> getHabitTypeFromId(int id) {
+  final mapHabitType =
+      kHabitType.firstWhere((element) => element[kKeyHabitTypeId] as int == id);
+  return mapHabitType;
 }
 
 // Function debounce(Function() func, int milliseconds) {

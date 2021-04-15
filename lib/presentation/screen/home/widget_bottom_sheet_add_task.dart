@@ -143,18 +143,18 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
         _buildPriority(),
         CircleInkWell(
           Icons.alarm,
-          sizeIcon: 24.0,
+          size: 24.0,
           onPressed: () {},
         ),
         const CircleInkWell(
           Icons.mode_comment_outlined,
-          sizeIcon: 24.0,
+          size: 24.0,
         ),
         const Spacer(),
         CircleInkWell(
           Icons.send_outlined,
-          sizeIcon: 24.0,
-          colorIcon: isSendButtonEnable() ? Colors.red : kColorBlack2,
+          size: 24.0,
+          color: isSendButtonEnable() ? Colors.red : kColorBlack2,
           onPressed: isSendButtonEnable()
               ? () {
                   _taskAddBloc.add(SubmitAddTask());
@@ -311,8 +311,8 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
       childBuilder: (context, openPopup) => CircleInkWell(
         Icons.local_offer_outlined,
         onPressed: openPopup,
-        sizeIcon: 24.0,
-        colorIcon: addState.taskAdd.labels?.isEmpty ?? true
+        size: 24.0,
+        color: addState.taskAdd.labels?.isEmpty ?? true
             ? kColorBlack2
             : Colors.red,
       ),
@@ -337,8 +337,8 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
       ],
       childBuilder: (context, openPopup) => CircleInkWell(
         dropdownChoicesPriority[addState.taskAdd.priority - 1].iconData,
-        colorIcon: dropdownChoicesPriority[addState.taskAdd.priority - 1].color,
-        sizeIcon: 24.0,
+        color: dropdownChoicesPriority[addState.taskAdd.priority - 1].color,
+        size: 24.0,
         onPressed: openPopup,
       ),
     );

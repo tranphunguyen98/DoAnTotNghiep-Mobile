@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:totodo/utils/my_const/hive_const.dart';
 
 part 'check_item.g.dart';
 
-@HiveType(typeId: 8)
+@HiveType(typeId: kHiveTypeCheckItem)
 class CheckItem extends Equatable {
   @HiveField(0)
   final String id;

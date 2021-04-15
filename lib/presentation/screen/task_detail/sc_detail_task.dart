@@ -152,8 +152,8 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
       children: [
         CircleInkWell(
           Icons.add,
-          sizeIcon: 24.0,
-          colorIcon: kColorPrimary,
+          size: 24.0,
+          color: kColorPrimary,
           onPressed: () {
             if (_checkListNameController.text.isNotEmpty) {
               final checkList = <CheckItem>[];
@@ -319,10 +319,10 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
       children: [
         CircleInkWell(
           Icons.local_offer_outlined,
-          colorIcon: state.taskEdit.labels?.isEmpty ?? true
+          color: state.taskEdit.labels?.isEmpty ?? true
               ? kColorBlack2
               : Colors.red,
-          sizeIcon: 24.0,
+          size: 24.0,
           onPressed: () async {
             final result = await Navigator.of(context).pushNamed(
                 AppRouter.kSelectLabel,
@@ -342,9 +342,8 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
           elevation: 6,
           icon: CircleInkWell(
             dropdownChoicesPriority[state.taskEdit.priority - 1].iconData,
-            colorIcon:
-                dropdownChoicesPriority[state.taskEdit.priority - 1].color,
-            sizeIcon: 24.0,
+            color: dropdownChoicesPriority[state.taskEdit.priority - 1].color,
+            size: 24.0,
           ),
           itemBuilder: (BuildContext context) {
             return dropdownChoicesPriority.map((DropdownChoice choice) {
@@ -357,14 +356,14 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
         ),
         const CircleInkWell(
           Icons.alarm,
-          sizeIcon: 24.0,
+          size: 24.0,
         ),
         const CircleInkWell(
           Icons.mode_comment_outlined,
-          sizeIcon: 24.0,
+          size: 24.0,
         ),
         const Spacer(),
-        const CircleInkWell(Icons.more_vert, sizeIcon: 24.0),
+        const CircleInkWell(Icons.more_vert, size: 24.0),
       ],
     );
   }

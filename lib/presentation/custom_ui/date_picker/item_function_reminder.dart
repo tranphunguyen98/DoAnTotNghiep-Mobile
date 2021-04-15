@@ -44,8 +44,8 @@ class ItemFunctionReminder extends StatelessWidget {
             if (isActive)
               CircleInkWell(
                 Icons.close,
-                sizeIcon: 20,
-                colorIcon: kColorGray1,
+                size: 20,
+                color: kColorGray1,
                 onPressed: onRemoveTime,
               )
           ],

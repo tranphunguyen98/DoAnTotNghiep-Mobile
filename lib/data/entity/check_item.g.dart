@@ -8,7 +8,7 @@ part of 'check_item.dart';
 
 class CheckItemAdapter extends TypeAdapter<CheckItem> {
   @override
-  final int typeId = 8;
+  final int typeId = 4;
 
   @override
   CheckItem read(BinaryReader reader) {

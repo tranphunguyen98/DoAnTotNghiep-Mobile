@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:totodo/bloc/create_habit/bloc.dart';
+import 'package:totodo/bloc/create_habit/create_habit_bloc.dart';
 import 'package:totodo/presentation/common_widgets/widget_text_field_non_border.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
@@ -8,9 +11,10 @@ class DialogGoal extends StatefulWidget {
 }
 
 class _DialogGoalState extends State<DialogGoal> {
+  CreateHabitBloc _createHabitBloc;
+  CreateHabitState _state;
+
   double heightContainer;
-  int _radioValue = 0;
-  String _dropDownValueUnit = kListUnitDailyGoal.first;
   String _dropDownValueMethod = kListCheckingType.first;
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _amountOneTimeCheckController =
@@ -18,8 +22,11 @@ class _DialogGoalState extends State<DialogGoal> {
 
   @override
   void initState() {
-    _amountController.text = '1';
-    _amountOneTimeCheckController.text = '1';
+    _createHabitBloc = BlocProvider.of<CreateHabitBloc>(context);
+    _amountController.text =
+        _createHabitBloc.state.habit.totalDayAmount.toString();
+    _amountOneTimeCheckController.text =
+        _createHabitBloc.state.habit.missionDayCheckInStep.toString();
     super.initState();
   }
 
@@ -31,76 +38,73 @@ class _DialogGoalState extends State<DialogGoal> {
 
   @override
   Widget build(BuildContext context) {
-    if (_radioValue == 0) {
-      heightContainer = 222.0;
-    } else {
-      if (_dropDownValueMethod == kListCheckingType[0]) {
-        heightContainer = 366.0;
-      } else {
-        heightContainer = 334.0;
-      }
-    }
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      child: SingleChildScrollView(
-        child: Container(
-          height: heightContainer,
-          padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-                child: Text(
-                  'Mục tiêu',
-                  style: kFontMediumBlack_16,
-                ),
-              ),
-              Row(
+    return BlocBuilder<CreateHabitBloc, CreateHabitState>(
+      cubit: _createHabitBloc,
+      builder: (context, state) {
+        _state = state;
+        if (_state.habit.typeHabitGoal == EHabitGoal.archiveItAll.index) {
+          heightContainer = 222.0;
+        } else {
+          if (_dropDownValueMethod == kListCheckingType[0]) {
+            heightContainer = 366.0;
+          } else {
+            heightContainer = 334.0;
+          }
+        }
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          child: SingleChildScrollView(
+            child: Container(
+              height: heightContainer,
+              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Radio(
-                    value: 0,
-                    groupValue: _radioValue,
-                    onChanged: (int value) {
-                      _onRadioChanged(value);
-                    },
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+                    child: Text(
+                      'Mục tiêu',
+                      style: kFontMediumBlack_16,
+                    ),
                   ),
-                  SizedBox(width: 8.0),
-                  Text(
-                    'Hoàn thành trong 1 lần',
-                    style: kFontRegularBlack2_14,
+                  Row(
+                    children: [
+                      Radio(
+                          value: 0,
+                          groupValue: _state.habit.typeHabitGoal,
+                          onChanged: _onRadioChanged),
+                      SizedBox(width: 8.0),
+                      Text(
+                        'Hoàn thành trong 1 lần',
+                        style: kFontRegularBlack2_14,
+                      ),
+                    ],
                   ),
+                  Row(
+                    children: [
+                      Radio(
+                          value: 1,
+                          groupValue: _state.habit.typeHabitGoal,
+                          onChanged: _onRadioChanged),
+                      SizedBox(width: 8.0),
+                      Text(
+                        'Hoàn thành theo số lượng nhất định',
+                        style: kFontRegularBlack2_14,
+                      ),
+                    ],
+                  ),
+                  if (_state.habit.typeHabitGoal ==
+                      EHabitGoal.reachACertainAmount.index)
+                    _buildSelectGoalCertainAmount(),
+                  _buildButton(),
                 ],
               ),
-              Row(
-                children: [
-                  Radio(
-                    value: 1,
-                    groupValue: _radioValue,
-                    onChanged: (int value) {
-                      _onRadioChanged(value);
-                    },
-                  ),
-                  SizedBox(width: 8.0),
-                  Text(
-                    'Hoàn thành theo số lượng nhất định',
-                    style: kFontRegularBlack2_14,
-                  ),
-                ],
-              ),
-              if (_radioValue == 1) _buildSelectGoalCertainAmount(),
-              _buildButton(),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
-  }
-
-  void _onRadioChanged(int value) {
-    setState(() {
-      _radioValue = value;
-    });
   }
 
   Widget _buildSelectGoalCertainAmount() {
@@ -147,10 +151,12 @@ class _DialogGoalState extends State<DialogGoal> {
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(4.0)),
             child: TextFieldNonBorder(
+              keyboardType: TextInputType.number,
               controller: _amountController,
               textStyle: kFontRegularBlack2_14,
               hint: '',
               autoFocus: false,
+              onChanged: _onHabitTotalAmountChanged,
             ),
           ),
         ),
@@ -161,24 +167,20 @@ class _DialogGoalState extends State<DialogGoal> {
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(4.0)),
           padding: EdgeInsets.only(left: 8.0),
-          child: DropdownButton<String>(
-            value: _dropDownValueUnit,
+          child: DropdownButton<int>(
+            value: _state.habit.missionDayUnit,
             isExpanded: true,
             underline: Container(),
-            items: kListUnitDailyGoal.map((value) {
-              return DropdownMenuItem<String>(
+            items: kHabitMissionDayUnit.keys.map((value) {
+              return DropdownMenuItem<int>(
                 value: value,
                 child: Text(
-                  value,
+                  kHabitMissionDayUnit[value],
                   style: kFontRegularBlack2_12,
                 ),
               );
             }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                _dropDownValueUnit = newValue;
-              });
-            },
+            onChanged: _onHabitMissionDayUnitChanged,
           ),
         ),
       ],
@@ -243,9 +245,11 @@ class _DialogGoalState extends State<DialogGoal> {
               borderRadius: BorderRadius.circular(4.0)),
           child: TextFieldNonBorder(
             controller: _amountOneTimeCheckController,
+            keyboardType: TextInputType.number,
             textStyle: kFontRegularBlack2_14,
             hint: '',
             autoFocus: false,
+            onChanged: _onMissionDayCheckInStepChanged,
           ),
         ),
       ],
@@ -259,7 +263,7 @@ class _DialogGoalState extends State<DialogGoal> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           TextButton(
-            onPressed: () {},
+            onPressed: _onOk,
             child: Text(
               'CANCEL',
               style: kFontMediumDefault_14,
@@ -269,7 +273,7 @@ class _DialogGoalState extends State<DialogGoal> {
             width: 8.0,
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: _onOk,
             child: Text(
               'OK',
               style: kFontMediumDefault_14,
@@ -278,5 +282,27 @@ class _DialogGoalState extends State<DialogGoal> {
         ],
       ),
     );
+  }
+
+  void _onOk() {
+    Navigator.of(context).pop();
+  }
+
+  void _onHabitMissionDayUnitChanged(int unit) {
+    _createHabitBloc.add(CreatingHabitDataChanged(missionDayUnit: unit));
+  }
+
+  void _onRadioChanged(int value) {
+    _createHabitBloc.add(CreatingHabitDataChanged(typeHabitGoal: value));
+  }
+
+  void _onHabitTotalAmountChanged(String value) {
+    _createHabitBloc
+        .add(CreatingHabitDataChanged(totalDayAmount: int.parse(value)));
+  }
+
+  void _onMissionDayCheckInStepChanged(String value) {
+    _createHabitBloc
+        .add(CreatingHabitDataChanged(missionDayCheckInStep: int.parse(value)));
   }
 }

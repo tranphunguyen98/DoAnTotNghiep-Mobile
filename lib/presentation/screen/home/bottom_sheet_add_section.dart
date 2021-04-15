@@ -65,8 +65,8 @@ class BottomSheetAddSection extends StatelessWidget {
         ),
         CircleInkWell(
           Icons.send,
-          sizeIcon: 24,
-          colorIcon: state.isValidNameSection ? Colors.red : kColorGray1,
+          size: 24,
+          color: state.isValidNameSection ? Colors.red : kColorGray1,
           onPressed: state.isValidNameSection
               ? () {
                   _addSectionBloc.add(AddSectionSubmit());

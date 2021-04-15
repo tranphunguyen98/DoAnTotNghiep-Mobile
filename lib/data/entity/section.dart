@@ -3,10 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/utils/date_helper.dart';
+import 'package:totodo/utils/my_const/hive_const.dart';
 
 part 'section.g.dart';
 
-@HiveType(typeId: 7)
+@HiveType(typeId: kHiveTypeSection)
 class Section extends Equatable {
   @HiveField(0)
   final String id;

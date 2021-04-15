@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
-import 'package:totodo/utils/util.dart';
 
 class GroupRadioButton<T> extends StatefulWidget {
   final List<RadioModel<T>> data;
@@ -47,7 +46,7 @@ class GroupRadioButtonState<T> extends State<GroupRadioButton<T>> {
         scrollDirection: Axis.horizontal,
         itemCount: _data.length,
         itemBuilder: (BuildContext context, int index) {
-          log("${_data[index].data} : $itemSelected ");
+          // log("${_data[index].data} : $itemSelected ");
           return GestureDetector(
             onTap: () {
               setState(() {

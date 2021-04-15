@@ -21,5 +21,5 @@ abstract class ITaskRepository {
   Future<void> updateSection(Section section);
   Future<List<Section>> getSections();
 
-  Future<void> clearData();
+  Future<void> clearDataOffline();
 }

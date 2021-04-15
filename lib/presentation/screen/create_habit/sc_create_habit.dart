@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:totodo/presentation/screen/create_habit/body_creating_advance_info_habit.dart';
-import 'package:totodo/presentation/screen/create_habit/body_creating_basic_info_habit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:totodo/bloc/create_habit/bloc.dart';
+import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/presentation/screen/create_habit/body_creating_habit_step_1.dart';
+import 'package:totodo/presentation/screen/create_habit/body_creating_habit_step_2.dart';
+import 'package:totodo/presentation/screen/create_habit/creating_habit_step.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
+import 'package:totodo/utils/util.dart';
 
 class CreateHabitScreen extends StatefulWidget {
+  final Habit _habit;
+
+  const CreateHabitScreen([this._habit]);
+
   @override
   _CreateHabitScreenState createState() => _CreateHabitScreenState();
 }
 
 class _CreateHabitScreenState extends State<CreateHabitScreen> {
-  final int kIndexInfoBasic = 0;
-  final int kIndexInfoAdvance = 1;
-
-  int index;
-
+  CreateHabitBloc _createHabitBloc;
   @override
   void initState() {
-    index = kIndexInfoBasic;
+    _createHabitBloc = BlocProvider.of<CreateHabitBloc>(context)
+      ..add(OpenScreenCreateHabit(widget._habit));
     super.initState();
   }
 
@@ -33,40 +40,53 @@ class _CreateHabitScreenState extends State<CreateHabitScreen> {
           style: kFontMediumBlack_18,
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: index == kIndexInfoBasic
-                ? BodyCreatingBasicInfoHabit()
-                : BodyCreatingAdvanceInfoHabit(),
+      body: Consumer<CreatingHabitStep>(builder: (context, value, child) {
+        return Column(
+          children: [
+            Expanded(
+                child: value.index == CreatingHabitStep.kStep1
+                    ? BodyCreatingHabitStep1(widget._habit)
+                    : BodyCreatingHabitStep2()),
+            _buildBottomContainer(value)
+          ],
+        );
+      }),
+    );
+  }
+
+  Widget _buildBottomContainer(CreatingHabitStep _step) {
+    return BlocListener<CreateHabitBloc, CreateHabitState>(
+      cubit: _createHabitBloc,
+      listenWhen: (previous, current) => previous.success != current.success,
+      listener: (context, state) {
+        if (state.success) {
+          log('SUCCESS');
+          Navigator.of(context).pop<String>('true');
+        }
+      },
+      child: Container(
+        height: 60,
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        color: kColorWhite,
+        child: ElevatedButton(
+          onPressed: () {
+            _onClickButton(_step);
+          },
+          child: Text(
+            _step.index == CreatingHabitStep.kStep1 ? 'Tiếp tục' : 'Lưu',
+            style: kFontMediumWhite_12,
           ),
-          Container(
-            height: 60,
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            color: kColorWhite,
-            child: ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  if (index == kIndexInfoBasic) {
-                    index = kIndexInfoAdvance;
-                  }
-                });
-              },
-              child: Text(
-                index == kIndexInfoBasic ? 'Tiếp tục' : 'Lưu',
-                style: kFontMediumWhite_12,
-              ),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(IntProperty('kIndexInfoBasic', kIndexInfoBasic));
+  void _onClickButton(CreatingHabitStep _step) {
+    if (_step.index == CreatingHabitStep.kStep1) {
+      _step.index = CreatingHabitStep.kStep2;
+    } else {
+      _createHabitBloc.add(SubmitCreatingHabit());
+    }
   }
 }

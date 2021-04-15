@@ -57,7 +57,7 @@ class ItemCheckList extends StatelessWidget {
           ),
           CircleInkWell(
             Icons.delete,
-            sizeIcon: 20.0,
+            size: 20.0,
             onPressed: onDeleteCheckItem,
           )
         ],
