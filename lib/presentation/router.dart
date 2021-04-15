@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-import 'package:totodo/bloc/create_habit/bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/bloc/select_label/bloc.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/screen/create_habit/creating_habit_step.dart';
 import 'package:totodo/presentation/screen/create_habit/sc_create_habit.dart';
 import 'package:totodo/presentation/screen/detail_habit/sc_habit_detail.dart';
 import 'package:totodo/presentation/screen/profile/sc_profile.dart';
@@ -128,13 +124,6 @@ class AppRouter {
       createHabitScreen = const CreateHabitScreen();
     }
 
-    return MaterialPageRoute(
-      builder: (_) => BlocProvider(
-        create: (context) =>
-            CreateHabitBloc(habitRepository: getIt<IHabitRepository>()),
-        child: ChangeNotifierProvider<CreatingHabitStep>(
-            create: (context) => CreatingHabitStep(), child: createHabitScreen),
-      ),
-    );
+    return MaterialPageRoute(builder: (_) => createHabitScreen);
   }
 }

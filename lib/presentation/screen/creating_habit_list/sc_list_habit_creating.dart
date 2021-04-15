@@ -72,7 +72,7 @@ class ListHabitCreatingScreen extends StatelessWidget {
                 onPressed: () async {
                   final success = await Navigator.of(context)
                       .pushNamed(AppRouter.kCreateHabit);
-                  log('success', success);
+                  log('success' * 100, success);
                   if (success is bool && success) {
                     Navigator.of(context).pop();
                   }

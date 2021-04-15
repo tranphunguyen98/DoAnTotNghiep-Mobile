@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/add_task/add_task_bloc.dart';
 import 'package:totodo/bloc/add_task/add_task_event.dart';
+import 'package:totodo/bloc/habit/bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/di/injection.dart';
@@ -35,15 +36,16 @@ class _FloatingActionButtonHomeState extends State<FloatingActionButtonHome> {
         return FloatingActionButton(
           onPressed: state.loading
               ? null
-              : () {
+              : () async {
                   if (state.indexNavigationBarSelected ==
                       HomeState.kBottomNavigationTask) {
                     _showBottomSheetAddTask(context);
                   }
                   if (state.indexNavigationBarSelected ==
                       HomeState.kBottomNavigationHabit) {
-                    Navigator.of(context)
+                    final result = await Navigator.of(context)
                         .pushNamed(AppRouter.kCreatingHabitList);
+                    getIt.get<HabitBloc>().add(OpenScreenHabit());
                   }
                 },
           backgroundColor: kColorPrimary,

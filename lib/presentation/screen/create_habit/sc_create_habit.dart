@@ -3,7 +3,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:totodo/bloc/create_habit/bloc.dart';
+import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/create_habit/body_creating_habit_step_1.dart';
 import 'package:totodo/presentation/screen/create_habit/body_creating_habit_step_2.dart';
 import 'package:totodo/presentation/screen/create_habit/creating_habit_step.dart';
@@ -24,33 +26,40 @@ class _CreateHabitScreenState extends State<CreateHabitScreen> {
   CreateHabitBloc _createHabitBloc;
   @override
   void initState() {
-    _createHabitBloc = BlocProvider.of<CreateHabitBloc>(context)
-      ..add(OpenScreenCreateHabit(widget._habit));
+    _createHabitBloc =
+        CreateHabitBloc(habitRepository: getIt<IHabitRepository>())
+          ..add(OpenScreenCreateHabit(widget._habit));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kColorWhite,
-        elevation: 0.0,
-        title: Text(
-          'Tạo thói quen',
-          style: kFontMediumBlack_18,
+    return BlocProvider<CreateHabitBloc>(
+      create: (context) => _createHabitBloc,
+      child: ChangeNotifierProvider<CreatingHabitStep>(
+        create: (context) => CreatingHabitStep(),
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: kColorWhite,
+            elevation: 0.0,
+            title: Text(
+              'Tạo thói quen',
+              style: kFontMediumBlack_18,
+            ),
+          ),
+          body: Consumer<CreatingHabitStep>(builder: (context, value, child) {
+            return Column(
+              children: [
+                Expanded(
+                    child: value.index == CreatingHabitStep.kStep1
+                        ? BodyCreatingHabitStep1(widget._habit)
+                        : BodyCreatingHabitStep2()),
+                _buildBottomContainer(value)
+              ],
+            );
+          }),
         ),
       ),
-      body: Consumer<CreatingHabitStep>(builder: (context, value, child) {
-        return Column(
-          children: [
-            Expanded(
-                child: value.index == CreatingHabitStep.kStep1
-                    ? BodyCreatingHabitStep1(widget._habit)
-                    : BodyCreatingHabitStep2()),
-            _buildBottomContainer(value)
-          ],
-        );
-      }),
     );
   }
 
@@ -61,7 +70,7 @@ class _CreateHabitScreenState extends State<CreateHabitScreen> {
       listener: (context, state) {
         if (state.success) {
           log('SUCCESS');
-          Navigator.of(context).pop<String>('true');
+          Navigator.pop(context, 'succcccccccccccccccccccccccccc');
         }
       },
       child: Container(

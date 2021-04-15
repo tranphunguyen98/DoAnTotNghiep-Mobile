@@ -36,14 +36,15 @@ class ItemHabit extends StatelessWidget {
                 title,
                 style: kFontMediumBlack_14,
               ),
-              Row(
-                children: [
-                  Text(
-                    unit,
-                    style: kFontRegularGray1_12,
-                  ),
-                ],
-              )
+              if (unit != null)
+                Row(
+                  children: [
+                    Text(
+                      unit,
+                      style: kFontRegularGray1_12,
+                    ),
+                  ],
+                )
             ],
           ),
           Spacer(),

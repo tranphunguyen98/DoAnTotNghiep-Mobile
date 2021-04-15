@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:totodo/data/entity/habit/habit.dart';
 import 'package:totodo/presentation/router.dart';
 import 'package:totodo/presentation/screen/habit/item_habit.dart';
-import 'package:totodo/utils/my_const/asset_const.dart';
+import 'package:totodo/utils/my_const/map_const.dart';
 
 class ListHabit extends StatelessWidget {
+  final List<Habit> listHabit;
+
+  ListHabit(this.listHabit);
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -12,10 +17,12 @@ class ListHabit extends StatelessWidget {
           Navigator.of(context).pushNamed(AppRouter.kDetailHabit);
         },
         child: ItemHabit(
-          image: kIconMeditation,
-          title: 'Thiền',
-          unit: '5/10',
-          totalDay: 10,
+          image: listHabit[index].icon.iconImage,
+          title: listHabit[index].name,
+          unit: listHabit[index].typeHabitGoal == EHabitGoal.archiveItAll.index
+              ? null
+              : '0/${listHabit[index].totalDayAmount}',
+          totalDay: 0,
         ),
       ),
       separatorBuilder: (context, index) => Padding(
@@ -24,7 +31,7 @@ class ListHabit extends StatelessWidget {
           height: 1.0,
         ),
       ),
-      itemCount: 10,
+      itemCount: listHabit.length,
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:totodo/bloc/habit/bloc.dart';
 import 'package:totodo/bloc/home/home_bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
@@ -82,4 +83,7 @@ Future<void> configureDependencies() async {
 
   getIt.registerLazySingleton<HomeBloc>(
       () => HomeBloc(taskRepository: getIt.get<ITaskRepository>()));
+
+  getIt.registerLazySingleton<HabitBloc>(
+      () => HabitBloc(habitRepository: getIt.get<IHabitRepository>()));
 }

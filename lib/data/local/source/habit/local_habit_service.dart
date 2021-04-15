@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/utils/util.dart';
 
 @Injectable()
 class LocalHabitService {
@@ -18,18 +19,20 @@ class LocalHabitService {
           habit.copyWith(id: DateTime.now().microsecondsSinceEpoch.toString()));
       return true;
     }
+    // log('habitcreate', habit);
     _habitBoxHabit.add(habit);
     return true;
   }
 
   Future<List<Habit>> getAllHabit() async {
+    // _habitBoxHabit.clear();
     final listHabit = <Habit>[];
 
     for (var i = 0; i < _habitBoxHabit.length; i++) {
       listHabit.add(_habitBoxHabit.getAt(i) as Habit);
     }
 
-    print("LIST HABIT: ${listHabit}");
+    log("LIST HABIT: ${listHabit}");
     return listHabit ?? <Habit>[];
   }
 

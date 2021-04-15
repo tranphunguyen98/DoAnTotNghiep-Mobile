@@ -21,19 +21,16 @@ class HabitRepositoryImpl implements IHabitRepository {
 
   @override
   Future<List<Habit>> getAllHabit(String authorization) {
-    // TODO: implement getAllHabit
-    throw UnimplementedError();
+    return _localHabitDataSource.getAllHabit(authorization);
   }
 
   @override
   Future<Habit> getDetailHabit(String authorization, String id) {
-    // TODO: implement getDetailHabit
-    throw UnimplementedError();
+    return _localHabitDataSource.getDetailHabit(authorization, id);
   }
 
   @override
   Future<bool> updateHabit(String authorization, Habit habit) {
-    // TODO: implement updateHabit
-    throw UnimplementedError();
+    return _localHabitDataSource.updateHabit(authorization, habit);
   }
 }
