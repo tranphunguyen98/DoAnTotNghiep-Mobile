@@ -1,110 +1,79 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
-import 'package:totodo/data/entity/task.dart';
-import 'package:totodo/presentation/screen/profile/data_ui/item_data_static_day.dart';
-import 'package:totodo/presentation/screen/profile/data_ui/item_data_statistic_project.dart';
+import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
+import 'package:totodo/data/entity/habit/diary_item.dart';
+import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/data/entity/habit/habit_progress_item.dart';
 import 'package:totodo/utils/date_helper.dart';
-import 'package:totodo/utils/util.dart';
+import 'package:totodo/utils/my_const/map_const.dart';
 
 import 'bloc.dart';
 
 class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
-  final ITaskRepository _taskRepository;
-  final IUserRepository _userRepository;
+  final IHabitRepository _habitRepository;
 
-  DetailHabitBloc(
-      {@required ITaskRepository taskRepository,
-      @required IUserRepository userRepository})
-      : assert(taskRepository != null && userRepository != null),
-        _taskRepository = taskRepository,
-        _userRepository = userRepository,
+  DetailHabitBloc({
+    @required IHabitRepository habitRepository,
+  })  : assert(habitRepository != null),
+        _habitRepository = habitRepository,
         super(DetailHabitState.loading());
 
   @override
   Stream<DetailHabitState> mapEventToState(DetailHabitEvent event) async* {
-    if (event is InitDataStatistic) {
-      yield* _mapOpenProfileScreenToState();
+    if (event is InitDataDetailHabit) {
+      yield* _mapInitDataDetailHabitToState(event.habit);
+    } else if (event is CheckInHabit) {
+      yield* _mapCheckInHabitToState();
+    }
+    if (event is AddDiary) {
+      yield* _mapAddDiaryToState(event.item);
     }
   }
 
-  Stream<DetailHabitState> _mapOpenProfileScreenToState() async* {
-    try {
-      final isSignedIn = await _userRepository.isSignedIn();
-
-      if (isSignedIn) {
-        final user = await _userRepository.getUser();
-        yield state.copyWith(
-          loading: false,
-          user: user,
-          listDataStaticProject: _listDataStatisticProjectMockUp,
-          dataStatisticToday:
-              await _getStatisticDayOfWeek(DateTime.now().toIso8601String()),
-          listDataStatisticLast7Days: await _getStatisticWeek(),
-        );
-      }
-    } catch (error, stackTrace) {
-      log('Profile Error', stackTrace);
-    }
+  Stream<DetailHabitState> _mapInitDataDetailHabitToState(Habit habit) async* {
+    yield state.copyWith(habit: habit);
   }
 
-  Future<ItemDataStatisticDay> _getStatisticDayOfWeek(String dateTimeStr,
-      {List<Task> allTask}) async {
-    //TODO handle NoDate
-    List<Task> _listAllTask = [];
-    if (allTask == null) {
-      _listAllTask = await _taskRepository.getAllTask();
+  Stream<DetailHabitState> _mapAddDiaryToState(DiaryItem item) async* {
+    List<HabitProgressItem> habitProgress = [];
+    habitProgress.addAll(state.habit.habitProgress);
+    habitProgress.add(HabitProgressItem(
+      diaries: [item],
+      day: DateTime.now().toIso8601String(),
+    ));
+
+    final habit = state.habit.copyWith(habitProgress: habitProgress);
+    await _habitRepository.updateHabit('authorization', habit);
+    yield state.copyWith(habit: habit);
+  }
+
+  Stream<DetailHabitState> _mapCheckInHabitToState() async* {
+    var habit = state.habit;
+    if (habit.typeHabitGoal == EHabitGoal.archiveItAll.index) {
+      habit = habit.copyWith(isFinished: true);
     } else {
-      _listAllTask.addAll(allTask);
+      List<HabitProgressItem> habitProgress = [];
+      habitProgress.addAll(habit.habitProgress);
+      int index = -1;
+      for (int i = 0; i < habitProgress.length; i++) {
+        if (DateHelper.isSameDayString(
+            habitProgress[i].day, DateTime.now().toIso8601String())) {
+          index = 0;
+          break;
+        }
+      }
+
+      if (index >= 0) {
+      } else {
+        habitProgress.add(HabitProgressItem(
+          day: DateTime.now().toIso8601String(),
+          currentCheckInAmounts: habit.missionDayCheckInStep,
+        ));
+      }
+
+      habit.copyWith(habitProgress: habitProgress);
     }
-
-    final listTaskToday = _listAllTask.where((task) =>
-        !(task.taskDate?.isEmpty ?? true) &&
-        DateHelper.isSameDayString(task.taskDate, dateTimeStr));
-    final int completedTask =
-        listTaskToday.where((element) => element.isCompleted).length;
-
-    return ItemDataStatisticDay(
-        completedTask: completedTask,
-        allTask: listTaskToday.length,
-        title: DateFormat('EEE').format(DateTime.parse(dateTimeStr)));
+    await _habitRepository.updateHabit('authorization', habit);
+    yield state.copyWith(habit: habit);
   }
-
-  Future<List<ItemDataStatisticDay>> _getStatisticWeek() async {
-    final listDataStatisticWeek = <ItemDataStatisticDay>[];
-    final allTask = await _taskRepository.getAllTask();
-    for (final day in [6, 5, 4, 3, 2, 1, 0]) {
-      final item = await _getStatisticDayOfWeek(
-          DateTime.now().subtract(Duration(days: day)).toIso8601String(),
-          allTask: allTask);
-      listDataStatisticWeek.add(item);
-    }
-
-    return listDataStatisticWeek;
-  }
-
-  final List<ItemDataStatisticProject> _listDataStatisticProjectMockUp = const [
-    ItemDataStatisticProject(
-        nameProject: 'Website Marketing',
-        totalTask: 10,
-        completedTask: 9,
-        projectColor: Colors.purpleAccent),
-    ItemDataStatisticProject(
-        nameProject: 'Mobile',
-        totalTask: 10,
-        completedTask: 5,
-        projectColor: Colors.redAccent),
-    ItemDataStatisticProject(
-        nameProject: 'Personal Marketing',
-        totalTask: 10,
-        completedTask: 5,
-        projectColor: Colors.green),
-    ItemDataStatisticProject(
-        nameProject: 'Learn English',
-        totalTask: 10,
-        completedTask: 7,
-        projectColor: Colors.orange),
-  ];
 }

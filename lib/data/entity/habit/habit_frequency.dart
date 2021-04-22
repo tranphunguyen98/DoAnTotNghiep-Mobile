@@ -38,7 +38,7 @@ class HabitFrequency extends Equatable {
       return this;
     }
 
-    return new HabitFrequency(
+    return HabitFrequency(
       typeFrequency: typeFrequency ?? this.typeFrequency,
       dailyDays: dailyDays ?? this.dailyDays,
       weeklyDays: weeklyDays ?? this.weeklyDays,

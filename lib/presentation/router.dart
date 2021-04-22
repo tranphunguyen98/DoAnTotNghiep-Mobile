@@ -67,7 +67,11 @@ class AppRouter {
       case kCreatingHabitList:
         return MaterialPageRoute(builder: (_) => ListHabitCreatingScreen());
       case kDetailHabit:
-        return MaterialPageRoute(builder: (_) => HabitDetailScreen());
+        if (settings.arguments is Habit) {
+          return MaterialPageRoute(
+              builder: (_) => HabitDetailScreen(settings.arguments as Habit));
+        }
+        break;
       case kCreateHabit:
         return _buildCreateHabitScreen(settings);
 

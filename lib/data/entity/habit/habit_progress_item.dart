@@ -9,7 +9,7 @@ part 'habit_progress_item.g.dart';
 @HiveType(typeId: kHiveTypeProgressItem)
 class HabitProgressItem extends Equatable {
   @HiveField(0)
-  final List<DiaryItem> diaries;
+  final List<DiaryItem> diaries; // TODO
   @HiveField(1)
   final int currentCheckInAmounts;
   @HiveField(2)
@@ -18,9 +18,9 @@ class HabitProgressItem extends Equatable {
   final String day;
 
   const HabitProgressItem({
-    @required this.diaries,
-    @required this.currentCheckInAmounts,
-    @required this.isDone,
+    this.diaries,
+    this.currentCheckInAmounts = 0,
+    this.isDone = false,
     @required this.day,
   });
 

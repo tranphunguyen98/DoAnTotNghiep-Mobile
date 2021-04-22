@@ -5,6 +5,8 @@ import 'package:totodo/data/entity/habit/habit_image.dart';
 import 'package:totodo/data/entity/habit/habit_motivation.dart';
 import 'package:totodo/data/entity/habit/habit_progress_item.dart';
 import 'package:totodo/data/entity/habit/habit_remind.dart';
+import 'package:totodo/utils/cron_helper.dart';
+import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
@@ -46,34 +48,48 @@ class Habit extends Equatable {
   final int typeHabitMissionDayCheckIn;
   @HiveField(15)
   final int typeHabitGoal;
+  @HiveField(16)
+  final String createdDate;
+
+  String get cronDay {
+    if (frequency.typeFrequency == EHabitFrequency.daily.index) {
+      return CronHelper.instance.dailyDays(frequency.dailyDays,
+          referenceUtcDate: DateHelper.dateOnlyWithStringDate(createdDate));
+    } else if (frequency.typeFrequency == EHabitFrequency.weekly.index) {
+      return CronHelper.instance.daily(
+          referenceUtcDate: DateHelper.dateOnlyWithStringDate(createdDate));
+    }
+    return "";
+  }
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
-
-  Habit(
-      {this.id,
-      this.name,
-      this.icon,
-      this.images,
-      this.isSaveDiary = true,
-      this.motivation = const HabitMotivation(text: ''),
-      this.missionDayUnit = 0, // 0: Count
-      this.missionDayCheckInStep = 1,
-      this.totalDayAmount = 1,
-      this.typeHabitMissionDayCheckIn = 0, // 0: Auto
-      this.typeHabitGoal = 0, //0: completeAll
-      this.isFinished = false,
-      this.habitProgress,
-      this.type = 0,
-      List<HabitRemind> reminds,
-      HabitFrequency frequency})
-      : frequency = frequency ??
+  Habit({
+    this.id,
+    this.name,
+    this.icon,
+    this.images,
+    this.isSaveDiary = true,
+    this.motivation = const HabitMotivation(text: ''),
+    this.missionDayUnit = 0, // 0: Count
+    this.missionDayCheckInStep = 1,
+    this.totalDayAmount = 1,
+    this.typeHabitMissionDayCheckIn = 0, // 0: Auto
+    this.typeHabitGoal = 0, //0: completeAll
+    this.isFinished = false,
+    this.type = 0,
+    this.createdDate,
+    List<HabitRemind> reminds,
+    HabitFrequency frequency,
+    List<HabitProgressItem> habitProgress,
+  })  : frequency = frequency ??
             HabitFrequency(
               typeFrequency: EHabitFrequency.daily.index,
               dailyDays: kDailyDays.keys.toList(),
               intervalDays: 2,
               weeklyDays: 1,
             ),
-        reminds = reminds ?? <HabitRemind>[];
+        reminds = reminds ?? <HabitRemind>[],
+        habitProgress = habitProgress ?? <HabitProgressItem>[];
 
   Habit copyWith({
     String id,
@@ -92,6 +108,7 @@ class Habit extends Equatable {
     HabitFrequency frequency,
     int typeHabitMissionDayCheckIn,
     int typeHabitGoal,
+    String createdDate,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (name == null || identical(name, this.name)) &&
@@ -115,7 +132,8 @@ class Habit extends Equatable {
             identical(
                 typeHabitMissionDayCheckIn, this.typeHabitMissionDayCheckIn)) &&
         (typeHabitGoal == null ||
-            identical(typeHabitGoal, this.typeHabitGoal))) {
+            identical(typeHabitGoal, this.typeHabitGoal)) &&
+        (createdDate == null || identical(createdDate, this.createdDate))) {
       return this;
     }
 
@@ -138,12 +156,13 @@ class Habit extends Equatable {
       typeHabitMissionDayCheckIn:
           typeHabitMissionDayCheckIn ?? this.typeHabitMissionDayCheckIn,
       typeHabitGoal: typeHabitGoal ?? this.typeHabitGoal,
+      createdDate: createdDate ?? this.createdDate,
     );
   }
 
   @override
   String toString() {
-    return 'Habit{id: $id, name: $name, icon: $icon, images: $images, isSaveDiary: $isSaveDiary, reminds: $reminds, motivation: $motivation, missionDayUnit: $missionDayUnit, missionDayCheckInStep: $missionDayCheckInStep, totalDayAmount: $totalDayAmount, isFinished: $isFinished, habitProgress: $habitProgress, type: $type, frequency: $frequency, typeHabitMissionDayCheckIn: $typeHabitMissionDayCheckIn, typeHabitGoal: $typeHabitGoal}';
+    return 'Habit{id: $id, name: $name, icon: $icon, images: $images, isSaveDiary: $isSaveDiary, reminds: $reminds, motivation: $motivation, missionDayUnit: $missionDayUnit, missionDayCheckInStep: $missionDayCheckInStep, totalDayAmount: $totalDayAmount, isFinished: $isFinished, habitProgress: $habitProgress, type: $type, frequency: $frequency, typeHabitMissionDayCheckIn: $typeHabitMissionDayCheckIn, typeHabitGoal: $typeHabitGoal, createdDate: $createdDate}';
   }
 
   @override
@@ -166,7 +185,8 @@ class Habit extends Equatable {
           type == other.type &&
           frequency == other.frequency &&
           typeHabitMissionDayCheckIn == other.typeHabitMissionDayCheckIn &&
-          typeHabitGoal == other.typeHabitGoal);
+          typeHabitGoal == other.typeHabitGoal &&
+          createdDate == other.createdDate);
 
   @override
   int get hashCode =>
@@ -185,7 +205,8 @@ class Habit extends Equatable {
       type.hashCode ^
       frequency.hashCode ^
       typeHabitMissionDayCheckIn.hashCode ^
-      typeHabitGoal.hashCode;
+      typeHabitGoal.hashCode ^
+      createdDate.hashCode;
 
   factory Habit.fromMap(Map<String, dynamic> map) {
     return new Habit(
@@ -205,6 +226,7 @@ class Habit extends Equatable {
       frequency: map['frequency'] as HabitFrequency,
       typeHabitMissionDayCheckIn: map['typeHabitMissionDayCheckIn'] as int,
       typeHabitGoal: map['typeHabitGoal'] as int,
+      createdDate: map['createdDate'] as String,
     );
   }
 
@@ -227,6 +249,7 @@ class Habit extends Equatable {
       'frequency': this.frequency,
       'typeHabitMissionDayCheckIn': this.typeHabitMissionDayCheckIn,
       'typeHabitGoal': this.typeHabitGoal,
+      'createdDate': this.createdDate,
     } as Map<String, dynamic>;
   }
 
@@ -249,5 +272,6 @@ class Habit extends Equatable {
         type,
         frequency,
         typeHabitMissionDayCheckIn,
+        createdDate,
       ];
 }

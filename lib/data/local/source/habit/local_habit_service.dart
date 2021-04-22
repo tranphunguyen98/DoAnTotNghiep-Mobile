@@ -25,7 +25,6 @@ class LocalHabitService {
   }
 
   Future<List<Habit>> getAllHabit() async {
-    // _habitBoxHabit.clear();
     final listHabit = <Habit>[];
 
     for (var i = 0; i < _habitBoxHabit.length; i++) {

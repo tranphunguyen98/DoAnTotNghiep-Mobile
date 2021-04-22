@@ -16,6 +16,8 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
   Stream<HabitState> mapEventToState(HabitEvent event) async* {
     if (event is OpenScreenHabit) {
       yield* _mapOpenScreenHabitToState();
+    } else if (event is ChosenDayChanged) {
+      yield* _mapChosenDayChangedToState(event.chosenDay);
     }
   }
 
@@ -23,5 +25,9 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     //TODO add try catch
     final listHabit = await _habitRepository.getAllHabit('authorization');
     yield state.copyWith(listHabit: listHabit);
+  }
+
+  Stream<HabitState> _mapChosenDayChangedToState(String date) async* {
+    yield state.copyWith(chosenDay: date);
   }
 }

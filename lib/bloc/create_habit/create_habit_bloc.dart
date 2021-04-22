@@ -31,8 +31,8 @@ class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
 
   Stream<CreateHabitState> _mapSubmitCreatingHabitToState() async* {
     final Habit habit = state.habit.copyWith(
-      id: state.habit.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
-    );
+        id: state.habit.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
+        createdDate: DateTime.now().toIso8601String());
 
     await _habitRepository.addHabit('test', habit);
 

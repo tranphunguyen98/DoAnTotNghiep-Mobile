@@ -4,6 +4,10 @@ import 'package:totodo/utils/my_const/font_const.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
 class ItemDiary extends StatelessWidget {
+  final String text;
+
+  ItemDiary(this.text);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,7 +26,7 @@ class ItemDiary extends StatelessWidget {
                 width: 16.0,
               ),
               Text(
-                'Ngày 9 tháng 8',
+                'Ngày 15 tháng 04',
                 style: kFontRegularGray1_12,
               ),
               SizedBox(
@@ -42,7 +46,7 @@ class ItemDiary extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Cố lên nhé, một ngày toẹt vời ^^',
+                  text,
                   style: kFontRegularBlack2_14,
                 ),
                 SizedBox(

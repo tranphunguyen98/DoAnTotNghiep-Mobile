@@ -85,6 +85,11 @@ class DateHelper {
     return DateTime(date.year, date.month, date.day);
   }
 
+  static DateTime dateOnlyWithStringDate(String dateString) {
+    final DateTime date = DateTime.parse(dateString);
+    return DateTime(date.year, date.month, date.day);
+  }
+
   static DateTime getDefaultTimeReminder(DateTime date) {
     return DateTime(date.year, date.month, date.day, 9);
   }

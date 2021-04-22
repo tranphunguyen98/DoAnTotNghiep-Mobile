@@ -1,31 +1,48 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:totodo/bloc/detail_habit/bloc.dart';
 import 'package:totodo/presentation/screen/create_habit/container_info.dart';
 import 'package:totodo/presentation/screen/detail_habit/chart_detail_habit.dart';
 import 'package:totodo/presentation/screen/detail_habit/item_diary.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
 class DetailInfoHabitContainer extends StatelessWidget {
+  DetailHabitState _state;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: kColorWhite,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildRowInfo(),
-            _buildDivider(),
-            _buildCalendar(),
-            _buildDivider(),
-            _buildMonthlyCompletionRate(),
-            _buildDivider(),
-            _buildDailyGoals(),
-            _buildDivider(),
-            _buildDiary(),
-          ],
-        ),
-      ),
+    return BlocBuilder<DetailHabitBloc, DetailHabitState>(
+      builder: (context, state) {
+        if (state.habit != null) {
+          _state = state;
+          return Container(
+            color: kColorWhite,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildRowInfo(),
+                  _buildDivider(),
+                  _buildCalendar(),
+                  _buildDivider(),
+                  _buildMonthlyCompletionRate(),
+                  if (state.habit.typeHabitGoal ==
+                      EHabitGoal.reachACertainAmount.index)
+                    _buildDivider(),
+                  if (state.habit.typeHabitGoal ==
+                      EHabitGoal.reachACertainAmount.index)
+                    _buildDailyGoals(),
+                  _buildDivider(),
+                  _buildDiary(),
+                ],
+              ),
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
 
@@ -174,10 +191,20 @@ class DetailInfoHabitContainer extends StatelessWidget {
 
   Widget _buildDiary() {
     return ContainerInfo(
-      title: 'Nhật ký thói quen',
-      child: Column(
-        children: [1, 2, 3, 4, 5, 6].map((e) => ItemDiary()).toList(),
-      ),
-    );
+        title: 'Nhật ký thói quen',
+        child: _state.habit.habitProgress.length > 0
+            ? Column(
+                children: _state.habit.habitProgress
+                    .map((e) => e.diaries.first.text)
+                    .map((e) => ItemDiary(e))
+                    .toList()
+                // [1, 2, 3, 4, 5, 6].map((e) => ItemDiary()).toList(),
+                )
+            : Center(
+                child: Text(
+                  'Chưa có nhật ký',
+                  style: kFontRegularGray1_14,
+                ),
+              ));
   }
 }

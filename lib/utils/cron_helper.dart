@@ -1,6 +1,8 @@
 import 'package:awesome_notifications/src/enumerators/time_and_date.dart';
+import 'package:cronparse/cronparse.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:totodo/utils/my_const/map_const.dart';
 
 /// Cron helper to set notification repetitions
 /// Use the rule bellow to specify your on cron repetition rule or access
@@ -91,8 +93,32 @@ class CronHelper {
     return '${DateFormat('s m H ? * ').format(referenceUtcDate ?? _getNow().toUtc())}${'$MON-$FRI *'}';
   }
 
+  /// Generates a Cron expression to be played daily days of week from now
+  String dailyDays(List<int> dailyDays, {DateTime referenceUtcDate}) {
+    return '${DateFormat('s m H ? * ').format(referenceUtcDate ?? _getNow().toUtc())}${'${getCronDailyDaysFromListInt(dailyDays)} *'}';
+  }
+
   /// Generates a Cron expression to be played only on weekend days from now
   String weekendDay({DateTime referenceUtcDate}) {
     return '${DateFormat('s m H ? * ').format(referenceUtcDate ?? _getNow().toUtc())}${'$SAT,$SUN *'}';
+  }
+
+  String getCronDailyDaysFromListInt(List<int> dailyDays) {
+    String result = "";
+    for (int i = 0; i < dailyDays.length; i++) {
+      if (i < dailyDays.length - 1) {
+        result += "${kEnDailyDays[dailyDays[i]]},";
+      } else {
+        result += kEnDailyDays[dailyDays[i]];
+      }
+    }
+    return result;
+  }
+
+  bool checkTimeIsInCron(DateTime time, String cronStr) {
+    final Cron cron =
+        Cron(cronStr.substring(2, cronStr.length - 2).replaceAll("?", "*"));
+    // log("checkTimeIsInCron", cron.expr);
+    return cron.dayOfWeekMatches(time);
   }
 }

@@ -18,7 +18,7 @@ class ListDayLast7DayRadio extends StatefulWidget {
 
 class ListDayLast7DayRadioState extends State<ListDayLast7DayRadio> {
   List<DateTime> data = [6, 5, 4, 3, 2, 1, 0]
-      .map((days) => DateTime.now().add(Duration(days: days)))
+      .map((days) => DateTime.now().subtract(Duration(days: days)))
       .toList();
   DateTime itemSelected;
 

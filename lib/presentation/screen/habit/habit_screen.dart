@@ -4,6 +4,7 @@ import 'package:totodo/bloc/habit/bloc.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/habit/list_day_last_7_days_radio.dart';
 import 'package:totodo/presentation/screen/habit/list_habit.dart';
+import 'package:totodo/presentation/screen/task/widget_empty_task.dart';
 
 class HabitScreen extends StatefulWidget {
   @override
@@ -30,12 +31,19 @@ class _HabitScreenState extends State<HabitScreen> {
               height: 4.0,
             ),
             ListDayLast7DayRadio(
-              onRadioValueChanged: (value) {},
+              onRadioValueChanged: _onChosenDayChanged,
             ),
-            Expanded(child: ListHabit(state.listHabit)),
+            Expanded(
+                child: state.listHabitWithChosenDay.isNotEmpty
+                    ? ListHabit(state.listHabitWithChosenDay)
+                    : const EmptyTask("Chưa có thói quen")),
           ],
         );
       },
     );
+  }
+
+  void _onChosenDayChanged(DateTime day) {
+    _habitBloc.add(ChosenDayChanged(chosenDay: day.toIso8601String()));
   }
 }

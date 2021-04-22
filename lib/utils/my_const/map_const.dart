@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
 import 'package:totodo/data/entity/habit/habit_icon.dart';
 import 'package:totodo/data/entity/habit/habit_motivation.dart';
@@ -27,7 +28,16 @@ const Map<int, String> kDailyDays = {
   3: 'T5',
   4: 'T6',
   5: 'T7',
-  6: 'CN'
+};
+
+const Map<int, String> kEnDailyDays = {
+  0: MON,
+  1: TUE,
+  2: WED,
+  3: THU,
+  4: FRI,
+  5: SAT,
+  6: SUN,
 };
 
 enum EHabitMissionUnit { count, cup, milliliter, minute, hour, kilometer, page }

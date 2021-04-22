@@ -1,26 +1,39 @@
 import 'package:equatable/equatable.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/utils/cron_helper.dart';
 
 class HabitState extends Equatable {
-  final List<Habit> listHabit;
+  final List<Habit> _listHabit;
+  final String chosenDay;
   final bool loading;
   final bool success;
   final String msg;
 
   HabitState({
     List<Habit> listHabit,
+    String chosenDay,
     this.loading = false,
     this.success = false,
     this.msg,
-  }) : listHabit = listHabit ?? [];
+  })  : _listHabit = listHabit ?? [],
+        chosenDay = chosenDay ?? DateTime.now().toIso8601String();
+
+  List<Habit> get listHabitWithChosenDay {
+    return _listHabit
+        .where((habit) => CronHelper.instance
+            .checkTimeIsInCron(DateTime.parse(chosenDay), habit.cronDay))
+        .toList();
+  }
 
   HabitState copyWith({
     List<Habit> listHabit,
+    String chosenDay,
     bool loading,
     bool success,
     String msg,
   }) {
-    if ((listHabit == null || identical(listHabit, this.listHabit)) &&
+    if ((listHabit == null || identical(listHabit, _listHabit)) &&
+        (chosenDay == null || identical(chosenDay, this.chosenDay)) &&
         (loading == null || identical(loading, this.loading)) &&
         (success == null || identical(success, this.success)) &&
         (msg == null || identical(msg, this.msg))) {
@@ -28,7 +41,8 @@ class HabitState extends Equatable {
     }
 
     return HabitState(
-      listHabit: listHabit ?? this.listHabit,
+      listHabit: listHabit ?? _listHabit,
+      chosenDay: chosenDay ?? this.chosenDay,
       loading: loading ?? this.loading,
       success: success ?? this.success,
       msg: msg ?? this.msg,
@@ -37,9 +51,9 @@ class HabitState extends Equatable {
 
   @override
   String toString() {
-    return 'CreateHabitState{listHabit: $listHabit, loading: $loading, success: $success, msg: $msg}';
+    return 'HabitState{success: $success}';
   }
 
   @override
-  List<Object> get props => [listHabit, loading, msg, success];
+  List<Object> get props => [_listHabit, chosenDay, loading, msg, success];
 }

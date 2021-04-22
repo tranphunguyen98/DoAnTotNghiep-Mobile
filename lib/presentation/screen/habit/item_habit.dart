@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:totodo/bloc/habit/bloc.dart';
+import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
+import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/di/injection.dart';
+import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
+import 'package:totodo/utils/my_const/map_const.dart';
 
 class ItemHabit extends StatelessWidget {
-  final String image;
-  final String title;
-  final String unit;
-  final int totalDay;
+  final Habit _habit;
 
-  const ItemHabit({
-    @required this.image,
-    @required this.title,
-    @required this.unit,
-    @required this.totalDay,
-  });
+  const ItemHabit(
+    this._habit,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +20,28 @@ class ItemHabit extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
-          Image.asset(
-            image,
-            width: 48,
-            height: 48,
+          GestureDetector(
+            onTap: () {
+              //TODO move to bloc
+              getIt<IHabitRepository>().updateHabit('authorization',
+                  _habit.copyWith(isFinished: !_habit.isFinished));
+              getIt<HabitBloc>().add(OpenScreenHabit());
+            },
+            child: _habit.isFinished
+                ? SizedBox(
+                    width: 48.0,
+                    height: 48.0,
+                    child: Icon(
+                      Icons.check,
+                      size: 24,
+                      color: kColorGreenLight,
+                    ),
+                  )
+                : Image.asset(
+                    _habit.icon.iconImage,
+                    width: 48,
+                    height: 48,
+                  ),
           ),
           SizedBox(
             width: 16.0,
@@ -33,14 +51,14 @@ class ItemHabit extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title,
+                _habit.name,
                 style: kFontMediumBlack_14,
               ),
-              if (unit != null)
+              if (_habit.typeHabitGoal == EHabitGoal.reachACertainAmount.index)
                 Row(
                   children: [
                     Text(
-                      unit,
+                      '0/${_habit.totalDayAmount}',
                       style: kFontRegularGray1_12,
                     ),
                   ],
@@ -53,7 +71,7 @@ class ItemHabit extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                totalDay.toString(),
+                0.toString(), // TODO add total day
                 style: kFontMediumBlack_14,
               ),
               Text(
