@@ -28,6 +28,7 @@ const Map<int, String> kDailyDays = {
   3: 'T5',
   4: 'T6',
   5: 'T7',
+  6: 'CN'
 };
 
 const Map<int, String> kEnDailyDays = {

@@ -5,13 +5,13 @@ import 'package:provider/provider.dart';
 import 'package:totodo/bloc/create_habit/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/data/entity/habit/habit_icon.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/create_habit/body_creating_habit_step_1.dart';
 import 'package:totodo/presentation/screen/create_habit/body_creating_habit_step_2.dart';
 import 'package:totodo/presentation/screen/create_habit/creating_habit_step.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
-import 'package:totodo/utils/util.dart';
 
 class CreateHabitScreen extends StatefulWidget {
   final Habit _habit;
@@ -24,11 +24,17 @@ class CreateHabitScreen extends StatefulWidget {
 
 class _CreateHabitScreenState extends State<CreateHabitScreen> {
   CreateHabitBloc _createHabitBloc;
+
   @override
   void initState() {
     _createHabitBloc =
-        CreateHabitBloc(habitRepository: getIt<IHabitRepository>())
-          ..add(OpenScreenCreateHabit(widget._habit));
+        CreateHabitBloc(habitRepository: getIt<IHabitRepository>());
+    if (widget._habit != null) {
+      _createHabitBloc.add(OpenScreenCreateHabit(widget._habit));
+    } else {
+      _createHabitBloc.add(CreatingHabitDataChanged(
+          icon: HabitIcon(iconImage: kListIconDefault[0])));
+    }
     super.initState();
   }
 
@@ -69,8 +75,7 @@ class _CreateHabitScreenState extends State<CreateHabitScreen> {
       listenWhen: (previous, current) => previous.success != current.success,
       listener: (context, state) {
         if (state.success) {
-          log('SUCCESS');
-          Navigator.pop(context, 'succcccccccccccccccccccccccccc');
+          Navigator.pop(context, true);
         }
       },
       child: Container(

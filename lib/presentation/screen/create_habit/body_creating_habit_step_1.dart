@@ -301,7 +301,10 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
   void onIconHabitChanged(int index) {
     _createHabitBloc.add(
       CreatingHabitDataChanged(
-        icon: HabitIcon(iconImage: kListIconDefault[index]),
+        icon: HabitIcon(
+          iconImage: kListIconDefault[index],
+        ),
+        type: kHabitType[0][kKeyHabitTypeId] as int,
       ),
     );
   }

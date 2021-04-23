@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
-import 'package:totodo/presentation/router.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 
 class ItemCreatingHabit extends StatelessWidget {
   final Habit habit;
+  final VoidCallback onCreatingHabitItemClick;
 
-  const ItemCreatingHabit(this.habit);
+  const ItemCreatingHabit(this.habit, {this.onCreatingHabitItemClick});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.of(context)
-            .pushNamed(AppRouter.kCreateHabit, arguments: habit);
-      },
+      onTap: onCreatingHabitItemClick,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
         child: Row(

@@ -3,6 +3,7 @@ import 'package:cronparse/cronparse.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:totodo/utils/my_const/map_const.dart';
+import 'package:totodo/utils/util.dart';
 
 /// Cron helper to set notification repetitions
 /// Use the rule bellow to specify your on cron repetition rule or access
@@ -118,7 +119,7 @@ class CronHelper {
   bool checkTimeIsInCron(DateTime time, String cronStr) {
     final Cron cron =
         Cron(cronStr.substring(2, cronStr.length - 2).replaceAll("?", "*"));
-    // log("checkTimeIsInCron", cron.expr);
+    log("checkTimeIsInCron", cron.expr);
     return cron.dayOfWeekMatches(time);
   }
 }
