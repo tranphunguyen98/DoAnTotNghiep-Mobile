@@ -34,9 +34,10 @@ class _HabitScreenState extends State<HabitScreen> {
               onRadioValueChanged: _onChosenDayChanged,
             ),
             Expanded(
-                child: state.listHabitWithChosenDay.isNotEmpty
-                    ? ListHabit(state.listHabitWithChosenDay)
-                    : const EmptyTask("Chưa có thói quen")),
+              child: state.listHabitWithChosenDay.isNotEmpty
+                  ? ListHabit(state.listHabitWithChosenDay, state.chosenDay)
+                  : const EmptyTask("Chưa có thói quen"),
+            ),
           ],
         );
       },

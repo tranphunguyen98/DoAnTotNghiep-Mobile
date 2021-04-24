@@ -16,21 +16,33 @@ class HabitRepositoryImpl implements IHabitRepository {
 
   @override
   Future<bool> addHabit(String authorization, Habit habit) async {
-    return _localHabitDataSource.addHabit(authorization, habit);
+    return _localHabitDataSource.addHabit(habit);
   }
 
   @override
   Future<List<Habit>> getAllHabit(String authorization) {
-    return _localHabitDataSource.getAllHabit(authorization);
+    return _localHabitDataSource.getAllHabit();
   }
 
   @override
   Future<Habit> getDetailHabit(String authorization, String id) {
-    return _localHabitDataSource.getDetailHabit(authorization, id);
+    return _localHabitDataSource.getDetailHabit(id);
   }
 
   @override
   Future<bool> updateHabit(String authorization, Habit habit) {
-    return _localHabitDataSource.updateHabit(authorization, habit);
+    return _localHabitDataSource.updateHabit(habit);
+  }
+
+  @override
+  Future<bool> checkInHabit(String authorization, Habit habit, String chosenDay,
+      [int checkInAmount]) {
+    return _localHabitDataSource.checkInHabit(habit, chosenDay);
+  }
+
+  @override
+  Future<bool> resetHabitOnDay(
+      String authorization, Habit habit, String chosenDay) {
+    return _localHabitDataSource.resetHabitOnDay(habit, chosenDay);
   }
 }

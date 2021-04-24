@@ -15,7 +15,6 @@ class _DialogGoalState extends State<DialogGoal> {
   CreateHabitState _state;
 
   double heightContainer;
-  String _dropDownValueMethod = kListCheckingType.first;
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _amountOneTimeCheckController =
       TextEditingController();
@@ -45,7 +44,8 @@ class _DialogGoalState extends State<DialogGoal> {
         if (_state.habit.typeHabitGoal == EHabitGoal.archiveItAll.index) {
           heightContainer = 222.0;
         } else {
-          if (_dropDownValueMethod == kListCheckingType[0]) {
+          if (state.habit.typeHabitMissionDayCheckIn ==
+              EHabitMissionDayCheckIn.auto.index) {
             heightContainer = 366.0;
           } else {
             heightContainer = 334.0;
@@ -124,7 +124,8 @@ class _DialogGoalState extends State<DialogGoal> {
           SizedBox(
             height: 16.0,
           ),
-          if (_dropDownValueMethod == kListCheckingType[0])
+          if (_state.habit.typeHabitMissionDayCheckIn ==
+              EHabitMissionDayCheckIn.auto.index)
             _buildRowAmountOneTimeCheck(),
         ],
       ),
@@ -203,25 +204,20 @@ class _DialogGoalState extends State<DialogGoal> {
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(4.0)),
           padding: EdgeInsets.only(left: 8.0),
-          child: DropdownButton<String>(
-            value: _dropDownValueMethod,
-            isExpanded: true,
-            underline: Container(),
-            items: kListCheckingType.map((value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(
-                  value,
-                  style: kFontRegularBlack2_12,
-                ),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                _dropDownValueMethod = newValue;
-              });
-            },
-          ),
+          child: DropdownButton<int>(
+              value: _state.habit.typeHabitMissionDayCheckIn,
+              isExpanded: true,
+              underline: Container(),
+              items: kHabitMissionDayCheckIn.keys.map((value) {
+                return DropdownMenuItem<int>(
+                  value: value,
+                  child: Text(
+                    kHabitMissionDayCheckIn[value],
+                    style: kFontRegularBlack2_12,
+                  ),
+                );
+              }).toList(),
+              onChanged: _onHabitMissionDayCheckInChanged),
         ),
       ],
     );
@@ -304,5 +300,10 @@ class _DialogGoalState extends State<DialogGoal> {
   void _onMissionDayCheckInStepChanged(String value) {
     _createHabitBloc
         .add(CreatingHabitDataChanged(missionDayCheckInStep: int.parse(value)));
+  }
+
+  void _onHabitMissionDayCheckInChanged(int value) {
+    _createHabitBloc
+        .add(CreatingHabitDataChanged(typeHabitMissionDayCheckIn: value));
   }
 }

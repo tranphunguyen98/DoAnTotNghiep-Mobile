@@ -1,11 +1,11 @@
 import 'package:totodo/data/entity/habit/habit.dart';
 
 abstract class LocalHabitDataSource {
-  Future<bool> addHabit(String authorization, Habit habit);
-  Future<bool> updateHabit(String authorization, Habit habit);
-  Future<Habit> getDetailHabit(String authorization, String id);
-  Future<List<Habit>> getAllHabit(
-    String authorization,
-  );
+  Future<bool> addHabit(Habit habit);
+  Future<bool> updateHabit(Habit habit);
+  Future<bool> checkInHabit(Habit habit, String chosenDay, [int checkInAmount]);
+  Future<bool> resetHabitOnDay(Habit habit, String chosenDay);
+  Future<Habit> getDetailHabit(String id);
+  Future<List<Habit>> getAllHabit();
   Future<void> clearOffline();
 }

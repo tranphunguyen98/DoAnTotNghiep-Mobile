@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:totodo/bloc/detail_habit/bloc.dart';
+import 'package:totodo/data/entity/habit/habit_progress_item.dart';
 import 'package:totodo/presentation/screen/create_habit/container_info.dart';
 import 'package:totodo/presentation/screen/detail_habit/chart_detail_habit.dart';
 import 'package:totodo/presentation/screen/detail_habit/item_diary.dart';
@@ -11,6 +12,7 @@ import 'package:totodo/utils/my_const/my_const.dart';
 
 class DetailInfoHabitContainer extends StatelessWidget {
   DetailHabitState _state;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DetailHabitBloc, DetailHabitState>(
@@ -190,21 +192,24 @@ class DetailInfoHabitContainer extends StatelessWidget {
   }
 
   Widget _buildDiary() {
+    final List<HabitProgressItem> listHabitProgressHaveDiary = _state
+        .habit.habitProgress
+        .where((habitProgressItem) => habitProgressItem.diary?.text != null)
+        .toList();
     return ContainerInfo(
-        title: 'Nhật ký thói quen',
-        child: _state.habit.habitProgress.length > 0
-            ? Column(
-                children: _state.habit.habitProgress
-                    .map((e) => e.diaries.first.text)
-                    .map((e) => ItemDiary(e))
-                    .toList()
-                // [1, 2, 3, 4, 5, 6].map((e) => ItemDiary()).toList(),
-                )
-            : Center(
-                child: Text(
-                  'Chưa có nhật ký',
-                  style: kFontRegularGray1_14,
-                ),
-              ));
+      title: 'Nhật ký thói quen',
+      child: listHabitProgressHaveDiary.isNotEmpty
+          ? Column(
+              children: listHabitProgressHaveDiary
+                  .map((e) => e.diary.text)
+                  .map((e) => ItemDiary(e))
+                  .toList())
+          : Center(
+              child: Text(
+                'Chưa có nhật ký',
+                style: kFontRegularGray1_14,
+              ),
+            ),
+    );
   }
 }

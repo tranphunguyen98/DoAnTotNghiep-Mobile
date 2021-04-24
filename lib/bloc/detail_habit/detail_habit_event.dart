@@ -11,17 +11,18 @@ abstract class DetailHabitEvent extends Equatable {
 
 class InitDataDetailHabit extends DetailHabitEvent {
   final Habit habit;
-
+  final String chosenDay;
   const InitDataDetailHabit({
     this.habit,
+    this.chosenDay,
   });
 
   @override
-  List<Object> get props => [habit];
+  List<Object> get props => [habit, chosenDay];
 
   @override
   String toString() {
-    return 'InitDataDetailHabit{habit: $habit}';
+    return 'InitDataDetailHabit{habit: $habit, chosenDay: $chosenDay}';
   }
 }
 

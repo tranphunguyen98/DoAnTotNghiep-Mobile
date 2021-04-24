@@ -9,7 +9,7 @@ class LocalHabitDataSourceImplement implements LocalHabitDataSource {
   const LocalHabitDataSourceImplement(this._habitService);
 
   @override
-  Future<bool> addHabit(String authorization, Habit habit) {
+  Future<bool> addHabit(Habit habit) {
     return _habitService.addHabit(habit);
   }
 
@@ -19,17 +19,28 @@ class LocalHabitDataSourceImplement implements LocalHabitDataSource {
   }
 
   @override
-  Future<List<Habit>> getAllHabit(String authorization) {
+  Future<List<Habit>> getAllHabit() {
     return _habitService.getAllHabit();
   }
 
   @override
-  Future<Habit> getDetailHabit(String authorization, String id) {
+  Future<Habit> getDetailHabit(String id) {
     return _habitService.getHabitFromId(id);
   }
 
   @override
-  Future<bool> updateHabit(String authorization, Habit habit) {
+  Future<bool> updateHabit(Habit habit) {
     return _habitService.updateHabit(habit);
+  }
+
+  @override
+  Future<bool> checkInHabit(Habit habit, String chosenDay,
+      [int checkInAmount]) {
+    return _habitService.checkInHabit(habit, chosenDay);
+  }
+
+  @override
+  Future<bool> resetHabitOnDay(Habit habit, String chosenDay) {
+    return _habitService.resetHabitOnDay(habit, chosenDay);
   }
 }

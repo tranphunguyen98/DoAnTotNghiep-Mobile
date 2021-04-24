@@ -9,9 +9,13 @@ import 'package:totodo/presentation/screen/detail_habit/header_detail_habit.dart
 import 'package:totodo/utils/my_const/my_const.dart';
 
 class HabitDetailScreen extends StatefulWidget {
-  final Habit _habit;
+  static const kTypeHabit = 'habit';
+  static const kTypeChosenDay = 'chosenDay';
 
-  HabitDetailScreen(this._habit);
+  final Habit _habit;
+  final String _chosenDay;
+
+  HabitDetailScreen(this._habit, this._chosenDay);
 
   @override
   _HabitDetailScreenState createState() => _HabitDetailScreenState();
@@ -35,11 +39,12 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
     return BlocProvider<DetailHabitBloc>(
       create: (context) =>
           DetailHabitBloc(habitRepository: getIt<IHabitRepository>())
-            ..add(InitDataDetailHabit(habit: widget._habit)),
+            ..add(InitDataDetailHabit(
+                habit: widget._habit, chosenDay: widget._chosenDay)),
       child: BlocBuilder<DetailHabitBloc, DetailHabitState>(
         builder: (context, state) {
           if (state.habit != null) {
-            maxHeight = state.habit.isFinished
+            maxHeight = state.habit.isDoneOnDay(state.chosenDay)
                 ? MediaQuery.of(context).size.height - 160
                 : MediaQuery.of(context).size.height;
             return Scaffold(

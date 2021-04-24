@@ -67,12 +67,6 @@ const Map<int, String> kHabitGoalType = {
 
 const List<int> kListWeeklyDays = [1, 2, 3, 4, 5, 6];
 
-const List<String> kListCheckingType = [
-  'Tự động',
-  'Tự nhập',
-  'Hoàn thành tất cả'
-];
-
 const List<String> kListDefaultQuotation = [
   "Dành thời gian cho những điều tốt đẹp",
   "Bạn hoàn toàn có thể làm được điều này",

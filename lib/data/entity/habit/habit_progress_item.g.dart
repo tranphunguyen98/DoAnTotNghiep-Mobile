@@ -17,7 +17,7 @@ class HabitProgressItemAdapter extends TypeAdapter<HabitProgressItem> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HabitProgressItem(
-      diaries: (fields[0] as List)?.cast<DiaryItem>(),
+      diary: fields[0] as DiaryItem,
       currentCheckInAmounts: fields[1] as int,
       isDone: fields[2] as bool,
       day: fields[3] as String,
@@ -29,7 +29,7 @@ class HabitProgressItemAdapter extends TypeAdapter<HabitProgressItem> {
     writer
       ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.diaries)
+      ..write(obj.diary)
       ..writeByte(1)
       ..write(obj.currentCheckInAmounts)
       ..writeByte(2)

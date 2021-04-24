@@ -67,9 +67,15 @@ class AppRouter {
       case kCreatingHabitList:
         return MaterialPageRoute(builder: (_) => ListHabitCreatingScreen());
       case kDetailHabit:
-        if (settings.arguments is Habit) {
+        if (settings.arguments is Map<String, Object>) {
+          final habit = (settings.arguments
+              as Map<String, Object>)[HabitDetailScreen.kTypeHabit] as Habit;
+          final chosenDay = (settings.arguments
+                  as Map<String, Object>)[HabitDetailScreen.kTypeChosenDay]
+              as String;
           return MaterialPageRoute(
-              builder: (_) => HabitDetailScreen(settings.arguments as Habit));
+            builder: (_) => HabitDetailScreen(habit, chosenDay),
+          );
         }
         break;
       case kCreateHabit:

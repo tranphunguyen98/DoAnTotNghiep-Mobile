@@ -35,6 +35,7 @@ class CreatingHabitDataChanged extends CreateHabitEvent {
   final int missionDayCheckInStep;
   final int totalDayAmount;
   final int typeHabitGoal;
+  final int typeHabitMissionDayCheckIn;
 
   CreatingHabitDataChanged(
       {this.name,
@@ -46,7 +47,8 @@ class CreatingHabitDataChanged extends CreateHabitEvent {
       this.missionDayUnit,
       this.missionDayCheckInStep,
       this.totalDayAmount,
-      this.typeHabitGoal});
+      this.typeHabitGoal,
+      this.typeHabitMissionDayCheckIn});
 
   @override
   List<Object> get props => [
@@ -59,12 +61,13 @@ class CreatingHabitDataChanged extends CreateHabitEvent {
         missionDayUnit,
         missionDayCheckInStep,
         totalDayAmount,
-        typeHabitGoal
+        typeHabitGoal,
+        typeHabitMissionDayCheckIn
       ];
 
   @override
   String toString() {
-    return 'CreatingHabitDataChanged{name: $name, type: $type, icon: $icon, motivation: $motivation, frequency: $frequency, reminds: $reminds, missionDayUnit: $missionDayUnit, missionDayCheckInStep: $missionDayCheckInStep, totalDayAmount: $totalDayAmount, typeHabitGoal: $typeHabitGoal}';
+    return 'CreatingHabitDataChanged{name: $name, type: $type, icon: $icon, motivation: $motivation, frequency: $frequency, reminds: $reminds, missionDayUnit: $missionDayUnit, missionDayCheckInStep: $missionDayCheckInStep, totalDayAmount: $totalDayAmount, typeHabitGoal: $typeHabitGoal, typeHabitMissionDayCheckIn: $typeHabitMissionDayCheckIn}';
   }
 }
 

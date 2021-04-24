@@ -1,6 +1,9 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/data/entity/habit/habit_progress_item.dart';
+import 'package:totodo/utils/date_helper.dart';
+import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
 
 @Injectable()
@@ -58,7 +61,79 @@ class LocalHabitService {
     return false;
   }
 
-  //</editor-fold>
+  Future<bool> checkInHabit(Habit habit, String chosenDay,
+      [int checkInAmount]) async {
+    final habitProgress = <HabitProgressItem>[];
+    habitProgress.addAll(habit.habitProgress);
+
+    bool isContainDay = false;
+    for (int i = 0; i < habitProgress.length; i++) {
+      if (DateHelper.isSameDayString(habitProgress[i].day, chosenDay)) {
+        log("EHabitMissionDayCheckIn1 ${habit.typeHabitMissionDayCheckIn}");
+        if (habit.typeHabitGoal == EHabitGoal.archiveItAll.index) {
+          habitProgress[i] =
+              habitProgress[i].copyWith(isDone: !habitProgress[i].isDone);
+        } else {
+          if (habit.typeHabitMissionDayCheckIn ==
+              EHabitMissionDayCheckIn.auto.index) {
+            habitProgress[i] = habitProgress[i].copyWith(
+              currentCheckInAmounts: habitProgress[i].currentCheckInAmounts +
+                  habit.missionDayCheckInStep,
+            );
+            if (habitProgress[i].currentCheckInAmounts >=
+                habit.totalDayAmount) {
+              habitProgress[i] = habitProgress[i].copyWith(isDone: true);
+            }
+          } else if (habit.typeHabitMissionDayCheckIn ==
+              EHabitMissionDayCheckIn.completedAll.index) {
+            log("EHabitMissionDayCheckIn1");
+            habitProgress[i] = habitProgress[i].copyWith(
+                isDone: true, currentCheckInAmounts: habit.totalDayAmount);
+          }
+        }
+        isContainDay = true;
+        break;
+      }
+    }
+
+    if (!isContainDay) {
+      if (habit.typeHabitGoal == EHabitGoal.archiveItAll.index) {
+        habitProgress.add(HabitProgressItem(day: chosenDay, isDone: true));
+      } else {
+        if (habit.typeHabitMissionDayCheckIn ==
+            EHabitMissionDayCheckIn.auto.index) {
+          habitProgress.add(HabitProgressItem(
+              day: chosenDay,
+              currentCheckInAmounts: habit.missionDayCheckInStep,
+              isDone: habit.missionDayCheckInStep >= habit.totalDayAmount));
+        } else if (habit.typeHabitMissionDayCheckIn ==
+            EHabitMissionDayCheckIn.completedAll.index) {
+          habitProgress.add(HabitProgressItem(
+              day: chosenDay,
+              currentCheckInAmounts: habit.totalDayAmount,
+              isDone: true));
+        }
+      }
+    }
+
+    updateHabit(habit.copyWith(habitProgress: habitProgress));
+    return true;
+  }
+
+  Future<bool> resetHabitOnDay(Habit habit, String chosenDay) async {
+    final progress = <HabitProgressItem>[];
+    progress.addAll(habit.habitProgress);
+
+    for (int i = 0; i < progress.length; i++) {
+      if (DateHelper.isSameDayString(progress[i].day, chosenDay)) {
+        progress[i] =
+            progress[i].copyWith(currentCheckInAmounts: 0, isDone: false);
+        break;
+      }
+    }
+    updateHabit(habit.copyWith(habitProgress: progress));
+    return true;
+  } //</editor-fold>
 
   Future<void> clearData() async {
     _habitBoxHabit.clear();

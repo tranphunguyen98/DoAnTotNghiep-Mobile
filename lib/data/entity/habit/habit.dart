@@ -62,6 +62,26 @@ class Habit extends Equatable {
     return "";
   }
 
+  bool isDoneOnDay(String day) {
+    for (final habitProgress in habitProgress) {
+      if (DateHelper.isSameDayString(habitProgress.day, day)) {
+        return habitProgress.isDone;
+      }
+    }
+
+    return false;
+  }
+
+  int currentAmountOnDay(String day) {
+    for (final habitProgress in habitProgress) {
+      if (DateHelper.isSameDayString(habitProgress.day, day)) {
+        return habitProgress.currentCheckInAmounts;
+      }
+    }
+
+    return 0;
+  }
+
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
   Habit({
     this.id,

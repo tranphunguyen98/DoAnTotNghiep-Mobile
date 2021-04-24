@@ -3,12 +3,14 @@ import 'package:totodo/bloc/habit/bloc.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/router.dart';
+import 'package:totodo/presentation/screen/detail_habit/sc_habit_detail.dart';
 import 'package:totodo/presentation/screen/habit/item_habit.dart';
 
 class ListHabit extends StatelessWidget {
   final List<Habit> listHabit;
+  final String chosenDay;
 
-  ListHabit(this.listHabit);
+  ListHabit(this.listHabit, this.chosenDay);
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +18,16 @@ class ListHabit extends StatelessWidget {
       itemBuilder: (context, index) => InkWell(
         onTap: () async {
           await Navigator.of(context)
-              .pushNamed(AppRouter.kDetailHabit, arguments: listHabit[index]);
+              .pushNamed(AppRouter.kDetailHabit, arguments: {
+            HabitDetailScreen.kTypeHabit: listHabit[index],
+            HabitDetailScreen.kTypeChosenDay: chosenDay,
+          });
           getIt<HabitBloc>().add(OpenScreenHabit());
         },
-        child: ItemHabit(listHabit[index]),
+        child: ItemHabit(listHabit[index], chosenDay),
       ),
-      separatorBuilder: (context, index) => Padding(
-        padding: const EdgeInsets.only(left: 16.0),
+      separatorBuilder: (context, index) => const Padding(
+        padding: EdgeInsets.only(left: 16.0),
         child: Divider(
           height: 1.0,
         ),

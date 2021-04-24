@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/habit/bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
+import 'package:totodo/bloc/habit/habit_bloc.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
@@ -9,9 +9,10 @@ import 'package:totodo/utils/my_const/map_const.dart';
 
 class ItemHabit extends StatelessWidget {
   final Habit _habit;
-
+  final String chosenDay;
   const ItemHabit(
     this._habit,
+    this.chosenDay,
   );
 
   @override
@@ -22,12 +23,9 @@ class ItemHabit extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              //TODO move to bloc
-              getIt<IHabitRepository>().updateHabit('authorization',
-                  _habit.copyWith(isFinished: !_habit.isFinished));
-              getIt<HabitBloc>().add(OpenScreenHabit());
+              getIt<HabitBloc>().add(ChangeCompletedStateHabit(habit: _habit));
             },
-            child: _habit.isFinished
+            child: _habit.isDoneOnDay(chosenDay)
                 ? SizedBox(
                     width: 48.0,
                     height: 48.0,
@@ -58,7 +56,7 @@ class ItemHabit extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '0/${_habit.totalDayAmount}',
+                      '${_habit.currentAmountOnDay(chosenDay)}/${_habit.totalDayAmount}',
                       style: kFontRegularGray1_12,
                     ),
                   ],

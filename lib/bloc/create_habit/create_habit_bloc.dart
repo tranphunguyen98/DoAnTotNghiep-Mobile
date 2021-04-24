@@ -59,6 +59,8 @@ class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
     habit = habit.copyWith(missionDayCheckInStep: event.missionDayCheckInStep);
     habit = habit.copyWith(totalDayAmount: event.totalDayAmount);
     habit = habit.copyWith(typeHabitGoal: event.typeHabitGoal);
+    habit = habit.copyWith(
+        typeHabitMissionDayCheckIn: event.typeHabitMissionDayCheckIn);
     yield state.copyWith(habit: habit);
   }
 }

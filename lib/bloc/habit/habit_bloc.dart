@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
+import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/utils/date_helper.dart';
 
 import 'bloc.dart';
 
@@ -18,6 +20,8 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
       yield* _mapOpenScreenHabitToState();
     } else if (event is ChosenDayChanged) {
       yield* _mapChosenDayChangedToState(event.chosenDay);
+    } else if (event is ChangeCompletedStateHabit) {
+      yield* _mapChangeCompletedStateHabitToState(event.habit, event.amount);
     }
   }
 
@@ -29,5 +33,28 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
 
   Stream<HabitState> _mapChosenDayChangedToState(String date) async* {
     yield state.copyWith(chosenDay: date);
+  }
+
+  Stream<HabitState> _mapChangeCompletedStateHabitToState(
+      Habit habit, int amount) async* {
+    bool isDone = false;
+    for (final habitProgress in habit.habitProgress) {
+      if (DateHelper.isSameDayString(habitProgress.day, state.chosenDay)) {
+        if (habitProgress.isDone) {
+          isDone = true;
+        }
+        break;
+      }
+    }
+
+    if (!isDone) {
+      await _habitRepository.checkInHabit('', habit, state.chosenDay);
+    } else {
+      await _habitRepository.resetHabitOnDay('', habit, state.chosenDay);
+    }
+
+    final listHabit = await _habitRepository.getAllHabit('authorization');
+
+    yield state.copyWith(listHabit: listHabit);
   }
 }
