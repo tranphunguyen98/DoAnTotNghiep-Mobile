@@ -166,7 +166,7 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
               SizedBox(
                 height: _state.habit.typeHabitGoal ==
                         EHabitGoal.reachACertainAmount.index
-                    ? 6.0
+                    ? 24.0
                     : 40.0,
               ),
             if (!_state.habit.isDoneOnDay(_state.chosenDay))

@@ -43,3 +43,5 @@ class AddDiary extends DetailHabitEvent {
     return 'AddDiary{item: $item}';
   }
 }
+
+class DeleteHabit extends DetailHabitEvent {}
