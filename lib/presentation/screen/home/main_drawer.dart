@@ -15,8 +15,7 @@ class MainDrawer extends StatelessWidget {
     return BlocBuilder<HomeBloc, HomeState>(
       cubit: getIt<HomeBloc>(),
       buildWhen: (previous, current) {
-        return previous.loading != current.loading ||
-            previous.indexDrawerSelected != current.indexDrawerSelected;
+        return previous.loading != current.loading;
       },
       builder: (context, state) {
         if (state is HomeState) {

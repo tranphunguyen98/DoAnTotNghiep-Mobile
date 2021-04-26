@@ -20,9 +20,19 @@ class HabitState extends Equatable {
 
   List<Habit> get listHabitWithChosenDay {
     return _listHabit
-        .where((habit) => CronHelper.instance
-            .checkTimeIsInCron(DateTime.parse(chosenDay), habit.cronDay))
+        .where((habit) =>
+            !habit.isFinished &&
+            CronHelper.instance
+                .checkTimeIsInCron(DateTime.parse(chosenDay), habit.cronDay))
         .toList();
+  }
+
+  List<Habit> get listActiveHabit {
+    return _listHabit.where((habit) => !habit.isFinished).toList();
+  }
+
+  List<Habit> get listArchivedHabit {
+    return _listHabit.where((habit) => habit.isFinished).toList();
   }
 
   HabitState copyWith({

@@ -51,6 +51,7 @@ final kFontRegularGray4_8 = kFontRegularGray4.copyWith(fontSize: 8);
 final kFontRegularGray4_10 = kFontRegularGray4.copyWith(fontSize: 10);
 final kFontRegularGray4_12 = kFontRegularGray4.copyWith(fontSize: 12);
 final kFontRegularGray4_14 = kFontRegularGray4.copyWith(fontSize: 14);
+final kFontRegularGray4_16 = kFontRegularGray4.copyWith(fontSize: 16);
 
 final kFontRegularGray5 = kFontRegular.copyWith(color: kColorGray5);
 final kFontRegularGray5_10 = kFontRegular.copyWith(fontSize: 10);

@@ -29,9 +29,7 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     //TODO add try catch
     final listHabit = await _habitRepository.getAllHabit('authorization');
     yield state.copyWith(
-        listHabit: listHabit
-            .where((habit) => !habit.isTrashed && !habit.isFinished)
-            .toList());
+        listHabit: listHabit.where((habit) => !habit.isTrashed).toList());
   }
 
   Stream<HabitState> _mapChosenDayChangedToState(String date) async* {

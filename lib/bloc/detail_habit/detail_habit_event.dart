@@ -45,3 +45,5 @@ class AddDiary extends DetailHabitEvent {
 }
 
 class DeleteHabit extends DetailHabitEvent {}
+
+class ArchiveHabit extends DetailHabitEvent {}

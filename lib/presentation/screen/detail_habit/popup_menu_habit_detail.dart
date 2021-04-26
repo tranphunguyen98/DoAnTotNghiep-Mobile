@@ -4,8 +4,11 @@ import 'package:totodo/utils/my_const/my_const.dart';
 
 class PopupMenuHabitDetail extends StatelessWidget {
   final Function onDeleteHabit;
+  final Function onEditHabit;
+  final Function onArchiveHabit;
 
-  PopupMenuHabitDetail({this.onDeleteHabit});
+  PopupMenuHabitDetail(
+      {this.onDeleteHabit, this.onArchiveHabit, this.onEditHabit});
 
   final List<DropdownChoices> dropdownChoices = [];
 
@@ -35,8 +38,16 @@ class PopupMenuHabitDetail extends StatelessWidget {
 
   List<DropdownChoices> getDropdownChoices() {
     final listDropdownChoices = [
-      DropdownChoices(title: 'Sửa', onPressed: (context) {}),
-      DropdownChoices(title: 'Hoàn thành', onPressed: (context) {}),
+      DropdownChoices(
+          title: 'Sửa',
+          onPressed: (context) {
+            onEditHabit();
+          }),
+      DropdownChoices(
+          title: 'Hoàn thành',
+          onPressed: (context) {
+            onArchiveHabit();
+          }),
       DropdownChoices(
           title: 'Xóa',
           onPressed: (context) {

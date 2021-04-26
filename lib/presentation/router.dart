@@ -8,6 +8,7 @@ import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/create_habit/sc_create_habit.dart';
 import 'package:totodo/presentation/screen/detail_habit/sc_habit_detail.dart';
+import 'package:totodo/presentation/screen/list_habit/sc_list_habit.dart';
 import 'package:totodo/presentation/screen/profile/sc_profile.dart';
 
 import 'screen/change_password/sc_change_password.dart';
@@ -39,6 +40,7 @@ class AppRouter {
   static const String kCreatingHabitList = '/creatingHabitList';
   static const String kCreateHabit = '/createHabit';
   static const String kDetailHabit = '/detailHabit';
+  static const String kListHabit = '/listHabit';
 
   static const String kArgumentTask = '/argumentTask';
 
@@ -66,6 +68,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => ProfileScreen());
       case kCreatingHabitList:
         return MaterialPageRoute(builder: (_) => ListHabitCreatingScreen());
+      case kListHabit:
+        return MaterialPageRoute(builder: (_) => ListHabitScreen());
       case kDetailHabit:
         if (settings.arguments is Map<String, Object>) {
           final habit = (settings.arguments

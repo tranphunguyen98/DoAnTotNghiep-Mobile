@@ -27,7 +27,7 @@ class _HabitScreenState extends State<HabitScreen> {
       builder: (context, state) {
         return Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 4.0,
             ),
             ListDayLast7DayRadio(

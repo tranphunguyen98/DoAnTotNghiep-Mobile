@@ -48,10 +48,13 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
       child: BlocConsumer<DetailHabitBloc, DetailHabitState>(
         listenWhen: (previous, current) =>
             previous.habit != null &&
-            current.habit != null &&
-            previous.habit.isTrashed != current.habit.isTrashed,
+                current.habit != null &&
+                previous.habit?.isTrashed != current.habit?.isTrashed ||
+            previous.habit?.isFinished != current.habit?.isFinished,
         listener: (context, state) {
-          if (state.habit?.isTrashed ?? false) {
+          if (state.habit?.isTrashed ??
+              false || state.habit.isFinished ??
+              false) {
             Navigator.pop(context);
           }
         },
@@ -78,6 +81,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                       actions: [
                         PopupMenuHabitDetail(
                           onDeleteHabit: _onDeleteHabit,
+                          onArchiveHabit: _onArchiveHabit,
                         )
                       ],
                       flexibleSpace: HeaderDetailHabit(
@@ -101,6 +105,10 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
 
   void _onDeleteHabit() {
     _detailHabitBloc.add(DeleteHabit());
+  }
+
+  void _onArchiveHabit() {
+    _detailHabitBloc.add(ArchiveHabit());
   }
 
   void _snapAppbar() {
