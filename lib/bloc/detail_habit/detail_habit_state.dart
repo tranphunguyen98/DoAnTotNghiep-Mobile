@@ -33,7 +33,25 @@ class DetailHabitState extends Equatable {
   }
 
   double get completedPercentByMonth {
-    return theNumberOfDoneDaysInMonth / DateTime.parse(chosenMonth).day;
+    return theNumberOfDoneDaysInMonth / targetDays;
+  }
+
+  int get targetDays {
+    if (habit.frequency.typeFrequency == EHabitFrequency.weekly.index) {
+      return DateTime.now().day;
+    } else if (habit.frequency.typeFrequency == EHabitFrequency.daily.index) {
+      int targetDays = 0;
+      for (int i = 0; i < DateTime.now().day; i++) {
+        final weekday = DateTime.now().subtract(Duration(days: i)).weekday;
+        if (habit.frequency.dailyDays.contains(
+            DateHelper.convertStandardWeekdayToCustomWeekday(weekday))) {
+          targetDays++;
+        }
+      }
+      return targetDays;
+    }
+
+    throw Exception('TYPE FREQUENCY IS INVALID');
   }
 
   int get theLongestStreak {

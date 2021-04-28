@@ -32,10 +32,9 @@ class ChartDetailHabitState extends State<ChartDetailHabit> {
         .currentAmountStep
         .toDouble();
 
-    if (maxY < target) {
-      maxY = target;
+    if (maxY < target * 1.5) {
+      maxY = target * 1.5;
     }
-    maxY = maxY * 1.5;
 
     super.initState();
   }

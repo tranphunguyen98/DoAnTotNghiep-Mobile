@@ -224,14 +224,13 @@ class DetailInfoHabitContainer extends StatelessWidget {
             'Steak dài nhất: ${_state.theLongestStreakInMonth} ngày',
             style: kFontRegularGray1_12,
           ),
-          //TODO target
-          // SizedBox(
-          //   height: 8.0,
-          // ),
-          // Text(
-          //   'Mục tiêu: ${_state.theCurrentStreakInMonth} ngày',
-          //   style: kFontRegularGray1_12,
-          // ),
+          SizedBox(
+            height: 8.0,
+          ),
+          Text(
+            'Mục tiêu: ${_state.targetDays} ngày',
+            style: kFontRegularGray1_12,
+          ),
         ],
       ),
     );
@@ -249,7 +248,7 @@ class DetailInfoHabitContainer extends StatelessWidget {
           .toList();
     }
     return ContainerInfo(
-      title: 'Mục tiêu hằng ngày (Count)',
+      title: 'Mục tiêu hằng ngày (Count)', //TODO change type Count => ...
       child: Container(
         height: 240.0,
         padding: const EdgeInsets.only(top: 8.0),
