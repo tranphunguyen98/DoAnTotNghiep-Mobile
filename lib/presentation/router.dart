@@ -8,6 +8,8 @@ import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/create_habit/sc_create_habit.dart';
 import 'package:totodo/presentation/screen/detail_habit/sc_habit_detail.dart';
+import 'package:totodo/presentation/screen/diary/item_diary.dart';
+import 'package:totodo/presentation/screen/diary/sc_diary.dart';
 import 'package:totodo/presentation/screen/list_habit/sc_list_habit.dart';
 import 'package:totodo/presentation/screen/profile/sc_profile.dart';
 
@@ -41,6 +43,7 @@ class AppRouter {
   static const String kCreateHabit = '/createHabit';
   static const String kDetailHabit = '/detailHabit';
   static const String kListHabit = '/listHabit';
+  static const String kDiary = '/diary';
 
   static const String kArgumentTask = '/argumentTask';
 
@@ -70,6 +73,9 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => ListHabitCreatingScreen());
       case kListHabit:
         return MaterialPageRoute(builder: (_) => ListHabitScreen());
+      case kDiary:
+        return _buildDiaryScreen(settings);
+        break;
       case kDetailHabit:
         if (settings.arguments is Map<String, Object>) {
           final habit = (settings.arguments
@@ -127,6 +133,15 @@ class AppRouter {
           ),
         );
     }
+  }
+
+  static MaterialPageRoute _buildDiaryScreen(RouteSettings settings) {
+    if (settings.arguments is List<ItemDiaryData>) {
+      return MaterialPageRoute(
+          builder: (_) =>
+              DiaryScreen(settings.arguments as List<ItemDiaryData>));
+    }
+    throw Exception('Not have enough argument');
   }
 
   static MaterialPageRoute _buildCreateHabitScreen(RouteSettings settings) {

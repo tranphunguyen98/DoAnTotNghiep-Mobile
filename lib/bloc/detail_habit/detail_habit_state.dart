@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
 import 'package:totodo/data/entity/habit/habit_progress_item.dart';
+import 'package:totodo/presentation/screen/diary/item_diary.dart';
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/map_const.dart';
 import 'package:totodo/utils/util.dart';
@@ -77,6 +78,18 @@ class DetailHabitState extends Equatable {
         .where((progressItem) =>
             DateHelper.isSameMonthString(progressItem.day, chosenMonth))
         .toList());
+  }
+
+  List<ItemDiaryData> get listDiary {
+    return habit.habitProgress
+        .where((itemProgress) => itemProgress.diary != null)
+        .map((itemProgress) => ItemDiaryData(
+              date: DateTime.parse(itemProgress.day),
+              title: habit.name,
+              content: itemProgress.diary.text,
+              images: itemProgress.diary.images,
+            ))
+        .toList();
   }
 
   factory DetailHabitState.loading() => const DetailHabitState(loading: true);
