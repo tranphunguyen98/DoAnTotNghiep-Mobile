@@ -193,6 +193,7 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
         return DialogCompleteHabit(_state.habit.name);
       },
     );
-    _detailHabitBloc.add(AddDiary(DiaryItem(text: result, images: [])));
+    _detailHabitBloc
+        .add(AddDiary(DiaryItem(text: result, images: []), _state.chosenDay));
   }
 }

@@ -19,12 +19,15 @@ class HabitState extends Equatable {
         chosenDay = chosenDay ?? DateTime.now().toIso8601String();
 
   List<Habit> get listHabitWithChosenDay {
-    return _listHabit
+    final list = _listHabit
         .where((habit) =>
             !habit.isFinished &&
             CronHelper.instance
                 .checkTimeIsInCron(DateTime.parse(chosenDay), habit.cronDay))
         .toList();
+    // log("lengthHabit=", _listHabit.length);
+    // log("length=", list.length);
+    return list;
   }
 
   List<Habit> get listActiveHabit {

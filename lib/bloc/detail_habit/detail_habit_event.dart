@@ -30,17 +30,16 @@ class CheckInHabit extends DetailHabitEvent {}
 
 class AddDiary extends DetailHabitEvent {
   final DiaryItem item;
+  final String date;
 
-  const AddDiary(
-    this.item,
-  );
+  const AddDiary(this.item, this.date);
 
   @override
-  List<Object> get props => [item];
+  List<Object> get props => [item, date];
 
   @override
   String toString() {
-    return 'AddDiary{item: $item}';
+    return 'AddDiary{item: $item, date: $date}';
   }
 }
 

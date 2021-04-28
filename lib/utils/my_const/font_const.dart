@@ -21,6 +21,7 @@ final kFontSemibold = TextStyle(
 final kFontRegularDefault = kFontRegular.copyWith(color: kColorPrimary);
 final kFontRegularDefault_10 = kFontRegular.copyWith(fontSize: 10);
 final kFontRegularDefault_12 = kFontRegular.copyWith(fontSize: 12);
+final kFontRegularDefault_16 = kFontRegular.copyWith(fontSize: 16);
 
 final kFontRegularWhite = kFontRegular.copyWith(color: kColorWhite);
 final kFontRegularWhite_8 = kFontRegularWhite.copyWith(fontSize: 8);

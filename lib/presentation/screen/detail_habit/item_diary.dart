@@ -5,8 +5,9 @@ import 'package:totodo/utils/my_const/my_const.dart';
 
 class ItemDiary extends StatelessWidget {
   final String text;
-
-  ItemDiary(this.text);
+  final String image;
+  final DateTime date;
+  const ItemDiary({this.text, this.image, this.date});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class ItemDiary extends StatelessWidget {
                 width: 16.0,
               ),
               Text(
-                'Ngày 15 tháng 04',
+                'Ngày ${date.day} tháng ${date.month < 10 ? '0' : ''}${date.month}',
                 style: kFontRegularGray1_12,
               ),
               SizedBox(
@@ -52,13 +53,14 @@ class ItemDiary extends StatelessWidget {
                 SizedBox(
                   height: 8.0,
                 ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16.0),
-                  child: Image.asset(
-                    kImageMotivation,
-                    width: 240,
-                  ),
-                )
+                if (image != null)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: Image.asset(
+                      kImageMotivation,
+                      width: 240,
+                    ),
+                  )
               ],
             ),
           )

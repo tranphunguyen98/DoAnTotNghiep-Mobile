@@ -91,7 +91,9 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                       expandedHeight:
                           maxHeight - MediaQuery.of(context).padding.top,
                     ),
-                    SliverFillRemaining(child: DetailInfoHabitContainer()),
+                    SliverFillRemaining(
+                      child: DetailInfoHabitContainer(),
+                    ),
                   ],
                 ),
               ),

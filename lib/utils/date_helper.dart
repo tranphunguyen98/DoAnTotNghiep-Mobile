@@ -105,4 +105,31 @@ class DateHelper {
     final dateTime = DateTime.parse(date);
     return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
   }
+
+  static bool isSameMonthString(String date, String dateDestination) {
+    return DateTime.parse(date).year == DateTime.parse(dateDestination).year &&
+        DateTime.parse(date).month == DateTime.parse(dateDestination).month;
+  }
+
+  static bool isInCurrentMonthString(String date) {
+    final dateTime = DateTime.parse(date);
+    return dateTime.month == DateTime.now().month;
+  }
+
+  //convert weekday of Datetime to custom weekday in file map_const.dart.
+  static int convertStandardWeekdayToCustomWeekday(int weekday) {
+    int customWeekday = weekday - 1;
+    if (customWeekday == -1) {
+      customWeekday = 6;
+    }
+    return customWeekday;
+  }
+
+  static int getCustomWeekdayFromString(String date) {
+    return convertStandardWeekdayToCustomWeekday(DateTime.parse(date).weekday);
+  }
+
+  static bool isWithinWeekFromString(String date1, String date2) {
+    return DateTime.parse(date1).day - DateTime.parse(date2).day <= 7;
+  }
 }

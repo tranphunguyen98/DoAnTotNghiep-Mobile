@@ -4,6 +4,7 @@ import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
 import 'package:totodo/data/entity/habit/diary_item.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
 import 'package:totodo/data/entity/habit/habit_progress_item.dart';
+import 'package:totodo/utils/date_helper.dart';
 
 import 'bloc.dart';
 
@@ -23,7 +24,7 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
     } else if (event is CheckInHabit) {
       yield* _mapCheckInHabitToState();
     } else if (event is AddDiary) {
-      yield* _mapAddDiaryToState(event.item);
+      yield* _mapAddDiaryToState(event.item, event.date);
     } else if (event is DeleteHabit) {
       yield* _mapDeleteHabitToState();
     } else if (event is ArchiveHabit) {
@@ -33,16 +34,20 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
 
   Stream<DetailHabitState> _mapInitDataDetailHabitToState(
       Habit habit, String chosenDay) async* {
-    yield state.copyWith(habit: habit, chosenDay: chosenDay);
+    yield state.copyWith(
+        habit: habit,
+        chosenDay: chosenDay,
+        chosenMonth: DateTime.now().toIso8601String());
   }
 
-  Stream<DetailHabitState> _mapAddDiaryToState(DiaryItem item) async* {
+  Stream<DetailHabitState> _mapAddDiaryToState(
+      DiaryItem item, String dateString) async* {
     List<HabitProgressItem> habitProgress = [];
     habitProgress.addAll(state.habit.habitProgress);
-    habitProgress.add(HabitProgressItem(
-      diary: item,
-      day: DateTime.now().toIso8601String(),
-    ));
+
+    final int index = habitProgress.indexWhere(
+        (element) => DateHelper.isSameDayString(element.day, dateString));
+    habitProgress[index] = habitProgress[index].copyWith(diary: item);
 
     final habit = state.habit.copyWith(habitProgress: habitProgress);
     await _habitRepository.updateHabit('authorization', habit);

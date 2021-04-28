@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 
-class DialogCompleteHabit extends StatelessWidget {
+class DialogCompleteHabit extends StatefulWidget {
   final String title;
 
-  DialogCompleteHabit(this.title);
+  const DialogCompleteHabit(this.title);
 
-  TextEditingController _diaryController = TextEditingController();
+  @override
+  _DialogCompleteHabitState createState() => _DialogCompleteHabitState();
+}
+
+class _DialogCompleteHabitState extends State<DialogCompleteHabit> {
+  final TextEditingController _diaryController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,7 @@ class DialogCompleteHabit extends StatelessWidget {
       },
       child: AlertDialog(
         title: Text(
-          title,
+          widget.title,
           style: kFontSemiboldBlack_16,
         ),
         content: SizedBox(

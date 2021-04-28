@@ -25,6 +25,11 @@ class _HabitScreenState extends State<HabitScreen> {
     return BlocBuilder<HabitBloc, HabitState>(
       cubit: _habitBloc,
       builder: (context, state) {
+        if (state.loading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return Column(
           children: [
             const SizedBox(

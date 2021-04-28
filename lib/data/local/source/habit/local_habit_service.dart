@@ -34,7 +34,7 @@ class LocalHabitService {
       listHabit.add(_habitBoxHabit.getAt(i) as Habit);
     }
 
-    log("LIST HABIT: ${listHabit}");
+    log("LIST HABIT: ${listHabit.length}");
     return listHabit ?? <Habit>[];
   }
 
