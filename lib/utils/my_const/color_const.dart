@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:totodo/presentation/custom_ui/custom_ui.dart';
 
 //#011f4b • #03396c • #005b96 • #6497b1 • #b3cde0
-final HexColor kColorPrimary = HexColor("#2ab7ca");
+final HexColor kColorPrimary = HexColor("#75cd9b");
 final HexColor kColorPrimaryDark = HexColor("#03396c");
 final HexColor kColorPrimaryLight = HexColor("#6497b1");
 final HexColor kColorBlack = HexColor("#000000");

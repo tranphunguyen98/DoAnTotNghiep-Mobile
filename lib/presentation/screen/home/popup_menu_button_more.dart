@@ -7,14 +7,21 @@ import 'package:totodo/utils/my_const/my_const.dart';
 
 import 'dropdown_choice.dart';
 
-class PopupMenuButtonMore extends StatelessWidget {
+class PopupMenuButtonMore extends StatefulWidget {
+  @override
+  _PopupMenuButtonMoreState createState() => _PopupMenuButtonMoreState();
+}
+
+class _PopupMenuButtonMoreState extends State<PopupMenuButtonMore> {
+  final _homeBloc = getIt<HomeBloc>();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
-      cubit: getIt<HomeBloc>(),
+      cubit: _homeBloc,
       buildWhen: (previous, current) =>
           previous.loading != current.loading ||
-          previous.indexDrawerSelected != current.indexDrawerSelected,
+          previous.indexDrawerSelected != current.indexDrawerSelected ||
+          previous.isShowCompletedTask != current.isShowCompletedTask,
       builder: (context, state) {
         final dropdownChoices = getDropdownChoices(state);
         return PopupMenuButton<DropdownChoices>(
@@ -41,6 +48,15 @@ class PopupMenuButtonMore extends StatelessWidget {
 
   List<DropdownChoices> getDropdownChoices(HomeState state) {
     final dropdownChoices = <DropdownChoices>[];
+    dropdownChoices.addAll([
+      DropdownChoices(
+          title: state.isShowCompletedTask
+              ? 'Hide completed tasks'
+              : 'Show completed tasks',
+          onPressed: (context) {
+            _homeBloc.add(ShowCompletedTaskChange());
+          })
+    ]);
     if (state.isInProject()) {
       dropdownChoices.addAll([
         DropdownChoices(

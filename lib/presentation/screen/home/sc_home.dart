@@ -21,7 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _homeBloc = getIt<HomeBloc>()..add(OpenHomeScreen());
-
+  HomeState _state;
   @override
   Widget build(BuildContext context) {
     log("BULD HOME SCREEN");
@@ -29,22 +29,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocBuilder<HomeBloc, HomeState>(
       cubit: _homeBloc,
       buildWhen: (previous, current) =>
-          // previous.indexDrawerSelected != current.indexDrawerSelected ||
           previous.indexNavigationBarSelected !=
           current.indexNavigationBarSelected,
       builder: (context, state) {
+        _state = state;
         return Scaffold(
-          // key: scaffoldKey,
           backgroundColor: kColorWhite,
           appBar: AppBar(
             elevation: 0.0,
-            title: state.indexNavigationBarSelected ==
-                    HomeState.kBottomNavigationTask
-                ? const Text('ToToDo')
-                : Text(
-                    'Habit',
-                    style: kFontRegularGray4_16,
-                  ),
+            title: getTitle(),
             backgroundColor: state.indexNavigationBarSelected ==
                     HomeState.kBottomNavigationTask
                 ? kColorPrimary
@@ -87,5 +80,20 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+  }
+
+  Widget getTitle() {
+    if (_state.indexNavigationBarSelected == HomeState.kBottomNavigationTask) {
+      String title = 'ToDoDo';
+      if (_state.indexDrawerSelected == HomeState.kDrawerIndexToday) {
+        title = 'Hôm nay';
+      }
+      return Text(title);
+    } else {
+      return Text(
+        'Habit',
+        style: kFontRegularGray4_16,
+      );
+    }
   }
 }

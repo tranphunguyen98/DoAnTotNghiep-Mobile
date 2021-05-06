@@ -8,7 +8,7 @@ class Task extends Equatable {
   static const int kPriority4 = 4;
   static const int kPriority3 = 3;
   static const int kPriority2 = 2;
-  static const int kPriority1 = 1;
+  static const int kPriority1 = 1; //most importance
 
   final String id;
   final String createdDate;

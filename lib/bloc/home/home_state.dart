@@ -5,6 +5,7 @@ import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/utils/date_helper.dart';
+import 'package:totodo/utils/util.dart';
 
 class HomeState extends Equatable {
   static const kDrawerIndexInbox = 0;
@@ -23,57 +24,14 @@ class HomeState extends Equatable {
   final List<Project> listProject;
   final List<Label> listLabel;
   final List<Section> listSection;
+  final bool isShowCompletedTask;
   final bool loading;
   final String msg;
-
-  List<Section> listSectionDataDisplay() {
-    if (_listAllTask == null) return <Section>[];
-
-    if (indexDrawerSelected == kDrawerIndexInbox) {
-      return _getListSectionInbox();
-    }
-
-    if (indexDrawerSelected == kDrawerIndexToday) {
-      return _getListSectionToday();
-    }
-
-    if (indexDrawerSelected == kDrawerIndexNextWeek) {
-      return _getListSectionNextWeek();
-    }
-
-    if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeProject) {
-      return _getListSectionProject();
-    }
-
-    if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeLabel) {
-      return _getListSectionLabel();
-    }
-
-    if (drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeFilter) {
-      return _getListSectionFilter();
-    }
-
-    return <Section>[];
-  }
-
-  bool isInProject() {
-    if (drawerItems != null) {
-      return drawerItems[indexDrawerSelected].type ==
-          DrawerItemData.kTypeProject;
-    }
-    return false;
-  }
-
-  Project getProjectSelected() {
-    if (isInProject()) {
-      return drawerItems[indexDrawerSelected].data as Project;
-    }
-    throw Exception('Not in project screen');
-  }
 
   const HomeState(
       {this.indexDrawerSelected = kDrawerIndexInbox,
       this.indexNavigationBarSelected = kBottomNavigationTask,
+      this.isShowCompletedTask = false,
       this.loading,
       this.msg,
       List<Task> listAllTask,
@@ -95,6 +53,7 @@ class HomeState extends Equatable {
   List<Object> get props => [
         indexDrawerSelected,
         indexNavigationBarSelected,
+        isShowCompletedTask,
         _listAllTask,
         loading,
         msg,
@@ -106,7 +65,7 @@ class HomeState extends Equatable {
 
   @override
   String toString() {
-    return 'HomeState{drawerItems: $drawerItems, indexDrawerSelected: $indexDrawerSelected, indexNavigationBarSelected: $indexNavigationBarSelected, _listAllTask: $_listAllTask, listProject: $listProject, listLabel: $listLabel, listSection: $listSection, loading: $loading, msg: $msg}';
+    return 'HomeState{drawerItems: $drawerItems, indexDrawerSelected: $indexDrawerSelected, indexNavigationBarSelected: $indexNavigationBarSelected, _listAllTask: $_listAllTask, listProject: $listProject, listLabel: $listLabel, listSection: $listSection, isShowCompletedTask: $isShowCompletedTask, loading: $loading, msg: $msg}';
   }
 
   HomeState copyWith({
@@ -117,6 +76,7 @@ class HomeState extends Equatable {
     List<Project> listProject,
     List<Label> listLabel,
     List<Section> listSection,
+    bool isShowCompletedTask,
     bool loading,
     String msg,
   }) {
@@ -126,10 +86,12 @@ class HomeState extends Equatable {
         (indexNavigationBarSelected == null ||
             identical(
                 indexNavigationBarSelected, this.indexNavigationBarSelected)) &&
-        (listAllTask == null || identical(listAllTask, _listAllTask)) &&
+        (listAllTask == null || identical(listAllTask, this._listAllTask)) &&
         (listProject == null || identical(listProject, this.listProject)) &&
         (listLabel == null || identical(listLabel, this.listLabel)) &&
         (listSection == null || identical(listSection, this.listSection)) &&
+        (isShowCompletedTask == null ||
+            identical(isShowCompletedTask, this.isShowCompletedTask)) &&
         (loading == null || identical(loading, this.loading)) &&
         (msg == null || identical(msg, this.msg))) {
       return this;
@@ -144,50 +106,115 @@ class HomeState extends Equatable {
       listProject: listProject ?? this.listProject,
       listLabel: listLabel ?? this.listLabel,
       listSection: listSection ?? this.listSection,
+      isShowCompletedTask: isShowCompletedTask ?? this.isShowCompletedTask,
       loading: loading ?? this.loading,
       msg: msg ?? this.msg,
     );
   }
 
+  List<Section> listSectionDataDisplay() {
+    List<Section> listSection = <Section>[];
+    if (_listAllTask == null) return listSection;
+
+    if (indexDrawerSelected == kDrawerIndexInbox) {
+      listSection = _getListSectionInbox();
+    } else if (indexDrawerSelected == kDrawerIndexToday) {
+      listSection = _getListSectionToday();
+    } else if (indexDrawerSelected == kDrawerIndexNextWeek) {
+      listSection = _getListSectionNextWeek();
+    } else if (drawerItems[indexDrawerSelected].type ==
+        DrawerItemData.kTypeProject) {
+      listSection = _getListSectionProject();
+    } else if (drawerItems[indexDrawerSelected].type ==
+        DrawerItemData.kTypeLabel) {
+      listSection = _getListSectionLabel();
+    } else if (drawerItems[indexDrawerSelected].type ==
+        DrawerItemData.kTypeFilter) {
+      listSection = _getListSectionFilter();
+    }
+
+    Section completedSection;
+    if (isShowCompletedTask) {
+      completedSection = _getCompletedSection(listSection);
+    }
+
+    for (final section in listSection) {
+      section.listTask.removeWhere((task) => task.isCompleted);
+    }
+
+    if (completedSection != null) {
+      listSection.add(completedSection);
+    }
+
+    listSection.removeWhere(
+        (section) => !section.isShowIfEmpty && section.listTask.isEmpty);
+
+    _sortListTask(listSection);
+
+    log('listSection', listSection);
+
+    return listSection;
+  }
+
+  bool isInProject() {
+    if (drawerItems != null) {
+      return drawerItems[indexDrawerSelected].type ==
+          DrawerItemData.kTypeProject;
+    }
+    return false;
+  }
+
+  Project getProjectSelected() {
+    if (isInProject()) {
+      return drawerItems[indexDrawerSelected].data as Project;
+    }
+    throw Exception('Not in project screen');
+  }
+
   List<Section> _getListSectionWithDataAndConditionDate(
       List<Section> listSectionNoData) {
     final listSectionWithData = listSectionNoData.map((section) {
-      final listTaskWithSection = _listAllTask
-          .where((task) =>
-              !(task.taskDate?.isEmpty ?? true) &&
-              section.condition(task.taskDate))
-          .toList();
+      final listTaskWithSection = _listAllTask.where((task) {
+        return !(task.taskDate?.isEmpty ?? true) &&
+            section.dateCondition(task.taskDate);
+      }).toList();
       return section.copyWith(listTask: listTaskWithSection);
     }).toList();
+
     return listSectionWithData;
   }
 
   List<Section> _getListSectionWithDataAndConditionSection(
       List<Section> listSectionNoData) {
     final listSectionWithData = listSectionNoData.map((section) {
-      final listTaskWithSection = _listAllTask
-          .where((task) =>
-              !(task.sectionId?.isEmpty ?? true) &&
-              section.condition(task.sectionId))
-          .toList();
+      final listTaskWithSection = _listAllTask.where((task) {
+        return !(task.sectionId?.isEmpty ?? true) &&
+            section.dateCondition(task.sectionId);
+      }).toList();
       return section.copyWith(listTask: listTaskWithSection);
     }).toList();
     return listSectionWithData;
   }
 
   List<Section> _getListSectionInbox() {
-    final listTaskInbox = _listAllTask
-        .where((element) => element.project?.id?.isEmpty ?? true)
+    final inboxTaskList = _listAllTask
+        .where((task) => task.project?.id?.isEmpty ?? true)
         .toList();
 
-    if (listTaskInbox.isNotEmpty) {
-      return [Section.kSectionNoName.copyWith(listTask: listTaskInbox)];
+    final List<Section> listSection = [];
+
+    if (inboxTaskList.isNotEmpty) {
+      listSection.add(Section.kSectionNoName.copyWith(listTask: inboxTaskList));
     }
-    return [];
+
+    return listSection;
   }
 
   List<Section> _getListSectionToday() {
-    final listSectionNoData = [Section.kSectionOverdue, Section.kSectionToday];
+    final listSectionNoData = [
+      Section.kSectionOverdue,
+      Section.kSectionToday,
+    ];
 
     final listSectionWithData =
         _getListSectionWithDataAndConditionDate(listSectionNoData);
@@ -198,6 +225,8 @@ class HomeState extends Equatable {
         listSectionWithData[1].listTask.isEmpty) {
       return [];
     }
+
+    listSectionWithData.removeWhere((element) => element.listTask.isEmpty);
 
     return listSectionWithData;
   }
@@ -214,7 +243,7 @@ class HomeState extends Equatable {
                     DateTime.now().add(Duration(days: numberOfDay))),
                 name: DateHelper.getNameOfDay(
                     DateTime.now().add(Duration(days: numberOfDay))),
-                condition: (dateTime) {
+                dateCondition: (dateTime) {
                   return DateHelper.isAfterNumberDay(
                       DateTime.parse(dateTime), numberOfDay);
                 }),
@@ -306,5 +335,43 @@ class HomeState extends Equatable {
     }
 
     return [];
+  }
+
+  void _sortListTask(List<Section> sections) {
+    for (final section in sections) {
+      section.listTask.sort((task1, task2) {
+        final bool isBothNoDay = (task1.taskDate?.isEmpty ?? true) &&
+            (task2.taskDate?.isEmpty ?? true);
+
+        final bool isSameDay = (!(task1.taskDate?.isEmpty ?? true) &&
+                !(task2.taskDate?.isEmpty ?? true)) &&
+            DateHelper.isSameDayString(task1.taskDate, task2.taskDate);
+
+        if (isBothNoDay || isSameDay) {
+          return task1.priority.compareTo(task2.priority);
+        } else {
+          if (task1.taskDate?.isEmpty ?? true) {
+            return 1;
+          }
+          if (task2.taskDate?.isEmpty ?? true) {
+            return -1;
+          }
+          return DateHelper.compareStringDay(task1.taskDate, task2.taskDate);
+        }
+      });
+    }
+  }
+
+  Section _getCompletedSection(List<Section> sections) {
+    final List<Task> completedTasks = [];
+
+    for (final section in sections) {
+      completedTasks
+          .addAll(section.listTask.where((task) => task.isCompleted).toList());
+    }
+    if (completedTasks.isNotEmpty) {
+      return Section.kSectionCompleted.copyWith(listTask: completedTasks);
+    }
+    return null;
   }
 }

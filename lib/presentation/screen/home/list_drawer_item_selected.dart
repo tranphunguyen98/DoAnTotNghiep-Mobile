@@ -36,7 +36,7 @@ class _ListDrawerItemSelectedState extends State<ListDrawerItemSelected> {
                     e.value,
                     isSelected: e.key == state.indexDrawerSelected,
                     onPressed: () {
-                      log("eKey ${e.key} ${state.indexDrawerSelected}");
+                      // log("eKey ${e.key} ${state.indexDrawerSelected}");
                       if (e.key != state.indexDrawerSelected) {
                         _homeBloc.add(SelectedDrawerIndexChanged(index: e.key));
                         Navigator.pop(context);

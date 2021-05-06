@@ -9,6 +9,8 @@ part 'section.g.dart';
 
 @HiveType(typeId: kHiveTypeSection)
 class Section extends Equatable {
+  static const String kIdCompleted = 'completed';
+
   @HiveField(0)
   final String id;
   @HiveField(1)
@@ -18,7 +20,7 @@ class Section extends Equatable {
 
   final bool isShowIfEmpty;
   final List<Task> listTask;
-  final bool Function(String date) condition;
+  final bool Function(String date) dateCondition;
 
   const Section(
       {@required this.id,
@@ -26,26 +28,35 @@ class Section extends Equatable {
       this.isShowIfEmpty = true,
       this.listTask = const [],
       this.projectId,
-      this.condition});
+      this.dateCondition});
 
   static const Section kSectionToday = Section(
       id: "today",
       name: "Today",
       isShowIfEmpty: false,
-      condition: DateHelper.isTodayString);
+      dateCondition: DateHelper.isTodayString);
 
   static const Section kSectionEmpty = Section(id: null);
 
   static const Section kSectionTomorrow = Section(
-      id: "tomorrow", name: "Tomorrow", condition: DateHelper.isTomorrowString);
+      id: "tomorrow",
+      name: "Tomorrow",
+      dateCondition: DateHelper.isTomorrowString);
+
+  static const Section kSectionCompleted = Section(
+    id: kIdCompleted,
+    name: "Completed",
+    isShowIfEmpty: false,
+  );
 
   static const Section kSectionOverdue = Section(
       id: "overdue",
       name: "Overdue",
       isShowIfEmpty: false,
-      condition: DateHelper.isOverDueString);
+      dateCondition: DateHelper.isOverDueString);
 
-  static const Section kSectionNoName = Section(id: "noName");
+  static const Section kSectionNoName =
+      Section(id: "noName", isShowIfEmpty: false);
 
   Section copyWith({
     String id,
@@ -61,7 +72,7 @@ class Section extends Equatable {
         (isShowIfEmpty == null ||
             identical(isShowIfEmpty, this.isShowIfEmpty)) &&
         (listTask == null || identical(listTask, this.listTask)) &&
-        (condition == null || identical(condition, this.condition))) {
+        (condition == null || identical(condition, this.dateCondition))) {
       return this;
     }
 
@@ -71,13 +82,13 @@ class Section extends Equatable {
       projectId: projectId ?? this.projectId,
       isShowIfEmpty: isShowIfEmpty ?? this.isShowIfEmpty,
       listTask: listTask ?? this.listTask,
-      condition: condition ?? this.condition,
+      dateCondition: condition ?? this.dateCondition,
     );
   }
 
   @override
   String toString() {
-    return 'Section{id: $id, name: $name, projectId: $projectId}';
+    return 'Section{id: $id, name: $name, projectId: $projectId, isShowIfEmpty: $isShowIfEmpty, listTask: $listTask, dateCondition: $dateCondition}';
   }
 
   @override

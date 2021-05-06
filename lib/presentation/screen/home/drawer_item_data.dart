@@ -29,7 +29,7 @@ class DrawerItemData {
   }
 
   static List<DrawerItemData> listDrawerItemDateInit = [
-    DrawerItemData("Dashboard", Icons.inbox, color: Colors.blue),
+    DrawerItemData("Inbox", Icons.inbox, color: Colors.blue),
     DrawerItemData("Hôm nay", Icons.today, color: Colors.green),
     DrawerItemData("7 ngày tiếp theo", Icons.date_range, color: Colors.red),
   ];

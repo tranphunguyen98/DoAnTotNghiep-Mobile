@@ -8,6 +8,16 @@ class DateHelper {
         dateTimeSource.day == dateTimeDestination.day;
   }
 
+  static int compareStringDay(String dateSource, String dateDestination) {
+    final DateTime dateTimeSource = DateTime.parse(dateSource);
+    final DateTime dateTimeDestination = DateTime.parse(dateDestination);
+
+    return DateTime(
+            dateTimeSource.year, dateTimeSource.month, dateTimeSource.day)
+        .compareTo(DateTime(dateTimeDestination.year, dateTimeDestination.month,
+            dateTimeDestination.day));
+  }
+
   static bool isTomorrow(DateTime dateTimeSource) {
     return isAfterNumberDay(dateTimeSource, 1);
   }
