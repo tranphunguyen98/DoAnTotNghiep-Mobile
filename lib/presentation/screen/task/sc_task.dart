@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/di/injection.dart';
@@ -19,6 +20,7 @@ class TaskScreen extends StatefulWidget {
 
 class _TaskScreenState extends State<TaskScreen> {
   final HomeBloc _homeBloc = getIt<HomeBloc>();
+  HomeState _state;
 
   @override
   void initState() {
@@ -30,6 +32,7 @@ class _TaskScreenState extends State<TaskScreen> {
     return BlocBuilder<HomeBloc, HomeState>(
       cubit: _homeBloc,
       builder: (context, state) {
+        _state = state;
         if (state.loading) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -46,13 +49,19 @@ class _TaskScreenState extends State<TaskScreen> {
           } else {
             final listWidgetSection =
                 getListWidgetSection(state.listSectionDataDisplay());
-            return ReorderableListView.builder(
-              itemBuilder: (context, index) => listWidgetSection[index],
-              itemCount: listWidgetSection.length,
-              onReorder: (oldIndex, newIndex) {
-                _onReorder(oldIndex, newIndex, listWidgetSection);
-              },
-            );
+            return state.isInProject() ||
+                    state.indexDrawerSelected == HomeState.kDrawerIndexInbox
+                ? ReorderableListView.builder(
+                    itemBuilder: (context, index) => listWidgetSection[index],
+                    itemCount: listWidgetSection.length,
+                    onReorder: (oldIndex, newIndex) {
+                      _onReorder(oldIndex, newIndex, listWidgetSection);
+                    },
+                  )
+                : ListView.builder(
+                    itemBuilder: (context, index) => listWidgetSection[index],
+                    itemCount: listWidgetSection.length,
+                  );
           }
         }
 
@@ -75,21 +84,42 @@ class _TaskScreenState extends State<TaskScreen> {
 
     if (idSectionBelow != null) {
       if (oldIndex > newIndex) {
-        _homeBloc.add(
-          UpdateTaskEvent(
-            (listWidgetSection[oldIndex] as ItemTask).task.copyWith(
-                  sectionId: idSectionAbove ?? '',
-                ),
-          ),
-        );
+        if (idSectionBelow == Section.kIdCompleted) {
+          _homeBloc.add(
+            UpdateTaskEvent(
+              (listWidgetSection[oldIndex] as ItemTask).task.copyWith(
+                    sectionId: idSectionAbove ?? '',
+                    isCompleted: false,
+                  ),
+            ),
+          );
+        } else {
+          _homeBloc.add(
+            UpdateTaskEvent(
+              (listWidgetSection[oldIndex] as ItemTask).task.copyWith(
+                    sectionId: idSectionAbove ?? '',
+                  ),
+            ),
+          );
+        }
       } else {
-        _homeBloc.add(
-          UpdateTaskEvent(
-            (listWidgetSection[oldIndex] as ItemTask).task.copyWith(
-                  sectionId: idSectionBelow,
-                ),
-          ),
-        );
+        if (idSectionBelow == Section.kIdCompleted) {
+          _homeBloc.add(
+            UpdateTaskEvent(
+              (listWidgetSection[oldIndex] as ItemTask).task.copyWith(
+                    isCompleted: true,
+                  ),
+            ),
+          );
+        } else {
+          _homeBloc.add(
+            UpdateTaskEvent(
+              (listWidgetSection[oldIndex] as ItemTask).task.copyWith(
+                    sectionId: idSectionBelow,
+                  ),
+            ),
+          );
+        }
       }
     }
   }
@@ -124,6 +154,12 @@ class _TaskScreenState extends State<TaskScreen> {
 
     for (final section in listSection) {
       if (section != Section.kSectionNoName) {
+        final dataDrawerItem =
+            _state.drawerItems[_state.indexDrawerSelected].data;
+        Project project;
+        if (dataDrawerItem is Project) {
+          project = dataDrawerItem;
+        }
         listWidget.add(
           HeaderSection(
             key: ValueKey(section.id),
@@ -132,6 +168,8 @@ class _TaskScreenState extends State<TaskScreen> {
             style: kFontSemiboldBlack,
             expandFlag: true,
             onExpand: () {},
+            project:
+                project, // (_state.drawerItems[indexDrawerSelected].data) as Project;,
           ),
         );
       }

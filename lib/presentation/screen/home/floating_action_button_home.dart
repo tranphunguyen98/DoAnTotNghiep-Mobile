@@ -75,7 +75,7 @@ class _FloatingActionButtonHomeState extends State<FloatingActionButtonHome> {
             ? BottomSheetAddTask(
                 projectSelected: _homeBloc.state.getProjectSelected(),
               )
-            : BottomSheetAddTask(),
+            : const BottomSheetAddTask(),
       ),
     );
   }

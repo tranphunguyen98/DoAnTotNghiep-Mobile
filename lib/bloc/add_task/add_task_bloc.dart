@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/utils/notification_helper.dart';
-import 'package:totodo/utils/util.dart';
 
 import 'bloc.dart';
 
@@ -40,10 +39,10 @@ class TaskAddBloc extends Bloc<TaskAddEvent, TaskAddState> {
   }
 
   Stream<TaskAddState> _mapOnDataTaskAddChangedToState() async* {
-    log("_mapOnDataTaskAddChangedToState :");
+    // log("_mapOnDataTaskAddChangedToState :");
     final labels = await _taskRepository.getLabels();
     final projects = await _taskRepository.getProjects();
-    log("Labels : $labels");
+    // log("Labels : $labels");
     yield state.copyWith(
       labels: labels,
       projects: projects,

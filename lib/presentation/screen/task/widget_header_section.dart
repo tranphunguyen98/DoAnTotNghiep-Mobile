@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:totodo/bloc/add_task/bloc.dart';
+import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
+import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/home/dropdown_choice.dart';
 import 'package:totodo/presentation/screen/home/widget_bottom_sheet_add_task.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
@@ -8,6 +13,7 @@ class HeaderSection extends StatelessWidget {
   final String sectionId;
   final TextStyle style;
   final bool expandFlag;
+  final Project project;
   final VoidCallback onExpand;
 
   HeaderSection({
@@ -16,6 +22,7 @@ class HeaderSection extends StatelessWidget {
     @required this.style,
     @required this.expandFlag,
     @required this.onExpand,
+    this.project,
     Key key,
   }) : super(key: key);
 
@@ -32,12 +39,19 @@ class HeaderSection extends StatelessWidget {
               backgroundColor: Colors.white,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(16.0),
-                    topLeft: Radius.circular(16.0)),
+                  topRight: Radius.circular(16.0),
+                  topLeft: Radius.circular(16.0),
+                ),
               ),
               context: Scaffold.of(context).context,
-              builder: (_) => BottomSheetAddTask(
-                sectionId: sectionId,
+              builder: (_) => BlocProvider<TaskAddBloc>(
+                create: (context) => TaskAddBloc(
+                  taskRepository: getIt<ITaskRepository>(),
+                )..add(OnDataTaskAddChanged()),
+                child: BottomSheetAddTask(
+                  sectionId: sectionId,
+                  projectSelected: project,
+                ),
               ),
             );
             //Navigator.pushNamed(context, MyRouter.SETTING);

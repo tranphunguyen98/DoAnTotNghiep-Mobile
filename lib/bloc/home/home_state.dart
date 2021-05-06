@@ -314,8 +314,8 @@ class HomeState extends Equatable {
 
     //Add condition date to listSection
     final listSectionWithCondition = listSectionWithProject
-        .map((e) => e.copyWith(condition: (value) {
-              return value == e.id;
+        .map((section) => section.copyWith(dateCondition: (value) {
+              return value == section.id;
             }))
         .toList();
 

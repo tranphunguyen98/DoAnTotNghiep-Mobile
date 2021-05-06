@@ -64,7 +64,7 @@ class Section extends Equatable {
     String projectId,
     bool isShowIfEmpty,
     List<Task> listTask,
-    bool Function(String date) condition,
+    bool Function(String date) dateCondition,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (name == null || identical(name, this.name)) &&
@@ -72,7 +72,8 @@ class Section extends Equatable {
         (isShowIfEmpty == null ||
             identical(isShowIfEmpty, this.isShowIfEmpty)) &&
         (listTask == null || identical(listTask, this.listTask)) &&
-        (condition == null || identical(condition, this.dateCondition))) {
+        (dateCondition == null ||
+            identical(dateCondition, this.dateCondition))) {
       return this;
     }
 
@@ -82,7 +83,7 @@ class Section extends Equatable {
       projectId: projectId ?? this.projectId,
       isShowIfEmpty: isShowIfEmpty ?? this.isShowIfEmpty,
       listTask: listTask ?? this.listTask,
-      dateCondition: condition ?? this.dateCondition,
+      dateCondition: dateCondition ?? this.dateCondition,
     );
   }
 
