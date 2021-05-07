@@ -74,7 +74,7 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
                   if (!(state.taskAdd.labels?.isEmpty ?? true))
                     _buildListChipLabel(),
                   buildRowDateAndProject(),
-                  buildRowFunction()
+                  // buildRowFunction()
                 ],
               ),
             ),
@@ -136,40 +136,45 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
     }
   }
 
-  Row buildRowFunction() {
-    return Row(
-      children: [
-        _buildLabel(),
-        _buildPriority(),
-        CircleInkWell(
-          Icons.alarm,
-          size: 24.0,
-          onPressed: () {},
-        ),
-        const CircleInkWell(
-          Icons.mode_comment_outlined,
-          size: 24.0,
-        ),
-        const Spacer(),
-        CircleInkWell(
-          Icons.send_outlined,
-          size: 24.0,
-          color: isSendButtonEnable() ? Colors.red : kColorBlack2,
-          onPressed: isSendButtonEnable()
-              ? () {
-                  _taskAddBloc.add(SubmitAddTask());
-                  _textNameTaskController.clear();
-                }
-              : null,
-        ),
-      ],
-    );
-  }
+  // Row buildRowFunction() {
+  //   return Row(
+  //     children: [
+  //       _buildLabel(),
+  //       _buildPriority(),
+  //       CircleInkWell(
+  //         Icons.alarm,
+  //         size: 24.0,
+  //         onPressed: () {},
+  //       ),
+  //       const CircleInkWell(
+  //         Icons.mode_comment_outlined,
+  //         size: 24.0,
+  //       ),
+  //       const Spacer(),
+  //       CircleInkWell(
+  //         Icons.send_outlined,
+  //         size: 24.0,
+  //         color: isSendButtonEnable() ? Colors.red : kColorBlack2,
+  //         onPressed: isSendButtonEnable()
+  //             ? () {
+  //                 _taskAddBloc.add(SubmitAddTask());
+  //                 _textNameTaskController.clear();
+  //               }
+  //             : null,
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Row buildRowDateAndProject() {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
+        _buildLabel(),
+        _buildPriority(),
+        const SizedBox(
+          width: 8.0,
+        ),
         IconOutlineButton(
           DateHelper.getDisplayTextDateFromDate(
                   addState.taskAdd.taskDate ?? "") ??
@@ -187,6 +192,18 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
           width: 8.0,
         ),
         _buildPopupProject(),
+        const Spacer(),
+        CircleInkWell(
+          Icons.send_outlined,
+          size: 24.0,
+          color: isSendButtonEnable() ? Colors.red : kColorBlack2,
+          onPressed: isSendButtonEnable()
+              ? () {
+                  _taskAddBloc.add(SubmitAddTask());
+                  _textNameTaskController.clear();
+                }
+              : null,
+        ),
       ],
     );
   }

@@ -9,7 +9,7 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
 
   @override
   Future<bool> addTask(Task task) {
-    // TODO: implement addTask
+    // TODO: implement getDetailTask
     throw UnimplementedError();
   }
 
