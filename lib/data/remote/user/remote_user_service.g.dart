@@ -9,7 +9,7 @@ part of 'remote_user_service.dart';
 class _RemoteUserService implements RemoteUserService {
   _RemoteUserService(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'http://192.168.1.183:3006/';
+    baseUrl ??= 'https://personal-task-management-be.herokuapp.com/';
   }
 
   final Dio _dio;
@@ -128,6 +128,35 @@ class _RemoteUserService implements RemoteUserService {
             baseUrl: baseUrl),
         data: _data);
     final value = MessageResponseRegister.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<UserResponse> saveAccountAuth(
+      idAccountOwner, type, displayName, avatar) async {
+    ArgumentError.checkNotNull(idAccountOwner, 'idAccountOwner');
+    ArgumentError.checkNotNull(type, 'type');
+    ArgumentError.checkNotNull(displayName, 'displayName');
+    ArgumentError.checkNotNull(avatar, 'avatar');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = {
+      'idAccountOwner': idAccountOwner,
+      'type': type,
+      'displayName': displayName,
+      'avatar': avatar
+    };
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/users/save-account-oauth',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = UserResponse.fromJson(_result.data);
     return value;
   }
 }

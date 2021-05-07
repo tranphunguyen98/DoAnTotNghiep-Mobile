@@ -7,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:totodo/data/data_source/user/remote_user_data_source.dart';
 import 'package:totodo/data/entity/user.dart';
 import 'package:totodo/data/remote/user/remote_user_service.dart';
+import 'package:totodo/data/response/user_response.dart';
 import 'package:totodo/di/injection.dart';
 
 class RemoteUserDataSourceImpl implements RemoteUserDataSource {
@@ -59,10 +60,8 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   Future<User> signIn(String email, String password) async {
     try {
       final userResponse = await _userService.signIn(email, password);
-      // print("userResponse: $userResponse}");
       return userResponse.user;
     } on DioError catch (e) {
-      // print("Error: ${e.response.data["message"]}");
       throw Exception(e.response.data["message"] ?? "Error Dio");
     }
   }
@@ -104,33 +103,18 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
   @override
   Future<User> signInWithGoogle() async {
     try {
-      // print("User: 0");
-
       _firebaseAuth.signOut();
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-      // print("User: 1 ${googleUser.displayName}");
-      return User(
-          type: User.kTypeGoogle,
-          email: googleUser.email,
-          name: googleUser.displayName,
-          avatar: googleUser.photoUrl);
 
-      // final GoogleSignInAuthentication googleAuth =
-      //     await googleUser.authentication;
-      // final AuthCredential credential = GoogleAuthProvider.getCredential(
-      //     idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
-      // print("User: 2");
-      //
-      // await _firebaseAuth.signInWithCredential(credential);
-      // final user = await _firebaseAuth.currentUser();
-      // print("User: $user");
-      // return User(
-      //     type: User.kTypeGoogle,
-      //     email: user.email,
-      //     name: user.displayName,
-      //     avatar: user.photoUrl);
+      final UserResponse response = await _userService.saveAccountAuth(
+          googleUser.id,
+          User.kTypeGoogle,
+          googleUser.displayName,
+          googleUser.photoUrl);
+      return response.user.copyWith(email: googleUser.email);
+    } on DioError catch (e) {
+      throw Exception(e.response.data["message"] ?? "Error Dio");
     } catch (e) {
-      // print("trace: $trace");
       rethrow;
     }
   }

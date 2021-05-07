@@ -5,7 +5,6 @@ import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/utils/date_helper.dart';
-import 'package:totodo/utils/util.dart';
 
 class HomeState extends Equatable {
   static const kDrawerIndexInbox = 0;
@@ -151,7 +150,7 @@ class HomeState extends Equatable {
 
     _sortListTask(listSection);
 
-    log('listSection', listSection);
+    // log('listSection', listSection);
 
     return listSection;
   }

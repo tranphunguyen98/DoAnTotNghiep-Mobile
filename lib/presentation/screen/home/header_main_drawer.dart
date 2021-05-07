@@ -41,7 +41,7 @@ class HeaderMainDrawer extends StatelessWidget {
                           textAlign: TextAlign.start,
                         ),
                         Text(
-                          user.email,
+                          user?.email ?? 'email',
                           style: kFontRegularWhite_12,
                         ),
                       ],

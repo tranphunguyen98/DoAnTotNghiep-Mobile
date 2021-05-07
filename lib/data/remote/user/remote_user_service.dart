@@ -7,8 +7,7 @@ import '../../response/user_response.dart';
 
 part 'remote_user_service.g.dart';
 
-//10.0.2.2
-@RestApi(baseUrl: "http://192.168.1.183:3006/")
+@RestApi(baseUrl: "https://personal-task-management-be.herokuapp.com/")
 abstract class RemoteUserService {
   factory RemoteUserService(Dio dio, {String baseUrl}) = _RemoteUserService;
 
@@ -32,15 +31,11 @@ abstract class RemoteUserService {
       @Field() String oldPassword,
       @Field() String password);
 
-  ///idAccountOwner": "string",
-  //   "type": 1,
-  //   "displayName": "string",
-  //   "avatar": "string"
-  // @POST("/users/save-account-oauth")
-  // Future<MessageResponseRegister> saveAccountAuth(
-  //   @Field() String idAccountOwner,
-  //   @Field() int type,
-  //   @Field() String displayName,
-  //   @Field() String avatar,
-  // );
+  @POST("/users/save-account-oauth")
+  Future<UserResponse> saveAccountAuth(
+    @Field() String idAccountOwner,
+    @Field() int type,
+    @Field() String displayName,
+    @Field() String avatar,
+  );
 }
