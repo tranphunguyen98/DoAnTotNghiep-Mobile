@@ -56,18 +56,18 @@ class Project extends Equatable {
   @override
   int get hashCode => id.hashCode ^ name.hashCode ^ color.hashCode;
 
-  factory Project.fromMap(Map<String, dynamic> map) {
+  factory Project.fromJson(Map<String, dynamic> map) {
     return Project(
-      id: map['id'] as String,
+      id: map['_id'] as String,
       name: map['name'] as String,
       color: map['color'] as String,
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     // ignore: unnecessary_cast
     return {
-      'id': id,
+      '_id': id,
       'name': name,
       'color': color,
     } as Map<String, dynamic>;

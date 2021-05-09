@@ -1,6 +1,7 @@
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
 import 'package:totodo/data/data_source/task/remote_task_data_source.dart';
+import 'package:totodo/data/data_source/user/local_user_data_source.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/section.dart';
@@ -9,8 +10,10 @@ import 'package:totodo/data/entity/task.dart';
 class TaskRepositoryImpl implements ITaskRepository {
   final RemoteTaskDataSource _remoteTaskDataSource;
   final LocalTaskDataSource _localTaskDataSource;
+  final LocalUserDataSource _localUserDataSource;
 
-  TaskRepositoryImpl(this._remoteTaskDataSource, this._localTaskDataSource);
+  TaskRepositoryImpl(this._remoteTaskDataSource, this._localTaskDataSource,
+      this._localUserDataSource);
 
   @override
   Future<bool> addTask(Task task) {
@@ -44,7 +47,14 @@ class TaskRepositoryImpl implements ITaskRepository {
   }
 
   @override
-  Future<List<Project>> getProjects() {
+  Future<List<Project>> getProjects({bool onlyRemote = false}) async {
+    if (onlyRemote) {
+      final user = await _localUserDataSource.getUser();
+      final List<Project> projects =
+          await _remoteTaskDataSource.getProjects(user.authorization);
+      //TODO save to local.
+      return projects;
+    }
     return _localTaskDataSource.getProjects();
   }
 

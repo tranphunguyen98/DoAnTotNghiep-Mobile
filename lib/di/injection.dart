@@ -66,7 +66,9 @@ Future<void> configureDependencies() async {
       () => LocalTaskDataSourceImplement(getIt.get<LocalTaskService>()));
 
   getIt.registerLazySingleton<ITaskRepository>(() => TaskRepositoryImpl(
-      getIt.get<RemoteTaskDataSource>(), getIt.get<LocalTaskDataSource>()));
+      getIt.get<RemoteTaskDataSource>(),
+      getIt.get<LocalTaskDataSource>(),
+      getIt.get<LocalUserDataSource>()));
 
   // Habit
   getIt.registerLazySingleton<RemoteHabitService>(
