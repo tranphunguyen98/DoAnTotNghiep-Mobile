@@ -70,10 +70,14 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
     setState(() {
       if (pickedFile != null) {
         final image = File(pickedFile.path);
+        final List<String> images = [];
+        images.addAll(_state.habit.motivation.images ?? []);
+        images.add(image.path);
+
         _createHabitBloc.add(
           CreatingHabitDataChanged(
             motivation: _state.habit.motivation.copyWith(
-              images: [image.path], //TODO Save Image
+              images: images, //TODO Save Image to local storage
             ),
           ),
         );
@@ -91,7 +95,7 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
             'Tên Thói Quen',
             style: kFontMediumBlack_14,
           ),
-          SizedBox(
+          const SizedBox(
             height: 16.0,
           ),
           Row(
@@ -101,7 +105,7 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
                 width: 48,
                 height: 48,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 16.0,
               ),
               Expanded(
@@ -113,16 +117,13 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
                     hintText: 'Thiền',
                     hintStyle: kFontRegularGray1_14,
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                          color: kColorGray1,
-                          width: 0.5,
-                          style: BorderStyle.solid),
+                      borderSide: BorderSide(color: kColorGray1, width: 0.5),
                     ),
                   ),
                 ),
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -138,7 +139,7 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
             'Phân loại',
             style: kFontMediumBlack_14,
           ),
-          SizedBox(
+          const SizedBox(
             height: 8.0,
           ),
           DropdownButton<Map<String, dynamic>>(
@@ -172,10 +173,10 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
             'Icon',
             style: kFontMediumBlack_14,
           ),
-          SizedBox(
+          const SizedBox(
             height: 16.0,
           ),
-          Container(
+          SizedBox(
             height: 52 * 3.0,
             child: GridView.builder(
               scrollDirection: Axis.horizontal,
@@ -232,7 +233,7 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
             'Câu nói tạo động lực',
             style: kFontMediumBlack_14,
           ),
-          SizedBox(
+          const SizedBox(
             height: 4.0,
           ),
           TextField(
@@ -243,8 +244,7 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
               hintText: 'Get up and be amazing',
               hintStyle: kFontRegularGray1_14,
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                    color: kColorGray1, width: 0.5, style: BorderStyle.solid),
+                borderSide: BorderSide(color: kColorGray1, width: 0.5),
               ),
             ),
           ),
@@ -261,32 +261,60 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
           'Hình ảnh tạo động lực',
           style: kFontMediumBlack_14,
         ),
-        SizedBox(
+        const SizedBox(
           height: 16.0,
         ),
-        if (_state.habit?.motivation?.images == null)
-          Center(
-            child: GestureDetector(
-              onTap: _getImage,
-              child: Icon(
-                Icons.add_photo_alternate,
-                size: 64,
-                color: Colors.grey[500],
-              ),
-            ),
-          ),
-        if (_state.habit?.motivation?.images != null)
-          GestureDetector(
-            onTap: _getImage,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: Image.file(
-                File(_state.habit.motivation.images.first),
-              ),
-            ),
-          ),
+        Wrap(
+          spacing: 8.0,
+          children: _getWidgetListMotivationImage(),
+        )
       ]),
     );
+  }
+
+  List<Widget> _getWidgetListMotivationImage() {
+    final List<Widget> widgetList = [];
+    final double imageSize = (MediaQuery.of(context).size.width - 56) / 3;
+
+    if (_state.habit?.motivation?.images != null) {
+      widgetList.addAll(_state.habit.motivation.images
+          .map(
+            (image) => Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16.0),
+                child: Image.file(
+                  File(image),
+                  height: imageSize,
+                  width: imageSize,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+            ),
+          )
+          .toList());
+    }
+
+    widgetList.add(
+      GestureDetector(
+        onTap: _getImage,
+        child: Container(
+          height: imageSize,
+          width: imageSize,
+          margin: const EdgeInsets.only(bottom: 8.0),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+            border: Border.all(color: Colors.grey[300]),
+          ),
+          child: Icon(
+            Icons.add_photo_alternate,
+            size: 32,
+            color: Colors.grey[500],
+          ),
+        ),
+      ),
+    );
+    return widgetList;
   }
 
   void _onNameHabitChanged(String value) {

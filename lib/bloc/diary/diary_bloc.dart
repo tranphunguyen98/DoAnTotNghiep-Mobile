@@ -63,6 +63,9 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
         diaries.addAll(getListOfDiaryFromHabit(dateFilter, habit));
       }
     }
+
+    diaries.sort((a, b) => b.date.compareTo(a.date));
+
     return diaries;
   }
 
