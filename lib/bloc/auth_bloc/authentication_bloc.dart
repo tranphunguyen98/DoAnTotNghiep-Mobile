@@ -1,6 +1,8 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
+import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 
 import '../repository_interface/i_user_repository.dart';
 import 'bloc.dart';
@@ -8,10 +10,17 @@ import 'bloc.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final IUserRepository _userRepository;
+  final ITaskRepository _taskRepository;
+  final IHabitRepository _habitRepository;
 
-  AuthenticationBloc({@required IUserRepository userRepository})
-      : assert(userRepository != null),
+  AuthenticationBloc({
+    @required IUserRepository userRepository,
+    @required ITaskRepository taskRepository,
+    @required IHabitRepository habitRepository,
+  })  : assert(userRepository != null),
         _userRepository = userRepository,
+        _taskRepository = taskRepository,
+        _habitRepository = habitRepository,
         super(null);
 
   @override
@@ -32,6 +41,7 @@ class AuthenticationBloc
     try {
       final isSignedIn = await _userRepository.isSignedIn();
 
+      //TODO check AccessToken
       if (isSignedIn) {
         final user = await _userRepository.getUser();
         yield Authenticated(user);
@@ -44,6 +54,7 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
+    await _taskRepository.saveDataToLocal();
     yield Authenticated(await _userRepository.getUser());
   }
 

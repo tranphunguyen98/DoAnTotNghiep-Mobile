@@ -1,22 +1,22 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/data/entity/section.dart';
+import 'package:totodo/data/entity/section_display.dart';
 
 @immutable
 class AddSectionState extends Equatable {
-  final Section section;
+  final SectionDisplay section;
   final bool isValidNameSection;
   final String msg;
   final bool isSuccess;
 
   const AddSectionState({
-    this.section = Section.kSectionEmpty,
+    this.section = SectionDisplay.kSectionEmpty,
     this.msg,
     this.isValidNameSection = false,
     this.isSuccess = false,
   });
 
-  AddSectionState updateSection(Section section) {
+  AddSectionState updateSection(SectionDisplay section) {
     return copyWith(section: section);
   }
 
@@ -29,7 +29,7 @@ class AddSectionState extends Equatable {
   }
 
   AddSectionState copyWith({
-    Section section,
+    SectionDisplay section,
     bool isValidNameSection,
     String msg,
     bool isSuccess,

@@ -1,13 +1,13 @@
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/section.dart';
+import 'package:totodo/data/entity/section_display.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/model/local_task.dart';
 
 class LocalTaskMapper {
   List<Project> listProject;
   List<Label> listLabel;
-  List<Section> listSection;
+  List<SectionDisplay> listSection;
 
   LocalTaskMapper(
       {this.listLabel, this.listProject, this.listSection = const []});

@@ -13,12 +13,14 @@ import 'package:totodo/data/entity/habit/habit_progress_item.dart';
 import 'package:totodo/data/entity/habit/habit_remind.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/entity/section_display.dart';
+import 'package:totodo/data/entity/section_display.dart';
 import 'package:totodo/data/local/model/local_task.dart';
 import 'package:totodo/data/local/source/habit/local_habit_service.dart';
 import 'package:totodo/utils/notification_helper.dart';
 
 import 'app_config.dart';
-import 'data/entity/section.dart';
+import 'data/entity/section_display.dart';
 import 'data/local/model/local_task.dart';
 import 'data/local/source/task/local_task_service.dart';
 import 'di/injection.dart';
@@ -56,13 +58,12 @@ Future _initHive() async {
   Hive.registerAdapter<LocalTask>(LocalTaskAdapter());
   Hive.registerAdapter<Project>(ProjectAdapter());
   Hive.registerAdapter<Label>(LabelAdapter());
-  Hive.registerAdapter<Section>(SectionAdapter());
   Hive.registerAdapter<CheckItem>(CheckItemAdapter());
+  Hive.registerAdapter<SectionDisplay>(SectionDisplayAdapter());
 
   await Hive.openBox(LocalTaskService.kNameBoxTask);
   await Hive.openBox(LocalTaskService.kNameBoxProject);
   await Hive.openBox(LocalTaskService.kNameBoxLabel);
-  await Hive.openBox(LocalTaskService.kNameBoxSection);
 
   // Habit
   Hive.registerAdapter<DiaryItem>(DiaryItemAdapter());

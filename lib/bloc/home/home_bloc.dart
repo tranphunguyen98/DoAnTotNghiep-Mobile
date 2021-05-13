@@ -58,7 +58,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final listAllTask = await _taskRepository.getAllTask();
       final listProject = await _taskRepository.getProjects();
       final listLabel = await _taskRepository.getLabels();
-      final listSection = await _taskRepository.getSections();
+      // final listSection = await _taskRepository.getSections();
       final drawerItems = <DrawerItemData>[];
 
       _initDrawerItems(drawerItems, listProject, listLabel);
@@ -67,7 +67,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           listAllTask: listAllTask,
           listProject: listProject,
           listLabel: listLabel,
-          listSection: listSection,
+          listSection: [], //TODO handle section
           drawerItems: drawerItems,
           loading: false);
     } catch (e, stackTrace) {
@@ -137,9 +137,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Stream<HomeState> _mapDataListSectionChangedToState() async* {
     try {
-      final listSection = await _taskRepository.getSections();
-
-      yield state.copyWith(listSection: listSection);
+      // final listSection = await _taskRepository.getSections();
+      //TODO Handle sector
+      // yield state.copyWith(listSection: listSection);
     } catch (e, stackTrace) {
       log("error:( $stackTrace");
       yield HomeState.error(e.toString());

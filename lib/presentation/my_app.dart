@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:hive/hive.dart';
 import 'package:totodo/bloc/auth_bloc/bloc.dart';
+import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
+import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/simple_bloc_delegate.dart';
@@ -33,9 +35,11 @@ class MyApp extends StatefulWidget {
     Bloc.observer = SimpleBlocDelegate();
 
     return BlocProvider(
-      create: (context) =>
-          AuthenticationBloc(userRepository: getIt<IUserRepository>())
-            ..add(AppStarted()),
+      create: (context) => AuthenticationBloc(
+        userRepository: getIt<IUserRepository>(),
+        habitRepository: getIt<IHabitRepository>(),
+        taskRepository: getIt<ITaskRepository>(),
+      )..add(AppStarted()),
       child: MyApp(),
     );
   }

@@ -4,7 +4,6 @@ import 'package:totodo/data/data_source/task/remote_task_data_source.dart';
 import 'package:totodo/data/data_source/user/local_user_data_source.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 
 class TaskRepositoryImpl implements ITaskRepository {
@@ -52,7 +51,7 @@ class TaskRepositoryImpl implements ITaskRepository {
       final user = await _localUserDataSource.getUser();
       final List<Project> projects =
           await _remoteTaskDataSource.getProjects(user.authorization);
-      //TODO save to local.
+      // await _localTaskDataSource.saveProjects(projects);
       return projects;
     }
     return _localTaskDataSource.getProjects();
@@ -74,24 +73,31 @@ class TaskRepositoryImpl implements ITaskRepository {
     throw UnimplementedError();
   }
 
-  @override
-  Future<void> addSection(Section section) {
-    return _localTaskDataSource.addSection(section);
-  }
+  // @override
+  // Future<void> addSection(SectionDisplay section) {
+  //   return _localTaskDataSource.addSection(section);
+  // }
+  //
+  // @override
+  // Future<List<SectionDisplay>> getSections() {
+  //   return _localTaskDataSource.getSections();
+  // }
 
-  @override
-  Future<List<Section>> getSections() {
-    return _localTaskDataSource.getSections();
-  }
-
-  @override
-  Future<void> updateSection(Section section) {
-    // TODO: implement updateSection
-    throw UnimplementedError();
-  }
+  // @override
+  // Future<void> updateSection(SectionDisplay section) {
+  //   throw UnimplementedError();
+  // }
 
   @override
   Future<void> clearDataOffline() {
     return _localTaskDataSource.clearData();
+  }
+
+  @override
+  Future<void> saveDataToLocal() async {
+    final user = await _localUserDataSource.getUser();
+    final List<Project> projects =
+        await _remoteTaskDataSource.getProjects(user.authorization);
+    await _localTaskDataSource.saveProjects(projects);
   }
 }

@@ -9,7 +9,7 @@ part of 'remote_task_service.dart';
 class _RemoteTaskService implements RemoteTaskService {
   _RemoteTaskService(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'https://personal-task-management-be.herokuapp.com/';
+    baseUrl ??= 'http://192.168.1.18:3006/';
   }
 
   final Dio _dio;
@@ -30,7 +30,6 @@ class _RemoteTaskService implements RemoteTaskService {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    log('_result', _result);
     final value = ProjectResponse.fromJson(_result.data);
     return value;
   }

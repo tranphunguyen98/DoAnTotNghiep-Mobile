@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/section.dart';
+import 'package:totodo/data/entity/section_display.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/common_widgets/widget_container_error.dart';
@@ -84,7 +84,7 @@ class _TaskScreenState extends State<TaskScreen> {
 
     if (idSectionBelow != null) {
       if (oldIndex > newIndex) {
-        if (idSectionBelow == Section.kIdCompleted) {
+        if (idSectionBelow == SectionDisplay.kIdCompleted) {
           _homeBloc.add(
             UpdateTaskEvent(
               (listWidgetSection[oldIndex] as ItemTask).task.copyWith(
@@ -103,7 +103,7 @@ class _TaskScreenState extends State<TaskScreen> {
           );
         }
       } else {
-        if (idSectionBelow == Section.kIdCompleted) {
+        if (idSectionBelow == SectionDisplay.kIdCompleted) {
           _homeBloc.add(
             UpdateTaskEvent(
               (listWidgetSection[oldIndex] as ItemTask).task.copyWith(
@@ -149,11 +149,11 @@ class _TaskScreenState extends State<TaskScreen> {
     return null;
   }
 
-  List<Widget> getListWidgetSection(List<Section> listSection) {
+  List<Widget> getListWidgetSection(List<SectionDisplay> listSection) {
     final listWidget = <Widget>[];
 
     for (final section in listSection) {
-      if (section != Section.kSectionNoName) {
+      if (section != SectionDisplay.kSectionNoName) {
         final dataDrawerItem =
             _state.drawerItems[_state.indexDrawerSelected].data;
         Project project;

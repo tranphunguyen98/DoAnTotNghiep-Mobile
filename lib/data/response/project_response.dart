@@ -14,12 +14,14 @@ class ProjectResponse {
 
   factory ProjectResponse.fromJson(Map<String, dynamic> json) {
     log('json', json);
-    final result = json['result'] as List<Map<String, dynamic>>;
+    final result = json['result'] as List;
 
     return ProjectResponse(
       succeeded: json['succeeded'] as bool,
       message: json['message'] as String,
-      projects: result.map((project) => Project.fromJson(project)).toList(),
+      projects: result
+          .map((project) => Project.fromJson(project as Map<String, dynamic>))
+          .toList(),
     );
   }
 

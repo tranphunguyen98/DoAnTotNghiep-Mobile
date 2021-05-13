@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/section.dart';
+import 'package:totodo/data/entity/section_display.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/utils/date_helper.dart';
@@ -22,7 +22,7 @@ class HomeState extends Equatable {
   final List<Task> _listAllTask;
   final List<Project> listProject;
   final List<Label> listLabel;
-  final List<Section> listSection;
+  final List<SectionDisplay> listSection;
   final bool isShowCompletedTask;
   final bool loading;
   final String msg;
@@ -74,7 +74,7 @@ class HomeState extends Equatable {
     List<Task> listAllTask,
     List<Project> listProject,
     List<Label> listLabel,
-    List<Section> listSection,
+    List<SectionDisplay> listSection,
     bool isShowCompletedTask,
     bool loading,
     String msg,
@@ -111,8 +111,8 @@ class HomeState extends Equatable {
     );
   }
 
-  List<Section> listSectionDataDisplay() {
-    List<Section> listSection = <Section>[];
+  List<SectionDisplay> listSectionDataDisplay() {
+    List<SectionDisplay> listSection = <SectionDisplay>[];
     if (_listAllTask == null) return listSection;
 
     if (indexDrawerSelected == kDrawerIndexInbox) {
@@ -132,7 +132,7 @@ class HomeState extends Equatable {
       listSection = _getListSectionFilter();
     }
 
-    Section completedSection;
+    SectionDisplay completedSection;
     if (isShowCompletedTask) {
       completedSection = _getCompletedSection(listSection);
     }
@@ -170,8 +170,8 @@ class HomeState extends Equatable {
     throw Exception('Not in project screen');
   }
 
-  List<Section> _getListSectionWithDataAndConditionDate(
-      List<Section> listSectionNoData) {
+  List<SectionDisplay> _getListSectionWithDataAndConditionDate(
+      List<SectionDisplay> listSectionNoData) {
     final listSectionWithData = listSectionNoData.map((section) {
       final listTaskWithSection = _listAllTask.where((task) {
         return !(task.taskDate?.isEmpty ?? true) &&
@@ -183,8 +183,8 @@ class HomeState extends Equatable {
     return listSectionWithData;
   }
 
-  List<Section> _getListSectionWithDataAndConditionSection(
-      List<Section> listSectionNoData) {
+  List<SectionDisplay> _getListSectionWithDataAndConditionSection(
+      List<SectionDisplay> listSectionNoData) {
     final listSectionWithData = listSectionNoData.map((section) {
       final listTaskWithSection = _listAllTask.where((task) {
         return !(task.sectionId?.isEmpty ?? true) &&
@@ -195,24 +195,25 @@ class HomeState extends Equatable {
     return listSectionWithData;
   }
 
-  List<Section> _getListSectionInbox() {
+  List<SectionDisplay> _getListSectionInbox() {
     final inboxTaskList = _listAllTask
         .where((task) => task.project?.id?.isEmpty ?? true)
         .toList();
 
-    final List<Section> listSection = [];
+    final List<SectionDisplay> listSection = [];
 
     if (inboxTaskList.isNotEmpty) {
-      listSection.add(Section.kSectionNoName.copyWith(listTask: inboxTaskList));
+      listSection
+          .add(SectionDisplay.kSectionNoName.copyWith(listTask: inboxTaskList));
     }
 
     return listSection;
   }
 
-  List<Section> _getListSectionToday() {
+  List<SectionDisplay> _getListSectionToday() {
     final listSectionNoData = [
-      Section.kSectionOverdue,
-      Section.kSectionToday,
+      SectionDisplay.kSectionOverdue,
+      SectionDisplay.kSectionToday,
     ];
 
     final listSectionWithData =
@@ -230,14 +231,14 @@ class HomeState extends Equatable {
     return listSectionWithData;
   }
 
-  List<Section> _getListSectionNextWeek() {
+  List<SectionDisplay> _getListSectionNextWeek() {
     final listSectionNoData = [
-      Section.kSectionOverdue,
-      Section.kSectionToday.copyWith(isShowIfEmpty: true),
-      Section.kSectionTomorrow,
+      SectionDisplay.kSectionOverdue,
+      SectionDisplay.kSectionToday.copyWith(isShowIfEmpty: true),
+      SectionDisplay.kSectionTomorrow,
       ...[2, 3, 4, 5, 6]
           .map(
-            (numberOfDay) => Section(
+            (numberOfDay) => SectionDisplay(
                 id: DateHelper.getNameOfDay(
                     DateTime.now().add(Duration(days: numberOfDay))),
                 name: DateHelper.getNameOfDay(
@@ -253,8 +254,8 @@ class HomeState extends Equatable {
     return _getListSectionWithDataAndConditionDate(listSectionNoData);
   }
 
-  List<Section> _getListSectionProject() {
-    final List<Section> listSectionWithTaskHaveSection =
+  List<SectionDisplay> _getListSectionProject() {
+    final List<SectionDisplay> listSectionWithTaskHaveSection =
         _getListSectionWithTaskHaveSection();
 
     final List<Task> listTaskNoSection = _getListTaskNoSection();
@@ -263,11 +264,11 @@ class HomeState extends Equatable {
       return [];
     }
 
-    final listSectionOfProject = <Section>[];
+    final listSectionOfProject = <SectionDisplay>[];
 
     if (listTaskNoSection.isNotEmpty) {
-      listSectionOfProject
-          .add(Section.kSectionNoName.copyWith(listTask: listTaskNoSection));
+      listSectionOfProject.add(
+          SectionDisplay.kSectionNoName.copyWith(listTask: listTaskNoSection));
     }
 
     listSectionOfProject.addAll(listSectionWithTaskHaveSection);
@@ -275,7 +276,7 @@ class HomeState extends Equatable {
     return listSectionOfProject;
   }
 
-  List<Section> _getListSectionLabel() {
+  List<SectionDisplay> _getListSectionLabel() {
     final listTask = _listAllTask.where((element) {
       if (element.labels?.isEmpty ?? true) {
         return false;
@@ -286,7 +287,7 @@ class HomeState extends Equatable {
     }).toList();
 
     if (listTask.isNotEmpty) {
-      return [Section.kSectionNoName.copyWith(listTask: listTask)];
+      return [SectionDisplay.kSectionNoName.copyWith(listTask: listTask)];
     }
 
     return [];
@@ -305,7 +306,7 @@ class HomeState extends Equatable {
     return listTaskNoSection;
   }
 
-  List<Section> _getListSectionWithTaskHaveSection() {
+  List<SectionDisplay> _getListSectionWithTaskHaveSection() {
     final projectSelected = drawerItems[indexDrawerSelected].data as Project;
 
     final listSectionWithProject =
@@ -324,19 +325,19 @@ class HomeState extends Equatable {
     return listSectionWithData;
   }
 
-  List<Section> _getListSectionFilter() {
+  List<SectionDisplay> _getListSectionFilter() {
     final listTask = _listAllTask.where((task) {
       return task.priority == drawerItems[indexDrawerSelected].data as int;
     }).toList();
 
     if (listTask.isNotEmpty) {
-      return [Section.kSectionNoName.copyWith(listTask: listTask)];
+      return [SectionDisplay.kSectionNoName.copyWith(listTask: listTask)];
     }
 
     return [];
   }
 
-  void _sortListTask(List<Section> sections) {
+  void _sortListTask(List<SectionDisplay> sections) {
     for (final section in sections) {
       section.listTask.sort((task1, task2) {
         final bool isBothNoDay = (task1.taskDate?.isEmpty ?? true) &&
@@ -361,7 +362,7 @@ class HomeState extends Equatable {
     }
   }
 
-  Section _getCompletedSection(List<Section> sections) {
+  SectionDisplay _getCompletedSection(List<SectionDisplay> sections) {
     final List<Task> completedTasks = [];
 
     for (final section in sections) {
@@ -369,7 +370,8 @@ class HomeState extends Equatable {
           .addAll(section.listTask.where((task) => task.isCompleted).toList());
     }
     if (completedTasks.isNotEmpty) {
-      return Section.kSectionCompleted.copyWith(listTask: completedTasks);
+      return SectionDisplay.kSectionCompleted
+          .copyWith(listTask: completedTasks);
     }
     return null;
   }

@@ -27,11 +27,11 @@ class MainDrawer extends StatelessWidget {
             );
           }
 
-          if (state.msg != null) {
-            return Center(
-              child: Text(state.msg),
-            );
-          }
+          // if (state.msg != null) {
+          //   return Center(
+          //     child: Text(state.msg),
+          //   );
+          // }
 
           return Drawer(
             child: ListView(

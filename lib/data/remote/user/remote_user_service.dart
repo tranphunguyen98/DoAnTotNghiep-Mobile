@@ -7,7 +7,7 @@ import '../../response/user_response.dart';
 
 part 'remote_user_service.g.dart';
 
-@RestApi(baseUrl: "https://personal-task-management-be.herokuapp.com/")
+@RestApi(baseUrl: "http://192.168.1.18:3006/")
 abstract class RemoteUserService {
   factory RemoteUserService(Dio dio, {String baseUrl}) = _RemoteUserService;
 

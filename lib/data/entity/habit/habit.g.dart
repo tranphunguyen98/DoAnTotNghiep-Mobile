@@ -32,6 +32,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       isTrashed: fields[17] as bool,
       type: fields[12] as int,
       createdDate: fields[16] as String,
+      updatedDate: fields[18] as String,
       reminds: (fields[5] as List)?.cast<HabitRemind>(),
       frequency: fields[13] as HabitFrequency,
       habitProgress: (fields[11] as List)?.cast<HabitProgressItem>(),
@@ -41,7 +42,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(18)
+      ..writeByte(19)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -77,7 +78,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(16)
       ..write(obj.createdDate)
       ..writeByte(17)
-      ..write(obj.isTrashed);
+      ..write(obj.isTrashed)
+      ..writeByte(18)
+      ..write(obj.updatedDate);
   }
 
   @override

@@ -9,7 +9,7 @@ part of 'remote_user_service.dart';
 class _RemoteUserService implements RemoteUserService {
   _RemoteUserService(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'https://personal-task-management-be.herokuapp.com/';
+    baseUrl ??= 'http://192.168.1.18:3006/';
   }
 
   final Dio _dio;

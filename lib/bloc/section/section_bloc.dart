@@ -53,7 +53,8 @@ class AddSectionBloc extends Bloc<AddSectionEvent, AddSectionState> {
       if (state.section?.name?.isEmpty ?? true) {
         yield state.failed("Tên Section rỗng!");
       } else {
-        await _taskRepository.addSection(state.section);
+        // TODO handle sector
+        // await _taskRepository.addSection(state.section);
         yield AddSectionState.success();
       }
     } catch (e) {
