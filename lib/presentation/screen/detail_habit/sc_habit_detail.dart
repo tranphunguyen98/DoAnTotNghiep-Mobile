@@ -67,6 +67,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
           }
         },
         builder: (context, state) {
+          _state = state;
           if (state.habit != null) {
             maxHeight = state.habit.isDoneOnDay(state.chosenDay)
                 ? MediaQuery.of(context).size.height - 160
@@ -97,6 +98,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                           },
                         ),
                         PopupMenuHabitDetail(
+                          onEditHabit: _onEditHabit,
                           onDeleteHabit: _onDeleteHabit,
                           onArchiveHabit: _onArchiveHabit,
                         )
@@ -344,6 +346,12 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _onEditHabit() async {
+    await Navigator.of(context)
+        .pushNamed(AppRouter.kCreateHabit, arguments: _state.habit);
+    _detailHabitBloc.add(UpdateDataDetailHabit());
   }
 
   void _onDeleteHabit() {

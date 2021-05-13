@@ -10,7 +10,7 @@ class ListHabit extends StatelessWidget {
   final List<Habit> listHabit;
   final String chosenDay;
 
-  ListHabit(this.listHabit, this.chosenDay);
+  const ListHabit(this.listHabit, this.chosenDay);
 
   @override
   Widget build(BuildContext context) {

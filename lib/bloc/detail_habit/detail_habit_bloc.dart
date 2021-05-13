@@ -29,6 +29,8 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
       yield* _mapDeleteHabitToState();
     } else if (event is ArchiveHabit) {
       yield* _mapArchiveHabitToState();
+    } else if (event is UpdateDataDetailHabit) {
+      yield* _mapUpdateDataDetailHabitToState();
     }
   }
 
@@ -70,5 +72,11 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
     final habit = state.habit.copyWith(isFinished: true);
     await _habitRepository.updateHabit(habit);
     yield state.copyWith(habit: habit);
+  }
+
+  Stream<DetailHabitState> _mapUpdateDataDetailHabitToState() async* {
+    final Habit updatedHabit =
+        await _habitRepository.getDetailHabit(state.habit.id);
+    yield state.copyWith(habit: updatedHabit);
   }
 }

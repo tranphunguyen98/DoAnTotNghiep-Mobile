@@ -5,6 +5,7 @@ import 'package:totodo/data/entity/habit/habit_icon.dart';
 import 'package:totodo/data/entity/habit/habit_motivation.dart';
 import 'package:totodo/data/entity/habit/habit_remind.dart';
 
+//TODO Change Name
 abstract class CreateHabitEvent extends Equatable {
   @override
   List<Object> get props => [];
@@ -72,3 +73,5 @@ class CreatingHabitDataChanged extends CreateHabitEvent {
 }
 
 class SubmitCreatingHabit extends CreateHabitEvent {}
+
+// class SubmitEditingHabit extends CreateHabitEvent {}

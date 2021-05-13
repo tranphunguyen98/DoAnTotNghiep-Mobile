@@ -25,17 +25,42 @@ class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
   }
 
   Stream<CreateHabitState> _mapOpenScreenCreateHabitToState(
-      Habit _habit) async* {
-    yield state.copyWith(habit: _habit);
+      Habit habit) async* {
+    yield state.copyWith(habit: habit);
+  }
+
+  Stream<CreateHabitState> _mapSubmitEditingHabitToState() async* {
+    final Habit habit =
+        state.habit.copyWith(updatedDate: DateTime.now().toIso8601String());
+
+    await _habitRepository.updateHabit(habit);
+
+    //TODO add reminder
+    // if (!(state.taskAdd.taskDate?.isEmpty ?? true)) {
+    //   showNotificationScheduledWithTask(taskSubmit);
+    // }
+
+    yield state.copyWith(
+      success: true,
+      habit: Habit(),
+    );
   }
 
   Stream<CreateHabitState> _mapSubmitCreatingHabitToState() async* {
-    final Habit habit = state.habit.copyWith(
-        id: state.habit.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
-        createdDate: DateTime.now().toIso8601String());
+    Habit habit = state.habit;
+    if (state.habit.id?.isEmpty ?? true) {
+      habit = state.habit.copyWith(
+          id: state.habit.id ??
+              DateTime.now().microsecondsSinceEpoch.toString(),
+          createdDate: DateTime.now().toIso8601String());
+      await _habitRepository.addHabit(habit);
+    } else {
+      habit =
+          state.habit.copyWith(updatedDate: DateTime.now().toIso8601String());
+      await _habitRepository.updateHabit(habit);
+    }
 
-    await _habitRepository.addHabit(habit);
-
+    //TODO add reminder
     // if (!(state.taskAdd.taskDate?.isEmpty ?? true)) {
     //   showNotificationScheduledWithTask(taskSubmit);
     // }

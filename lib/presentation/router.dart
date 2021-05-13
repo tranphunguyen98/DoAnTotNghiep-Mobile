@@ -105,7 +105,7 @@ class AppRouter {
                 create: (context) => SelectLabelBloc(
                       taskRepository: getIt<ITaskRepository>(),
                     ),
-                child: SelectLabelScreen()));
+                child: const SelectLabelScreen()));
       case kDetailTask:
         if (settings.arguments is Task) {
           final task = settings.arguments as Task;
@@ -120,15 +120,14 @@ class AppRouter {
           );
         }
         break;
-      default:
-        return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(
-              child: Text('No route defined for ${settings.name}'),
-            ),
-          ),
-        );
     }
+    return MaterialPageRoute(
+      builder: (_) => Scaffold(
+        body: Center(
+          child: Text('No route defined for ${settings.name}'),
+        ),
+      ),
+    );
   }
 
   static MaterialPageRoute _buildDiaryScreen(RouteSettings settings) {
