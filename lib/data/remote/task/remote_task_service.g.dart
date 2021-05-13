@@ -17,6 +17,44 @@ class _RemoteTaskService implements RemoteTaskService {
   String baseUrl;
 
   @override
+  Future<TaskListResponse> getTasks(authorization) async {
+    ArgumentError.checkNotNull(authorization, 'authorization');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('/tasks',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{r'authorization': authorization},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = TaskListResponse.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<TaskResponse> addTask(authorization, body) async {
+    ArgumentError.checkNotNull(authorization, 'authorization');
+    ArgumentError.checkNotNull(body, 'body');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body ?? <String, dynamic>{});
+    final _result = await _dio.request<Map<String, dynamic>>('/tasks',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{r'authorization': authorization},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = TaskResponse.fromJson(_result.data);
+    return value;
+  }
+
+  @override
   Future<ProjectListResponse> getProjects(authorization) async {
     ArgumentError.checkNotNull(authorization, 'authorization');
     const _extra = <String, dynamic>{};

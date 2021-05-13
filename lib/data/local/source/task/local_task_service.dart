@@ -5,6 +5,7 @@ import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/mapper/local_task_mapper.dart';
 import 'package:totodo/data/local/model/local_task.dart';
+import 'package:totodo/utils/util.dart';
 
 @Injectable()
 class LocalTaskService {
@@ -12,26 +13,25 @@ class LocalTaskService {
   static const kNameBoxProject = "project";
   static const kNameBoxLabel = "label";
 
-  Box _taskBoxTask;
-  Box _taskBoxProject;
-  Box _taskBoxLabel;
+  Box _taskBox;
+  Box _projectBox;
+  Box _labelBox;
 
   LocalTaskService() {
-    _taskBoxTask = Hive.box(kNameBoxTask);
-    _taskBoxProject = Hive.box(kNameBoxProject);
-    _taskBoxLabel = Hive.box(kNameBoxLabel);
+    _taskBox = Hive.box(kNameBoxTask);
+    _projectBox = Hive.box(kNameBoxProject);
+    _labelBox = Hive.box(kNameBoxLabel);
   }
 
   //<editor-fold desc="Task" defaultstate="collapsed">
-  Future<bool> addTask(Task task) async {
-    final localTask = LocalTaskMapper().mapToLocal(task);
-
+  Future<bool> addTask(LocalTask localTask) async {
     if (localTask.id == null) {
-      _taskBoxTask.add(localTask.copyWith(
+      _taskBox.add(localTask.copyWith(
           id: DateTime.now().microsecondsSinceEpoch.toString()));
       return true;
     }
-    _taskBoxTask.add(localTask);
+
+    _taskBox.add(localTask);
     return true;
   }
 
@@ -40,9 +40,9 @@ class LocalTaskService {
         listLabel: await getLabels(), listProject: await getProjects());
 
     final listTask = <Task>[];
-    for (var i = 0; i < _taskBoxTask.length; i++) {
-      listTask.add(
-          localTaskMapper.mapFromLocal(_taskBoxTask.getAt(i) as LocalTask));
+    for (var i = 0; i < _taskBox.length; i++) {
+      listTask
+          .add(localTaskMapper.mapFromLocal(_taskBox.getAt(i) as LocalTask));
     }
     // print("LIST TASK: ${listTask}");
     return listTask ?? <Task>[];
@@ -52,7 +52,7 @@ class LocalTaskService {
     final localTaskMapper = LocalTaskMapper(
         listLabel: await getLabels(), listProject: await getProjects());
 
-    final task = await _taskBoxTask.values
+    final task = await _taskBox.values
             .firstWhere((element) => (element as LocalTask).id == idTask)
         as LocalTask;
 
@@ -64,17 +64,28 @@ class LocalTaskService {
 
     final localTask = LocalTaskMapper().mapToLocal(task);
 
-    for (var i = 0; i < _taskBoxTask.length; i++) {
-      if ((_taskBoxTask.getAt(i) as LocalTask).id == localTask.id) {
+    for (var i = 0; i < _taskBox.length; i++) {
+      if ((_taskBox.getAt(i) as LocalTask).id == localTask.id) {
         indexUpdated = i;
         break;
       }
     }
     if (indexUpdated > -1) {
-      _taskBoxTask.putAt(indexUpdated, localTask);
+      _taskBox.putAt(indexUpdated, localTask);
       return true;
     }
     return false;
+  }
+
+  Future<void> saveTasks(List<LocalTask> tasks) async {
+    await _taskBox.clear();
+    await _taskBox.addAll(tasks);
+    final c = await getAllTask();
+    log('tasks111111111111111111', tasks);
+    final listTask = <Task>[];
+    for (var i = 0; i < _taskBox.length; i++) {
+      log("tasks111111111 $i", _taskBox.getAt(i) as LocalTask);
+    }
   }
 
   //</editor-fold>
@@ -82,28 +93,28 @@ class LocalTaskService {
   //<editor-fold desc="Project" defaultstate="collapsed">
   Future<bool> addProject(Project project) async {
     if (project.id == null) {
-      _taskBoxProject.add(
+      _projectBox.add(
         project.copyWith(
             id: DateTime.now().microsecondsSinceEpoch.toString(),
             isLocal: true),
       );
       return true;
     }
-    _taskBoxProject.add(project);
+    _projectBox.add(project);
     return true;
   }
 
   Future<List<Project>> getProjects() async {
     final listProject = <Project>[];
-    for (var i = 0; i < _taskBoxProject.length; i++) {
-      listProject.add(_taskBoxProject.getAt(i) as Project);
+    for (var i = 0; i < _projectBox.length; i++) {
+      listProject.add(_projectBox.getAt(i) as Project);
     }
     return listProject ?? <Project>[];
   }
 
   Future<void> saveProjects(List<Project> projects) async {
-    await _taskBoxProject.clear();
-    await _taskBoxProject.addAll(projects);
+    await _projectBox.clear();
+    await _projectBox.addAll(projects);
   }
 
   //</editor-fold>
@@ -111,18 +122,18 @@ class LocalTaskService {
   //<editor-fold desc="Label" defaultstate="collapsed">
   Future<bool> addLabel(Label label) async {
     if (label.id == null) {
-      _taskBoxLabel.add(
+      _labelBox.add(
           label.copyWith(id: DateTime.now().microsecondsSinceEpoch.toString()));
       return true;
     }
-    _taskBoxLabel.add(label);
+    _labelBox.add(label);
     return true;
   }
 
   Future<List<Label>> getLabels() async {
     final listLabel = <Label>[];
-    for (var i = 0; i < _taskBoxLabel.length; i++) {
-      listLabel.add(_taskBoxLabel.getAt(i) as Label);
+    for (var i = 0; i < _labelBox.length; i++) {
+      listLabel.add(_labelBox.getAt(i) as Label);
     }
     // print("LIST LABEL: ${listLabel}");
     return listLabel ?? <Label>[];
@@ -168,8 +179,8 @@ class LocalTaskService {
 //</editor-fold>
 
   Future<void> clearData() async {
-    _taskBoxTask.clear();
-    _taskBoxLabel.clear();
-    _taskBoxProject.clear();
+    _taskBox.clear();
+    _labelBox.clear();
+    _projectBox.clear();
   }
 }

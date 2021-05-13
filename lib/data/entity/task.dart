@@ -11,8 +11,8 @@ class Task extends Equatable {
   static const int kPriority1 = 1; //most importance
 
   final String id;
-  final String createdDate;
-  final String updatedDate;
+  final String createdAt;
+  final String updatedAt;
   final int priority;
   final String name;
   final String description;
@@ -32,8 +32,8 @@ class Task extends Equatable {
 
   const Task(
       {this.id,
-      this.createdDate,
-      this.updatedDate,
+      this.createdAt,
+      this.updatedAt,
       this.name,
       this.description,
       this.taskDate,
@@ -51,8 +51,8 @@ class Task extends Equatable {
 
   Task copyWith({
     String id,
-    String createdDate,
-    String updatedDate,
+    String createdAt,
+    String updatedAt,
     int priority,
     String name,
     String description,
@@ -69,8 +69,8 @@ class Task extends Equatable {
     List<String> preciseSchedules,
   }) {
     if ((id == null || identical(id, this.id)) &&
-        (createdDate == null || identical(createdDate, this.createdDate)) &&
-        (updatedDate == null || identical(updatedDate, this.updatedDate)) &&
+        (createdAt == null || identical(createdAt, this.createdAt)) &&
+        (updatedAt == null || identical(updatedAt, this.updatedAt)) &&
         (priority == null || identical(priority, this.priority)) &&
         (name == null || identical(name, this.name)) &&
         (description == null || identical(description, this.description)) &&
@@ -93,8 +93,8 @@ class Task extends Equatable {
 
     return new Task(
       id: id ?? this.id,
-      createdDate: createdDate ?? this.createdDate,
-      updatedDate: updatedDate ?? this.updatedDate,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       priority: priority ?? this.priority,
       name: name ?? this.name,
       description: description ?? this.description,
@@ -114,7 +114,7 @@ class Task extends Equatable {
 
   @override
   String toString() {
-    return 'Task{id: $id, createdDate: $createdDate, updatedDate: $updatedDate, priority: $priority, name: $name, description: $description, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate, project: $project, sectionId: $sectionId, labels: $labels, checkList: $checkList, completedDate: $completedDate, crontabSchedule: $crontabSchedule, preciseSchedules: $preciseSchedules}';
+    return 'Task{id: $id, createdAt: $createdAt, updatedAt: $updatedAt, priority: $priority, name: $name, description: $description, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate, project: $project, sectionId: $sectionId, labels: $labels, checkList: $checkList, completedDate: $completedDate, crontabSchedule: $crontabSchedule, preciseSchedules: $preciseSchedules}';
   }
 
   @override
@@ -123,8 +123,8 @@ class Task extends Equatable {
       (other is Task &&
           runtimeType == other.runtimeType &&
           id == other.id &&
-          createdDate == other.createdDate &&
-          updatedDate == other.updatedDate &&
+          createdAt == other.createdAt &&
+          updatedAt == other.updatedAt &&
           priority == other.priority &&
           name == other.name &&
           description == other.description &&
@@ -143,8 +143,8 @@ class Task extends Equatable {
   @override
   int get hashCode =>
       id.hashCode ^
-      createdDate.hashCode ^
-      updatedDate.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode ^
       priority.hashCode ^
       name.hashCode ^
       description.hashCode ^
@@ -160,11 +160,11 @@ class Task extends Equatable {
       crontabSchedule.hashCode ^
       preciseSchedules.hashCode;
 
-  factory Task.fromMap(Map<String, dynamic> map) {
-    return new Task(
-      id: map['id'] as String,
-      createdDate: map['createdDate'] as String,
-      updatedDate: map['updatedDate'] as String,
+  factory Task.fromJson(Map<String, dynamic> map) {
+    return Task(
+      id: map['_id'] as String,
+      createdAt: map['createdAt'] as String,
+      updatedAt: map['updatedAt'] as String,
       priority: map['priority'] as int,
       name: map['name'] as String,
       description: map['description'] as String,
@@ -186,8 +186,8 @@ class Task extends Equatable {
     // ignore: unnecessary_cast
     return {
       'id': this.id,
-      'createdDate': this.createdDate,
-      'updatedDate': this.updatedDate,
+      'createdAt': this.createdAt,
+      'updatedAt': this.updatedAt,
       'priority': this.priority,
       'name': this.name,
       'description': this.description,
@@ -212,8 +212,8 @@ class Task extends Equatable {
   List<Object> get props => [
         id,
         checkList,
-        // createdDate,
-        // updatedDate,
+        // createdAt,
+        // updatedAt,
         priority,
         taskDate,
         name,

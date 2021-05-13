@@ -2,6 +2,7 @@ import 'package:totodo/data/data_source/task/local_task_data_source.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/local/model/local_task.dart';
 
 import 'local_task_service.dart';
 
@@ -11,7 +12,7 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
   const LocalTaskDataSourceImplement(this._taskService);
 
   @override
-  Future<bool> addTask(Task task) => _taskService.addTask(task);
+  Future<bool> addTask(LocalTask task) => _taskService.addTask(task);
 
   @override
   Future<Task> getDetailTask(String id) {
@@ -83,5 +84,10 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
   @override
   Future<void> saveProjects(List<Project> projects) {
     return _taskService.saveProjects(projects);
+  }
+
+  @override
+  Future<void> saveTasks(List<LocalTask> tasks) {
+    return _taskService.saveTasks(tasks);
   }
 }

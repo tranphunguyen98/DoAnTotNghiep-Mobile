@@ -1,12 +1,14 @@
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/local/model/local_task.dart';
 
 abstract class LocalTaskDataSource {
-  Future<bool> addTask(Task task);
+  Future<bool> addTask(LocalTask task);
   Future<Task> getDetailTask(String id);
   Future<List<Task>> getAllTask();
   Future<bool> updateTask(Task task);
+  Future<void> saveTasks(List<LocalTask> tasks);
 
   Future<void> addProject(Project project);
   Future<void> updateProject(Project project);
