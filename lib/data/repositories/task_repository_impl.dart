@@ -35,8 +35,11 @@ class TaskRepositoryImpl implements ITaskRepository {
   }
 
   @override
-  Future<void> addProject(Project project) {
-    return _localTaskDataSource.addProject(project);
+  Future<void> addProject(Project project) async {
+    final user = await _localUserDataSource.getUser();
+    final serverProject =
+        await _remoteTaskDataSource.addProject(user.authorization, project);
+    return _localTaskDataSource.addProject(serverProject);
   }
 
   @override

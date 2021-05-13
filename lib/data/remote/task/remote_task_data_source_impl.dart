@@ -32,17 +32,24 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   }
 
   @override
-  Future<void> addProject(String authorization, Project project) {
-    // TODO: implement addProject
-    throw UnimplementedError();
+  Future<Project> addProject(String authorization, Project project) async {
+    try {
+      final projectResponse = await _taskService.addProject(
+          authorization, project.name, project.color);
+      if (projectResponse.succeeded) {
+        return projectResponse.project;
+      }
+      throw Exception(projectResponse.message ?? "Error Dio");
+    } on DioError catch (e, stacktrace) {
+      log('stacktrace', stacktrace);
+      throw Exception(e.response.data["message"] ?? "Error Dio");
+    }
   }
 
   @override
   Future<List<Project>> getProjects(String authorization) async {
     try {
       final projectResponse = await _taskService.getProjects(authorization);
-      log('projects', projectResponse);
-
       if (projectResponse.succeeded) {
         return projectResponse.projects;
       }

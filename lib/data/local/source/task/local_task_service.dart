@@ -5,7 +5,6 @@ import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/mapper/local_task_mapper.dart';
 import 'package:totodo/data/local/model/local_task.dart';
-import 'package:totodo/utils/util.dart';
 
 @Injectable()
 class LocalTaskService {
@@ -83,8 +82,11 @@ class LocalTaskService {
   //<editor-fold desc="Project" defaultstate="collapsed">
   Future<bool> addProject(Project project) async {
     if (project.id == null) {
-      _taskBoxProject.add(project.copyWith(
-          id: DateTime.now().microsecondsSinceEpoch.toString()));
+      _taskBoxProject.add(
+        project.copyWith(
+            id: DateTime.now().microsecondsSinceEpoch.toString(),
+            isLocal: true),
+      );
       return true;
     }
     _taskBoxProject.add(project);
@@ -96,16 +98,12 @@ class LocalTaskService {
     for (var i = 0; i < _taskBoxProject.length; i++) {
       listProject.add(_taskBoxProject.getAt(i) as Project);
     }
-    log("LIST PROJECT: $listProject");
     return listProject ?? <Project>[];
   }
 
   Future<void> saveProjects(List<Project> projects) async {
     await _taskBoxProject.clear();
     await _taskBoxProject.addAll(projects);
-
-    final a = await getProjects();
-    log('aProject', a);
   }
 
   //</editor-fold>

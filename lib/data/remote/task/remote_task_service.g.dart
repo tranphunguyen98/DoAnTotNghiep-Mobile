@@ -17,7 +17,7 @@ class _RemoteTaskService implements RemoteTaskService {
   String baseUrl;
 
   @override
-  Future<ProjectResponse> getProjects(authorization) async {
+  Future<ProjectListResponse> getProjects(authorization) async {
     ArgumentError.checkNotNull(authorization, 'authorization');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -26,6 +26,27 @@ class _RemoteTaskService implements RemoteTaskService {
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'GET',
+            headers: <String, dynamic>{r'authorization': authorization},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = ProjectListResponse.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<ProjectResponse> addProject(authorization, name, color) async {
+    ArgumentError.checkNotNull(authorization, 'authorization');
+    ArgumentError.checkNotNull(name, 'name');
+    ArgumentError.checkNotNull(color, 'color');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = {'name': name, 'color': color};
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<Map<String, dynamic>>('projects',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
             headers: <String, dynamic>{r'authorization': authorization},
             extra: _extra,
             baseUrl: baseUrl),

@@ -20,17 +20,18 @@ class Project extends Equatable {
   final String updatedAt;
   @HiveField(5)
   final List<SectionDisplay> sections;
+  final bool isLocal;
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
-  const Project({
-    @required this.id,
-    @required this.name,
-    @required this.color,
-    @required this.createdAt,
-    @required this.updatedAt,
-    @required this.sections,
-  });
+  const Project(
+      {@required this.id,
+      @required this.name,
+      @required this.color,
+      @required this.createdAt,
+      @required this.updatedAt,
+      @required this.sections,
+      this.isLocal = false});
 
   Project copyWith({
     String id,
@@ -39,16 +40,8 @@ class Project extends Equatable {
     String createdAt,
     String updatedAt,
     List<SectionDisplay> sections,
+    bool isLocal,
   }) {
-    if ((id == null || identical(id, this.id)) &&
-        (name == null || identical(name, this.name)) &&
-        (color == null || identical(color, this.color)) &&
-        (createdAt == null || identical(createdAt, this.createdAt)) &&
-        (updatedAt == null || identical(updatedAt, this.updatedAt)) &&
-        (sections == null || identical(sections, this.sections))) {
-      return this;
-    }
-
     return Project(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -56,34 +49,14 @@ class Project extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       sections: sections ?? this.sections,
+      isLocal: isLocal ?? this.isLocal,
     );
   }
 
   @override
   String toString() {
-    return 'Project{id: $id, name: $name, color: $color, createdAt: $createdAt, updatedAt: $updatedAt, sections: $sections}';
+    return 'Project{id: $id, name: $name, color: $color, createdAt: $createdAt, updatedAt: $updatedAt, sections: $sections, isLocal: $isLocal}';
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Project &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          name == other.name &&
-          color == other.color &&
-          createdAt == other.createdAt &&
-          updatedAt == other.updatedAt &&
-          sections == other.sections);
-
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      name.hashCode ^
-      color.hashCode ^
-      createdAt.hashCode ^
-      updatedAt.hashCode ^
-      sections.hashCode;
 
   factory Project.fromJson(Map<String, dynamic> map) {
     return Project(
@@ -113,5 +86,6 @@ class Project extends Equatable {
   //</editor-fold>
 
   @override
-  List<Object> get props => [id, name, color, createdAt, updatedAt, sections];
+  List<Object> get props =>
+      [id, name, color, createdAt, updatedAt, sections, isLocal];
 }

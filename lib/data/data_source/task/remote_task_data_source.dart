@@ -10,7 +10,7 @@ abstract class RemoteTaskDataSource {
     String authorization,
   );
 
-  Future<void> addProject(String authorization, Project project);
+  Future<Project> addProject(String authorization, Project project);
 
   Future<void> updateProject(String authorization, Project project);
 
