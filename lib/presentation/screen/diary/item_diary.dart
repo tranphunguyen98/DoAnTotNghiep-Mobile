@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
 class ItemDiary extends StatelessWidget {
-  final ItemDiaryData data;
+  final DiaryItemData data;
 
   const ItemDiary(this.data);
 
@@ -97,14 +97,14 @@ class ItemDiary extends StatelessWidget {
   }
 }
 
-class ItemDiaryData {
+class DiaryItemData {
   final DateTime date;
   final String title;
   final String content;
   final List<String> images;
   final int emotional;
 
-  const ItemDiaryData({
+  const DiaryItemData({
     @required this.date,
     @required this.title,
     this.emotional,

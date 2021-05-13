@@ -56,7 +56,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     try {
       final listAllTask = await _taskRepository.getAllTask();
-      final listProject = await _taskRepository.getProjects(onlyRemote: true);
+      final listProject = await _taskRepository.getProjects();
       final listLabel = await _taskRepository.getLabels();
       final listSection = await _taskRepository.getSections();
       final drawerItems = <DrawerItemData>[];

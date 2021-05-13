@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:totodo/utils/util.dart';
 
 class DateHelper {
   static bool isSameDay(DateTime dateTimeSource, DateTime dateTimeDestination) {
@@ -121,9 +122,25 @@ class DateHelper {
         DateTime.parse(date).month == DateTime.parse(dateDestination).month;
   }
 
+  static bool isInCurrentWeekString(String strDate) {
+    final dateTime = DateTime.parse(strDate);
+    final lastMonday = DateTime.now()
+        .subtract(Duration(days: DateTime.now().weekday - DateTime.monday));
+    log('date', dateTime);
+    log('lastMonday', lastMonday);
+    log('inDays', dateTime.difference(lastMonday).inDays);
+    final int differenceDays = dateTime.difference(lastMonday).inDays;
+    return differenceDays >= 0 && differenceDays < DateTime.daysPerWeek;
+  }
+
   static bool isInCurrentMonthString(String date) {
     final dateTime = DateTime.parse(date);
     return dateTime.month == DateTime.now().month;
+  }
+
+  static bool isInCurrentYearString(String date) {
+    final dateTime = DateTime.parse(date);
+    return dateTime.year == DateTime.now().year;
   }
 
   //convert weekday of Datetime to custom weekday in file map_const.dart.

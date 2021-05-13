@@ -29,7 +29,7 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     //TODO add try catch
     state.copyWith(loading: true);
     final listHabit = <Habit>[];
-    listHabit.addAll(await _habitRepository.getAllHabit('authorization'));
+    listHabit.addAll(await _habitRepository.getAllHabit());
     yield state.copyWith(
         listHabit: listHabit.where((habit) => !habit.isTrashed).toList(),
         loading: false);
@@ -52,12 +52,12 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     }
 
     if (!isDone) {
-      await _habitRepository.checkInHabit('', habit, state.chosenDay);
+      await _habitRepository.checkInHabit(habit, state.chosenDay);
     } else {
-      await _habitRepository.resetHabitOnDay('', habit, state.chosenDay);
+      await _habitRepository.resetHabitOnDay(habit, state.chosenDay);
     }
 
-    final listHabit = await _habitRepository.getAllHabit('authorization');
+    final listHabit = await _habitRepository.getAllHabit();
 
     yield state.copyWith(listHabit: listHabit);
   }

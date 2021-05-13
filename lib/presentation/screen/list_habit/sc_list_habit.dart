@@ -5,7 +5,7 @@ import 'package:totodo/bloc/habit/habit_bloc.dart';
 import 'package:totodo/bloc/habit/habit_event.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/habit/list_habit.dart';
-import 'package:totodo/presentation/screen/task/widget_empty_task.dart';
+import 'package:totodo/presentation/screen/task/widget_empty_data.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
 class ListHabitScreen extends StatefulWidget {
@@ -65,11 +65,11 @@ class _ListHabitScreenState extends State<ListHabitScreen> {
                   if (state.listActiveHabit.isNotEmpty)
                     ListHabit(state.listActiveHabit, state.chosenDay)
                   else
-                    const EmptyTask("Chưa có thói quen đang thực hiện"),
+                    const EmptyData("Chưa có thói quen đang thực hiện"),
                   if (state.listArchivedHabit.isNotEmpty)
                     ListHabit(state.listArchivedHabit, state.chosenDay)
                   else
-                    const EmptyTask("Chưa có thói quen đã hoàn thành"),
+                    const EmptyData("Chưa có thói quen đã hoàn thành"),
                 ],
               ),
             ),

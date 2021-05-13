@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:totodo/bloc/diary/bloc.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
 import 'package:totodo/data/entity/habit/habit_icon.dart';
 import 'package:totodo/data/entity/habit/habit_motivation.dart';
@@ -19,6 +20,13 @@ Map<int, String> kHabitFrequency = {
   EHabitFrequency.daily.index: 'Daily',
   EHabitFrequency.weekly.index: 'Weekly',
   EHabitFrequency.interval.index: 'Interval',
+};
+
+Map<int, String> kDateFilterHabit = {
+  DiaryState.kFilterDateNoDate: 'All',
+  DiaryState.kFilterDateThisWeek: 'This Week',
+  DiaryState.kFilterDateThisMonth: 'This Month',
+  DiaryState.kFilterDateThisYear: 'This Year',
 };
 
 const Map<int, String> kDailyDays = {

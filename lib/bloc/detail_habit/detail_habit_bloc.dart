@@ -50,25 +50,25 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
     habitProgress[index] = habitProgress[index].copyWith(diary: item);
 
     final habit = state.habit.copyWith(habitProgress: habitProgress);
-    await _habitRepository.updateHabit('authorization', habit);
+    await _habitRepository.updateHabit(habit);
     yield state.copyWith(habit: habit);
   }
 
   Stream<DetailHabitState> _mapDeleteHabitToState() async* {
     final habit = state.habit.copyWith(isTrashed: true);
-    await _habitRepository.updateHabit('authorization', habit);
+    await _habitRepository.updateHabit(habit);
     yield state.copyWith(habit: habit);
   }
 
   Stream<DetailHabitState> _mapCheckInHabitToState() async* {
-    await _habitRepository.checkInHabit('', state.habit, state.chosenDay);
-    final habit = await _habitRepository.getDetailHabit('', state.habit.id);
+    await _habitRepository.checkInHabit(state.habit, state.chosenDay);
+    final habit = await _habitRepository.getDetailHabit(state.habit.id);
     yield state.copyWith(habit: habit);
   }
 
   Stream<DetailHabitState> _mapArchiveHabitToState() async* {
     final habit = state.habit.copyWith(isFinished: true);
-    await _habitRepository.updateHabit('authorization', habit);
+    await _habitRepository.updateHabit(habit);
     yield state.copyWith(habit: habit);
   }
 }

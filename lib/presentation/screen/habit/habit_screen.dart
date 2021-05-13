@@ -4,7 +4,7 @@ import 'package:totodo/bloc/habit/bloc.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/habit/list_day_last_7_days_radio.dart';
 import 'package:totodo/presentation/screen/habit/list_habit.dart';
-import 'package:totodo/presentation/screen/task/widget_empty_task.dart';
+import 'package:totodo/presentation/screen/task/widget_empty_data.dart';
 
 class HabitScreen extends StatefulWidget {
   @override
@@ -41,7 +41,7 @@ class _HabitScreenState extends State<HabitScreen> {
             Expanded(
               child: state.listHabitWithChosenDay.isNotEmpty
                   ? ListHabit(state.listHabitWithChosenDay, state.chosenDay)
-                  : const EmptyTask("Chưa có thói quen"),
+                  : const EmptyData("Chưa có thói quen"),
             ),
           ],
         );

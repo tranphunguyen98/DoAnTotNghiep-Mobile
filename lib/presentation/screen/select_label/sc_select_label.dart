@@ -6,7 +6,7 @@ import 'package:totodo/utils/my_const/my_const.dart';
 
 import '../../../bloc/select_label/bloc.dart';
 import '../label/widget_item_label_check_box.dart';
-import '../task/widget_empty_task.dart';
+import '../task/widget_empty_data.dart';
 
 class SelectLabelScreen extends StatefulWidget {
   final List<Label> listLabelSelected;
@@ -40,7 +40,7 @@ class _SelectLabelScreenState extends State<SelectLabelScreen> {
       body: BlocBuilder<SelectLabelBloc, SelectLabelState>(
         builder: (context, state) {
           if (state.listAllLabel.isEmpty) {
-            return const EmptyTask("Danh sách Nhãn rỗng!");
+            return const EmptyData("Danh sách Nhãn rỗng!");
           }
           return WillPopScope(
             onWillPop: () async {

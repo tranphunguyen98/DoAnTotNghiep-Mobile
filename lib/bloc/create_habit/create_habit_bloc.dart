@@ -34,7 +34,7 @@ class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
         id: state.habit.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
         createdDate: DateTime.now().toIso8601String());
 
-    await _habitRepository.addHabit('test', habit);
+    await _habitRepository.addHabit(habit);
 
     // if (!(state.taskAdd.taskDate?.isEmpty ?? true)) {
     //   showNotificationScheduledWithTask(taskSubmit);

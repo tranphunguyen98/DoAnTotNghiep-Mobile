@@ -80,10 +80,11 @@ class DetailHabitState extends Equatable {
         .toList());
   }
 
-  List<ItemDiaryData> get listDiary {
+  List<DiaryItemData> get listDiary {
+    //TODO Move to diary bloc
     return habit.habitProgress
         .where((itemProgress) => itemProgress.diary != null)
-        .map((itemProgress) => ItemDiaryData(
+        .map((itemProgress) => DiaryItemData(
               date: DateTime.parse(itemProgress.day),
               title: habit.name,
               content: itemProgress.diary.text,

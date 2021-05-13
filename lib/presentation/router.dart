@@ -90,7 +90,6 @@ class AppRouter {
         break;
       case kCreateHabit:
         return _buildCreateHabitScreen(settings);
-
       case kSelectLabel:
         if (settings.arguments is List<Label>) {
           final listLabelSelected = settings.arguments as List<Label>;
@@ -107,10 +106,7 @@ class AppRouter {
                       taskRepository: getIt<ITaskRepository>(),
                     ),
                 child: SelectLabelScreen()));
-        break;
-        return MaterialPageRoute(builder: (_) => SelectLabelScreen());
       case kDetailTask:
-        // print("kDetailTask: ${settings.arguments}");
         if (settings.arguments is Task) {
           final task = settings.arguments as Task;
           return MaterialPageRoute(builder: (_) => ScreenDetailTask(task));
@@ -136,12 +132,12 @@ class AppRouter {
   }
 
   static MaterialPageRoute _buildDiaryScreen(RouteSettings settings) {
-    if (settings.arguments is List<ItemDiaryData>) {
+    if (settings.arguments is List<DiaryItemData>) {
       return MaterialPageRoute(
           builder: (_) =>
-              DiaryScreen(settings.arguments as List<ItemDiaryData>));
+              DiaryScreen(listData: settings.arguments as List<DiaryItemData>));
     }
-    throw Exception('Not have enough argument');
+    return MaterialPageRoute(builder: (_) => const DiaryScreen());
   }
 
   static MaterialPageRoute _buildCreateHabitScreen(RouteSettings settings) {
