@@ -90,4 +90,9 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
   Future<void> saveTasks(List<LocalTask> tasks) {
     return _taskService.saveTasks(tasks);
   }
+
+  @override
+  Future<void> saveLabels(List<Label> labels) {
+    return _taskService.saveLabels(labels);
+  }
 }

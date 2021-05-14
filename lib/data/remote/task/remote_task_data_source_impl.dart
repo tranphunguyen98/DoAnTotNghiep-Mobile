@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:totodo/data/data_source/task/remote_task_data_source.dart';
+import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/mapper/local_task_mapper.dart';
@@ -20,8 +21,8 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
     final localTask = LocalTaskMapper().mapToLocal(task);
 
     try {
-      final taskResponse = await _taskService.addTask(
-          authorization + "test", localTask.toJson());
+      final taskResponse =
+          await _taskService.addTask(authorization, localTask.toJson());
       if (taskResponse.succeeded) {
         return taskResponse.task;
       }
@@ -83,6 +84,10 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
       throw Exception(projectResponse.message ?? "Error Dio");
     } on DioError catch (e, stacktrace) {
       log('stacktrace', stacktrace);
+      if (e.type == DioErrorType.RESPONSE &&
+          e.response.statusCode == HttpStatus.unauthorized) {
+        throw UnauthenticatedException(e.response.statusMessage);
+      }
       throw Exception(e.response.data["message"] ?? "Error Dio");
     }
   }
@@ -90,6 +95,49 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   @override
   Future<void> updateProject(String authorization, Project project) {
     // TODO: implement updateProject
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Label> addLabel(String authorization, Label label) async {
+    try {
+      final labelResponse =
+          await _taskService.addLabel(authorization, label.name, label.color);
+      if (labelResponse.succeeded) {
+        return labelResponse.label;
+      }
+      throw Exception(labelResponse.message ?? "Error Dio");
+    } on DioError catch (e, stacktrace) {
+      log('stacktrace', stacktrace);
+      if (e.type == DioErrorType.RESPONSE &&
+          e.response.statusCode == HttpStatus.unauthorized) {
+        throw UnauthenticatedException(e.response.statusMessage);
+      }
+      throw Exception(e.response.data["message"] ?? "Error Dio");
+    }
+  }
+
+  @override
+  Future<List<Label>> getLabels(String authorization) async {
+    try {
+      final labelListResponse = await _taskService.getLabels(authorization);
+      if (labelListResponse.succeeded) {
+        return labelListResponse.labels;
+      }
+      throw Exception(labelListResponse.message ?? "Error Dio");
+    } on DioError catch (e, stackTrace) {
+      log('stacktrace', stackTrace);
+      if (e.type == DioErrorType.RESPONSE &&
+          e.response.statusCode == HttpStatus.unauthorized) {
+        throw UnauthenticatedException(e.response.statusMessage);
+      }
+      throw Exception(e.response.data["message"] ?? "Error Dio");
+    }
+  }
+
+  @override
+  Future<void> updateLabel(String authorization, Label label) {
+    // TODO: implement updateLabel
     throw UnimplementedError();
   }
 }

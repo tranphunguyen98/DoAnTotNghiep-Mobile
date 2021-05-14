@@ -24,8 +24,7 @@ class AddLabelBloc extends Bloc<AddLabelEvent, AddLabelState> {
   Stream<AddLabelState> _mapNameLabelChangedToState(
       AddedLabelChanged event) async* {
     yield state.copyWith(
-        label: state.label
-            .copyWith(nameLabel: event.nameLabel, color: event.color),
+        label: state.label.copyWith(name: event.name, color: event.color),
         msg: '');
   }
 

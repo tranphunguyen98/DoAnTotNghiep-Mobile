@@ -54,7 +54,11 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
-    await _taskRepository.saveDataToLocal();
+    // try {
+    //   await _taskRepository.saveDataToLocal();
+    // } catch (e) {
+    //
+    // }
     yield Authenticated(await _userRepository.getUser());
   }
 

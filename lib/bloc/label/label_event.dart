@@ -8,17 +8,17 @@ abstract class AddLabelEvent extends Equatable {
 }
 
 class AddedLabelChanged extends AddLabelEvent {
-  final String nameLabel;
+  final String name;
   final String color;
 
-  const AddedLabelChanged({this.nameLabel, this.color});
+  const AddedLabelChanged({this.name, this.color});
 
   @override
-  List<Object> get props => [nameLabel, color];
+  List<Object> get props => [name, color];
 
   @override
   String toString() {
-    return 'NameLabelChanged{nameLabel: $nameLabel + $color}';
+    return 'NameLabelChanged{name: $name + $color}';
   }
 }
 

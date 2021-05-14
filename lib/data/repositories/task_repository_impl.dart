@@ -69,7 +69,16 @@ class TaskRepositoryImpl implements ITaskRepository {
   }
 
   @override
-  Future<void> addLabel(Label label) {
+  Future<void> addLabel(Label label) async {
+    final user = await _localUserDataSource.getUser();
+    // try {
+    final serverLabel =
+        await _remoteTaskDataSource.addLabel(user.authorization, label);
+    return _localTaskDataSource.addLabel(serverLabel);
+    // } catch (e) {
+    //   // TODO try remove :v
+    //   rethrow;
+    // }
     return _localTaskDataSource.addLabel(label);
   }
 
@@ -84,21 +93,6 @@ class TaskRepositoryImpl implements ITaskRepository {
     throw UnimplementedError();
   }
 
-  // @override
-  // Future<void> addSection(SectionDisplay section) {
-  //   return _localTaskDataSource.addSection(section);
-  // }
-  //
-  // @override
-  // Future<List<SectionDisplay>> getSections() {
-  //   return _localTaskDataSource.getSections();
-  // }
-
-  // @override
-  // Future<void> updateSection(SectionDisplay section) {
-  //   throw UnimplementedError();
-  // }
-
   @override
   Future<void> clearDataOffline() {
     return _localTaskDataSource.clearData();
@@ -107,11 +101,16 @@ class TaskRepositoryImpl implements ITaskRepository {
   @override
   Future<void> saveDataToLocal() async {
     final user = await _localUserDataSource.getUser();
+
     final List<Project> projects =
         await _remoteTaskDataSource.getProjects(user.authorization);
+    final List<Label> labels =
+        await _remoteTaskDataSource.getLabels(user.authorization);
     final List<LocalTask> tasks =
         await _remoteTaskDataSource.getAllTask(user.authorization);
+
     await _localTaskDataSource.saveProjects(projects);
+    await _localTaskDataSource.saveLabels(labels);
     await _localTaskDataSource.saveTasks(tasks);
   }
 }

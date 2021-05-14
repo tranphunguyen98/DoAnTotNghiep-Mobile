@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:totodo/data/response/label_list_response.dart';
+import 'package:totodo/data/response/label_response.dart';
 import 'package:totodo/data/response/project_list_response.dart';
 import 'package:totodo/data/response/project_response.dart';
 import 'package:totodo/data/response/task_list_response.dart';
@@ -29,8 +31,20 @@ abstract class RemoteTaskService {
     @Header("authorization") String authorization,
   );
 
-  @POST('projects')
+  @POST('/projects')
   Future<ProjectResponse> addProject(
+    @Header("authorization") String authorization,
+    @Field() String name,
+    @Field() String color,
+  );
+
+  @GET("/labels")
+  Future<LabelListResponse> getLabels(
+    @Header("authorization") String authorization,
+  );
+
+  @POST('/labels')
+  Future<LabelResponse> addLabel(
     @Header("authorization") String authorization,
     @Field() String name,
     @Field() String color,

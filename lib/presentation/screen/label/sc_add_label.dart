@@ -82,7 +82,7 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
                           ? null
                           : (state as AddLabelState).msg),
                   onChanged: (value) {
-                    _addLabelBloc.add(AddedLabelChanged(nameLabel: value));
+                    _addLabelBloc.add(AddedLabelChanged(name: value));
                   },
                 ),
                 DropdownButton<Map<String, Object>>(

@@ -81,7 +81,7 @@ class _RemoteTaskService implements RemoteTaskService {
     final queryParameters = <String, dynamic>{};
     final _data = {'name': name, 'color': color};
     _data.removeWhere((k, v) => v == null);
-    final _result = await _dio.request<Map<String, dynamic>>('projects',
+    final _result = await _dio.request<Map<String, dynamic>>('/projects',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'POST',
@@ -90,6 +90,45 @@ class _RemoteTaskService implements RemoteTaskService {
             baseUrl: baseUrl),
         data: _data);
     final value = ProjectResponse.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<LabelListResponse> getLabels(authorization) async {
+    ArgumentError.checkNotNull(authorization, 'authorization');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('/labels',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{r'authorization': authorization},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = LabelListResponse.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<LabelResponse> addLabel(authorization, name, color) async {
+    ArgumentError.checkNotNull(authorization, 'authorization');
+    ArgumentError.checkNotNull(name, 'name');
+    ArgumentError.checkNotNull(color, 'color');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = {'name': name, 'color': color};
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<Map<String, dynamic>>('/labels',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{r'authorization': authorization},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = LabelResponse.fromJson(_result.data);
     return value;
   }
 }

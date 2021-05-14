@@ -79,12 +79,6 @@ class LocalTaskService {
   Future<void> saveTasks(List<LocalTask> tasks) async {
     await _taskBox.clear();
     await _taskBox.addAll(tasks);
-    final c = await getAllTask();
-    // log('tasks111111111111111111', tasks); //TODO remove log
-    final listTask = <Task>[];
-    for (var i = 0; i < _taskBox.length; i++) {
-      // log("tasks111111111 $i", _taskBox.getAt(i) as LocalTask);
-    }
   }
 
   //</editor-fold>
@@ -136,6 +130,11 @@ class LocalTaskService {
     }
     // print("LIST LABEL: ${listLabel}");
     return listLabel ?? <Label>[];
+  }
+
+  Future<void> saveLabels(List<Label> labels) async {
+    await _labelBox.clear();
+    await _labelBox.addAll(labels);
   }
 
   //</editor-fold>

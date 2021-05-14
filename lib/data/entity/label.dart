@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
 
@@ -12,36 +13,48 @@ class Label extends Equatable {
   final String name;
   @HiveField(2)
   final String color;
+  @HiveField(3)
+  final String createdAt;
+  @HiveField(4)
+  final String updatedAt;
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
   const Label({
-    this.id,
-    this.name,
-    this.color,
+    @required this.id,
+    @required this.name,
+    @required this.color,
+    @required this.createdAt,
+    @required this.updatedAt,
   });
 
   Label copyWith({
     String id,
-    String nameLabel,
+    String name,
     String color,
+    String createdAt,
+    String updatedAt,
   }) {
     if ((id == null || identical(id, this.id)) &&
-        (nameLabel == null || identical(nameLabel, name)) &&
-        (color == null || identical(color, this.color))) {
+        (name == null || identical(name, this.name)) &&
+        (color == null || identical(color, this.color)) &&
+        (createdAt == null || identical(createdAt, this.createdAt)) &&
+        (updatedAt == null || identical(updatedAt, this.updatedAt))) {
       return this;
     }
 
-    return Label(
+    return new Label(
       id: id ?? this.id,
-      name: nameLabel ?? name,
+      name: name ?? this.name,
       color: color ?? this.color,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   @override
   String toString() {
-    return 'Label{id: $id, nameLabel: $name, color: $color}';
+    return 'Label{id: $id, name: $name, color: $color, createdAt: $createdAt, updatedAt: $updatedAt}';
   }
 
   @override
@@ -51,30 +64,41 @@ class Label extends Equatable {
           runtimeType == other.runtimeType &&
           id == other.id &&
           name == other.name &&
-          color == other.color);
+          color == other.color &&
+          createdAt == other.createdAt &&
+          updatedAt == other.updatedAt);
 
   @override
-  int get hashCode => id.hashCode ^ name.hashCode ^ color.hashCode;
+  int get hashCode =>
+      id.hashCode ^
+      name.hashCode ^
+      color.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode;
 
   factory Label.fromJson(Map<String, dynamic> map) {
     return Label(
-      id: map['id'] as String,
-      name: map['nameLabel'] as String,
+      id: map['_id'] as String,
+      name: map['name'] as String,
       color: map['color'] as String,
+      createdAt: map['createdAt'] as String,
+      updatedAt: map['updatedAt'] as String,
     );
   }
 
   Map<String, dynamic> toJson() {
     // ignore: unnecessary_cast
     return {
-      'id': id,
-      'nameLabel': name,
-      'color': color,
+      '_id': this.id,
+      'name': this.name,
+      'color': this.color,
+      'createdAt': this.createdAt,
+      'updatedAt': this.updatedAt,
     } as Map<String, dynamic>;
   }
 
   //</editor-fold>
 
   @override
-  List<Object> get props => [id, name, color];
+  List<Object> get props => [id, name, color, createdAt, updatedAt];
 }

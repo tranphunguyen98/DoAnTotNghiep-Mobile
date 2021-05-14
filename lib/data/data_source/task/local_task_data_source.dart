@@ -18,6 +18,7 @@ abstract class LocalTaskDataSource {
   Future<void> addLabel(Label label);
   Future<void> updateLabel(Label label);
   Future<List<Label>> getLabels();
+  Future<void> saveLabels(List<Label> labels);
 
   // Future<void> addSection(SectionDisplay section);
   // Future<void> updateSection(SectionDisplay section);

@@ -1,5 +1,4 @@
 import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/utils/util.dart';
 
 class ProjectListResponse {
   final bool succeeded;
@@ -13,7 +12,6 @@ class ProjectListResponse {
   });
 
   factory ProjectListResponse.fromJson(Map<String, dynamic> json) {
-    log('json', json);
     final result = json['result'] as List;
 
     return ProjectListResponse(
