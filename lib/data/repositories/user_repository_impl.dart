@@ -2,6 +2,7 @@ import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/data/data_source/user/local_user_data_source.dart';
 import 'package:totodo/data/data_source/user/remote_user_data_source.dart';
 import 'package:totodo/data/entity/user.dart';
+import 'package:totodo/utils/util.dart';
 
 class UserRepositoryImpl implements IUserRepository {
   final RemoteUserDataSource _remoteUserDataSource;
@@ -53,5 +54,14 @@ class UserRepositoryImpl implements IUserRepository {
   @override
   Future<bool> sendOTPResetPassword(String email) {
     return _remoteUserDataSource.sendOTPResetPassword(email);
+  }
+
+  @override
+  Future<User> renewUser() async {
+    final oldUser = await _localUserDataSource.getUser();
+    final newUser = await _remoteUserDataSource.renewUser(oldUser);
+    await _localUserDataSource.saveUser(newUser);
+    log('newUser', newUser);
+    return newUser;
   }
 }

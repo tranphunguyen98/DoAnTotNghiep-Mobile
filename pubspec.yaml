@@ -62,6 +62,7 @@ dependencies:
   table_calendar: ^3.0.0
   build: ^1.5.2
   analyzer: ^1.1.0
+  workmanager: ^0.4.0
 
   # Cron
   cronparse: ^0.1.1

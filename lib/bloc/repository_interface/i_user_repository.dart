@@ -13,4 +13,5 @@ abstract class IUserRepository {
   Future<User> getUser();
   Future<bool> saveUser(User user);
   Future<bool> signOut();
+  Future<User> renewUser();
 }

@@ -5,7 +5,6 @@ import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/mapper/local_task_mapper.dart';
 import 'package:totodo/data/local/model/local_task.dart';
-import 'package:totodo/utils/util.dart';
 
 @Injectable()
 class LocalTaskService {
@@ -81,10 +80,10 @@ class LocalTaskService {
     await _taskBox.clear();
     await _taskBox.addAll(tasks);
     final c = await getAllTask();
-    log('tasks111111111111111111', tasks);
+    // log('tasks111111111111111111', tasks); //TODO remove log
     final listTask = <Task>[];
     for (var i = 0; i < _taskBox.length; i++) {
-      log("tasks111111111 $i", _taskBox.getAt(i) as LocalTask);
+      // log("tasks111111111 $i", _taskBox.getAt(i) as LocalTask);
     }
   }
 

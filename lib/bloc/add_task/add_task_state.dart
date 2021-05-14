@@ -35,14 +35,14 @@ class TaskAddState extends Equatable {
     List<Project> projects,
     List<Label> labels,
     bool loading,
-    String msg,
+    String errorMessage,
     bool success,
   }) {
     if ((taskAdd == null || identical(taskAdd, this.taskAdd)) &&
         (projects == null || identical(projects, this.projects)) &&
         (labels == null || identical(labels, this.labels)) &&
         (loading == null || identical(loading, this.loading)) &&
-        (msg == null || identical(msg, this.msg)) &&
+        (errorMessage == null || identical(errorMessage, this.msg)) &&
         (success == null || identical(success, this.success))) {
       return this;
     }
@@ -52,7 +52,7 @@ class TaskAddState extends Equatable {
       projects: projects ?? this.projects,
       labels: labels ?? this.labels,
       loading: loading ?? this.loading,
-      msg: msg ?? this.msg,
+      msg: errorMessage ?? this.msg,
       success: success ?? this.success,
     );
   }

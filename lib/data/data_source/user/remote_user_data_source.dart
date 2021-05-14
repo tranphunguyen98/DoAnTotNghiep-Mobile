@@ -9,5 +9,6 @@ abstract class RemoteUserDataSource {
       String authorization, String oldPassword, String newPassword);
   Future<bool> resetPassword(String email, String otpCode, String password);
   Future<bool> sendOTPResetPassword(String email);
+  Future<User> renewUser(User user);
   Future<void> signOut();
 }

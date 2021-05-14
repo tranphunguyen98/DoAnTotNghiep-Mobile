@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:totodo/data/data_source/task/remote_task_data_source.dart';
 import 'package:totodo/data/entity/project.dart';
@@ -5,6 +7,7 @@ import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/mapper/local_task_mapper.dart';
 import 'package:totodo/data/local/model/local_task.dart';
 import 'package:totodo/data/remote/task/remote_task_service.dart';
+import 'package:totodo/data/remote/unauthenticated_exception.dart';
 import 'package:totodo/utils/util.dart';
 
 class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
@@ -17,14 +20,18 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
     final localTask = LocalTaskMapper().mapToLocal(task);
 
     try {
-      final taskResponse =
-          await _taskService.addTask(authorization, localTask.toJson());
+      final taskResponse = await _taskService.addTask(
+          authorization + "test", localTask.toJson());
       if (taskResponse.succeeded) {
         return taskResponse.task;
       }
       throw Exception(taskResponse.message ?? "Error Dio");
     } on DioError catch (e, stacktrace) {
       log('stacktrace', stacktrace);
+      if (e.type == DioErrorType.RESPONSE &&
+          e.response.statusCode == HttpStatus.unauthorized) {
+        throw UnauthenticatedException(e.response.statusMessage);
+      }
       throw Exception(e.response.data["message"] ?? "Error Dio");
     }
   }

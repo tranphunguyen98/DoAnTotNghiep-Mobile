@@ -153,4 +153,21 @@ class RemoteUserDataSourceImpl implements RemoteUserDataSource {
       _googleSignIn.signOut(),
     ]);
   }
+
+  @override
+  Future<User> renewUser(User user) async {
+    if (user.type == User.kTypeGoogle) {
+      try {
+        final UserResponse response = await _userService.saveAccountAuth(
+            user.id, User.kTypeGoogle, user.name, user.avatar);
+        return response.user.copyWith(email: user.email);
+      } on DioError catch (e) {
+        throw Exception(e.response.data["message"] ?? "Error Dio");
+      } catch (e) {
+        rethrow;
+      }
+    }
+    //TODO TYPE == EMAIL
+    return user;
+  }
 }

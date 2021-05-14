@@ -18,9 +18,14 @@ class TaskRepositoryImpl implements ITaskRepository {
   @override
   Future<bool> addTask(Task task) async {
     final user = await _localUserDataSource.getUser();
-    final serverTask =
-        await _remoteTaskDataSource.addTask(user.authorization, task);
-    return _localTaskDataSource.addTask(serverTask);
+    try {
+      final serverTask =
+          await _remoteTaskDataSource.addTask(user.authorization, task);
+      return _localTaskDataSource.addTask(serverTask);
+    } catch (e) {
+      // TODO try remove :v
+      rethrow;
+    }
   }
 
   @override
@@ -58,7 +63,6 @@ class TaskRepositoryImpl implements ITaskRepository {
       final user = await _localUserDataSource.getUser();
       final List<Project> projects =
           await _remoteTaskDataSource.getProjects(user.authorization);
-      // await _localTaskDataSource.saveProjects(projects);
       return projects;
     }
     return _localTaskDataSource.getProjects();

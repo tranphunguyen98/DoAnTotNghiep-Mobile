@@ -5,6 +5,7 @@ import 'package:totodo/bloc/add_task/add_task_event.dart';
 import 'package:totodo/bloc/habit/bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
+import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/router.dart';
 import 'package:totodo/presentation/screen/home/widget_bottom_sheet_add_task.dart';
@@ -70,6 +71,7 @@ class _FloatingActionButtonHomeState extends State<FloatingActionButtonHome> {
       builder: (_) => BlocProvider<TaskAddBloc>(
         create: (context) => TaskAddBloc(
           taskRepository: getIt<ITaskRepository>(),
+          userRepository: getIt<IUserRepository>(),
         )..add(OnDataTaskAddChanged()),
         child: _homeBloc.state.isInProject()
             ? BottomSheetAddTask(
