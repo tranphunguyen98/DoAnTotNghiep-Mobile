@@ -55,6 +55,27 @@ class _RemoteTaskService implements RemoteTaskService {
   }
 
   @override
+  Future<MessageResponse> updateTask(authorization, id, body) async {
+    ArgumentError.checkNotNull(authorization, 'authorization');
+    ArgumentError.checkNotNull(id, 'id');
+    ArgumentError.checkNotNull(body, 'body');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body ?? <String, dynamic>{});
+    final _result = await _dio.request<Map<String, dynamic>>('/tasks/$id',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'PUT',
+            headers: <String, dynamic>{r'authorization': authorization},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = MessageResponse.fromJson(_result.data);
+    return value;
+  }
+
+  @override
   Future<ProjectListResponse> getProjects(authorization) async {
     ArgumentError.checkNotNull(authorization, 'authorization');
     const _extra = <String, dynamic>{};

@@ -182,10 +182,10 @@ class Task extends Equatable {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     // ignore: unnecessary_cast
     return {
-      'id': this.id,
+      // 'id': this.id,
       'createdAt': this.createdAt,
       'updatedAt': this.updatedAt,
       'priority': this.priority,

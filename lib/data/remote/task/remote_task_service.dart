@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:totodo/data/response/label_list_response.dart';
 import 'package:totodo/data/response/label_response.dart';
+import 'package:totodo/data/response/message_response.dart';
 import 'package:totodo/data/response/project_list_response.dart';
 import 'package:totodo/data/response/project_response.dart';
 import 'package:totodo/data/response/task_list_response.dart';
@@ -25,6 +27,12 @@ abstract class RemoteTaskService {
     @Body() Map<String, dynamic> body,
     // @Body() Map<String, dynamic> task,
   );
+
+  @PUT("/tasks/{id}")
+  Future<MessageResponse> updateTask(
+      @Header("authorization") String authorization,
+      @Path() String id,
+      @Body() Map<String, dynamic> body);
 
   @GET("/projects")
   Future<ProjectListResponse> getProjects(

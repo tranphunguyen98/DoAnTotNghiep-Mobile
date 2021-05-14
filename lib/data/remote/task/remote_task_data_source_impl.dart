@@ -19,7 +19,6 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   @override
   Future<LocalTask> addTask(String authorization, Task task) async {
     final localTask = LocalTaskMapper().mapToLocal(task);
-
     try {
       final taskResponse =
           await _taskService.addTask(authorization, localTask.toJson());
@@ -44,9 +43,7 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   }
 
   @override
-  Future<List<LocalTask>> getAllTask(
-    String authorization,
-  ) async {
+  Future<List<LocalTask>> getAllTask(String authorization) async {
     try {
       final taskListResponse = await _taskService.getTasks(authorization);
       if (taskListResponse.succeeded) {
@@ -139,5 +136,12 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   Future<void> updateLabel(String authorization, Label label) {
     // TODO: implement updateLabel
     throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateTask(String authorization, Task task) {
+    log("TaskToJson", task.toJson());
+
+    return _taskService.updateTask(authorization, task.id, task.toJson());
   }
 }

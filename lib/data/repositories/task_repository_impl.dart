@@ -39,8 +39,15 @@ class TaskRepositoryImpl implements ITaskRepository {
   }
 
   @override
-  Future<bool> updateTask(Task task) {
-    return _localTaskDataSource.updateTask(task);
+  Future<bool> updateTask(Task task) async {
+    final user = await _localUserDataSource.getUser();
+    try {
+      await _remoteTaskDataSource.updateTask(user.authorization, task);
+      return _localTaskDataSource.updateTask(task);
+    } catch (e) {
+      // TODO try remove :v
+      rethrow;
+    }
   }
 
   @override

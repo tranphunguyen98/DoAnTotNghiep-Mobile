@@ -5,7 +5,6 @@ import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/home/home_appbar.dart';
 import 'package:totodo/presentation/screen/home/home_body.dart';
 import 'package:totodo/presentation/screen/home/main_bottom_navigation_bar.dart';
-import 'package:totodo/utils/util.dart';
 
 import '../../../utils/my_const/color_const.dart';
 import 'floating_action_button_home.dart';
@@ -20,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _homeBloc = getIt<HomeBloc>()..add(OpenHomeScreen());
   @override
   Widget build(BuildContext context) {
-    log("BULD HOME SCREEN");
+    // log("BUILD HOME SCREEN");
     return BlocBuilder<HomeBloc, HomeState>(
       cubit: _homeBloc,
       buildWhen: (previous, current) =>
