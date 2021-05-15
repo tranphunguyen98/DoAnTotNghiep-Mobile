@@ -12,6 +12,7 @@ import 'package:totodo/presentation/screen/diary/item_diary.dart';
 import 'package:totodo/presentation/screen/diary/sc_diary.dart';
 import 'package:totodo/presentation/screen/list_habit/sc_list_habit.dart';
 import 'package:totodo/presentation/screen/profile/sc_profile.dart';
+import 'package:totodo/presentation/screen/util/sc_loading.dart';
 
 import 'screen/change_password/sc_change_password.dart';
 import 'screen/creating_habit_list/sc_list_habit_creating.dart';
@@ -23,12 +24,13 @@ import 'screen/project/sc_add_project.dart';
 import 'screen/select_label/sc_select_label.dart';
 import 'screen/setting/sc_setting.dart';
 import 'screen/signup/sc_signup.dart';
-import 'screen/splash/sc_splash.dart';
 import 'screen/task_detail/sc_detail_task.dart';
+import 'screen/util/sc_splash.dart';
 
 class AppRouter {
   static const String kHome = '/home';
   static const String kSplash = '/splash';
+  static const String kLoading = '/loading';
   static const String kLogin = '/login';
   static const String kSignUp = '/signUp';
   static const String kChangePassword = '/changePassword';
@@ -51,6 +53,8 @@ class AppRouter {
     switch (settings.name) {
       case kSplash:
         return MaterialPageRoute(builder: (_) => SplashScreen());
+      case kLoading:
+        return MaterialPageRoute(builder: (_) => LoadingScreen());
       case kHome:
         return MaterialPageRoute(builder: (_) => HomeScreen());
       case kLogin:

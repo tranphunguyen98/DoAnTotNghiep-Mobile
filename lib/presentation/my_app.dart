@@ -94,6 +94,9 @@ class _MyAppState extends State<MyApp> {
                   AppRouter.kLogin, (_) => false);
             } else if (state is Authenticated) {
               _navigator.pushNamedAndRemoveUntil(AppRouter.kHome, (_) => false);
+            } else if (state is Loading) {
+              _navigator.pushNamedAndRemoveUntil(
+                  AppRouter.kLoading, (_) => false);
             }
           },
           child: child,
