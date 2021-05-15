@@ -163,11 +163,40 @@ class HomeState extends Equatable {
     return false;
   }
 
+  bool isInLabel() {
+    if (drawerItems != null) {
+      return drawerItems[indexDrawerSelected].type == DrawerItemData.kTypeLabel;
+    }
+    return false;
+  }
+
+  bool isInPriority() {
+    if (drawerItems != null) {
+      return drawerItems[indexDrawerSelected].type ==
+          DrawerItemData.kTypeFilter; // TODO Filter is only priority
+    }
+    return false;
+  }
+
   Project getProjectSelected() {
     if (isInProject()) {
       return drawerItems[indexDrawerSelected].data as Project;
     }
     throw Exception('Not in project screen');
+  }
+
+  Label getLabelSelected() {
+    if (isInLabel()) {
+      return drawerItems[indexDrawerSelected].data as Label;
+    }
+    throw Exception('Not in label screen');
+  }
+
+  int getPrioritySelected() {
+    if (isInPriority()) {
+      return drawerItems[indexDrawerSelected].data as int;
+    }
+    throw Exception('Not in filter screen');
   }
 
   List<SectionDisplay> _getListSectionWithDataAndConditionDate(

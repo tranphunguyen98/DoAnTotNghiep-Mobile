@@ -21,8 +21,16 @@ import 'package:totodo/utils/util.dart';
 class BottomSheetAddTask extends StatefulWidget {
   final String sectionId;
   final Project projectSelected;
+  final Label labelSelected;
+  final String dateTime;
+  final int priority;
 
-  const BottomSheetAddTask({this.sectionId, this.projectSelected});
+  const BottomSheetAddTask(
+      {this.sectionId,
+      this.projectSelected,
+      this.labelSelected,
+      this.dateTime,
+      this.priority});
 
   @override
   _BottomSheetAddTaskState createState() => _BottomSheetAddTaskState();
@@ -98,6 +106,21 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
           sectionId: widget.sectionId,
           project: widget.projectSelected,
         ),
+      );
+    } else if (widget.priority != null) {
+      _taskAddBloc.add(
+        TaskAddChanged(priority: widget.priority),
+      );
+    } else if (widget.dateTime != null) {
+      log('test1111', 'today1');
+      _taskAddBloc.add(
+        TaskAddChanged(
+          taskDate: widget.dateTime,
+        ),
+      );
+    } else if (widget.labelSelected != null) {
+      _taskAddBloc.add(
+        TaskAddChanged(labels: [widget.labelSelected]),
       );
     }
   }

@@ -10,6 +10,7 @@ import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/router.dart';
 import 'package:totodo/presentation/screen/home/widget_bottom_sheet_add_task.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
+import 'package:totodo/utils/util.dart';
 
 class FloatingActionButtonHome extends StatefulWidget {
   @override
@@ -73,12 +74,34 @@ class _FloatingActionButtonHomeState extends State<FloatingActionButtonHome> {
           taskRepository: getIt<ITaskRepository>(),
           userRepository: getIt<IUserRepository>(),
         )..add(OnDataTaskAddChanged()),
-        child: _homeBloc.state.isInProject()
-            ? BottomSheetAddTask(
-                projectSelected: _homeBloc.state.getProjectSelected(),
-              )
-            : const BottomSheetAddTask(),
+        child: getBottomSheetAddTaskFromState(),
       ),
     );
+  }
+
+  BottomSheetAddTask getBottomSheetAddTaskFromState() {
+    if (_homeBloc.state.isInProject()) {
+      log('test1111', 'isInProject');
+      return BottomSheetAddTask(
+        projectSelected: _homeBloc.state.getProjectSelected(),
+      );
+    } else if (_homeBloc.state.isInLabel()) {
+      log('test1111', 'isInLabel');
+      return BottomSheetAddTask(
+        labelSelected: _homeBloc.state.getLabelSelected(),
+      );
+    } else if (_homeBloc.state.isInPriority()) {
+      log('test1111', 'isInPriority');
+      return BottomSheetAddTask(
+        priority: _homeBloc.state.getPrioritySelected(),
+      );
+    } else if (_homeBloc.state.indexDrawerSelected ==
+        HomeState.kDrawerIndexToday) {
+      log('test1111', 'today');
+      return BottomSheetAddTask(
+        dateTime: DateTime.now().toIso8601String(),
+      );
+    }
+    return const BottomSheetAddTask();
   }
 }
