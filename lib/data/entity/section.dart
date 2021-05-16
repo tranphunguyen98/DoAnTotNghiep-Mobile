@@ -5,69 +5,65 @@ import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
 
-part 'section_display.g.dart';
+part 'section.g.dart';
 
 @HiveType(typeId: kHiveTypeSection)
-class SectionDisplay extends Equatable {
+class Section extends Equatable {
   static const String kIdCompleted = 'completed';
 
   @HiveField(0)
   final String id;
   @HiveField(1)
   final String name;
-  final String projectId;
 
   final bool isShowIfEmpty;
   final List<Task> listTask;
   final bool Function(String date) dateCondition;
 
-  const SectionDisplay(
+  const Section(
       {@required this.id,
       this.name = '',
       this.isShowIfEmpty = true,
       this.listTask = const [],
-      this.projectId,
       this.dateCondition});
 
-  static const SectionDisplay kSectionToday = SectionDisplay(
+  static const Section kSectionToday = Section(
       id: "today",
       name: "Today",
       isShowIfEmpty: false,
       dateCondition: DateHelper.isTodayString);
 
-  static const SectionDisplay kSectionEmpty = SectionDisplay(id: null);
+  static const Section kSectionEmpty = Section(id: null);
 
-  static const SectionDisplay kSectionTomorrow = SectionDisplay(
+  static const Section kSectionTomorrow = Section(
       id: "tomorrow",
       name: "Tomorrow",
       dateCondition: DateHelper.isTomorrowString);
 
-  static const SectionDisplay kSectionCompleted = SectionDisplay(
+  static const Section kSectionCompleted = Section(
     id: kIdCompleted,
     name: "Completed",
     isShowIfEmpty: false,
   );
 
-  static const SectionDisplay kSectionOverdue = SectionDisplay(
+  static const Section kSectionOverdue = Section(
       id: "overdue",
       name: "Overdue",
       isShowIfEmpty: false,
       dateCondition: DateHelper.isOverDueString);
 
-  static const SectionDisplay kSectionNoName =
-      SectionDisplay(id: "noName", isShowIfEmpty: false);
+  static const Section kSectionNoName =
+      Section(id: "noName", isShowIfEmpty: false);
 
-  SectionDisplay copyWith({
+  Section copyWith({
     String id,
     String name,
-    String projectId,
     bool isShowIfEmpty,
     List<Task> listTask,
     bool Function(String date) dateCondition,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (name == null || identical(name, this.name)) &&
-        (projectId == null || identical(projectId, this.projectId)) &&
         (isShowIfEmpty == null ||
             identical(isShowIfEmpty, this.isShowIfEmpty)) &&
         (listTask == null || identical(listTask, this.listTask)) &&
@@ -76,10 +72,9 @@ class SectionDisplay extends Equatable {
       return this;
     }
 
-    return SectionDisplay(
+    return Section(
       id: id ?? this.id,
       name: name ?? this.name,
-      projectId: projectId ?? this.projectId,
       isShowIfEmpty: isShowIfEmpty ?? this.isShowIfEmpty,
       listTask: listTask ?? this.listTask,
       dateCondition: dateCondition ?? this.dateCondition,
@@ -88,12 +83,12 @@ class SectionDisplay extends Equatable {
 
   @override
   String toString() {
-    return 'Section{id: $id, name: $name, projectId: $projectId, isShowIfEmpty: $isShowIfEmpty, listTask: $listTask, dateCondition: $dateCondition}';
+    return 'Section{id: $id, name: $name}';
   }
 
-  factory SectionDisplay.fromMap(Map<String, dynamic> map) {
-    return SectionDisplay(
-      id: map['_id'] as String,
+  factory Section.fromJson(Map<String, dynamic> map) {
+    return Section(
+      id: map['id'] as String,
       name: map['name'] as String,
     );
   }
@@ -101,7 +96,7 @@ class SectionDisplay extends Equatable {
   Map<String, dynamic> toJson() {
     // ignore: unnecessary_cast
     return {
-      '_id': id,
+      'id': id,
       'name': name,
     } as Map<String, dynamic>;
   }
@@ -110,6 +105,5 @@ class SectionDisplay extends Equatable {
   List<Object> get props => [
         id,
         name,
-        projectId,
       ];
 }

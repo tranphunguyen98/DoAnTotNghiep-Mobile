@@ -42,9 +42,7 @@ class AddSectionBloc extends Bloc<AddSectionEvent, AddSectionState> {
   Stream<AddSectionState> _mapProjectIdSectionAddChangedToState(
       String projectId) async* {
     if (projectId.isNotEmpty) {
-      yield state.copyWith(
-        section: state.section.copyWith(projectId: projectId),
-      );
+      yield state.copyWith(projectId: projectId);
     }
   }
 
@@ -53,9 +51,8 @@ class AddSectionBloc extends Bloc<AddSectionEvent, AddSectionState> {
       if (state.section?.name?.isEmpty ?? true) {
         yield state.failed("Tên Section rỗng!");
       } else {
-        // TODO handle sector
-        // await _taskRepository.addSection(state.section);
-        yield AddSectionState.success();
+        await _taskRepository.addSection(state.projectId, state.section);
+        yield state.copyWith(isSuccess: true);
       }
     } catch (e) {
       yield state.failed(e.toString());

@@ -2,9 +2,11 @@ import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/mapper/local_task_mapper.dart';
 import 'package:totodo/data/local/model/local_task.dart';
+import 'package:totodo/utils/util.dart';
 
 @Injectable()
 class LocalTaskService {
@@ -43,7 +45,8 @@ class LocalTaskService {
       listTask
           .add(localTaskMapper.mapFromLocal(_taskBox.getAt(i) as LocalTask));
     }
-    // print("LIST TASK: ${listTask}");
+    log("testLocal1111111", listTask);
+
     return listTask ?? <Task>[];
   }
 
@@ -97,12 +100,32 @@ class LocalTaskService {
     return true;
   }
 
+  Future<Project> getProjectById(String id) async {
+    final listProject = await getProjects();
+    return listProject.firstWhere((project) => project.id == id);
+  }
+
   Future<List<Project>> getProjects() async {
     final listProject = <Project>[];
     for (var i = 0; i < _projectBox.length; i++) {
       listProject.add(_projectBox.getAt(i) as Project);
     }
+    log("testLocal1111111", listProject);
     return listProject ?? <Project>[];
+  }
+
+  Future<void> updateProject(Project project) async {
+    int indexUpdated = -1;
+
+    for (var i = 0; i < _projectBox.length; i++) {
+      if ((_projectBox.getAt(i) as Project).id == project.id) {
+        indexUpdated = i;
+        break;
+      }
+    }
+    if (indexUpdated > -1) {
+      _projectBox.putAt(indexUpdated, project);
+    }
   }
 
   Future<void> saveProjects(List<Project> projects) async {
@@ -140,15 +163,24 @@ class LocalTaskService {
   //</editor-fold>
 
   //<editor-fold desc="Section" defaultstate="collapsed">
-  // Future<bool> addSection(SectionDisplay section) async {
-  //   // if (section.id == null) {
-  //   //   _taskBoxSection.add(section.copyWith(
-  //   //       id: DateTime.now().microsecondsSinceEpoch.toString()));
-  //   //   return true;
-  //   // }
-  //   // _taskBoxSection.add(section);
-  //   // return true;
-  // }
+
+  Future<void> addSection(String projectId, Section section) async {
+    final Project project = await getProjectById(projectId);
+
+    final List<Section> sections = [];
+    sections.addAll(project.sections);
+
+    if (section.id?.isEmpty ?? true) {
+      log('local', section);
+      sections.add(section.copyWith(
+          id: DateTime.now().microsecondsSinceEpoch.toString()));
+    } else {
+      log('server', section);
+      sections.add(section);
+    }
+
+    await updateProject(project.copyWith(sections: sections));
+  }
 
   // Future<List<SectionDisplay>> getAllSection() async {
   // final listSection = <SectionDisplay>[];

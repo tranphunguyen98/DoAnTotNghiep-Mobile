@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/add_task/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
+import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/home/dropdown_choice.dart';
@@ -28,39 +29,6 @@ class HeaderSection extends StatelessWidget {
 
   final List<DropdownChoices> dropdownChoices = [];
 
-  void _intData() {
-    dropdownChoices.clear();
-    dropdownChoices.addAll([
-      DropdownChoices(
-          title: 'Thêm Task',
-          onPressed: (context) {
-            showModalBottomSheet(
-              isScrollControlled: true,
-              backgroundColor: Colors.white,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(16.0),
-                  topLeft: Radius.circular(16.0),
-                ),
-              ),
-              context: Scaffold.of(context).context,
-              builder: (_) => BlocProvider<TaskAddBloc>(
-                create: (context) => TaskAddBloc(
-                  taskRepository: getIt<ITaskRepository>(),
-                )..add(OnDataTaskAddChanged()),
-                child: BottomSheetAddTask(
-                  sectionId: sectionId,
-                  projectSelected: project,
-                ),
-              ),
-            );
-            //Navigator.pushNamed(context, MyRouter.SETTING);
-          }),
-      DropdownChoices(title: 'Sửa tên section', onPressed: (context) {}),
-      DropdownChoices(title: 'Xóa section', onPressed: (context) {}),
-    ]);
-  }
-
   @override
   Widget build(BuildContext context) {
     _intData();
@@ -76,26 +44,10 @@ class HeaderSection extends StatelessWidget {
                 top: 20.0,
                 bottom: 16.0,
               ),
-              child: Text(sectionName, style: style
-                  // widget.section.listTask.isNotEmpty
-                  //     ? kFontSemiboldBlack_16
-                  //     : kFontSemiboldGray_16,
-                  ),
+              child: Text(sectionName, style: style),
             ),
             const Spacer(),
-            // SizedBox(
-            //   width: 36.0,
-            //   height: 36.0,
-            //   child: ExpandIcon(
-            //     isExpanded: expandFlag,
-            //     color: kColorBlack2,
-            //     expandedColor: kColorBlack2,
-            //     disabledColor: kColorBlack2,
-            //     onPressed: (bool value) {
-            //       // _expand();
-            //     },
-            //   ),
-            // ),
+            //TODO only show in project
             PopupMenuButton<DropdownChoices>(
               onSelected: (DropdownChoices choice) {
                 choice.onPressed(context);
@@ -122,5 +74,39 @@ class HeaderSection extends StatelessWidget {
         )
       ],
     );
+  }
+
+  void _intData() {
+    dropdownChoices.clear();
+    dropdownChoices.addAll([
+      DropdownChoices(
+          title: 'Thêm Task',
+          onPressed: (context) {
+            showModalBottomSheet(
+              isScrollControlled: true,
+              backgroundColor: Colors.white,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(16.0),
+                  topLeft: Radius.circular(16.0),
+                ),
+              ),
+              context: Scaffold.of(context).context,
+              builder: (_) => BlocProvider<TaskAddBloc>(
+                create: (context) => TaskAddBloc(
+                  taskRepository: getIt<ITaskRepository>(),
+                  userRepository: getIt<IUserRepository>(),
+                )..add(OnDataTaskAddChanged()),
+                child: BottomSheetAddTask(
+                  sectionId: sectionId,
+                  projectSelected: project,
+                ),
+              ),
+            );
+            //Navigator.pushNamed(context, MyRouter.SETTING);
+          }),
+      DropdownChoices(title: 'Sửa tên section', onPressed: (context) {}),
+      DropdownChoices(title: 'Xóa section', onPressed: (context) {}),
+    ]);
   }
 }

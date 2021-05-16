@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
+import 'package:totodo/utils/util.dart';
 
 import '../../../bloc/section/bloc.dart';
 import '../../../di/injection.dart';
@@ -21,13 +22,16 @@ class BottomSheetAddSection extends StatelessWidget {
         projectId: (_homeBloc.state).getProjectSelected().id));
     return BlocConsumer<AddSectionBloc, AddSectionState>(
       cubit: _addSectionBloc,
+      listenWhen: (previous, current) =>
+          previous.isSuccess != current.isSuccess,
       listener: (context, state) {
+        log('state11111111111111111111111111111111111111111111111111', state);
         if (state.isSuccess == true) {
-          _homeBloc.add(DataListSectionChanged());
+          _homeBloc.add(DataProjectChanged());
         }
+        Navigator.pop(context);
       },
       builder: (context, state) {
-        //_intData(_HomeBloc.state as HomeState);
         return Container(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -43,11 +47,6 @@ class BottomSheetAddSection extends StatelessWidget {
   }
 
   Widget _buildTextNameTask(AddSectionState state, BuildContext context) {
-    // _textNameTaskController
-    //   ..text = state.section.name ?? ''
-    //   ..selection =
-    //   TextSelection.collapsed(offset: state.taskSubmit.name?.length ?? 0);
-
     return Row(
       children: [
         Expanded(
@@ -70,7 +69,7 @@ class BottomSheetAddSection extends StatelessWidget {
           onPressed: state.isValidNameSection
               ? () {
                   _addSectionBloc.add(AddSectionSubmit());
-                  Navigator.pop(context);
+                  // Navigator.pop(context);
                 }
               : null,
         )

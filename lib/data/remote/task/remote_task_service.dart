@@ -7,6 +7,7 @@ import 'package:totodo/data/response/label_response.dart';
 import 'package:totodo/data/response/message_response.dart';
 import 'package:totodo/data/response/project_list_response.dart';
 import 'package:totodo/data/response/project_response.dart';
+import 'package:totodo/data/response/section_response.dart';
 import 'package:totodo/data/response/task_list_response.dart';
 import 'package:totodo/data/response/task_response.dart';
 
@@ -57,4 +58,10 @@ abstract class RemoteTaskService {
     @Field() String name,
     @Field() String color,
   );
+
+  @POST("/projects/{projectId}/sections")
+  Future<ListSectionResponse> addSection(
+      @Header("authorization") String authorization,
+      @Path() String projectId,
+      @Field() String name);
 }

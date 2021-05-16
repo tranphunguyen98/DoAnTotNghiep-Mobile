@@ -13,14 +13,13 @@ import 'package:totodo/data/entity/habit/habit_progress_item.dart';
 import 'package:totodo/data/entity/habit/habit_remind.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/section_display.dart';
-import 'package:totodo/data/entity/section_display.dart';
+import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/local/model/local_task.dart';
 import 'package:totodo/data/local/source/habit/local_habit_service.dart';
 import 'package:totodo/utils/notification_helper.dart';
 
 import 'app_config.dart';
-import 'data/entity/section_display.dart';
+import 'data/entity/section.dart';
 import 'data/local/model/local_task.dart';
 import 'data/local/source/task/local_task_service.dart';
 import 'di/injection.dart';
@@ -59,7 +58,7 @@ Future _initHive() async {
   Hive.registerAdapter<Project>(ProjectAdapter());
   Hive.registerAdapter<Label>(LabelAdapter());
   Hive.registerAdapter<CheckItem>(CheckItemAdapter());
-  Hive.registerAdapter<SectionDisplay>(SectionDisplayAdapter());
+  Hive.registerAdapter<Section>(SectionAdapter());
 
   await Hive.openBox(LocalTaskService.kNameBoxTask);
   await Hive.openBox(LocalTaskService.kNameBoxProject);

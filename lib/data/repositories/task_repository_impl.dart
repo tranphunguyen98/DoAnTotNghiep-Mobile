@@ -4,6 +4,7 @@ import 'package:totodo/data/data_source/task/remote_task_data_source.dart';
 import 'package:totodo/data/data_source/user/local_user_data_source.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 
 class TaskRepositoryImpl implements ITaskRepository {
@@ -41,7 +42,7 @@ class TaskRepositoryImpl implements ITaskRepository {
   Future<bool> updateTask(Task task) async {
     final user = await _localUserDataSource.getUser();
     try {
-      await _remoteTaskDataSource.updateTask(user.authorization, task);
+      _remoteTaskDataSource.updateTask(user.authorization, task);
       return _localTaskDataSource.updateTask(task);
     } catch (e) {
       // TODO try remove :v
@@ -59,8 +60,7 @@ class TaskRepositoryImpl implements ITaskRepository {
 
   @override
   Future<void> updateProject(Project project) {
-    // TODO: implement updateProject
-    throw UnimplementedError();
+    return _localTaskDataSource.updateProject(project);
   }
 
   @override
@@ -102,6 +102,27 @@ class TaskRepositoryImpl implements ITaskRepository {
   @override
   Future<void> clearDataOffline() {
     return _localTaskDataSource.clearData();
+  }
+
+  @override
+  Future<void> addSection(String projectId, Section section) async {
+    // return _localTaskDataSource.addSection(projectId, section);
+    final user = await _localUserDataSource.getUser();
+    final serverSection = await _remoteTaskDataSource.addSection(
+        user.authorization, projectId, section);
+    await _localTaskDataSource.addSection(projectId, section);
+  }
+
+  @override
+  Future<void> deleteSection(String projectId, Section section) {
+    // TODO: implement deleteSection
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateSection(String projectId, Section section) {
+    // TODO: implement updateSection
+    throw UnimplementedError();
   }
 
   @override

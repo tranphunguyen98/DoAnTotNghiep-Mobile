@@ -63,6 +63,7 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
       listener: (context, state) {
         if (state.success) {
           getIt<HomeBloc>().add(DataListTaskChanged());
+          Navigator.of(context).pop();
         }
       },
       builder: (context, state) {
@@ -82,7 +83,6 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
                   if (!(state.taskAdd.labels?.isEmpty ?? true))
                     _buildListChipLabel(),
                   buildRowDateAndProject(),
-                  // buildRowFunction()
                 ],
               ),
             ),

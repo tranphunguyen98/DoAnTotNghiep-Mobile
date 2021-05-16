@@ -152,4 +152,26 @@ class _RemoteTaskService implements RemoteTaskService {
     final value = LabelResponse.fromJson(_result.data);
     return value;
   }
+
+  @override
+  Future<ListSectionResponse> addSection(authorization, projectId, name) async {
+    ArgumentError.checkNotNull(authorization, 'authorization');
+    ArgumentError.checkNotNull(projectId, 'projectId');
+    ArgumentError.checkNotNull(name, 'name');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = {'name': name};
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/projects/$projectId/sections',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{r'authorization': authorization},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = ListSectionResponse.fromJson(_result.data);
+    return value;
+  }
 }

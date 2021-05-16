@@ -1,5 +1,6 @@
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/model/local_task.dart';
 
@@ -23,4 +24,13 @@ abstract class RemoteTaskDataSource {
   Future<void> updateLabel(String authorization, Label label);
 
   Future<List<Label>> getLabels(String authorization);
+
+  Future<Section> addSection(
+      String authorization, String projectId, Section section);
+
+  Future<void> updateSection(
+      String authorization, String projectId, Section section);
+
+  Future<void> deleteSection(
+      String authorization, String projectId, Section section);
 }

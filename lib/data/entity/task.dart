@@ -114,7 +114,9 @@ class Task extends Equatable {
 
   @override
   String toString() {
-    return 'Task{id: $id, createdAt: $createdAt, updatedAt: $updatedAt, priority: $priority, name: $name, description: $description, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, taskDate: $taskDate, project: $project, sectionId: $sectionId, labels: $labels, checkList: $checkList, completedDate: $completedDate, crontabSchedule: $crontabSchedule, preciseSchedules: $preciseSchedules}';
+    return 'Task{id: $id,  sectionId: $sectionId, updatedAt: $updatedAt, priority: $priority, name: $name, isCompleted: $isCompleted, isTrashed: $isTrashed, taskDate: $taskDate, project: ${project?.name}, labels: $labels, checkList: $checkList, completedDate: $completedDate,'
+        // ' crontabSchedule: $crontabSchedule, preciseSchedules: $preciseSchedules}'
+        ;
   }
 
   @override

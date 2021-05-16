@@ -1,5 +1,6 @@
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/model/local_task.dart';
 
@@ -20,7 +21,9 @@ abstract class LocalTaskDataSource {
   Future<List<Label>> getLabels();
   Future<void> saveLabels(List<Label> labels);
 
-  // Future<void> addSection(SectionDisplay section);
+  Future<void> addSection(String projectId, Section section);
+  Future<void> updateSection(String projectId, Section section);
+  Future<void> deleteSection(String projectId, Section section);
   // Future<void> updateSection(SectionDisplay section);
   // Future<List<SectionDisplay>> getSections();
 

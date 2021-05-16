@@ -34,8 +34,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _mapDataProjectChangedState();
     } else if (event is DataListTaskChanged) {
       yield* _mapDataListTaskChangedState();
-    } else if (event is DataListSectionChanged) {
-      yield* _mapDataListSectionChangedToState();
     } else if (event is ShowCompletedTaskChange) {
       yield* _mapShowCompletedTaskChangeToState();
     }
@@ -115,7 +113,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final listProject = await _taskRepository.getProjects();
       final drawerItems = <DrawerItemData>[];
       _initDrawerItems(drawerItems, listProject, state.listLabel);
-
       yield state.copyWith(
           listProject: listProject, drawerItems: drawerItems, loading: false);
     } catch (e, stackTrace) {
@@ -135,16 +132,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  Stream<HomeState> _mapDataListSectionChangedToState() async* {
-    try {
-      // final listSection = await _taskRepository.getSections();
-      //TODO Handle sector
-      // yield state.copyWith(listSection: listSection);
-    } catch (e, stackTrace) {
-      log("error:( $stackTrace");
-      yield HomeState.error(e.toString());
-    }
-  }
+  // Stream<HomeState> _mapDataListSectionChangedToState() async* {
+  //   try {
+  //     // final listSection = await _taskRepository.getSections();
+  //     //TODO Handle sector
+  //     // yield state.copyWith(listSection: listSection);
+  //   } catch (e, stackTrace) {
+  //     log("error:( $stackTrace");
+  //     yield HomeState.error(e.toString());
+  //   }
+  // }
 
   Stream<HomeState> _mapShowCompletedTaskChangeToState() async* {
     yield state.copyWith(isShowCompletedTask: !state.isShowCompletedTask);

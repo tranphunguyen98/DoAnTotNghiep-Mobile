@@ -54,7 +54,8 @@ class LocalTask {
       isTrashed: map['isTrashed'] as bool,
       dueDate: map['dueDate'] as String,
       projectId: map['projectId'] as String,
-      labelIds: [], //TODO List Labels
+      labelIds: [],
+      //TODO List Labels
       sectionId: map['sectionId'] as String,
       checkList: [],
       completedDate: map['completedDate'] as String,
@@ -173,6 +174,6 @@ class LocalTask {
 
   @override
   String toString() {
-    return 'LocalTask{id: $id, createdAt: $createdAt, updatedAt: $updatedAt, priority: $priority, name: $name, description: $description, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, dueDate: $dueDate, projectId: $projectId, labelIds: $labelIds, sectionId: $sectionId, checkList: $checkList, completedDate: $completedDate, crontabSchedule: $crontabSchedule, preciseSchedules: $preciseSchedules}';
+    return 'LocalTask{id: $id, updatedAt: $updatedAt, priority: $priority, name: $name, isCompleted: $isCompleted, isTrashed: $isTrashed, dueDate: $dueDate, projectId: $projectId, labelIds: $labelIds, sectionId: $sectionId, checkList: $checkList, completedDate: $completedDate, crontabSchedule: $crontabSchedule, preciseSchedules: $preciseSchedules}';
   }
 }

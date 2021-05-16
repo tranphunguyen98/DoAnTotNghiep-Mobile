@@ -22,7 +22,7 @@ class ProjectAdapter extends TypeAdapter<Project> {
       color: fields[2] as String,
       createdAt: fields[3] as String,
       updatedAt: fields[4] as String,
-      sections: (fields[5] as List)?.cast<SectionDisplay>(),
+      sections: (fields[5] as List)?.cast<Section>(),
     );
   }
 

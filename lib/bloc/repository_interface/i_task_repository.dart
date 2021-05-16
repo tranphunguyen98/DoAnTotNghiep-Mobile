@@ -1,5 +1,6 @@
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 
 abstract class ITaskRepository {
@@ -16,8 +17,9 @@ abstract class ITaskRepository {
   Future<void> updateLabel(Label label);
   Future<List<Label>> getLabels();
 
-  // Future<void> addSection(SectionDisplay section);
-  // Future<void> updateSection(SectionDisplay section);
+  Future<void> addSection(String projectId, Section section);
+  Future<void> updateSection(String projectId, Section section);
+  Future<void> deleteSection(String projectId, Section section);
   // Future<List<SectionDisplay>> getSections();
   Future<void> saveDataToLocal();
   Future<void> clearDataOffline();

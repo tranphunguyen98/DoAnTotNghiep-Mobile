@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:totodo/data/data_source/task/remote_task_data_source.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/mapper/local_task_mapper.dart';
 import 'package:totodo/data/local/model/local_task.dart';
@@ -143,5 +144,40 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
     log("TaskToJson", task.toJson());
 
     return _taskService.updateTask(authorization, task.id, task.toJson());
+  }
+
+  @override
+  Future<Section> addSection(
+      String authorization, String projectId, Section section) async {
+    try {
+      final labelResponse =
+          await _taskService.addSection(authorization, projectId, section.name);
+      if (labelResponse.succeeded) {
+        return labelResponse.sections
+            .firstWhere((element) => element.name == section.name);
+      }
+      throw Exception(labelResponse.message ?? "Error Dio");
+    } on DioError catch (e, stacktrace) {
+      log('stacktrace', stacktrace);
+      if (e.type == DioErrorType.RESPONSE &&
+          e.response.statusCode == HttpStatus.unauthorized) {
+        throw UnauthenticatedException(e.response.statusMessage);
+      }
+      throw Exception(e.response.data["message"] ?? "Error Dio");
+    }
+  }
+
+  @override
+  Future<void> deleteSection(
+      String authorization, String projectId, Section section) {
+    // TODO: implement deleteSection
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateSection(
+      String authorization, String projectId, Section section) {
+    // TODO: implement updateSection
+    throw UnimplementedError();
   }
 }

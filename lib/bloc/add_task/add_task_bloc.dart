@@ -71,6 +71,7 @@ class TaskAddBloc extends Bloc<TaskAddEvent, TaskAddState> {
       yield state.copyWith(errorMessage: e.toString());
       //TODO handle error
     }
+
     if (!(state.taskAdd.taskDate?.isEmpty ?? true)) {
       showNotificationScheduledWithTask(taskSubmit);
     }

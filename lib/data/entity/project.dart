@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
-import 'package:totodo/data/entity/section_display.dart';
+import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
 
 part 'project.g.dart';
@@ -19,7 +19,7 @@ class Project extends Equatable {
   @HiveField(4)
   final String updatedAt;
   @HiveField(5)
-  final List<SectionDisplay> sections;
+  final List<Section> sections;
   final bool isLocal;
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
@@ -39,7 +39,7 @@ class Project extends Equatable {
     String color,
     String createdAt,
     String updatedAt,
-    List<SectionDisplay> sections,
+    List<Section> sections,
     bool isLocal,
   }) {
     return Project(
@@ -66,7 +66,7 @@ class Project extends Equatable {
       createdAt: map['createdAt'] as String,
       updatedAt: map['updatedAt'] as String,
       sections: (map['sections'] as List)
-          .map((e) => SectionDisplay.fromMap(e as Map<String, dynamic>))
+          .map((e) => Section.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
   }

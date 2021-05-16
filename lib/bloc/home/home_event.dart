@@ -58,6 +58,4 @@ class DataProjectChanged extends HomeEvent {}
 
 class DataListTaskChanged extends HomeEvent {}
 
-class DataListSectionChanged extends HomeEvent {}
-
 class ShowCompletedTaskChange extends HomeEvent {}

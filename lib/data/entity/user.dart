@@ -12,7 +12,7 @@ class User {
   final String refreshToken;
   final int type;
 
-  String get authorization => "authorization $accessToken";
+  String get authorization => "Bearer $accessToken";
   User(
       {this.id,
       this.name,

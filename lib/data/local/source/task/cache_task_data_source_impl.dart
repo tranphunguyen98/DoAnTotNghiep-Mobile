@@ -1,6 +1,7 @@
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/model/local_task.dart';
 
@@ -36,8 +37,7 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
 
   @override
   Future<void> updateProject(Project project) {
-    // TODO: implement updateProject
-    throw UnimplementedError();
+    return _taskService.updateProject(project);
   }
 
   @override
@@ -94,5 +94,22 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
   @override
   Future<void> saveLabels(List<Label> labels) {
     return _taskService.saveLabels(labels);
+  }
+
+  @override
+  Future<void> addSection(String projectId, Section section) {
+    return _taskService.addSection(projectId, section);
+  }
+
+  @override
+  Future<void> deleteSection(String projectId, Section section) {
+    // TODO: implement deleteSection
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateSection(String projectId, Section section) {
+    // TODO: implement updateSection
+    throw UnimplementedError();
   }
 }
