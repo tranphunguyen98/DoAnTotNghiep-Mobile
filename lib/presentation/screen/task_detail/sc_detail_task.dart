@@ -15,6 +15,7 @@ import 'package:totodo/presentation/common_widgets/widget_item_popup_menu.dart';
 import 'package:totodo/presentation/common_widgets/widget_text_field_non_border.dart';
 import 'package:totodo/presentation/custom_ui/date_picker/custom_picker_dialog.dart';
 import 'package:totodo/presentation/router.dart';
+import 'package:totodo/presentation/screen/home/dropdown_choice.dart';
 import 'package:totodo/presentation/screen/task_detail/item_checklist.dart';
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
@@ -42,11 +43,11 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
       DropdownChoice.dropdownChoicesPriority;
   final List<Project> dropdownChoicesProject = [];
   final List<Label> dropdownChoicesLabel = [];
+  final List<DropdownChoices> dropdownChoices = [];
 
   final TextEditingController _nameTaskController = TextEditingController();
   final TextEditingController _checkListNameController =
       TextEditingController();
-
   @override
   void initState() {
     if (widget.task != null) {
@@ -55,13 +56,22 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
       _taskDetailBloc.add(OpenScreenEditTaskWithId(widget.taskId));
     }
     _intData(_homeBloc.state);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TaskDetailBloc, TaskDetailState>(
+    return BlocConsumer<TaskDetailBloc, TaskDetailState>(
       cubit: _taskDetailBloc,
+      listenWhen: (previous, current) =>
+          previous.taskEdit.isTrashed != current.taskEdit.isTrashed,
+      listener: (context, state) {
+        if (state.taskEdit.isTrashed == true) {
+          _homeBloc.add(DataListTaskChanged());
+          Navigator.pop(context);
+        }
+      },
       builder: (context, state) {
         if (state.loading == true) {
           return const Center(child: CircularProgressIndicator());
@@ -82,6 +92,26 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
                 "Chi tiết Task",
                 style: kFontMediumWhite_18,
               ),
+              actions: [
+                PopupMenuButton<DropdownChoices>(
+                  onSelected: (DropdownChoices choice) {
+                    choice.onPressed(context);
+                  },
+                  elevation: 6,
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: kColorWhite,
+                  ),
+                  itemBuilder: (BuildContext context) {
+                    return dropdownChoices.map((DropdownChoices choice) {
+                      return PopupMenuItem<DropdownChoices>(
+                        value: choice,
+                        child: Text(choice.title),
+                      );
+                    }).toList();
+                  },
+                )
+              ],
             ),
             body: Container(
               padding: const EdgeInsets.all(16.0),
@@ -144,7 +174,18 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
     dropdownChoicesLabel.clear();
     dropdownChoicesLabel
         .add(Label(name: "No Label", color: getHexFromColor(Colors.grey)));
+
     dropdownChoicesLabel.addAll(state.listLabel);
+
+    dropdownChoices.clear();
+    dropdownChoices.add(
+      DropdownChoices(
+        title: 'Xóa',
+        onPressed: (context) {
+          _taskDetailBloc.add(DeleteTask());
+        },
+      ),
+    );
   }
 
   Row _buildEditTextAddCheckList(TaskDetailState state) {
@@ -158,15 +199,21 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
             if (_checkListNameController.text.isNotEmpty) {
               final checkList = <CheckItem>[];
               checkList.addAll(state.taskEdit.checkList ?? []);
-              checkList.add(CheckItem(
-                id: DateTime.now().microsecondsSinceEpoch.toString(),
-                name: _checkListNameController.text,
-              ));
+              checkList.add(
+                CheckItem(
+                  id: DateTime.now().microsecondsSinceEpoch.toString(),
+                  name: _checkListNameController.text,
+                ),
+              );
 
               _checkListNameController.text = '';
-              _taskDetailBloc.add(SubmitEditTask(state.taskEdit.copyWith(
-                checkList: checkList,
-              )));
+              _taskDetailBloc.add(
+                SubmitEditTask(
+                  state.taskEdit.copyWith(
+                    checkList: checkList,
+                  ),
+                ),
+              );
             }
           },
         ),
@@ -179,7 +226,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
             hint: 'Thêm Checklist',
             controller: _checkListNameController,
           ),
-        )
+        ),
       ],
     );
   }

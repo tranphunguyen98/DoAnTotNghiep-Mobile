@@ -22,7 +22,7 @@ class SimpleBlocDelegate extends BlocObserver {
 
   @override
   void onClose(Cubit cubit) {
-    // log('onClose', cubit);
+    log('onClose', cubit);
     super.onClose(cubit);
   }
 

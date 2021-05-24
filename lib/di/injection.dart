@@ -38,13 +38,16 @@ final getIt = GetIt.instance;
 Future<void> configureDependencies() async {
   $initGetIt(getIt);
 
+  const String kBaseUrl = 'http://192.168.43.26:3006/';
+
   getIt.registerLazySingleton<DateFormat>(() => DateFormat('MMM yyyy'));
   getIt.registerSingleton<Logger>(Logger());
   getIt.registerSingleton<Dio>(Dio());
 
   // User
   getIt.registerLazySingleton<RemoteUserService>(
-      () => RemoteUserService(getIt.get<Dio>()));
+    () => RemoteUserService(getIt.get<Dio>(), baseUrl: kBaseUrl),
+  );
 
   getIt.registerLazySingleton<RemoteUserDataSource>(
       () => RemoteUserDataSourceImpl(getIt.get<RemoteUserService>()));
@@ -57,7 +60,7 @@ Future<void> configureDependencies() async {
 
   // Task
   getIt.registerLazySingleton<RemoteTaskService>(
-      () => RemoteTaskService(getIt.get<Dio>()));
+      () => RemoteTaskService(getIt.get<Dio>(), baseUrl: kBaseUrl));
 
   getIt.registerLazySingleton<RemoteTaskDataSource>(
       () => RemoteTaskDataSourceImpl(getIt.get<RemoteTaskService>()));

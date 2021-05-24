@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
-import 'package:totodo/utils/util.dart';
 
 import '../../../bloc/section/bloc.dart';
 import '../../../di/injection.dart';
@@ -25,7 +24,6 @@ class BottomSheetAddSection extends StatelessWidget {
       listenWhen: (previous, current) =>
           previous.isSuccess != current.isSuccess,
       listener: (context, state) {
-        log('state11111111111111111111111111111111111111111111111111', state);
         if (state.isSuccess == true) {
           _homeBloc.add(DataProjectChanged());
         }
@@ -51,7 +49,7 @@ class BottomSheetAddSection extends StatelessWidget {
       children: [
         Expanded(
           child: TextFieldNonBorder(
-              hint: 'Tên Section',
+              hint: 'Tkn Section',
               controller: _textNameSectionController,
               onChanged: (value) {
                 _addSectionBloc.add(NameSectionAddChanged(name: value));

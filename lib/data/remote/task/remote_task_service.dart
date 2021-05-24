@@ -26,7 +26,6 @@ abstract class RemoteTaskService {
   Future<TaskResponse> addTask(
     @Header("authorization") String authorization,
     @Body() Map<String, dynamic> body,
-    // @Body() Map<String, dynamic> task,
   );
 
   @PUT("/tasks/{id}")

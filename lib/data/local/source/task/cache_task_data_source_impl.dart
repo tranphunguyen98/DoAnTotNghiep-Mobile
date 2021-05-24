@@ -57,8 +57,7 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
 
   @override
   Future<void> updateLabel(Label label) {
-    // TODO: implement updateLabel
-    throw UnimplementedError();
+    return _taskService.updateLabel(label);
   }
 
   // @override
@@ -102,14 +101,29 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
   }
 
   @override
-  Future<void> deleteSection(String projectId, Section section) {
-    // TODO: implement deleteSection
-    throw UnimplementedError();
+  Future<void> deleteSection(String projectId, String sectionId) {
+    return _taskService.deleteSection(projectId, sectionId);
   }
 
   @override
   Future<void> updateSection(String projectId, Section section) {
-    // TODO: implement updateSection
+    return _taskService.updateSection(projectId, section);
+  }
+
+  @override
+  Future<void> deleteLabel(String labelId) {
+    return _taskService.deleteLabel(labelId);
+  }
+
+  @override
+  Future<void> deleteProject(String projectId) {
+    // TODO: implement deleteProject
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteTask(String taskId) {
+    // TODO: implement deleteTask
     throw UnimplementedError();
   }
 }

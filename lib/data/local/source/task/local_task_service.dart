@@ -160,6 +160,22 @@ class LocalTaskService {
     await _labelBox.addAll(labels);
   }
 
+  Future<void> updateLabel(Label label) async {
+    int indexUpdated = -1;
+
+    for (var i = 0; i < _labelBox.length; i++) {
+      if ((_labelBox.getAt(i) as Label).id == label.id) {
+        indexUpdated = i;
+        break;
+      }
+    }
+    if (indexUpdated > -1) {
+      _labelBox.putAt(indexUpdated, label);
+    }
+  }
+
+  Future<void> deleteLabel(String labelId) async {}
+
   //</editor-fold>
 
   //<editor-fold desc="Section" defaultstate="collapsed">
@@ -182,29 +198,36 @@ class LocalTaskService {
     await updateProject(project.copyWith(sections: sections));
   }
 
-  // Future<List<SectionDisplay>> getAllSection() async {
-  // final listSection = <SectionDisplay>[];
-  // for (var i = 0; i < _taskBoxSection.length; i++) {
-  //   listSection.add(_taskBoxSection.getAt(i) as SectionDisplay);
-  // }
-  // log("LIST SECTION: $listSection");
-  // return listSection ?? <SectionDisplay>[];
-  // }
+  Future<void> updateSection(String projectId, Section section) async {
+    final Project project = await getProjectById(projectId);
 
-  // void updateSection(SectionDisplay section) {
-  // int indexUpdated = -1;
-  //
-  // for (var i = 0; i < _taskBoxSection.length; i++) {
-  //   if ((_taskBoxSection.getAt(i) as SectionDisplay).id == section.id) {
-  //     indexUpdated = i;
-  //     break;
-  //   }
-  // }
+    final List<Section> sections = [];
+    sections.addAll(project.sections);
 
-  // if (indexUpdated > -1) {
-  //   _taskBoxSection.putAt(indexUpdated, section);
-  // }
-  // }
+    int indexUpdate = -1;
+
+    for (int i = 0; i < sections.length; i++) {
+      if (sections[i].id == section.id) {
+        indexUpdate = i;
+        break;
+      }
+    }
+
+    if (indexUpdate >= 0) {
+      sections[indexUpdate] = section;
+      await updateProject(project.copyWith(sections: sections));
+    }
+  }
+
+  Future<void> deleteSection(String projectId, String sectionId) async {
+    final Project project = await getProjectById(projectId);
+
+    final List<Section> sections = [];
+    sections.addAll(project.sections);
+    sections.removeWhere((section) => section.id == sectionId);
+
+    await updateProject(project.copyWith(sections: sections));
+  }
 
 //</editor-fold>
 

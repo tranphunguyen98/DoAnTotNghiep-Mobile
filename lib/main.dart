@@ -59,11 +59,9 @@ Future _initHive() async {
   Hive.registerAdapter<Label>(LabelAdapter());
   Hive.registerAdapter<CheckItem>(CheckItemAdapter());
   Hive.registerAdapter<Section>(SectionAdapter());
-
   await Hive.openBox(LocalTaskService.kNameBoxTask);
   await Hive.openBox(LocalTaskService.kNameBoxProject);
   await Hive.openBox(LocalTaskService.kNameBoxLabel);
-
   // Habit
   Hive.registerAdapter<DiaryItem>(DiaryItemAdapter());
   Hive.registerAdapter<HabitFrequency>(HabitFrequencyAdapter());

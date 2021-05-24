@@ -30,6 +30,8 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
       yield* _mapDeleteCheckItemToState(event.idCheckItem);
     } else if (event is TaskSubmitDateChanged) {
       yield* _mapTaskSubmitDateChangedToState(event.taskDate);
+    } else if (event is DeleteTask) {
+      yield* _mapDeleteTaskToState();
     }
   }
 
@@ -117,5 +119,10 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
       }
       //TODO update task with noDate
     }
+  }
+
+  Stream<TaskDetailState> _mapDeleteTaskToState() async* {
+    await _taskRepository.updateTask(state.taskEdit.copyWith(isTrashed: true));
+    yield state.copyWith(taskEdit: state.taskEdit.copyWith(isTrashed: true));
   }
 }

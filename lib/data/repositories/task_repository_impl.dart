@@ -6,6 +6,7 @@ import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/local/model/local_task.dart';
 
 class TaskRepositoryImpl implements ITaskRepository {
   final RemoteTaskDataSource _remoteTaskDataSource;
@@ -34,8 +35,9 @@ class TaskRepositoryImpl implements ITaskRepository {
   }
 
   @override
-  Future<List<Task>> getAllTask() {
-    return _localTaskDataSource.getAllTask();
+  Future<List<Task>> getAllTask() async {
+    final listTask = await _localTaskDataSource.getAllTask();
+    return listTask.where((element) => element.isTrashed == false).toList();
   }
 
   @override
@@ -46,6 +48,7 @@ class TaskRepositoryImpl implements ITaskRepository {
       return _localTaskDataSource.updateTask(task);
     } catch (e) {
       // TODO try remove :v
+
       rethrow;
     }
   }
@@ -133,11 +136,11 @@ class TaskRepositoryImpl implements ITaskRepository {
         await _remoteTaskDataSource.getProjects(user.authorization);
     final List<Label> labels =
         await _remoteTaskDataSource.getLabels(user.authorization);
-    // final List<LocalTask> tasks =
-    //     await _remoteTaskDataSource.getAllTask(user.authorization);
+    final List<LocalTask> tasks =
+        await _remoteTaskDataSource.getAllTask(user.authorization);
 
     await _localTaskDataSource.saveProjects(projects);
     await _localTaskDataSource.saveLabels(labels);
-    // await _localTaskDataSource.saveTasks(tasks);
+    await _localTaskDataSource.saveTasks(tasks);
   }
 }

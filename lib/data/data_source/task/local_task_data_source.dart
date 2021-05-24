@@ -15,15 +15,17 @@ abstract class LocalTaskDataSource {
   Future<void> updateProject(Project project);
   Future<List<Project>> getProjects();
   Future<void> saveProjects(List<Project> projects);
+  Future<void> deleteProject(String projectId);
 
   Future<void> addLabel(Label label);
   Future<void> updateLabel(Label label);
   Future<List<Label>> getLabels();
   Future<void> saveLabels(List<Label> labels);
+  Future<void> deleteLabel(String labelId);
 
   Future<void> addSection(String projectId, Section section);
   Future<void> updateSection(String projectId, Section section);
-  Future<void> deleteSection(String projectId, Section section);
+  Future<void> deleteSection(String projectId, String sectionId);
   // Future<void> updateSection(SectionDisplay section);
   // Future<List<SectionDisplay>> getSections();
 

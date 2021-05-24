@@ -90,3 +90,5 @@ class DeleteCheckItem extends TaskDetailEvent {
     return 'DeleteCheckItem{idCheckItem: $idCheckItem}';
   }
 }
+
+class DeleteTask extends TaskDetailEvent {}

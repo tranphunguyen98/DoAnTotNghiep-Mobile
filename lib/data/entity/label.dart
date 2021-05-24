@@ -17,6 +17,8 @@ class Label extends Equatable {
   final String createdAt;
   @HiveField(4)
   final String updatedAt;
+  @HiveField(5)
+  final bool isTrashed;
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
@@ -26,6 +28,7 @@ class Label extends Equatable {
     @required this.color,
     @required this.createdAt,
     @required this.updatedAt,
+    @required this.isTrashed,
   });
 
   Label copyWith({
@@ -34,27 +37,30 @@ class Label extends Equatable {
     String color,
     String createdAt,
     String updatedAt,
+    bool isTrashed,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (name == null || identical(name, this.name)) &&
         (color == null || identical(color, this.color)) &&
         (createdAt == null || identical(createdAt, this.createdAt)) &&
-        (updatedAt == null || identical(updatedAt, this.updatedAt))) {
+        (updatedAt == null || identical(updatedAt, this.updatedAt)) &&
+        (isTrashed == null || identical(isTrashed, this.isTrashed))) {
       return this;
     }
 
-    return new Label(
+    return Label(
       id: id ?? this.id,
       name: name ?? this.name,
       color: color ?? this.color,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      isTrashed: isTrashed ?? this.isTrashed,
     );
   }
 
   @override
   String toString() {
-    return 'Label{id: $id, name: $name, color: $color, createdAt: $createdAt, updatedAt: $updatedAt}';
+    return 'Label{id: $id, name: $name, color: $color, createdAt: $createdAt, updatedAt: $updatedAt, isTrashed: $isTrashed}';
   }
 
   @override
@@ -66,7 +72,8 @@ class Label extends Equatable {
           name == other.name &&
           color == other.color &&
           createdAt == other.createdAt &&
-          updatedAt == other.updatedAt);
+          updatedAt == other.updatedAt &&
+          isTrashed == other.isTrashed);
 
   @override
   int get hashCode =>
@@ -74,26 +81,29 @@ class Label extends Equatable {
       name.hashCode ^
       color.hashCode ^
       createdAt.hashCode ^
-      updatedAt.hashCode;
+      updatedAt.hashCode ^
+      isTrashed.hashCode;
 
   factory Label.fromJson(Map<String, dynamic> map) {
     return Label(
-      id: map['_id'] as String,
+      id: map['id'] as String,
       name: map['name'] as String,
       color: map['color'] as String,
       createdAt: map['createdAt'] as String,
       updatedAt: map['updatedAt'] as String,
+      isTrashed: map['isTrashed'] as bool,
     );
   }
 
   Map<String, dynamic> toJson() {
     // ignore: unnecessary_cast
     return {
-      '_id': this.id,
+      'id': this.id,
       'name': this.name,
       'color': this.color,
       'createdAt': this.createdAt,
       'updatedAt': this.updatedAt,
+      'isTrashed': this.isTrashed,
     } as Map<String, dynamic>;
   }
 
