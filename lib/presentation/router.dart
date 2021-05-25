@@ -70,7 +70,13 @@ class AppRouter {
       case kAddProject:
         return MaterialPageRoute(builder: (_) => AddProjectScreen());
       case kAddLabel:
-        return MaterialPageRoute(builder: (_) => AddLabelScreen());
+        if (settings.arguments is Label) {
+          return MaterialPageRoute(
+              builder: (_) => AddLabelScreen(
+                    label: settings.arguments as Label,
+                  ));
+        }
+        return MaterialPageRoute(builder: (_) => const AddLabelScreen());
       case kProfile:
         return MaterialPageRoute(builder: (_) => ProfileScreen());
       case kCreatingHabitList:

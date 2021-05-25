@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
 
@@ -23,12 +22,12 @@ class Label extends Equatable {
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
   const Label({
-    @required this.id,
-    @required this.name,
-    @required this.color,
-    @required this.createdAt,
-    @required this.updatedAt,
-    @required this.isTrashed,
+    this.id,
+    this.name,
+    this.color,
+    this.createdAt,
+    this.updatedAt,
+    this.isTrashed,
   });
 
   Label copyWith({

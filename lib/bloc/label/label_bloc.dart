@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
+import 'package:totodo/data/entity/label.dart';
 
 import 'bloc.dart';
 
@@ -18,6 +19,8 @@ class AddLabelBloc extends Bloc<AddLabelEvent, AddLabelState> {
       yield* _mapNameLabelChangedToState(event);
     } else if (event is AddLabelSubmit) {
       yield* _mapAddLabelSubmitToState();
+    } else if (event is InitLabel) {
+      yield* _mapInitLabelToState(event.label);
     }
   }
 
@@ -33,11 +36,19 @@ class AddLabelBloc extends Bloc<AddLabelEvent, AddLabelState> {
       if (state.label?.name?.isEmpty ?? true) {
         yield state.failed("Tên nhãn rỗng!");
       } else {
-        await _taskRepository.addLabel(state.label);
+        if (state.label.id?.isEmpty ?? true) {
+          await _taskRepository.addLabel(state.label);
+        } else {
+          await _taskRepository.updateLabel(state.label);
+        }
         yield AddLabelState.success();
       }
     } catch (e) {
       yield state.failed(e.toString());
     }
+  }
+
+  Stream<AddLabelState> _mapInitLabelToState(Label label) async* {
+    yield state.copyWith(label: label);
   }
 }

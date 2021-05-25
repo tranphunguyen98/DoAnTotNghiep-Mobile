@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
+import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/di/injection.dart';
+import 'package:totodo/presentation/router.dart';
 import 'package:totodo/presentation/screen/home/bottom_sheet_add_section.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
@@ -94,7 +96,13 @@ class _PopupMenuButtonMoreState extends State<PopupMenuButtonMore> {
         ),
         DropdownChoices(
           title: 'Edit Label',
-          onPressed: (context) {},
+          onPressed: (context) {
+            Navigator.of(context).pushNamed(AppRouter.kAddLabel,
+                arguments: _homeBloc
+                    .state
+                    .drawerItems[_homeBloc.state.indexDrawerSelected]
+                    .data as Label);
+          },
         )
       ]);
     }

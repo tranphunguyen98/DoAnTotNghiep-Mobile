@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/bloc/label/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
+import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
@@ -15,6 +16,10 @@ class ChooseColor {
 }
 
 class AddLabelScreen extends StatefulWidget {
+  final Label label;
+
+  const AddLabelScreen({Key key, this.label}) : super(key: key);
+
   @override
   _AddLabelScreenState createState() => _AddLabelScreenState();
 }
@@ -25,12 +30,29 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
 
   Map<String, Object> dropdownValue;
 
+  final TextEditingController _nameController = TextEditingController();
+
   @override
   void initState() {
-    dropdownValue = kListColorDefault.first;
-    _addLabelBloc.add(
-        AddedLabelChanged(color: dropdownValue[keyListColorValue] as String));
+    final label = widget.label;
+    if (label == null) {
+      dropdownValue = kListColorDefault.first;
+      _addLabelBloc.add(
+          AddedLabelChanged(color: dropdownValue[keyListColorValue] as String));
+    } else {
+      dropdownValue = kListColorDefault.firstWhere(
+          (element) => element[keyListColorValue] as String == label.color);
+      _nameController.text = label.name;
+      _addLabelBloc.add(InitLabel(label));
+    }
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -41,6 +63,7 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
         if (state is AddLabelState) {
           if (state == AddLabelState.success()) {
             getIt<HomeBloc>().add(DataListLabelChanged());
+            getIt<HomeBloc>().add(DataListTaskChanged());
             Navigator.of(context).pop(state.label);
           }
         }
@@ -58,7 +81,7 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
           appBar: AppBar(
             iconTheme: const IconThemeData(color: Colors.white),
             title: Text(
-              "Thêm Nhán",
+              widget.label == null ? "Thêm Nhán" : "Chỉnh Sửa Nhãn",
               style: kFontSemiboldWhite_18,
             ),
             actions: [
@@ -76,6 +99,7 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 TextField(
+                  controller: _nameController,
                   decoration: InputDecoration(
                       hintText: "Name",
                       errorText: (state as AddLabelState).msg?.isEmpty ?? true

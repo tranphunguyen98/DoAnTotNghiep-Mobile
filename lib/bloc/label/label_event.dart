@@ -1,10 +1,27 @@
 import 'package:equatable/equatable.dart';
+import 'package:totodo/data/entity/label.dart';
 
 abstract class AddLabelEvent extends Equatable {
   const AddLabelEvent();
 
   @override
   List<Object> get props => [];
+}
+
+class InitLabel extends AddLabelEvent {
+  final Label label;
+
+  const InitLabel(this.label);
+
+  @override
+  List<Object> get props => [
+        label,
+      ];
+
+  @override
+  String toString() {
+    return 'InitLabel{name: $label  }';
+  }
 }
 
 class AddedLabelChanged extends AddLabelEvent {
