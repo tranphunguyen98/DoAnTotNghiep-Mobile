@@ -27,6 +27,8 @@ class HomeState extends Equatable {
   final bool loading;
   final String msg;
 
+  List<Task> get allTasks => _listAllTask;
+
   const HomeState(
       {this.indexDrawerSelected = kDrawerIndexInbox,
       this.indexNavigationBarSelected = kBottomNavigationTask,

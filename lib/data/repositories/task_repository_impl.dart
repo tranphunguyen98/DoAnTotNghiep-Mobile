@@ -92,14 +92,14 @@ class TaskRepositoryImpl implements ITaskRepository {
   }
 
   @override
-  Future<List<Label>> getLabels() {
-    return _localTaskDataSource.getLabels();
+  Future<List<Label>> getLabels() async {
+    final labels = await _localTaskDataSource.getLabels();
+    return labels.where((label) => label.isTrashed != true).toList();
   }
 
   @override
   Future<void> updateLabel(Label label) {
-    // TODO: implement updateLabel
-    throw UnimplementedError();
+    return _localTaskDataSource.updateLabel(label);
   }
 
   @override

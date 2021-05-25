@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 
 class IconOutlineButton extends StatelessWidget {
@@ -6,14 +7,19 @@ class IconOutlineButton extends StatelessWidget {
   final IconData iconData;
   final Color colorIcon;
   final Color colorBorder;
+  final bool isExpanded;
   final void Function() onPressed;
 
   const IconOutlineButton(this.title, this.iconData,
-      {@required this.onPressed, this.colorIcon, this.colorBorder});
+      {@required this.onPressed,
+      this.colorIcon,
+      this.colorBorder,
+      this.isExpanded = false});
 
   @override
   Widget build(BuildContext context) {
     return OutlineButton(
+      padding: const EdgeInsets.all(8.0),
       onPressed: onPressed,
       borderSide: BorderSide(
         color: colorBorder ?? kColorGray1, //Color of the border
@@ -24,28 +30,34 @@ class IconOutlineButton extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // SizedBox(
-          //   height: 16.0,
-          //   width: 16.0, // fixed width and height
-          //   child: Image.asset(
-          //     iconPath,
-          //     color: colorIcon ?? kColorGray1,
-          //   ),
-          // ),
           Icon(
             iconData,
-            size: 16.0,
+            size: 12.0,
             color: colorIcon ?? kColorGray1,
           ),
           const SizedBox(
             width: 8.0,
           ),
-          Text(
-            title,
-            style: TextStyle(
-              color: kColorGray1,
+          if (isExpanded)
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: kColorGray1,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
+          if (!isExpanded)
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                color: kColorGray1,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
         ],
       ),
     );

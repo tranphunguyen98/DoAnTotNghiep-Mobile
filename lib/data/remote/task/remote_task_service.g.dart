@@ -62,6 +62,7 @@ class _RemoteTaskService implements RemoteTaskService {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
+    log('_data', body);
     _data.addAll(body ?? <String, dynamic>{});
     final _result = await _dio.request<Map<String, dynamic>>('/tasks/$id',
         queryParameters: queryParameters,

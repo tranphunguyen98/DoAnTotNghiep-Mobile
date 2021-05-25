@@ -86,7 +86,7 @@ class Label extends Equatable {
 
   factory Label.fromJson(Map<String, dynamic> map) {
     return Label(
-      id: map['id'] as String,
+      id: map['_id'] as String,
       name: map['name'] as String,
       color: map['color'] as String,
       createdAt: map['createdAt'] as String,
@@ -98,12 +98,12 @@ class Label extends Equatable {
   Map<String, dynamic> toJson() {
     // ignore: unnecessary_cast
     return {
-      'id': this.id,
-      'name': this.name,
-      'color': this.color,
-      'createdAt': this.createdAt,
-      'updatedAt': this.updatedAt,
-      'isTrashed': this.isTrashed,
+      'id': id,
+      'name': name,
+      'color': color,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'isTrashed': isTrashed,
     } as Map<String, dynamic>;
   }
 

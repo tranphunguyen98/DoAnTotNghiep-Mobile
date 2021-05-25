@@ -29,14 +29,14 @@ class CheckItem extends Equatable {
   }) {
     if ((id == null || identical(id, this.id)) &&
         (name == null || identical(name, this.name)) &&
-        (isCheck == null || identical(isCheck, this.isDone))) {
+        (isCheck == null || identical(isCheck, isDone))) {
       return this;
     }
 
     return CheckItem(
       id: id ?? this.id,
       name: name ?? this.name,
-      isDone: isCheck ?? this.isDone,
+      isDone: isCheck ?? isDone,
     );
   }
 
@@ -57,18 +57,18 @@ class CheckItem extends Equatable {
   @override
   int get hashCode => id.hashCode ^ name.hashCode ^ isDone.hashCode;
 
-  factory CheckItem.fromMap(Map<String, dynamic> map) {
+  factory CheckItem.fromJson(Map<String, dynamic> map) {
     return CheckItem(
-      id: map['id'] as String,
+      id: map['_id'] as String,
       name: map['name'] as String,
       isDone: map['isCheck'] as bool,
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     // ignore: unnecessary_cast
     return {
-      'id': id,
+      '_id': id,
       'name': name,
       'isCheck': isDone,
     } as Map<String, dynamic>;

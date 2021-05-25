@@ -36,6 +36,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _mapDataListTaskChangedState();
     } else if (event is ShowCompletedTaskChange) {
       yield* _mapShowCompletedTaskChangeToState();
+    } else if (event is DeleteLabel) {
+      yield* _mapDeleteLabelToState();
     }
   }
 
@@ -65,7 +67,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           listAllTask: listAllTask,
           listProject: listProject,
           listLabel: listLabel,
-          listSection: [], //TODO handle section
+          listSection: [],
+          //TODO handle section
           drawerItems: drawerItems,
           loading: false);
     } catch (e, stackTrace) {
@@ -166,5 +169,45 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     drawerItems.addAll(DrawerItemData.listDrawerItemFilterInit);
+  }
+
+  Stream<HomeState> _mapDeleteLabelToState() async* {
+    try {
+      final selectedLabel =
+          state.drawerItems[state.indexDrawerSelected].data as Label;
+
+      await _taskRepository
+          .updateLabel(selectedLabel.copyWith(isTrashed: true));
+
+      final listTask = state.allTasks.where((element) {
+        if (element.labels?.isEmpty ?? true) {
+          return false;
+        }
+        return element.labels.contains(selectedLabel);
+      }).toList();
+
+      final updatedTasks = listTask.map((e) {
+        final updatedLabel = e.labels;
+        updatedLabel.remove(selectedLabel);
+        return e.copyWith(labels: updatedLabel);
+      });
+
+      await Future.wait(updatedTasks.map((e) => _taskRepository.updateTask(e)));
+
+      final listAllTask = await _taskRepository.getAllTask();
+      final listLabel = await _taskRepository.getLabels();
+      final drawerItems = <DrawerItemData>[];
+
+      _initDrawerItems(drawerItems, state.listProject, listLabel);
+
+      yield state.copyWith(
+          listAllTask: listAllTask,
+          listLabel: listLabel,
+          drawerItems: drawerItems,
+          indexDrawerSelected: HomeState.kDrawerIndexInbox,
+          loading: false);
+    } catch (e) {
+      yield state.copyWith(msg: e.toString());
+    }
   }
 }

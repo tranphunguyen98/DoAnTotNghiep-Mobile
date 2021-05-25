@@ -91,7 +91,7 @@ class Task extends Equatable {
       return this;
     }
 
-    return new Task(
+    return Task(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -188,22 +188,22 @@ class Task extends Equatable {
     // ignore: unnecessary_cast
     return {
       // 'id': this.id,
-      'createdAt': this.createdAt,
-      'updatedAt': this.updatedAt,
-      'priority': this.priority,
-      'name': this.name,
-      'description': this.description,
-      'isCompleted': this.isCompleted,
-      'isStarred': this.isStarred,
-      'isTrashed': this.isTrashed,
-      'taskDate': this.taskDate,
-      'project': this.project,
-      'sectionId': this.sectionId,
-      'labels': this.labels,
-      'checkList': this.checkList,
-      'completedDate': this.completedDate,
-      'crontabSchedule': this.crontabSchedule,
-      'preciseSchedules': this.preciseSchedules,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'priority': priority,
+      'name': name,
+      'description': description,
+      'isCompleted': isCompleted,
+      'isStarred': isStarred,
+      'isTrashed': isTrashed,
+      'taskDate': taskDate,
+      'project': project,
+      'sectionId': sectionId,
+      'labels': labels,
+      'checkList': checkList,
+      'completedDate': completedDate,
+      'crontabSchedule': crontabSchedule,
+      'preciseSchedules': preciseSchedules,
     } as Map<String, dynamic>;
   }
 

@@ -14,6 +14,7 @@ class PopupMenuButtonMore extends StatefulWidget {
 
 class _PopupMenuButtonMoreState extends State<PopupMenuButtonMore> {
   final _homeBloc = getIt<HomeBloc>();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
@@ -81,6 +82,20 @@ class _PopupMenuButtonMoreState extends State<PopupMenuButtonMore> {
             );
           },
         ),
+      ]);
+    }
+    if (state.isInLabel()) {
+      dropdownChoices.addAll([
+        DropdownChoices(
+          title: 'Delete Label',
+          onPressed: (context) {
+            _homeBloc.add(DeleteLabel());
+          },
+        ),
+        DropdownChoices(
+          title: 'Edit Label',
+          onPressed: (context) {},
+        )
       ]);
     }
     return dropdownChoices;

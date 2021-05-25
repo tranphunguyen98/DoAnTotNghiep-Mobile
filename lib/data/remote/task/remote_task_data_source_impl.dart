@@ -141,9 +141,10 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
 
   @override
   Future<void> updateTask(String authorization, Task task) {
-    log("TaskToJson", task.toJson());
+    // log("TaskToJson", task.toJson());
 
-    return _taskService.updateTask(authorization, task.id, task.toJson());
+    return _taskService.updateTask(
+        authorization, task.id, LocalTaskMapper().mapToLocal(task).toJson());
   }
 
   @override

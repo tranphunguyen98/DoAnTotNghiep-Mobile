@@ -74,12 +74,12 @@ class Project extends Equatable {
   Map<String, dynamic> toJson() {
     // ignore: unnecessary_cast
     return {
-      '_id': this.id,
-      'name': this.name,
-      'color': this.color,
-      'createdAt': this.createdAt,
-      'updatedAt': this.updatedAt,
-      'sections': this.sections,
+      '_id': id,
+      'name': name,
+      'color': color,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'sections': sections,
     } as Map<String, dynamic>;
   }
 

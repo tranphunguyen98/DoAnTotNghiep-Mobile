@@ -41,52 +41,6 @@ class LocalTask {
   @HiveField(16)
   final List<String> preciseSchedules;
 
-  factory LocalTask.fromJson(Map<String, dynamic> map) {
-    return LocalTask(
-      id: map['_id'] as String,
-      createdAt: map['createdAt'] as String,
-      updatedAt: map['updatedAt'] as String,
-      priority: map['priority'] as int,
-      name: map['name'] as String,
-      description: map['description'] as String,
-      isCompleted: map['isCompleted'] as bool,
-      isStarred: map['isStarred'] as bool,
-      isTrashed: map['isTrashed'] as bool,
-      dueDate: map['dueDate'] as String,
-      projectId: map['projectId'] as String,
-      labelIds: [],
-      //TODO List Labels
-      sectionId: map['sectionId'] as String,
-      checkList: [],
-      completedDate: map['completedDate'] as String,
-      crontabSchedule: map['crontabSchedule'] as String,
-      preciseSchedules: [],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    // ignore: unnecessary_cast
-    return {
-      'id': this.id,
-      'createdAt': this.createdAt,
-      'updatedAt': this.updatedAt,
-      'priority': this.priority,
-      'name': this.name,
-      'description': this.description,
-      'isCompleted': this.isCompleted,
-      'isStarred': this.isStarred,
-      'isTrashed': this.isTrashed,
-      'dueDate': this.dueDate,
-      'projectId': this.projectId,
-      'labelIds': this.labelIds,
-      'sectionId': this.sectionId,
-      'checkList': this.checkList,
-      'completedDate': this.completedDate,
-      'crontabSchedule': this.crontabSchedule,
-      'preciseSchedules': this.preciseSchedules,
-    } as Map<String, dynamic>;
-  }
-
   // precise datetime - reminder
 
   const LocalTask({
@@ -108,6 +62,52 @@ class LocalTask {
     this.crontabSchedule,
     this.preciseSchedules,
   });
+
+  factory LocalTask.fromJson(Map<String, dynamic> map) {
+    return LocalTask(
+      id: map['_id'] as String,
+      createdAt: map['createdAt'] as String,
+      updatedAt: map['updatedAt'] as String,
+      priority: map['priority'] as int,
+      name: map['name'] as String,
+      description: map['description'] as String,
+      isCompleted: map['isCompleted'] as bool,
+      isStarred: map['isStarred'] as bool,
+      isTrashed: map['isTrashed'] as bool,
+      dueDate: map['dueDate'] as String,
+      projectId: map['projectId'] as String,
+      labelIds:
+          (map['labelIds'] as List)?.map((e) => e as String)?.toList() ?? [],
+      sectionId: map['sectionId'] as String,
+      checkList: [],
+      completedDate: map['completedDate'] as String,
+      crontabSchedule: map['crontabSchedule'] as String,
+      preciseSchedules: [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    // ignore: unnecessary_cast
+    return {
+      'id': id,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'priority': priority,
+      'name': name,
+      'description': description,
+      'isCompleted': isCompleted,
+      'isStarred': isStarred,
+      'isTrashed': isTrashed,
+      'dueDate': dueDate,
+      'projectId': projectId,
+      'labelIds': labelIds,
+      'sectionId': sectionId,
+      'checkList': checkList,
+      'completedDate': completedDate,
+      'crontabSchedule': crontabSchedule,
+      'preciseSchedules': preciseSchedules,
+    } as Map<String, dynamic>;
+  }
 
   LocalTask copyWith({
     String id,

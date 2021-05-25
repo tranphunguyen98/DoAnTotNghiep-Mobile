@@ -1,5 +1,4 @@
 import 'package:totodo/data/local/model/local_task.dart';
-import 'package:totodo/utils/util.dart';
 
 class TaskListResponse {
   final bool succeeded;
@@ -13,7 +12,7 @@ class TaskListResponse {
   });
 
   factory TaskListResponse.fromJson(Map<String, dynamic> json) {
-    log('json', json);
+    // log('json', json);
     final result = json['result'] as List;
 
     return TaskListResponse(

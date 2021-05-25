@@ -45,7 +45,7 @@ class LocalTaskService {
       listTask
           .add(localTaskMapper.mapFromLocal(_taskBox.getAt(i) as LocalTask));
     }
-    log("testLocal1111111", listTask);
+    // log("testLocal1111111", listTask);
 
     return listTask ?? <Task>[];
   }
@@ -110,7 +110,7 @@ class LocalTaskService {
     for (var i = 0; i < _projectBox.length; i++) {
       listProject.add(_projectBox.getAt(i) as Project);
     }
-    log("testLocal1111111", listProject);
+    // log("testLocal1111111", listProject);
     return listProject ?? <Project>[];
   }
 
@@ -151,7 +151,7 @@ class LocalTaskService {
     for (var i = 0; i < _labelBox.length; i++) {
       listLabel.add(_labelBox.getAt(i) as Label);
     }
-    // print("LIST LABEL: ${listLabel}");
+    log("LIST LABEL: $listLabel");
     return listLabel ?? <Label>[];
   }
 

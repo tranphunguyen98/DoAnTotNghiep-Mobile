@@ -198,24 +198,29 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
         const SizedBox(
           width: 8.0,
         ),
-        IconOutlineButton(
-          DateHelper.getDisplayTextDateFromDate(
-                  addState.taskAdd.taskDate ?? "") ??
-              "No Date",
-          Icons.calendar_today,
-          colorIcon:
-              addState.taskAdd.taskDate != null ? Colors.green : kColorGray1,
-          colorBorder:
-              addState.taskAdd.taskDate != null ? Colors.green : kColorGray1,
-          onPressed: () async {
-            await onPressedPickDate();
-          },
+        Expanded(
+          flex: 8,
+          child: IconOutlineButton(
+            DateHelper.getDisplayTextDateFromDate(
+                    addState.taskAdd.taskDate ?? "") ??
+                "No Date",
+            Icons.calendar_today,
+            colorIcon:
+                addState.taskAdd.taskDate != null ? Colors.green : kColorGray1,
+            colorBorder:
+                addState.taskAdd.taskDate != null ? Colors.green : kColorGray1,
+            onPressed: () async {
+              await onPressedPickDate();
+            },
+          ),
         ),
         const SizedBox(
           width: 8.0,
         ),
-        _buildPopupProject(),
-        const Spacer(),
+        Expanded(flex:6, child: _buildPopupProject()),
+        const SizedBox(
+          width: 8.0,
+        ),
         CircleInkWell(
           Icons.send_outlined,
           size: 24.0,

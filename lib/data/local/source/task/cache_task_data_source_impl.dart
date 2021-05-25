@@ -120,10 +120,4 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
     // TODO: implement deleteProject
     throw UnimplementedError();
   }
-
-  @override
-  Future<void> deleteTask(String taskId) {
-    // TODO: implement deleteTask
-    throw UnimplementedError();
-  }
 }
