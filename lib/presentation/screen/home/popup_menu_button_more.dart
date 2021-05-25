@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/router.dart';
 import 'package:totodo/presentation/screen/home/bottom_sheet_add_section.dart';
@@ -63,12 +64,16 @@ class _PopupMenuButtonMoreState extends State<PopupMenuButtonMore> {
     if (state.isInProject()) {
       dropdownChoices.addAll([
         DropdownChoices(
-            title: "Chỉnh sửa dự án",
+            title: "Edit Project",
             onPressed: (context) {
-              //Navigator.pushNamed(context, MyRouter.SETTING);
+              Navigator.of(context).pushNamed(AppRouter.kAddProject,
+                  arguments: _homeBloc
+                      .state
+                      .drawerItems[_homeBloc.state.indexDrawerSelected]
+                      .data as Project);
             }),
         DropdownChoices(
-          title: "Thêm Section",
+          title: "Add Section",
           onPressed: (context) {
             showModalBottomSheet(
               isScrollControlled: true,

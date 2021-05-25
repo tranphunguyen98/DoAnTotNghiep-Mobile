@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/utils/util.dart';
 import 'package:totodo/utils/validators.dart';
 
@@ -20,6 +21,8 @@ class AddProjectBloc extends Bloc<AddProjectEvent, AddProjectState> {
       yield* _mapNameProjectChangedToState(event.name, event.color);
     } else if (event is AddProjectSubmit) {
       yield* _mapAddProjectSubmitToState();
+    } else if (event is InitProject) {
+      yield* _mapInitProjectToState(event.project);
     }
   }
 
@@ -40,11 +43,19 @@ class AddProjectBloc extends Bloc<AddProjectEvent, AddProjectState> {
       if (state.project?.name?.isEmpty ?? true) {
         yield state.failed("Tên nhãn rỗng!");
       } else {
-        await _taskRepository.addProject(state.project);
+        if (state.project.id?.isEmpty ?? true) {
+          await _taskRepository.addProject(state.project);
+        } else {
+          await _taskRepository.updateProject(state.project);
+        }
         yield AddProjectState.success();
       }
     } catch (e) {
       yield state.failed(e.toString());
     }
+  }
+
+  Stream<AddProjectState> _mapInitProjectToState(Project project) async* {
+    yield state.copyWith(project: project);
   }
 }

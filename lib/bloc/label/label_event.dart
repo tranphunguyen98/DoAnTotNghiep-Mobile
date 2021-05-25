@@ -14,9 +14,7 @@ class InitLabel extends AddLabelEvent {
   const InitLabel(this.label);
 
   @override
-  List<Object> get props => [
-        label,
-      ];
+  List<Object> get props => [label];
 
   @override
   String toString() {

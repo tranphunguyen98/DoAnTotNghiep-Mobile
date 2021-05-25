@@ -4,6 +4,7 @@ import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/bloc/select_label/bloc.dart';
 import 'package:totodo/data/entity/habit/habit.dart';
 import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/create_habit/sc_create_habit.dart';
@@ -68,13 +69,21 @@ class AppRouter {
       case kSetting:
         return MaterialPageRoute(builder: (_) => SettingScreen());
       case kAddProject:
-        return MaterialPageRoute(builder: (_) => AddProjectScreen());
+        if (settings.arguments is Project) {
+          return MaterialPageRoute(
+            builder: (_) => AddProjectScreen(
+              project: settings.arguments as Project,
+            ),
+          );
+        }
+        return MaterialPageRoute(builder: (_) => const AddProjectScreen());
       case kAddLabel:
         if (settings.arguments is Label) {
           return MaterialPageRoute(
-              builder: (_) => AddLabelScreen(
-                    label: settings.arguments as Label,
-                  ));
+            builder: (_) => AddLabelScreen(
+              label: settings.arguments as Label,
+            ),
+          );
         }
         return MaterialPageRoute(builder: (_) => const AddLabelScreen());
       case kProfile:

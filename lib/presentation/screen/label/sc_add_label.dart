@@ -8,13 +8,6 @@ import 'package:totodo/di/injection.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 
-class ChooseColor {
-  final Color color;
-  final String label;
-
-  ChooseColor(this.color, this.label);
-}
-
 class AddLabelScreen extends StatefulWidget {
   final Label label;
 

@@ -1,10 +1,25 @@
 import 'package:equatable/equatable.dart';
+import 'package:totodo/data/entity/project.dart';
 
 abstract class AddProjectEvent extends Equatable {
   const AddProjectEvent();
 
   @override
   List<Object> get props => [];
+}
+
+class InitProject extends AddProjectEvent {
+  final Project project;
+
+  const InitProject(this.project);
+
+  @override
+  List<Object> get props => [project];
+
+  @override
+  String toString() {
+    return 'InitProject{name: $project  }';
+  }
 }
 
 class AddedProjectChanged extends AddProjectEvent {
