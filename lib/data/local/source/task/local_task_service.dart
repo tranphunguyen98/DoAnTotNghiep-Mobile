@@ -45,7 +45,8 @@ class LocalTaskService {
       listTask
           .add(localTaskMapper.mapFromLocal(_taskBox.getAt(i) as LocalTask));
     }
-    // log("testLocal1111111", listTask);
+
+    log("testLocal1111111", listTask);
 
     return listTask ?? <Task>[];
   }
@@ -110,7 +111,7 @@ class LocalTaskService {
     for (var i = 0; i < _projectBox.length; i++) {
       listProject.add(_projectBox.getAt(i) as Project);
     }
-    // log("testLocal1111111", listProject);
+    log("testLocal1111111", listProject);
     return listProject ?? <Project>[];
   }
 
@@ -131,6 +132,21 @@ class LocalTaskService {
   Future<void> saveProjects(List<Project> projects) async {
     await _projectBox.clear();
     await _projectBox.addAll(projects);
+  }
+
+  Future<void> deleteProject(String projectId) async {
+    int indexUpdated = -1;
+
+    for (var i = 0; i < _projectBox.length; i++) {
+      if ((_projectBox.getAt(i) as Project).id == projectId) {
+        indexUpdated = i;
+        break;
+      }
+    }
+
+    if (indexUpdated > -1) {
+      _projectBox.deleteAt(indexUpdated);
+    }
   }
 
   //</editor-fold>

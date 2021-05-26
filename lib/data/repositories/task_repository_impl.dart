@@ -37,7 +37,7 @@ class TaskRepositoryImpl implements ITaskRepository {
   @override
   Future<List<Task>> getAllTask() async {
     final listTask = await _localTaskDataSource.getAllTask();
-    return listTask.where((element) => element.isTrashed == false).toList();
+    return listTask.where((element) => element.isTrashed != true).toList();
   }
 
   @override
@@ -142,5 +142,10 @@ class TaskRepositoryImpl implements ITaskRepository {
     await _localTaskDataSource.saveProjects(projects);
     await _localTaskDataSource.saveLabels(labels);
     await _localTaskDataSource.saveTasks(tasks);
+  }
+
+  @override
+  Future<void> deleteProject(String projectId) {
+    return _localTaskDataSource.deleteProject(projectId);
   }
 }

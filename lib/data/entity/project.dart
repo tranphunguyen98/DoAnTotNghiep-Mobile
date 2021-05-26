@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
@@ -24,14 +23,15 @@ class Project extends Equatable {
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
-  const Project(
-      {@required this.id,
-      @required this.name,
-      @required this.color,
-      @required this.createdAt,
-      @required this.updatedAt,
-      @required this.sections,
-      this.isLocal = false});
+  const Project({
+    this.id,
+    this.name,
+    this.color,
+    this.createdAt,
+    this.updatedAt,
+    this.sections,
+    this.isLocal,
+  });
 
   Project copyWith({
     String id,
@@ -42,6 +42,16 @@ class Project extends Equatable {
     List<Section> sections,
     bool isLocal,
   }) {
+    if ((id == null || identical(id, this.id)) &&
+        (name == null || identical(name, this.name)) &&
+        (color == null || identical(color, this.color)) &&
+        (createdAt == null || identical(createdAt, this.createdAt)) &&
+        (updatedAt == null || identical(updatedAt, this.updatedAt)) &&
+        (sections == null || identical(sections, this.sections)) &&
+        (isLocal == null || identical(isLocal, this.isLocal))) {
+      return this;
+    }
+
     return Project(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -57,6 +67,28 @@ class Project extends Equatable {
   String toString() {
     return 'Project{id: $id, name: $name, color: $color, createdAt: $createdAt, updatedAt: $updatedAt, sections: $sections, isLocal: $isLocal}';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Project &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          color == other.color &&
+          createdAt == other.createdAt &&
+          updatedAt == other.updatedAt &&
+          sections == other.sections);
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      name.hashCode ^
+      color.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode ^
+      sections.hashCode ^
+      isLocal.hashCode;
 
   factory Project.fromJson(Map<String, dynamic> map) {
     return Project(
@@ -80,12 +112,20 @@ class Project extends Equatable {
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'sections': sections,
+      'isLocal': isLocal,
     } as Map<String, dynamic>;
   }
 
   //</editor-fold>
 
   @override
-  List<Object> get props =>
-      [id, name, color, createdAt, updatedAt, sections, isLocal];
+  List<Object> get props => [
+        id,
+        name,
+        color,
+        createdAt,
+        updatedAt,
+        sections,
+        isLocal,
+      ];
 }

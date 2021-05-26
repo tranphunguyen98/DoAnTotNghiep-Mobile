@@ -12,6 +12,7 @@ abstract class ITaskRepository {
   Future<void> addProject(Project project);
   Future<void> updateProject(Project project);
   Future<List<Project>> getProjects({bool onlyRemote = false});
+  Future<void> deleteProject(String projectId);
 
   Future<void> addLabel(Label label);
   Future<void> updateLabel(Label label);

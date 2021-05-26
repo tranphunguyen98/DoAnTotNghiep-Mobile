@@ -5,7 +5,6 @@ import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/common_widgets/widget_container_error.dart';
 import 'package:totodo/presentation/screen/task/widget_empty_data.dart';
 import 'package:totodo/presentation/screen/task/widget_header_section.dart';
 import 'package:totodo/presentation/screen/task/widget_item_task.dart';
@@ -39,9 +38,9 @@ class _TaskScreenState extends State<TaskScreen> {
           );
         }
 
-        if (state.msg != null) {
-          return ContainerError(state.msg);
-        }
+        // if (state.msg != null) {
+        //   return ContainerError(state.msg);
+        // }
 
         if (state.listSectionDataDisplay() != null) {
           if (state.listSectionDataDisplay().isEmpty) {

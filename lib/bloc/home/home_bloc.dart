@@ -38,6 +38,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _mapShowCompletedTaskChangeToState();
     } else if (event is DeleteLabel) {
       yield* _mapDeleteLabelToState();
+    } else if (event is DeleteProject) {
+      yield* _mapDeleteProjectToState();
     }
   }
 
@@ -207,6 +209,44 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           indexDrawerSelected: HomeState.kDrawerIndexInbox,
           loading: false);
     } catch (e) {
+      yield state.copyWith(msg: e.toString());
+    }
+  }
+
+  Stream<HomeState> _mapDeleteProjectToState() async* {
+    try {
+      final selectedProject =
+          state.drawerItems[state.indexDrawerSelected].data as Project;
+      await _taskRepository.deleteProject(selectedProject.id);
+
+      final listTask = state.allTasks.where((element) {
+        if (element.project?.id?.isEmpty ?? true) {
+          return false;
+        }
+        return element.project.id == selectedProject.id;
+      }).toList();
+
+      await Future.wait(listTask.map((e) => _taskRepository
+          .updateTask(e.copyWith(isTrashed: true, project: const Project()))));
+      // await Future.wait(
+      //     listTask.map((e) => _taskRepository.updateTask(e.copyWith(
+      //           isTrashed: false,
+      //         ))));
+
+      final listAllTask = await _taskRepository.getAllTask();
+      final listProject = await _taskRepository.getProjects();
+      final drawerItems = <DrawerItemData>[];
+
+      _initDrawerItems(drawerItems, listProject, state.listLabel);
+
+      yield state.copyWith(
+          listAllTask: listAllTask,
+          listProject: listProject,
+          drawerItems: drawerItems,
+          indexDrawerSelected: HomeState.kDrawerIndexInbox,
+          loading: false);
+    } catch (e, stackTrace) {
+      log('TraceStack', stackTrace);
       yield state.copyWith(msg: e.toString());
     }
   }

@@ -61,6 +61,7 @@ class LocalTaskMapper {
   }
 
   Project getProjectFromId(String id) {
+    // log('idProjectTest', id);
     return listProject.firstWhere((element) => element.id == id);
   }
 

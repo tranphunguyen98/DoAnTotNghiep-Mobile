@@ -64,15 +64,6 @@ class _PopupMenuButtonMoreState extends State<PopupMenuButtonMore> {
     if (state.isInProject()) {
       dropdownChoices.addAll([
         DropdownChoices(
-            title: "Edit Project",
-            onPressed: (context) {
-              Navigator.of(context).pushNamed(AppRouter.kAddProject,
-                  arguments: _homeBloc
-                      .state
-                      .drawerItems[_homeBloc.state.indexDrawerSelected]
-                      .data as Project);
-            }),
-        DropdownChoices(
           title: "Add Section",
           onPressed: (context) {
             showModalBottomSheet(
@@ -89,6 +80,20 @@ class _PopupMenuButtonMoreState extends State<PopupMenuButtonMore> {
             );
           },
         ),
+        DropdownChoices(
+            title: "Edit Project",
+            onPressed: (context) {
+              Navigator.of(context).pushNamed(AppRouter.kAddProject,
+                  arguments: _homeBloc
+                      .state
+                      .drawerItems[_homeBloc.state.indexDrawerSelected]
+                      .data as Project);
+            }),
+        DropdownChoices(
+            title: "Delete Project",
+            onPressed: (context) {
+              _homeBloc.add(DeleteProject());
+            }),
       ]);
     }
     if (state.isInLabel()) {
