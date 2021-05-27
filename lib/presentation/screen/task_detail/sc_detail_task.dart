@@ -180,7 +180,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
     dropdownChoices.clear();
     dropdownChoices.add(
       DropdownChoices(
-        title: 'Xóa',
+        title: 'Xóa Task',
         onPressed: (context) {
           _taskDetailBloc.add(DeleteTask());
         },

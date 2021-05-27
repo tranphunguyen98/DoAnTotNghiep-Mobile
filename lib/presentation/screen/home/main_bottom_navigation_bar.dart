@@ -21,7 +21,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
           current.indexNavigationBarSelected,
       builder: (context, state) {
         return BottomNavigationBar(
-          items: [
+          items: const [
             BottomNavigationBarItem(
                 icon: Icon(Icons.check_box_rounded), label: 'Task'),
             BottomNavigationBarItem(

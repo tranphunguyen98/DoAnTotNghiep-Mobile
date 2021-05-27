@@ -8,6 +8,7 @@ abstract class ITaskRepository {
   Future<bool> updateTask(Task task);
   Future<Task> getDetailTask(String id);
   Future<List<Task>> getAllTask();
+  Future<void> deleteTask(Task task);
 
   Future<void> addProject(Project project);
   Future<void> updateProject(Project project);
@@ -24,4 +25,5 @@ abstract class ITaskRepository {
   // Future<List<SectionDisplay>> getSections();
   Future<void> saveDataToLocal();
   Future<void> clearDataOffline();
+  Future<bool> asyncData();
 }

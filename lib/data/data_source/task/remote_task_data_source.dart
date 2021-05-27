@@ -13,6 +13,8 @@ abstract class RemoteTaskDataSource {
 
   Future<List<LocalTask>> getAllTask(String authorization);
 
+  Future<void> deleteTask(String authorization, String taskId);
+
   Future<Project> addProject(String authorization, Project project);
 
   Future<void> updateProject(String authorization, Project project);

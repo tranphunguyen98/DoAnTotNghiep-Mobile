@@ -27,6 +27,7 @@ class Task extends Equatable {
   final String completedDate;
   final String crontabSchedule; // cron expression - reminder
   final List<String> preciseSchedules; // precise datetime - reminder
+  final bool isLocal;
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
@@ -43,6 +44,7 @@ class Task extends Equatable {
       this.isCompleted = false,
       this.isStarred = false,
       this.isTrashed = false,
+      this.isLocal = false,
       this.sectionId,
       this.checkList,
       this.completedDate,
@@ -67,6 +69,7 @@ class Task extends Equatable {
     String completedDate,
     String crontabSchedule,
     List<String> preciseSchedules,
+    bool isLocal,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (createdAt == null || identical(createdAt, this.createdAt)) &&
@@ -87,7 +90,8 @@ class Task extends Equatable {
         (crontabSchedule == null ||
             identical(crontabSchedule, this.crontabSchedule)) &&
         (preciseSchedules == null ||
-            identical(preciseSchedules, this.preciseSchedules))) {
+            identical(preciseSchedules, this.preciseSchedules)) &&
+        (isLocal == null || identical(isLocal, this.isLocal))) {
       return this;
     }
 
@@ -109,14 +113,27 @@ class Task extends Equatable {
       completedDate: completedDate ?? this.completedDate,
       crontabSchedule: crontabSchedule ?? this.crontabSchedule,
       preciseSchedules: preciseSchedules ?? this.preciseSchedules,
+      isLocal: isLocal ?? this.isLocal,
     );
   }
 
   @override
   String toString() {
-    return 'Task{id: $id,  sectionId: $sectionId, updatedAt: $updatedAt, priority: $priority, name: $name, isCompleted: $isCompleted, isTrashed: $isTrashed, taskDate: $taskDate, project: ${project?.name}, labels: $labels, checkList: $checkList, completedDate: $completedDate,'
-        // ' crontabSchedule: $crontabSchedule, preciseSchedules: $preciseSchedules}'
-        ;
+    return 'Task{id: $id,'
+        // ' createdAt: $createdAt,'
+        ' updatedAt: $updatedAt, '
+        // 'priority: $priority,'
+        ' name: $name,'
+        // ' description: $description,'
+        ' isCompleted: $isCompleted,'
+        ' isTrashed: $isTrashed,'
+        ' taskDate: $taskDate,'
+        ' project: ${project?.name},'
+        ' sectionId: $sectionId, labels: $labels,'
+        // ' checkList: $checkList, completedDate: $completedDate,'
+        // ' crontabSchedule: $crontabSchedule,'
+        // ' preciseSchedules: $preciseSchedules,'
+        ' isLocal: $isLocal}';
   }
 
   @override
@@ -140,7 +157,8 @@ class Task extends Equatable {
           checkList == other.checkList &&
           completedDate == other.completedDate &&
           crontabSchedule == other.crontabSchedule &&
-          preciseSchedules == other.preciseSchedules);
+          preciseSchedules == other.preciseSchedules &&
+          isLocal == other.isLocal);
 
   @override
   int get hashCode =>
@@ -160,7 +178,8 @@ class Task extends Equatable {
       checkList.hashCode ^
       completedDate.hashCode ^
       crontabSchedule.hashCode ^
-      preciseSchedules.hashCode;
+      preciseSchedules.hashCode ^
+      isLocal.hashCode;
 
   factory Task.fromJson(Map<String, dynamic> map) {
     return Task(
@@ -187,7 +206,6 @@ class Task extends Equatable {
   Map<String, dynamic> toJson() {
     // ignore: unnecessary_cast
     return {
-      // 'id': this.id,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'priority': priority,
@@ -204,6 +222,7 @@ class Task extends Equatable {
       'completedDate': completedDate,
       'crontabSchedule': crontabSchedule,
       'preciseSchedules': preciseSchedules,
+      'isLocal': isLocal,
     } as Map<String, dynamic>;
   }
 
@@ -214,8 +233,8 @@ class Task extends Equatable {
   List<Object> get props => [
         id,
         checkList,
-        // createdAt,
-        // updatedAt,
+        createdAt,
+        updatedAt,
         priority,
         taskDate,
         name,

@@ -25,6 +25,7 @@ class HomeState extends Equatable {
   final List<Section> listSection;
   final bool isShowCompletedTask;
   final bool loading;
+  final bool asyncing;
   final String msg;
 
   List<Task> get allTasks => _listAllTask;
@@ -33,6 +34,7 @@ class HomeState extends Equatable {
       {this.indexDrawerSelected = kDrawerIndexInbox,
       this.indexNavigationBarSelected = kBottomNavigationTask,
       this.isShowCompletedTask = false,
+      this.asyncing = false,
       this.loading,
       this.msg,
       List<Task> listAllTask,
@@ -57,6 +59,7 @@ class HomeState extends Equatable {
         isShowCompletedTask,
         _listAllTask,
         loading,
+        asyncing,
         msg,
         drawerItems,
         listProject,
@@ -89,6 +92,7 @@ class HomeState extends Equatable {
     List<Section> listSection,
     bool isShowCompletedTask,
     bool loading,
+    bool syncing,
     String msg,
   }) {
     if ((drawerItems == null || identical(drawerItems, this.drawerItems)) &&
@@ -97,13 +101,14 @@ class HomeState extends Equatable {
         (indexNavigationBarSelected == null ||
             identical(
                 indexNavigationBarSelected, this.indexNavigationBarSelected)) &&
-        (listAllTask == null || identical(listAllTask, _listAllTask)) &&
+        (listAllTask == null || identical(listAllTask, this._listAllTask)) &&
         (listProject == null || identical(listProject, this.listProject)) &&
         (listLabel == null || identical(listLabel, this.listLabel)) &&
         (listSection == null || identical(listSection, this.listSection)) &&
         (isShowCompletedTask == null ||
             identical(isShowCompletedTask, this.isShowCompletedTask)) &&
         (loading == null || identical(loading, this.loading)) &&
+        (syncing == null || identical(syncing, this.asyncing)) &&
         (msg == null || identical(msg, this.msg))) {
       return this;
     }
@@ -113,12 +118,13 @@ class HomeState extends Equatable {
       indexDrawerSelected: indexDrawerSelected ?? this.indexDrawerSelected,
       indexNavigationBarSelected:
           indexNavigationBarSelected ?? this.indexNavigationBarSelected,
-      listAllTask: listAllTask ?? _listAllTask,
+      listAllTask: listAllTask ?? this._listAllTask,
       listProject: listProject ?? this.listProject,
       listLabel: listLabel ?? this.listLabel,
       listSection: listSection ?? this.listSection,
       isShowCompletedTask: isShowCompletedTask ?? this.isShowCompletedTask,
       loading: loading ?? this.loading,
+      asyncing: syncing ?? this.asyncing,
       msg: msg ?? this.msg,
     );
   }

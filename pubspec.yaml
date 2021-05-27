@@ -63,6 +63,7 @@ dependencies:
   build: ^1.5.2
   analyzer: ^1.1.0
   workmanager: ^0.4.0
+  connectivity: ^3.0.6
 
   # Cron
   cronparse: ^0.1.1

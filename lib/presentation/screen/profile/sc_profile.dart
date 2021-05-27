@@ -43,14 +43,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 indicatorColor: kColorPrimary,
                 unselectedLabelColor: kColorGray1,
                 labelColor: kColorPrimary,
-                tabs: [
-                  const Tab(
+                tabs: const [
+                  Tab(
                     text: 'TASK',
                   ),
-                  const Tab(
+                  Tab(
                     text: 'LIFE',
                   ),
-                  const Tab(
+                  Tab(
                     text: 'HABIT',
                   )
                 ],

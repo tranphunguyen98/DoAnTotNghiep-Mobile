@@ -40,6 +40,8 @@ class LocalTask {
   final String crontabSchedule; // cron expression - reminder
   @HiveField(16)
   final List<String> preciseSchedules;
+  @HiveField(17)
+  final bool isLocal;
 
   // precise datetime - reminder
 
@@ -61,6 +63,7 @@ class LocalTask {
     this.completedDate,
     this.crontabSchedule,
     this.preciseSchedules,
+    this.isLocal,
   });
 
   factory LocalTask.fromJson(Map<String, dynamic> map) {
@@ -127,6 +130,7 @@ class LocalTask {
     String completedDate,
     String crontabSchedule,
     List<String> preciseSchedules,
+    bool isLocal,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (createdAt == null || identical(createdAt, this.createdAt)) &&
@@ -147,7 +151,8 @@ class LocalTask {
         (crontabSchedule == null ||
             identical(crontabSchedule, this.crontabSchedule)) &&
         (preciseSchedules == null ||
-            identical(preciseSchedules, this.preciseSchedules))) {
+            identical(preciseSchedules, this.preciseSchedules)) &&
+        (isLocal == null || identical(isLocal, this.isLocal))) {
       return this;
     }
 
@@ -169,11 +174,12 @@ class LocalTask {
       completedDate: completedDate ?? this.completedDate,
       crontabSchedule: crontabSchedule ?? this.crontabSchedule,
       preciseSchedules: preciseSchedules ?? this.preciseSchedules,
+      isLocal: isLocal ?? this.isLocal,
     );
   }
 
   @override
   String toString() {
-    return 'LocalTask{id: $id, updatedAt: $updatedAt, priority: $priority, name: $name, isCompleted: $isCompleted, isTrashed: $isTrashed, dueDate: $dueDate, projectId: $projectId, labelIds: $labelIds, sectionId: $sectionId, checkList: $checkList, completedDate: $completedDate, crontabSchedule: $crontabSchedule, preciseSchedules: $preciseSchedules}';
+    return 'LocalTask{id: $id, createdAt: $createdAt, updatedAt: $updatedAt, priority: $priority, name: $name, description: $description, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, dueDate: $dueDate, projectId: $projectId, labelIds: $labelIds, sectionId: $sectionId, checkList: $checkList, completedDate: $completedDate, crontabSchedule: $crontabSchedule, preciseSchedules: $preciseSchedules, isLocal: $isLocal}';
   }
 }

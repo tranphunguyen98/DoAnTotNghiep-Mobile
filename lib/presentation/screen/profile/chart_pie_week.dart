@@ -41,7 +41,7 @@ class PieChart2State extends State {
           padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+            children: const <Widget>[
               Indicator(
                 color: Colors.green,
                 label: 'Đúng giờ',

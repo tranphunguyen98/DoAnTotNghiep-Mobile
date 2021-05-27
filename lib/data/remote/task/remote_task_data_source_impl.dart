@@ -181,4 +181,9 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
     // TODO: implement updateSection
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> deleteTask(String authorization, String taskId) {
+    return _taskService.deleteTask(authorization, taskId);
+  }
 }

@@ -122,7 +122,8 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
   }
 
   Stream<TaskDetailState> _mapDeleteTaskToState() async* {
-    await _taskRepository.updateTask(state.taskEdit.copyWith(isTrashed: true));
-    yield state.copyWith(taskEdit: state.taskEdit.copyWith(isTrashed: true));
+    await _taskRepository.deleteTask(state.taskEdit);
+    yield state.copyWith(
+        taskEdit: state.taskEdit.copyWith(isTrashed: true, isLocal: true));
   }
 }

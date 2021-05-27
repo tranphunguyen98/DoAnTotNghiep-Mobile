@@ -28,11 +28,17 @@ abstract class RemoteTaskService {
     @Body() Map<String, dynamic> body,
   );
 
-  @PUT("/tasks/{id}")
+  @PUT("/tasks/{taskId}")
   Future<MessageResponse> updateTask(
       @Header("authorization") String authorization,
-      @Path() String id,
+      @Path() String taskId,
       @Body() Map<String, dynamic> body);
+
+  @DELETE("/tasks/{taskId}")
+  Future<MessageResponse> deleteTask(
+    @Header("authorization") String authorization,
+    @Path() String taskId,
+  );
 
   @GET("/projects")
   Future<ProjectListResponse> getProjects(

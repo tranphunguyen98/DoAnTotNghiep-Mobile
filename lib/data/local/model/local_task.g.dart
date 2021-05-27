@@ -34,13 +34,14 @@ class LocalTaskAdapter extends TypeAdapter<LocalTask> {
       completedDate: fields[14] as String,
       crontabSchedule: fields[15] as String,
       preciseSchedules: (fields[16] as List)?.cast<String>(),
+      isLocal: fields[17] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, LocalTask obj) {
     writer
-      ..writeByte(17)
+      ..writeByte(18)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -74,7 +75,9 @@ class LocalTaskAdapter extends TypeAdapter<LocalTask> {
       ..writeByte(15)
       ..write(obj.crontabSchedule)
       ..writeByte(16)
-      ..write(obj.preciseSchedules);
+      ..write(obj.preciseSchedules)
+      ..writeByte(17)
+      ..write(obj.isLocal);
   }
 
   @override

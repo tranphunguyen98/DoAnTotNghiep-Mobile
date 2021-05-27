@@ -63,6 +63,7 @@ class LocalTaskService {
   }
 
   bool updateTask(Task task) {
+    log('testAsync updateTask');
     int indexUpdated = -1;
 
     final localTask = LocalTaskMapper().mapToLocal(task);
@@ -74,10 +75,27 @@ class LocalTaskService {
       }
     }
     if (indexUpdated > -1) {
-      _taskBox.putAt(indexUpdated, localTask);
+      _taskBox.putAt(indexUpdated,
+          localTask.copyWith(updatedAt: DateTime.now().toIso8601String()));
       return true;
     }
     return false;
+  }
+
+  Future<void> permanentlyDeleteTask(String taskId) async {
+    log('testAsync deleteTask');
+    int indexUpdated = -1;
+
+    for (var i = 0; i < _taskBox.length; i++) {
+      if ((_taskBox.getAt(i) as LocalTask).id == taskId) {
+        indexUpdated = i;
+        break;
+      }
+    }
+
+    if (indexUpdated > -1) {
+      _taskBox.deleteAt(indexUpdated);
+    }
   }
 
   Future<void> saveTasks(List<LocalTask> tasks) async {

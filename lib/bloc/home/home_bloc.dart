@@ -40,6 +40,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _mapDeleteLabelToState();
     } else if (event is DeleteProject) {
       yield* _mapDeleteProjectToState();
+    } else if (event is AsyncData) {
+      yield* _mapAsyncDataToState();
     } else if (event is DeleteSectionEvent) {
       yield* _mapDeleteSectionEventToState(event.projectId, event.sectionId);
     }
@@ -74,6 +76,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           listSection: [],
           //TODO handle section
           drawerItems: drawerItems,
+          syncing: false,
           loading: false);
     } catch (e, stackTrace) {
       log("error:( $stackTrace");
@@ -269,5 +272,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         listProject: listProject,
         drawerItems: drawerItems,
         loading: false);
+  }
+
+  Stream<HomeState> _mapAsyncDataToState() async* {
+    yield state.copyWith(syncing: true);
+    await _taskRepository.asyncData();
+    yield* _mapOpenHomeScreenToState();
   }
 }

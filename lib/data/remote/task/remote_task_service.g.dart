@@ -55,19 +55,37 @@ class _RemoteTaskService implements RemoteTaskService {
   }
 
   @override
-  Future<MessageResponse> updateTask(authorization, id, body) async {
+  Future<MessageResponse> updateTask(authorization, taskId, body) async {
     ArgumentError.checkNotNull(authorization, 'authorization');
-    ArgumentError.checkNotNull(id, 'id');
+    ArgumentError.checkNotNull(taskId, 'taskId');
     ArgumentError.checkNotNull(body, 'body');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    log('_data', body);
     _data.addAll(body ?? <String, dynamic>{});
-    final _result = await _dio.request<Map<String, dynamic>>('/tasks/$id',
+    final _result = await _dio.request<Map<String, dynamic>>('/tasks/$taskId',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'PUT',
+            headers: <String, dynamic>{r'authorization': authorization},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = MessageResponse.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<MessageResponse> deleteTask(authorization, taskId) async {
+    ArgumentError.checkNotNull(authorization, 'authorization');
+    ArgumentError.checkNotNull(taskId, 'taskId');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('/tasks/$taskId',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'DELETE',
             headers: <String, dynamic>{r'authorization': authorization},
             extra: _extra,
             baseUrl: baseUrl),

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
 import 'package:totodo/data/data_source/task/remote_task_data_source.dart';
@@ -7,6 +8,7 @@ import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/model/local_task.dart';
+import 'package:totodo/utils/util.dart';
 
 class TaskRepositoryImpl implements ITaskRepository {
   final RemoteTaskDataSource _remoteTaskDataSource;
@@ -46,9 +48,11 @@ class TaskRepositoryImpl implements ITaskRepository {
     try {
       _remoteTaskDataSource.updateTask(user.authorization, task);
       return _localTaskDataSource.updateTask(task);
-    } catch (e) {
-      // TODO try remove :v
-
+    } on DioError catch (e, traceStack) {
+      log('testAsync', traceStack);
+      return _localTaskDataSource.updateTask(task.copyWith(isLocal: true));
+    } catch (e, traceStack) {
+      log('testAsync', traceStack);
       rethrow;
     }
   }
@@ -146,5 +150,52 @@ class TaskRepositoryImpl implements ITaskRepository {
   @override
   Future<void> deleteProject(String projectId) {
     return _localTaskDataSource.deleteProject(projectId);
+  }
+
+  @override
+  Future<void> deleteTask(Task task) async {
+    final user = await _localUserDataSource.getUser();
+
+    _remoteTaskDataSource.deleteTask(user.authorization, task.id).then((value) {
+      _localTaskDataSource.deleteTask(task.id);
+    });
+
+    return _localTaskDataSource
+        .updateTask(task.copyWith(isTrashed: true, isLocal: true));
+  }
+
+  @override
+  Future<bool> asyncData() async {
+    log('testAsync async....');
+    final user = await _localUserDataSource.getUser();
+
+    final allLocalTasks = await _localTaskDataSource.getAllTask();
+
+    final notAsyncTasks = allLocalTasks.where((task) => task.isLocal == true);
+
+    final serverTasks =
+        await _remoteTaskDataSource.getAllTask(user.authorization);
+
+    log('testAsync', notAsyncTasks);
+    await Future.delayed(Duration(seconds: 3));
+    final futures = <Future>[];
+
+    for (final task in notAsyncTasks) {
+      if (task.isTrashed) {
+        futures.add(_remoteTaskDataSource
+            .deleteTask(user.authorization, task.id)
+            .then((value) async => _localTaskDataSource.deleteTask(task.id)));
+      }
+    }
+
+    for (final task in allLocalTasks) {
+      if (serverTasks.indexWhere((element) => element.id == task.id) < 0) {
+        log('testAsync ${task.name}');
+        futures.add(_localTaskDataSource.deleteTask(task.id));
+      }
+    }
+
+    await Future.wait(futures);
+    return true;
   }
 }
