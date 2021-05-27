@@ -415,14 +415,16 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
 
     // Avoid going outside an area defined as the rectangle 8.0 pixels from the
     // edge of the screen in every direction.
-    if (x < kMenuScreenPadding + overlayRect.left)
+    if (x < kMenuScreenPadding + overlayRect.left) {
       x = kMenuScreenPadding + overlayRect.left;
-    else if (x + menuSize.width > overlayRect.right - kMenuScreenPadding)
+    } else if (x + menuSize.width > overlayRect.right - kMenuScreenPadding) {
       x = overlayRect.right - menuSize.width - kMenuScreenPadding;
-    if (y < kMenuScreenPadding + overlayRect.top)
+    }
+    if (y < kMenuScreenPadding + overlayRect.top) {
       y = kMenuScreenPadding + overlayRect.top;
-    else if (y + menuSize.height > overlayRect.bottom - kMenuScreenPadding)
+    } else if (y + menuSize.height > overlayRect.bottom - kMenuScreenPadding) {
       y = overlayRect.bottom - menuSize.height - kMenuScreenPadding;
+    }
     return Offset(x, y + offsetY);
   }
 

@@ -16,12 +16,12 @@ class ItemReminderHabit extends StatelessWidget {
       width: 86.0,
       margin: EdgeInsets.only(right: 8.0, bottom: 8.0),
       padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
-      child: Center(
-        child: Text(text, style: kFontRegularWhite_14),
-      ),
       decoration: BoxDecoration(
         color: kColorPrimary,
         borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+      ),
+      child: Center(
+        child: Text(text, style: kFontRegularWhite_14),
       ),
     );
   }

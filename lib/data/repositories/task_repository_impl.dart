@@ -88,7 +88,7 @@ class TaskRepositoryImpl implements ITaskRepository {
     //   // TODO try remove :v
     //   rethrow;
     // }
-    return _localTaskDataSource.addLabel(label);
+    // return _localTaskDataSource.addLabel(label);
   }
 
   @override
@@ -117,9 +117,8 @@ class TaskRepositoryImpl implements ITaskRepository {
   }
 
   @override
-  Future<void> deleteSection(String projectId, Section section) {
-    // TODO: implement deleteSection
-    throw UnimplementedError();
+  Future<void> deleteSection(String projectId, String sectionId) {
+    return _localTaskDataSource.deleteSection(projectId, sectionId);
   }
 
   @override

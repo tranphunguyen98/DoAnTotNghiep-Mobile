@@ -67,16 +67,16 @@ class CheckBoxItem<T> extends StatelessWidget {
       width: 86.0,
       margin: EdgeInsets.only(right: 8.0, bottom: 8.0),
       padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        color: isSelected ? kColorPrimary : Colors.grey[200],
+        borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+      ),
       child: Center(
         child: Text(
           text,
           style: TextStyle(
               color: isSelected ? kColorWhite : kColorGray1, fontSize: 14),
         ),
-      ),
-      decoration: BoxDecoration(
-        color: isSelected ? kColorPrimary : Colors.grey[200],
-        borderRadius: const BorderRadius.all(Radius.circular(4.0)),
       ),
     );
   }

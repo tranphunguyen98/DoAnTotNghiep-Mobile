@@ -2,7 +2,7 @@
 include: package:lint/analysis_options.yaml
 analyzer:
   errors:
-#    prefer_const_constructors: error
+    prefer_const_constructors: ignore
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"

@@ -97,7 +97,7 @@ class HomeState extends Equatable {
         (indexNavigationBarSelected == null ||
             identical(
                 indexNavigationBarSelected, this.indexNavigationBarSelected)) &&
-        (listAllTask == null || identical(listAllTask, this._listAllTask)) &&
+        (listAllTask == null || identical(listAllTask, _listAllTask)) &&
         (listProject == null || identical(listProject, this.listProject)) &&
         (listLabel == null || identical(listLabel, this.listLabel)) &&
         (listSection == null || identical(listSection, this.listSection)) &&

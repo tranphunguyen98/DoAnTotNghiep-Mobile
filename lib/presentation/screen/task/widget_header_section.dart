@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/add_task/bloc.dart';
+import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/data/entity/project.dart';
@@ -47,25 +48,25 @@ class HeaderSection extends StatelessWidget {
               child: Text(sectionName, style: style),
             ),
             const Spacer(),
-            //TODO only show in project
-            PopupMenuButton<DropdownChoices>(
-              onSelected: (DropdownChoices choice) {
-                choice.onPressed(context);
-              },
-              elevation: 6,
-              icon: Icon(
-                Icons.more_vert,
-                color: kColorBlack2,
+            if (getIt<HomeBloc>().state.isInProject())
+              PopupMenuButton<DropdownChoices>(
+                onSelected: (DropdownChoices choice) {
+                  choice.onPressed(context);
+                },
+                elevation: 6,
+                icon: Icon(
+                  Icons.more_vert,
+                  color: kColorBlack2,
+                ),
+                itemBuilder: (BuildContext context) {
+                  return dropdownChoices.map((DropdownChoices choice) {
+                    return PopupMenuItem<DropdownChoices>(
+                      value: choice,
+                      child: Text(choice.title),
+                    );
+                  }).toList();
+                },
               ),
-              itemBuilder: (BuildContext context) {
-                return dropdownChoices.map((DropdownChoices choice) {
-                  return PopupMenuItem<DropdownChoices>(
-                    value: choice,
-                    child: Text(choice.title),
-                  );
-                }).toList();
-              },
-            ),
           ],
         ),
         const Divider(
@@ -106,7 +107,11 @@ class HeaderSection extends StatelessWidget {
             //Navigator.pushNamed(context, MyRouter.SETTING);
           }),
       DropdownChoices(title: 'Sửa tên section', onPressed: (context) {}),
-      DropdownChoices(title: 'Xóa section', onPressed: (context) {}),
+      DropdownChoices(
+          title: 'Xóa section',
+          onPressed: (context) {
+            getIt<HomeBloc>().add(DeleteSectionEvent(sectionId, project.id));
+          }),
     ]);
   }
 }

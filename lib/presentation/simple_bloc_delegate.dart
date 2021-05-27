@@ -14,11 +14,6 @@ class SimpleBlocDelegate extends BlocObserver {
     log('onError', error);
   }
 
-  @override
-  void onCreate(Cubit cubit) {
-    // log('onCreate', cubit);
-    super.onCreate(cubit);
-  }
 
   @override
   void onClose(Cubit cubit) {

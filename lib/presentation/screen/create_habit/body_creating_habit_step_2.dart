@@ -124,7 +124,7 @@ class _BodyCreatingHabitStep2State extends State<BodyCreatingHabitStep2> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
-                children: [Text('2'), Spacer(), Text('30')],
+                children: const [Text('2'), Spacer(), Text('30')],
               ),
             )
           ],
@@ -211,16 +211,16 @@ class _BodyCreatingHabitStep2State extends State<BodyCreatingHabitStep2> {
               width: 86.0,
               margin: EdgeInsets.only(right: 8.0, bottom: 8.0),
               padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                border: Border.all(color: kColorGray4_40),
+              ),
               child: Center(
                 child: Icon(
                   Icons.add,
                   size: 24.0,
                   color: kColorGray4_40,
                 ),
-              ),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                border: Border.all(color: kColorGray4_40),
               ),
             ),
           )

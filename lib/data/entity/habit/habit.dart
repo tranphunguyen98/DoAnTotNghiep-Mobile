@@ -167,7 +167,7 @@ class Habit extends Equatable {
       return this;
     }
 
-    return new Habit(
+    return Habit(
       id: id ?? this.id,
       name: name ?? this.name,
       icon: icon ?? this.icon,
@@ -245,7 +245,7 @@ class Habit extends Equatable {
       updatedDate.hashCode;
 
   factory Habit.fromMap(Map<String, dynamic> map) {
-    return new Habit(
+    return Habit(
       id: map['id'] as String,
       name: map['name'] as String,
       icon: map['icon'] as HabitIcon,

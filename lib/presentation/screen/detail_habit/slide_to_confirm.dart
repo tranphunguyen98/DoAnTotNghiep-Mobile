@@ -111,9 +111,9 @@ class ConfirmationSliderState extends State<ConfirmationSlider> {
       percent = 0.0;
     }
 
-    int red = widget.backgroundColorEnd.red;
-    int green = widget.backgroundColorEnd.green;
-    int blue = widget.backgroundColorEnd.blue;
+    final int red = widget.backgroundColorEnd.red;
+    final int green = widget.backgroundColorEnd.green;
+    final int blue = widget.backgroundColorEnd.blue;
 
     return Color.alphaBlend(
         Color.fromRGBO(red, green, blue, percent), widget.backgroundColor);
@@ -141,7 +141,7 @@ class ConfirmationSliderState extends State<ConfirmationSlider> {
         borderRadius: widget.backgroundShape ??
             BorderRadius.all(Radius.circular(widget.height)),
         color: widget.backgroundColorEnd != null
-            ? this.calculateBackground()
+            ? calculateBackground()
             : widget.backgroundColor,
       ),
       child: Stack(
@@ -163,7 +163,7 @@ class ConfirmationSliderState extends State<ConfirmationSlider> {
                 borderRadius: widget.backgroundShape ??
                     BorderRadius.all(Radius.circular(widget.height)),
                 color: widget.backgroundColorEnd != null
-                    ? this.calculateBackground()
+                    ? calculateBackground()
                     : widget.backgroundColor,
               ),
             ),

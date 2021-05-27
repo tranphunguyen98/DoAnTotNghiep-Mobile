@@ -40,6 +40,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _mapDeleteLabelToState();
     } else if (event is DeleteProject) {
       yield* _mapDeleteProjectToState();
+    } else if (event is DeleteSectionEvent) {
+      yield* _mapDeleteSectionEventToState(event.projectId, event.sectionId);
     }
   }
 
@@ -249,5 +251,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       log('TraceStack', stackTrace);
       yield state.copyWith(msg: e.toString());
     }
+  }
+
+  Stream<HomeState> _mapDeleteSectionEventToState(
+      String projectId, String sectionId) async* {
+    await _taskRepository.deleteSection(projectId, sectionId);
+
+    //TODO delete task
+    final listAllTask = await _taskRepository.getAllTask();
+    final listProject = await _taskRepository.getProjects();
+    final drawerItems = <DrawerItemData>[];
+
+    _initDrawerItems(drawerItems, listProject, state.listLabel);
+
+    yield state.copyWith(
+        listAllTask: listAllTask,
+        listProject: listProject,
+        drawerItems: drawerItems,
+        loading: false);
   }
 }

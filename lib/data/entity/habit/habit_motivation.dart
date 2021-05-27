@@ -23,7 +23,7 @@ class HabitMotivation extends Equatable {
       return this;
     }
 
-    return new HabitMotivation(
+    return HabitMotivation(
       text: text ?? this.text,
       images: images ?? this.images,
     );

@@ -56,6 +56,21 @@ class DeleteLabel extends HomeEvent {}
 
 class DeleteProject extends HomeEvent {}
 
+class DeleteSectionEvent extends HomeEvent {
+  final String projectId;
+  final String sectionId;
+
+  DeleteSectionEvent(this.sectionId, this.projectId);
+
+  @override
+  List<Object> get props => [projectId, sectionId];
+
+  @override
+  String toString() {
+    return 'DeleteSectionEvent{projectId: $projectId, sectionId: $sectionId}';
+  }
+}
+
 class DataListLabelChanged extends HomeEvent {}
 
 class DataProjectChanged extends HomeEvent {}

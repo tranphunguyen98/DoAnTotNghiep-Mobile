@@ -45,16 +45,16 @@ class _DialogCompleteHabitState extends State<DialogCompleteHabit> {
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('CANCEL'),
             onPressed: () {
               Navigator.of(context).pop();
             },
+            child: Text('CANCEL'),
           ),
           TextButton(
-            child: Text('OK'),
             onPressed: () {
               Navigator.pop<String>(context, _diaryController.text);
             },
+            child: Text('OK'),
           ),
         ],
       ),

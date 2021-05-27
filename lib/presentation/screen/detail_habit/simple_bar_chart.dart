@@ -6,7 +6,7 @@ class SimpleBarChart extends StatelessWidget {
   final List<charts.Series<OrdinalSales, String>> seriesList;
   final bool animate;
 
-  SimpleBarChart(this.seriesList, {this.animate});
+  const SimpleBarChart(this.seriesList, {this.animate});
 
   /// Creates a [BarChart] with sample data and no transition.
   factory SimpleBarChart.withSampleData() {

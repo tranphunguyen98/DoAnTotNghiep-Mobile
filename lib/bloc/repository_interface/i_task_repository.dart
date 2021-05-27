@@ -20,7 +20,7 @@ abstract class ITaskRepository {
 
   Future<void> addSection(String projectId, Section section);
   Future<void> updateSection(String projectId, Section section);
-  Future<void> deleteSection(String projectId, Section section);
+  Future<void> deleteSection(String projectId, String sectionId);
   // Future<List<SectionDisplay>> getSections();
   Future<void> saveDataToLocal();
   Future<void> clearDataOffline();

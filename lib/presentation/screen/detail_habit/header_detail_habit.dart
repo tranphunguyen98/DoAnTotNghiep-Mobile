@@ -12,7 +12,7 @@ class HeaderDetailHabit extends StatefulWidget {
   final double maxHeight;
   final double minHeight;
 
-  HeaderDetailHabit({Key key, this.maxHeight, this.minHeight})
+  const HeaderDetailHabit({Key key, this.maxHeight, this.minHeight})
       : super(key: key);
 
   @override

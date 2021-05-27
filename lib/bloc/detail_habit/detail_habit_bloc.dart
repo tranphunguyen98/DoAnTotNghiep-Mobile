@@ -44,7 +44,7 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
 
   Stream<DetailHabitState> _mapAddDiaryToState(
       DiaryItem item, String dateString) async* {
-    List<HabitProgressItem> habitProgress = [];
+    final List<HabitProgressItem> habitProgress = [];
     habitProgress.addAll(state.habit.habitProgress);
 
     final int index = habitProgress.indexWhere(
