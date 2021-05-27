@@ -1,20 +1,27 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
+import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/remote/unauthenticated_exception.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/utils/util.dart';
 
 import 'bloc.dart';
 
+//TODO update isCompleted not working with server
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ITaskRepository _taskRepository;
+  final IUserRepository _userRepository;
 
-  HomeBloc({@required ITaskRepository taskRepository})
+  HomeBloc(
+      {@required ITaskRepository taskRepository,
+      @required IUserRepository userRepository})
       : assert(taskRepository != null),
         _taskRepository = taskRepository,
+        _userRepository = userRepository,
         super(HomeState.loading());
 
   @override
@@ -275,8 +282,21 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Stream<HomeState> _mapAsyncDataToState() async* {
-    yield state.copyWith(syncing: true);
-    await _taskRepository.asyncData();
-    yield* _mapOpenHomeScreenToState();
+    bool checkServerSuccess = false;
+
+    try {
+      await _taskRepository.checkServer();
+      checkServerSuccess = true;
+    } on UnauthenticatedException catch (e) {
+      _userRepository.renewUser();
+      checkServerSuccess = true;
+    }
+
+    if (checkServerSuccess) {
+      log('testAsync checkServerSuccess');
+      yield state.copyWith(syncing: true);
+      await _taskRepository.asyncData();
+      yield* _mapOpenHomeScreenToState();
+    }
   }
 }

@@ -62,11 +62,9 @@ class LocalTaskService {
     return localTaskMapper.mapFromLocal(task);
   }
 
-  bool updateTask(Task task) {
+  bool updateTask(LocalTask localTask) {
     log('testAsync updateTask');
     int indexUpdated = -1;
-
-    final localTask = LocalTaskMapper().mapToLocal(task);
 
     for (var i = 0; i < _taskBox.length; i++) {
       if ((_taskBox.getAt(i) as LocalTask).id == localTask.id) {
@@ -74,6 +72,7 @@ class LocalTaskService {
         break;
       }
     }
+
     if (indexUpdated > -1) {
       _taskBox.putAt(indexUpdated,
           localTask.copyWith(updatedAt: DateTime.now().toIso8601String()));

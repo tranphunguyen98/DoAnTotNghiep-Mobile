@@ -5,6 +5,7 @@ import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/utils/date_helper.dart';
+import 'package:totodo/utils/util.dart';
 
 class HomeState extends Equatable {
   static const kDrawerIndexInbox = 0;
@@ -35,7 +36,7 @@ class HomeState extends Equatable {
       this.indexNavigationBarSelected = kBottomNavigationTask,
       this.isShowCompletedTask = false,
       this.asyncing = false,
-      this.loading,
+      this.loading = false,
       this.msg,
       List<Task> listAllTask,
       this.listSection,
@@ -49,7 +50,11 @@ class HomeState extends Equatable {
   }
 
   factory HomeState.error(String msg) {
-    return HomeState(msg: msg, loading: false);
+    return HomeState(
+      msg: msg,
+      loading: false,
+      asyncing: false,
+    );
   }
 
   @override
@@ -76,7 +81,7 @@ class HomeState extends Equatable {
         // '_listAllTask: $_listAllTask,'
         // ' listProject: $listProject, '
         // 'listLabel: $listLabel,'
-        // ' listSection: $listSection,'
+        // ' listSection: $listSection,asyncing $asyncing'
         ' isShowCompletedTask: $isShowCompletedTask, '
         'loading: $loading,'
         ' msg: $msg}';
@@ -394,13 +399,21 @@ class HomeState extends Equatable {
 
   Section _getCompletedSection(List<Section> sections) {
     final List<Task> completedTasks = [];
+    try {
+      for (final section in sections) {
+        final test =
+            section.listTask.where((element) => element.isCompleted == null);
 
-    for (final section in sections) {
-      completedTasks
-          .addAll(section.listTask.where((task) => task.isCompleted).toList());
-    }
-    if (completedTasks.isNotEmpty) {
-      return Section.kSectionCompleted.copyWith(listTask: completedTasks);
+        log('testAsync132', test);
+
+        completedTasks.addAll(
+            section.listTask.where((task) => task.isCompleted).toList());
+      }
+      if (completedTasks.isNotEmpty) {
+        return Section.kSectionCompleted.copyWith(listTask: completedTasks);
+      }
+    } catch (e, traceStack) {
+      log('testAsync', traceStack);
     }
     return null;
   }

@@ -26,4 +26,5 @@ abstract class ITaskRepository {
   Future<void> saveDataToLocal();
   Future<void> clearDataOffline();
   Future<bool> asyncData();
+  Future<void> checkServer();
 }

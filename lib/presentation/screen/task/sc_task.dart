@@ -32,7 +32,7 @@ class _TaskScreenState extends State<TaskScreen> {
       cubit: _homeBloc,
       builder: (context, state) {
         _state = state;
-        if (state.loading) {
+        if (state.loading == true) {
           return const Center(
             child: CircularProgressIndicator(),
           );

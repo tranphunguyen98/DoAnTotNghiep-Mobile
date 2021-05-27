@@ -9,7 +9,7 @@ abstract class LocalTaskDataSource {
   Future<Task> getDetailTask(String id);
   Future<List<Task>> getAllTask();
   Future<void> deleteTask(String taskId);
-  Future<bool> updateTask(Task task);
+  Future<bool> updateTask(LocalTask task);
   Future<void> saveTasks(List<LocalTask> tasks);
 
   Future<void> addProject(Project project);

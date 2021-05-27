@@ -26,7 +26,7 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
   }
 
   @override
-  Future<bool> updateTask(Task task) async {
+  Future<bool> updateTask(LocalTask task) async {
     return _taskService.updateTask(task);
   }
 

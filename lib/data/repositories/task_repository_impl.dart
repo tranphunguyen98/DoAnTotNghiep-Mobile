@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
 import 'package:totodo/data/data_source/task/remote_task_data_source.dart';
@@ -7,16 +6,20 @@ import 'package:totodo/data/entity/label.dart';
 import 'package:totodo/data/entity/project.dart';
 import 'package:totodo/data/entity/section.dart';
 import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/local/mapper/local_task_mapper.dart';
 import 'package:totodo/data/local/model/local_task.dart';
+import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/util.dart';
 
+//TODO refactor localMapper
 class TaskRepositoryImpl implements ITaskRepository {
   final RemoteTaskDataSource _remoteTaskDataSource;
   final LocalTaskDataSource _localTaskDataSource;
   final LocalUserDataSource _localUserDataSource;
+  final LocalTaskMapper _localTaskMapper;
 
   TaskRepositoryImpl(this._remoteTaskDataSource, this._localTaskDataSource,
-      this._localUserDataSource);
+      this._localUserDataSource, this._localTaskMapper);
 
   @override
   Future<bool> addTask(Task task) async {
@@ -45,16 +48,14 @@ class TaskRepositoryImpl implements ITaskRepository {
   @override
   Future<bool> updateTask(Task task) async {
     final user = await _localUserDataSource.getUser();
-    try {
-      _remoteTaskDataSource.updateTask(user.authorization, task);
-      return _localTaskDataSource.updateTask(task);
-    } on DioError catch (e, traceStack) {
-      log('testAsync', traceStack);
-      return _localTaskDataSource.updateTask(task.copyWith(isLocal: true));
-    } catch (e, traceStack) {
-      log('testAsync', traceStack);
-      rethrow;
-    }
+    final localTask = _localTaskMapper.mapToLocal(task);
+
+    _remoteTaskDataSource.updateTask(user.authorization, task).then(
+          (value) => _localTaskDataSource
+              .updateTask(localTask.copyWith(isLocal: false)),
+        );
+
+    return _localTaskDataSource.updateTask(localTask.copyWith(isLocal: true));
   }
 
   @override
@@ -154,14 +155,16 @@ class TaskRepositoryImpl implements ITaskRepository {
 
   @override
   Future<void> deleteTask(Task task) async {
+    //TODO handle access token
     final user = await _localUserDataSource.getUser();
+    final localTask = _localTaskMapper.mapToLocal(task);
 
     _remoteTaskDataSource.deleteTask(user.authorization, task.id).then((value) {
       _localTaskDataSource.deleteTask(task.id);
     });
 
     return _localTaskDataSource
-        .updateTask(task.copyWith(isTrashed: true, isLocal: true));
+        .updateTask(localTask.copyWith(isTrashed: true, isLocal: true));
   }
 
   @override
@@ -170,17 +173,15 @@ class TaskRepositoryImpl implements ITaskRepository {
     final user = await _localUserDataSource.getUser();
 
     final allLocalTasks = await _localTaskDataSource.getAllTask();
-
     final notAsyncTasks = allLocalTasks.where((task) => task.isLocal == true);
-
     final serverTasks =
         await _remoteTaskDataSource.getAllTask(user.authorization);
 
     log('testAsync', notAsyncTasks);
-    await Future.delayed(Duration(seconds: 3));
     final futures = <Future>[];
 
     for (final task in notAsyncTasks) {
+      //Delete on local
       if (task.isTrashed) {
         futures.add(_remoteTaskDataSource
             .deleteTask(user.authorization, task.id)
@@ -188,14 +189,43 @@ class TaskRepositoryImpl implements ITaskRepository {
       }
     }
 
-    for (final task in allLocalTasks) {
-      if (serverTasks.indexWhere((element) => element.id == task.id) < 0) {
-        log('testAsync ${task.name}');
-        futures.add(_localTaskDataSource.deleteTask(task.id));
+    for (final localTask in allLocalTasks) {
+      final serverTaskIndex =
+          serverTasks.indexWhere((element) => element.id == localTask.id);
+
+      //Delete on server
+      if (serverTaskIndex < 0) {
+        log('testAsync ${localTask.name}');
+        futures.add(_localTaskDataSource.deleteTask(localTask.id));
+      } else {
+        final comparedLocalAndServerDate = DateHelper.compareStringTime(
+            localTask.updatedAt, serverTasks[serverTaskIndex].updatedAt);
+
+        log('testAsync $comparedLocalAndServerDate ${localTask.name}');
+
+        if (comparedLocalAndServerDate > 0) {
+          //Latest update on local
+          futures.add(
+              _remoteTaskDataSource.updateTask(user.authorization, localTask));
+        } else if (comparedLocalAndServerDate < 0) {
+          //Latest update on server
+          futures.add(
+              _localTaskDataSource.updateTask(serverTasks[serverTaskIndex]));
+        }
       }
     }
 
     await Future.wait(futures);
     return true;
+  }
+
+  @override
+  Future<void> checkServer() async {
+    final user = await _localUserDataSource.getUser();
+    try {
+      await _remoteTaskDataSource.getLabels(user.authorization);
+    } catch (e) {
+      rethrow;
+    }
   }
 }
