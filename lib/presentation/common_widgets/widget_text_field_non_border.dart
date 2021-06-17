@@ -11,6 +11,7 @@ class TextFieldNonBorder extends StatelessWidget {
   final FocusNode focusNode;
   final Color background;
   final TextInputType keyboardType;
+  final int minLine;
 
   const TextFieldNonBorder(
       {this.controller,
@@ -22,6 +23,7 @@ class TextFieldNonBorder extends StatelessWidget {
       this.errorText,
       this.background,
       this.keyboardType,
+      this.minLine,
       @required this.hint});
 
   @override
@@ -33,6 +35,8 @@ class TextFieldNonBorder extends StatelessWidget {
       keyboardType: keyboardType,
       focusNode: focusNode,
       autofocus: autoFocus,
+      minLines: minLine ?? 1,
+      maxLines: minLine ?? 1,
       decoration: InputDecoration(
         border: InputBorder.none,
         focusedBorder: InputBorder.none,

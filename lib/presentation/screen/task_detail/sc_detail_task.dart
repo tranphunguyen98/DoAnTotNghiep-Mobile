@@ -48,6 +48,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
   final TextEditingController _nameTaskController = TextEditingController();
   final TextEditingController _checkListNameController =
       TextEditingController();
+
   @override
   void initState() {
     if (widget.task != null) {
@@ -126,15 +127,11 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0, top: 8.0),
-                          child: _buildButtonDate(state, context),
-                        ),
-                        if (!(state.taskEdit.labels?.isEmpty ?? true))
-                          _buildListLabel(state),
-                        Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: _buildRowFunction(context, state),
                         ),
+                        _buildListLabel(state),
+                        _buildDescription(state),
                         const Padding(
                           padding: EdgeInsets.only(left: 8.0),
                           child: Divider(),
@@ -206,7 +203,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
                   name: _checkListNameController.text,
                 ),
               );
-
+              //TODO add description
               _checkListNameController.text = '';
               _taskDetailBloc.add(
                 SubmitEditTask(
@@ -232,12 +229,57 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
     );
   }
 
-  Widget _buildListLabel(TaskDetailState state) {
-    return Wrap(
-      children: [
-        ...state.taskEdit.labels.map((label) => ItemLabel(label)).toList()
-      ],
+  Widget _buildDescription(TaskDetailState state) {
+    return TextFieldNonBorder(
+      hint: 'Description',
+      minLine: 3,
+      autoFocus: false,
     );
+  }
+
+  Widget _buildListLabel(TaskDetailState state) {
+    if (!(state.taskEdit.labels?.isEmpty ?? true)) {
+      return Wrap(
+        children: [
+          ...state.taskEdit.labels
+              .map((label) => ItemLabel(
+                    label,
+                    onPressed: () async {
+                      final result = await Navigator.of(context).pushNamed(
+                          AppRouter.kSelectLabel,
+                          arguments: state.taskEdit.labels);
+                      if (result != null && result is List<Label>) {
+                        _taskDetailBloc.add(SubmitEditTask(
+                            state.taskEdit.copyWith(labels: result)));
+                      }
+                    },
+                  ))
+              .toList()
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          Spacer(),
+          CircleInkWell(
+            Icons.local_offer_outlined,
+            color: state.taskEdit.labels?.isEmpty ?? true
+                ? kColorBlack2
+                : Colors.red,
+            size: 24.0,
+            onPressed: () async {
+              final result = await Navigator.of(context).pushNamed(
+                  AppRouter.kSelectLabel,
+                  arguments: state.taskEdit.labels);
+              if (result != null && result is List<Label>) {
+                _taskDetailBloc.add(
+                    SubmitEditTask(state.taskEdit.copyWith(labels: result)));
+              }
+            },
+          ),
+        ],
+      );
+    }
   }
 
   Widget _buildButtonDate(TaskDetailState state, BuildContext context) {
@@ -365,22 +407,8 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
   Row _buildRowFunction(BuildContext context, TaskDetailState state) {
     return Row(
       children: [
-        CircleInkWell(
-          Icons.local_offer_outlined,
-          color: state.taskEdit.labels?.isEmpty ?? true
-              ? kColorBlack2
-              : Colors.red,
-          size: 24.0,
-          onPressed: () async {
-            final result = await Navigator.of(context).pushNamed(
-                AppRouter.kSelectLabel,
-                arguments: state.taskEdit.labels);
-            if (result != null && result is List<Label>) {
-              _taskDetailBloc
-                  .add(SubmitEditTask(state.taskEdit.copyWith(labels: result)));
-            }
-          },
-        ),
+        _buildButtonDate(state, context),
+        Spacer(),
         PopupMenuButton<DropdownChoice>(
           offset: const Offset(0, -300),
           onSelected: (DropdownChoice choice) {
@@ -402,16 +430,6 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
             }).toList();
           },
         ),
-        const CircleInkWell(
-          Icons.alarm,
-          size: 24.0,
-        ),
-        const CircleInkWell(
-          Icons.mode_comment_outlined,
-          size: 24.0,
-        ),
-        const Spacer(),
-        const CircleInkWell(Icons.more_vert, size: 24.0),
       ],
     );
   }
