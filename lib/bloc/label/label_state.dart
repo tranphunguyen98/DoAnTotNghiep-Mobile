@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/data/model/label.dart';
 
 @immutable
 class AddLabelState extends Equatable {

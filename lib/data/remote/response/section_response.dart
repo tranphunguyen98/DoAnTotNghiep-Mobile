@@ -1,4 +1,4 @@
-import 'package:totodo/data/entity/section.dart';
+import 'package:totodo/data/model/section.dart';
 
 class ListSectionResponse {
   final bool succeeded;

@@ -1,4 +1,4 @@
-import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit.dart';
 
 abstract class IHabitRepository {
   Future<bool> addHabit(Habit habit);

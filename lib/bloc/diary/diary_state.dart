@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/presentation/screen/diary/item_diary.dart';
 
 @immutable

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/data/model/label.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
 

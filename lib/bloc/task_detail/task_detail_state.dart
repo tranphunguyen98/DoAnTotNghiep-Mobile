@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/task.dart';
 
 class TaskDetailState extends Equatable {
   //TODO add task Source to compare with changed task.

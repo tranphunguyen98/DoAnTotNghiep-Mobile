@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/data/model/label.dart';
 import 'package:totodo/presentation/router.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 

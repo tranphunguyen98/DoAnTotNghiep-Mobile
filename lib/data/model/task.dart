@@ -27,7 +27,7 @@ class Task extends Equatable {
   final String completedDate;
   final String crontabSchedule; // cron expression - reminder
   final List<String> preciseSchedules; // precise datetime - reminder
-  final bool isLocal;
+  final bool isCreatedOnLocal;
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
@@ -39,14 +39,14 @@ class Task extends Equatable {
       this.description,
       this.taskDate,
       this.project,
-      this.labels,
+      this.labels = const [],
       this.priority = kPriority4,
       this.isCompleted = false,
       this.isStarred = false,
       this.isTrashed = false,
-      this.isLocal = false,
+      this.isCreatedOnLocal = false,
       this.sectionId,
-      this.checkList,
+      this.checkList = const [],
       this.completedDate,
       this.preciseSchedules,
       this.crontabSchedule});
@@ -69,7 +69,7 @@ class Task extends Equatable {
     String completedDate,
     String crontabSchedule,
     List<String> preciseSchedules,
-    bool isLocal,
+    bool isCreatedOnLocal,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (createdAt == null || identical(createdAt, this.createdAt)) &&
@@ -89,9 +89,10 @@ class Task extends Equatable {
             identical(completedDate, this.completedDate)) &&
         (crontabSchedule == null ||
             identical(crontabSchedule, this.crontabSchedule)) &&
+        (isCreatedOnLocal == null ||
+            identical(isCreatedOnLocal, this.isCreatedOnLocal)) &&
         (preciseSchedules == null ||
-            identical(preciseSchedules, this.preciseSchedules)) &&
-        (isLocal == null || identical(isLocal, this.isLocal))) {
+            identical(preciseSchedules, this.preciseSchedules))) {
       return this;
     }
 
@@ -113,7 +114,7 @@ class Task extends Equatable {
       completedDate: completedDate ?? this.completedDate,
       crontabSchedule: crontabSchedule ?? this.crontabSchedule,
       preciseSchedules: preciseSchedules ?? this.preciseSchedules,
-      isLocal: isLocal ?? this.isLocal,
+      isCreatedOnLocal: isCreatedOnLocal ?? this.isCreatedOnLocal,
     );
   }
 
@@ -129,102 +130,55 @@ class Task extends Equatable {
         ' isTrashed: $isTrashed,'
         ' taskDate: $taskDate,'
         ' project: ${project?.name},'
-        ' sectionId: $sectionId, labels: $labels,'
-        // ' checkList: $checkList, completedDate: $completedDate,'
-        // ' crontabSchedule: $crontabSchedule,'
-        // ' preciseSchedules: $preciseSchedules,'
-        ' isLocal: $isLocal}';
+        ' sectionId: $sectionId, labels: $labels,';
+    // ' checkList: $checkList, completedDate: $completedDate,'
+    // ' crontabSchedule: $crontabSchedule,'
+    // ' preciseSchedules: $preciseSchedules,'
   }
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Task &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          createdAt == other.createdAt &&
-          updatedAt == other.updatedAt &&
-          priority == other.priority &&
-          name == other.name &&
-          description == other.description &&
-          isCompleted == other.isCompleted &&
-          isStarred == other.isStarred &&
-          isTrashed == other.isTrashed &&
-          taskDate == other.taskDate &&
-          project == other.project &&
-          sectionId == other.sectionId &&
-          labels == other.labels &&
-          checkList == other.checkList &&
-          completedDate == other.completedDate &&
-          crontabSchedule == other.crontabSchedule &&
-          preciseSchedules == other.preciseSchedules &&
-          isLocal == other.isLocal);
+  // factory Task.fromJson(Map<String, dynamic> map) {
+  //   return Task(
+  //     id: map['_id'] as String,
+  //     createdAt: map['createdAt'] as String,
+  //     updatedAt: map['updatedAt'] as String,
+  //     priority: map['priority'] as int,
+  //     name: map['name'] as String,
+  //     description: map['description'] as String,
+  //     isCompleted: map['isCompleted'] as bool,
+  //     isStarred: map['isStarred'] as bool,
+  //     isTrashed: map['isTrashed'] as bool,
+  //     taskDate: map['taskDate'] as String,
+  //     project: map['project'] as Project,
+  //     sectionId: map['sectionId'] as String,
+  //     labels: map['labels'] as List<Label>,
+  //     checkList: map['checkList'] as List<CheckItem>,
+  //     completedDate: map['completedDate'] as String,
+  //     crontabSchedule: map['crontabSchedule'] as String,
+  //     preciseSchedules: map['preciseSchedules'] as List<String>,
+  //   );
+  // }
 
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      createdAt.hashCode ^
-      updatedAt.hashCode ^
-      priority.hashCode ^
-      name.hashCode ^
-      description.hashCode ^
-      isCompleted.hashCode ^
-      isStarred.hashCode ^
-      isTrashed.hashCode ^
-      taskDate.hashCode ^
-      project.hashCode ^
-      sectionId.hashCode ^
-      labels.hashCode ^
-      checkList.hashCode ^
-      completedDate.hashCode ^
-      crontabSchedule.hashCode ^
-      preciseSchedules.hashCode ^
-      isLocal.hashCode;
-
-  factory Task.fromJson(Map<String, dynamic> map) {
-    return Task(
-      id: map['_id'] as String,
-      createdAt: map['createdAt'] as String,
-      updatedAt: map['updatedAt'] as String,
-      priority: map['priority'] as int,
-      name: map['name'] as String,
-      description: map['description'] as String,
-      isCompleted: map['isCompleted'] as bool,
-      isStarred: map['isStarred'] as bool,
-      isTrashed: map['isTrashed'] as bool,
-      taskDate: map['taskDate'] as String,
-      project: map['project'] as Project,
-      sectionId: map['sectionId'] as String,
-      labels: map['labels'] as List<Label>,
-      checkList: map['checkList'] as List<CheckItem>,
-      completedDate: map['completedDate'] as String,
-      crontabSchedule: map['crontabSchedule'] as String,
-      preciseSchedules: map['preciseSchedules'] as List<String>,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    // ignore: unnecessary_cast
-    return {
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
-      'priority': priority,
-      'name': name,
-      'description': description,
-      'isCompleted': isCompleted,
-      'isStarred': isStarred,
-      'isTrashed': isTrashed,
-      'taskDate': taskDate,
-      'project': project,
-      'sectionId': sectionId,
-      'labels': labels,
-      'checkList': checkList,
-      'completedDate': completedDate,
-      'crontabSchedule': crontabSchedule,
-      'preciseSchedules': preciseSchedules,
-      'isLocal': isLocal,
-    } as Map<String, dynamic>;
-  }
+  // Map<String, dynamic> toJson() {
+  //   // ignore: unnecessary_cast
+  //   return {
+  //     '_id': id,
+  //     'createdAt': createdAt,
+  //     'updatedAt': updatedAt,
+  //     'priority': priority,
+  //     'name': name,
+  //     'description': description,
+  //     'isCompleted': isCompleted,
+  //     'isStarred': isStarred,
+  //     'taskDate': taskDate,
+  //     'project': project,
+  //     'sectionId': sectionId,
+  //     'labels': labels,
+  //     'checkList': checkList,
+  //     'completedDate': completedDate,
+  //     'crontabSchedule': crontabSchedule,
+  //     'preciseSchedules': preciseSchedules,
+  //   } as Map<String, dynamic>;
+  // }
 
   //</editor-fold>
 
@@ -248,5 +202,6 @@ class Task extends Equatable {
         completedDate,
         crontabSchedule,
         preciseSchedules,
+        isCreatedOnLocal,
       ];
 }

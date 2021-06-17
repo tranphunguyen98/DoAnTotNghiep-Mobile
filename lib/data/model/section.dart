@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/task.dart';
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
 

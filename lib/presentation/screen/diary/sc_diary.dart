@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/diary/bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
+import 'package:totodo/data/repository_interface/i_habit_repository.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
 import 'package:totodo/presentation/screen/diary/item_diary.dart';

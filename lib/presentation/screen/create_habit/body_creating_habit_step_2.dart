@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:totodo/bloc/create_habit/bloc.dart';
-import 'package:totodo/data/entity/habit/habit_remind.dart';
+import 'package:totodo/data/model/habit/habit_remind.dart';
 import 'package:totodo/presentation/custom_ui/custom_check_box.dart';
 import 'package:totodo/presentation/custom_ui/custom_radio.dart';
 import 'package:totodo/presentation/screen/create_habit/container_info.dart';

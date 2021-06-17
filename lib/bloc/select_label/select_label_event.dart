@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/data/model/label.dart';
 
 abstract class SelectLabelEvent extends Equatable {
   const SelectLabelEvent();

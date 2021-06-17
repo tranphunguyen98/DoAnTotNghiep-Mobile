@@ -1,9 +1,8 @@
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/section.dart';
-import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/model/local_task.dart';
+import 'package:totodo/data/model/label.dart';
+import 'package:totodo/data/model/project.dart';
+import 'package:totodo/data/model/section.dart';
 
 import 'local_task_service.dart';
 
@@ -13,21 +12,26 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
   const LocalTaskDataSourceImplement(this._taskService);
 
   @override
-  Future<bool> addTask(LocalTask task) => _taskService.addTask(task);
+  Future<String> addTask(LocalTask task) => _taskService.addTask(task);
 
   @override
-  Future<Task> getDetailTask(String id) {
+  Future<LocalTask> getDetailTask(String id) {
     return _taskService.getTaskFromId(id);
   }
 
   @override
-  Future<List<Task>> getAllTask() async {
+  Future<List<LocalTask>> getAllTask() async {
     return _taskService.getAllTask();
   }
 
   @override
   Future<bool> updateTask(LocalTask task) async {
     return _taskService.updateTask(task);
+  }
+
+  @override
+  Future<bool> updateTaskAsync(LocalTask task) async {
+    return _taskService.updateTaskAsync(task);
   }
 
   @override

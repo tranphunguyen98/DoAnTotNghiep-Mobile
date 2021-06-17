@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/auth_bloc/bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
-import 'package:totodo/data/entity/user.dart';
+import 'package:totodo/data/model/user.dart';
+import 'package:totodo/data/repository_interface/i_task_repository.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_normal.dart';
 

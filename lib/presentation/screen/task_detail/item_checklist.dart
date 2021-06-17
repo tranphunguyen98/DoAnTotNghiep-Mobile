@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:totodo/data/model/check_item.dart';
 
-import '../../../data/entity/check_item.dart';
 import '../../../utils/my_const/my_const.dart';
 import '../../common_widgets/widget_circle_inkwell.dart';
 import '../../common_widgets/widget_text_field_non_border.dart';

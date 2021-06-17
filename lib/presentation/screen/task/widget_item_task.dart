@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:totodo/data/entity/task.dart';
-import 'package:totodo/presentation/custom_ui/custom_ui.dart';
+import 'package:totodo/data/model/task.dart';
 import 'package:totodo/presentation/screen/task/widget_row_checkbox_name_task.dart';
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
@@ -36,7 +35,8 @@ class ItemTask extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 32.0),
                   child: Row(
                     children: [
-                      if (task.taskDate != null) buildRowDate(task.taskDate),
+                      if (!(task?.taskDate?.isEmpty ?? true))
+                        buildRowDate(task.taskDate),
                       const SizedBox(
                         width: 8.0,
                       ),

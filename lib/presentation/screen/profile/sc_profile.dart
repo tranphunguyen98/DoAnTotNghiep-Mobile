@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/profile/bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
+import 'package:totodo/data/repository_interface/i_task_repository.dart';
+import 'package:totodo/data/repository_interface/i_user_repository.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/profile/header_profile.dart';
 import 'package:totodo/presentation/screen/profile/statistic_life.dart';

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/data/entity/section.dart';
+import 'package:totodo/data/model/section.dart';
 
 @immutable
 class AddSectionState extends Equatable {

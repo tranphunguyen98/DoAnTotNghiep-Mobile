@@ -5,9 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:totodo/data/data_source/user/remote_user_data_source.dart';
-import 'package:totodo/data/entity/user.dart';
-import 'package:totodo/data/remote/user/remote_user_service.dart';
-import 'package:totodo/data/response/user_response.dart';
+import 'package:totodo/data/model/user.dart';
+import 'package:totodo/data/remote/response/user_response.dart';
+import 'package:totodo/data/remote/source/user/remote_user_service.dart';
 import 'package:totodo/di/injection.dart';
 
 class RemoteUserDataSourceImpl implements RemoteUserDataSource {

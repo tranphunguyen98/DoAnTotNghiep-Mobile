@@ -1,4 +1,4 @@
-import 'package:totodo/data/entity/label.dart';
+import 'package:totodo/data/model/label.dart';
 
 class LabelResponse {
   final bool succeeded;

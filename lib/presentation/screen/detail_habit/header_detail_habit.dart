@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:totodo/bloc/detail_habit/bloc.dart';
-import 'package:totodo/data/entity/habit/diary_item.dart';
+import 'package:totodo/data/model/habit/diary_item.dart';
 import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
 import 'package:totodo/presentation/screen/detail_habit/dialog_complete_habit.dart';
 import 'package:totodo/presentation/screen/detail_habit/slide_to_confirm.dart';

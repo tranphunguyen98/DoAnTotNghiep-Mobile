@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/change_password/bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
+import 'package:totodo/data/repository_interface/i_user_repository.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/change_password/widget_change_password_form.dart';
 import 'package:totodo/presentation/screen/login/widget_top_welcome.dart';

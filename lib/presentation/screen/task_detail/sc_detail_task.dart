@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/bloc/task_detail/bloc.dart';
-import 'package:totodo/data/entity/check_item.dart';
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/check_item.dart';
+import 'package:totodo/data/model/label.dart';
+import 'package:totodo/data/model/project.dart';
+import 'package:totodo/data/model/task.dart';
+import 'package:totodo/data/repository_interface/i_task_repository.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/common_widgets/barrel_common_widgets.dart';
 import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
@@ -79,6 +79,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
         return WillPopScope(
           onWillPop: () async {
             _saveNameTask(state);
+            //TODO fix save name
             _homeBloc.add(DataListTaskChanged());
             Navigator.pop(context);
             return true;
@@ -241,7 +242,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
 
   Widget _buildButtonDate(TaskDetailState state, BuildContext context) {
     Color colorButton = kColorGray1;
-    if (state.taskEdit.taskDate != null) {
+    if (!(state.taskEdit.taskDate?.isEmpty ?? true)) {
       if (DateHelper.isOverDueString(state.taskEdit.taskDate)) {
         colorButton = Colors.red;
       } else {

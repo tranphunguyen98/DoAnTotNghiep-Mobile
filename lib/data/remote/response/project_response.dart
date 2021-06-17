@@ -1,4 +1,4 @@
-import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/model/project.dart';
 import 'package:totodo/utils/util.dart';
 
 class ProjectResponse {

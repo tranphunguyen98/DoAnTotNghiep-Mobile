@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:totodo/data/repository_interface/i_user_repository.dart';
 
 import '../../utils/validators.dart';
-import '../repository_interface/i_user_repository.dart';
 import 'bloc.dart';
 
 class ForgotPasswordBloc

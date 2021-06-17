@@ -1,7 +1,7 @@
-import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
 import 'package:totodo/data/data_source/habit/local_habit_data_source.dart';
 import 'package:totodo/data/data_source/habit/remote_habit_data_source.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit.dart';
+import 'package:totodo/data/repository_interface/i_habit_repository.dart';
 
 class HabitRepositoryImpl implements IHabitRepository {
   final RemoteHabitDataSource _remoteHabitDataSource;

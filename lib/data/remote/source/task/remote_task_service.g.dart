@@ -35,7 +35,26 @@ class _RemoteTaskService implements RemoteTaskService {
   }
 
   @override
-  Future<TaskResponse> addTask(authorization, body) async {
+  Future<TaskResponse> getTaskDetail(authorization, taskId) async {
+    ArgumentError.checkNotNull(authorization, 'authorization');
+    ArgumentError.checkNotNull(taskId, 'taskId');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('tasks/$taskId',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{r'authorization': authorization},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = TaskResponse.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<TaskListResponse> addTask(authorization, body) async {
     ArgumentError.checkNotNull(authorization, 'authorization');
     ArgumentError.checkNotNull(body, 'body');
     const _extra = <String, dynamic>{};
@@ -50,12 +69,12 @@ class _RemoteTaskService implements RemoteTaskService {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = TaskResponse.fromJson(_result.data);
+    final value = TaskListResponse.fromJson(_result.data);
     return value;
   }
 
   @override
-  Future<MessageResponse> updateTask(authorization, taskId, body) async {
+  Future<TaskResponse> updateTask(authorization, taskId, body) async {
     ArgumentError.checkNotNull(authorization, 'authorization');
     ArgumentError.checkNotNull(taskId, 'taskId');
     ArgumentError.checkNotNull(body, 'body');
@@ -71,7 +90,7 @@ class _RemoteTaskService implements RemoteTaskService {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = MessageResponse.fromJson(_result.data);
+    final value = TaskResponse.fromJson(_result.data);
     return value;
   }
 

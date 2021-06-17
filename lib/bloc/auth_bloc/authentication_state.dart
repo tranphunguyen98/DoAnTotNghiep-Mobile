@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:totodo/data/entity/user.dart';
+import 'package:totodo/data/model/user.dart';
 
 abstract class AuthenticationState extends Equatable {
   const AuthenticationState();

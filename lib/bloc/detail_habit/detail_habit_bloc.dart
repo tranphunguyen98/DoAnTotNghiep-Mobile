@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
-import 'package:totodo/data/entity/habit/diary_item.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
-import 'package:totodo/data/entity/habit/habit_progress_item.dart';
+import 'package:totodo/data/model/habit/diary_item.dart';
+import 'package:totodo/data/model/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit_progress_item.dart';
+import 'package:totodo/data/repository_interface/i_habit_repository.dart';
 import 'package:totodo/utils/date_helper.dart';
 
 import 'bloc.dart';

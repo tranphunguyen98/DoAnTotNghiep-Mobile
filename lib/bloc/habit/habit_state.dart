@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/utils/cron_helper.dart';
 
 class HabitState extends Equatable {

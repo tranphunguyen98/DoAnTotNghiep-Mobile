@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
+import 'package:totodo/data/repository_interface/i_user_repository.dart';
 import 'package:totodo/utils/validators.dart';
 
 import 'bloc.dart';

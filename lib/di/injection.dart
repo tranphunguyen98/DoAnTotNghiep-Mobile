@@ -5,9 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:totodo/bloc/habit/bloc.dart';
 import 'package:totodo/bloc/home/home_bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
-import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/data/data_source/habit/local_habit_data_source.dart';
 import 'package:totodo/data/data_source/habit/remote_habit_data_source.dart';
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
@@ -21,15 +18,18 @@ import 'package:totodo/data/local/source/task/cache_task_data_source_impl.dart';
 import 'package:totodo/data/local/source/task/local_task_service.dart';
 import 'package:totodo/data/local/source/user/cache_user_data_source_impl.dart';
 import 'package:totodo/data/local/source/user/local_user_service.dart';
-import 'package:totodo/data/remote/habit/remote_habit_data_source_impl.dart';
-import 'package:totodo/data/remote/habit/remote_habit_service.dart';
-import 'package:totodo/data/remote/task/remote_task_data_source_impl.dart';
-import 'package:totodo/data/remote/task/remote_task_service.dart';
-import 'package:totodo/data/remote/user/remote_user_data_source_impl.dart';
-import 'package:totodo/data/remote/user/remote_user_service.dart';
-import 'package:totodo/data/repositories/habit_repository_impl.dart';
-import 'package:totodo/data/repositories/task_repository_impl.dart';
-import 'package:totodo/data/repositories/user_repository_impl.dart';
+import 'package:totodo/data/remote/source/habit/remote_habit_data_source_impl.dart';
+import 'package:totodo/data/remote/source/habit/remote_habit_service.dart';
+import 'package:totodo/data/remote/source/task/remote_task_data_source_impl.dart';
+import 'package:totodo/data/remote/source/task/remote_task_service.dart';
+import 'package:totodo/data/remote/source/user/remote_user_data_source_impl.dart';
+import 'package:totodo/data/remote/source/user/remote_user_service.dart';
+import 'package:totodo/data/repository_implement/habit_repository_impl.dart';
+import 'package:totodo/data/repository_implement/task_repository_impl.dart';
+import 'package:totodo/data/repository_implement/user_repository_impl.dart';
+import 'package:totodo/data/repository_interface/i_habit_repository.dart';
+import 'package:totodo/data/repository_interface/i_task_repository.dart';
+import 'package:totodo/data/repository_interface/i_user_repository.dart';
 
 import 'injection.config.dart';
 
@@ -39,11 +39,14 @@ final getIt = GetIt.instance;
 Future<void> configureDependencies() async {
   $initGetIt(getIt);
 
-  const String kBaseUrl = 'http://192.168.43.26:3006/';
+  const String kBaseUrl = 'https://personal-task-management-be.herokuapp.com/';
+  // const String kBaseUrl = 'http://192.168.43.26:3006/';
+  // const String kBaseUrl = 'http://192.168.1.3:3006/';
 
   getIt.registerLazySingleton<DateFormat>(() => DateFormat('MMM yyyy'));
   getIt.registerSingleton<Logger>(Logger());
-  getIt.registerSingleton<Dio>(Dio());
+  getIt.registerSingleton<Dio>(
+      Dio(BaseOptions(followRedirects: false, maxRedirects: 0)));
 
   // User
   getIt.registerLazySingleton<RemoteUserService>(
@@ -75,6 +78,7 @@ Future<void> configureDependencies() async {
         getIt.get<RemoteTaskDataSource>(),
         getIt.get<LocalTaskDataSource>(),
         getIt.get<LocalUserDataSource>(),
+        getIt.get<RemoteUserDataSource>(),
         getIt.get<LocalTaskMapper>(),
       ));
 

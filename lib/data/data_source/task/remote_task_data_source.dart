@@ -1,15 +1,14 @@
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/section.dart';
-import 'package:totodo/data/entity/task.dart';
 import 'package:totodo/data/local/model/local_task.dart';
+import 'package:totodo/data/model/label.dart';
+import 'package:totodo/data/model/project.dart';
+import 'package:totodo/data/model/section.dart';
 
 abstract class RemoteTaskDataSource {
-  Future<LocalTask> addTask(String authorization, Task task);
+  Future<LocalTask> addTask(String authorization, LocalTask localTask);
 
-  Future<Task> getDetailTask(String authorization, String id);
+  Future<LocalTask> getDetailTask(String authorization, String id);
 
-  Future<void> updateTask(String authorization, Task task);
+  Future<LocalTask> updateTask(String authorization, LocalTask task);
 
   Future<List<LocalTask>> getAllTask(String authorization);
 

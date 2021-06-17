@@ -4,8 +4,7 @@ import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/common_widgets/widget_container_error.dart';
 import 'package:totodo/presentation/screen/habit/habit_screen.dart';
-
-import 'file:///C:/Flutter/totodo/lib/presentation/screen/task/sc_task.dart';
+import 'package:totodo/presentation/screen/task/sc_task.dart';
 
 class HomeBody extends StatefulWidget {
   @override

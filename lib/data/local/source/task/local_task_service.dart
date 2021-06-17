@@ -1,11 +1,10 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/section.dart';
-import 'package:totodo/data/entity/task.dart';
-import 'package:totodo/data/local/mapper/local_task_mapper.dart';
+import 'package:objectid/objectid.dart';
 import 'package:totodo/data/local/model/local_task.dart';
+import 'package:totodo/data/model/label.dart';
+import 'package:totodo/data/model/project.dart';
+import 'package:totodo/data/model/section.dart';
 import 'package:totodo/utils/util.dart';
 
 @Injectable()
@@ -25,45 +24,55 @@ class LocalTaskService {
   }
 
   //<editor-fold desc="Task" defaultstate="collapsed">
-  Future<bool> addTask(LocalTask localTask) async {
+  Future<String> addTask(LocalTask localTask) async {
+    final task = await getTaskFromId(localTask.id);
+    if (task != null) {
+      log('GlobalKeyTest', 'duplicate $localTask.id $task');
+      return null;
+    }
+
+    final currentDateString = DateTime.now().toIso8601String();
     if (localTask.id == null) {
-      _taskBox.add(localTask.copyWith(
-          id: DateTime.now().microsecondsSinceEpoch.toString()));
-      return true;
+      final taskWithId = localTask.copyWith(
+        id: ObjectId().hexString,
+        isOnlyCreatedOnLocal: true,
+        createdAt: currentDateString,
+        updatedAt: currentDateString,
+      );
+      _taskBox.add(taskWithId);
+      return taskWithId.id;
     }
 
-    _taskBox.add(localTask);
-    return true;
+    _taskBox.add(localTask.copyWith(
+      createdAt: localTask.createdAt ?? currentDateString,
+      updatedAt: localTask.updatedAt ?? currentDateString,
+    ));
+
+    return localTask.id;
   }
 
-  Future<List<Task>> getAllTask() async {
-    final localTaskMapper = LocalTaskMapper(
-        listLabel: await getLabels(), listProject: await getProjects());
-
-    final listTask = <Task>[];
+  Future<List<LocalTask>> getAllTask() async {
+    final listTask = <LocalTask>[];
     for (var i = 0; i < _taskBox.length; i++) {
-      listTask
-          .add(localTaskMapper.mapFromLocal(_taskBox.getAt(i) as LocalTask));
+      listTask.add(_taskBox.getAt(i) as LocalTask);
     }
 
-    log("testLocal1111111", listTask);
+    log("testLocal1111111", listTask.length);
 
-    return listTask ?? <Task>[];
+    return listTask ?? <LocalTask>[];
   }
 
-  Future<Task> getTaskFromId(String idTask) async {
-    final localTaskMapper = LocalTaskMapper(
-        listLabel: await getLabels(), listProject: await getProjects());
-
-    final task = await _taskBox.values
-            .firstWhere((element) => (element as LocalTask).id == idTask)
-        as LocalTask;
-
-    return localTaskMapper.mapFromLocal(task);
+  Future<LocalTask> getTaskFromId(String idTask) async {
+    final task = await _taskBox.values.firstWhere(
+        (element) => (element as LocalTask).id == idTask,
+        orElse: () => null);
+    if (task != null) {
+      return task as LocalTask;
+    }
+    return null;
   }
 
   bool updateTask(LocalTask localTask) {
-    log('testAsync updateTask');
     int indexUpdated = -1;
 
     for (var i = 0; i < _taskBox.length; i++) {
@@ -81,8 +90,24 @@ class LocalTaskService {
     return false;
   }
 
+  bool updateTaskAsync(LocalTask localTask) {
+    int indexUpdated = -1;
+
+    for (var i = 0; i < _taskBox.length; i++) {
+      if ((_taskBox.getAt(i) as LocalTask).id == localTask.id) {
+        indexUpdated = i;
+        break;
+      }
+    }
+
+    if (indexUpdated > -1) {
+      _taskBox.putAt(indexUpdated, localTask);
+      return true;
+    }
+    return false;
+  }
+
   Future<void> permanentlyDeleteTask(String taskId) async {
-    log('testAsync deleteTask');
     int indexUpdated = -1;
 
     for (var i = 0; i < _taskBox.length; i++) {
@@ -128,7 +153,7 @@ class LocalTaskService {
     for (var i = 0; i < _projectBox.length; i++) {
       listProject.add(_projectBox.getAt(i) as Project);
     }
-    log("testLocal1111111", listProject);
+    // log("testLocal1111111", listProject);
     return listProject ?? <Project>[];
   }
 

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/task.dart';
 
 abstract class HomeEvent extends Equatable {
   @override

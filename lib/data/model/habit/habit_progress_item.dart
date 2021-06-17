@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
-import 'package:totodo/data/entity/habit/diary_item.dart';
+import 'package:totodo/data/model/habit/diary_item.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
 
 part 'habit_progress_item.g.dart';

@@ -1,8 +1,8 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:totodo/bloc/diary/bloc.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
-import 'package:totodo/data/entity/habit/habit_icon.dart';
-import 'package:totodo/data/entity/habit/habit_motivation.dart';
+import 'package:totodo/data/model/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit_icon.dart';
+import 'package:totodo/data/model/habit/habit_motivation.dart';
 import 'package:totodo/utils/my_const/asset_const.dart';
 
 const String kKeyHabitTypeLabel = 'label';

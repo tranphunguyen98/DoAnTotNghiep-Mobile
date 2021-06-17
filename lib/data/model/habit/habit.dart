@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
-import 'package:totodo/data/entity/habit/habit_frequency.dart';
-import 'package:totodo/data/entity/habit/habit_image.dart';
-import 'package:totodo/data/entity/habit/habit_motivation.dart';
-import 'package:totodo/data/entity/habit/habit_progress_item.dart';
-import 'package:totodo/data/entity/habit/habit_remind.dart';
+import 'package:totodo/data/model/habit/habit_frequency.dart';
+import 'package:totodo/data/model/habit/habit_image.dart';
+import 'package:totodo/data/model/habit/habit_motivation.dart';
+import 'package:totodo/data/model/habit/habit_progress_item.dart';
+import 'package:totodo/data/model/habit/habit_remind.dart';
 import 'package:totodo/utils/cron_helper.dart';
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';

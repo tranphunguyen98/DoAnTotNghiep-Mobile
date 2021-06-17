@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:totodo/data/entity/habit/diary_item.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/data/model/habit/diary_item.dart';
+import 'package:totodo/data/model/habit/habit.dart';
 
 abstract class DetailHabitEvent extends Equatable {
   const DetailHabitEvent();

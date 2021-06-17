@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
 import 'package:totodo/bloc/signup/bloc.dart';
+import 'package:totodo/data/repository_interface/i_user_repository.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/login/widget_top_welcome.dart';
 import 'package:totodo/presentation/screen/signup/widget_bottom_sign_up.dart';

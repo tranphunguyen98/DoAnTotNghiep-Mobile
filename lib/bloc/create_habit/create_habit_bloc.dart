@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit.dart';
+import 'package:totodo/data/repository_interface/i_habit_repository.dart';
 
 import 'bloc.dart';
 

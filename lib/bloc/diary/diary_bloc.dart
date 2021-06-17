@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:totodo/bloc/repository_interface/i_habit_repository.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit.dart';
+import 'package:totodo/data/repository_interface/i_habit_repository.dart';
 import 'package:totodo/presentation/screen/diary/item_diary.dart';
 import 'package:totodo/utils/date_helper.dart';
 

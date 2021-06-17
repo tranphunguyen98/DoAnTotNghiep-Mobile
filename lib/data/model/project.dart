@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
-import 'package:totodo/data/entity/section.dart';
+import 'package:totodo/data/model/section.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
 
 part 'project.g.dart';

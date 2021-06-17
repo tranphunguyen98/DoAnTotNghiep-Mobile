@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
 import 'package:totodo/bloc/select_label/bloc.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/habit/habit.dart';
+import 'package:totodo/data/model/label.dart';
+import 'package:totodo/data/model/project.dart';
+import 'package:totodo/data/model/task.dart';
+import 'package:totodo/data/repository_interface/i_task_repository.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/create_habit/sc_create_habit.dart';
 import 'package:totodo/presentation/screen/detail_habit/sc_habit_detail.dart';

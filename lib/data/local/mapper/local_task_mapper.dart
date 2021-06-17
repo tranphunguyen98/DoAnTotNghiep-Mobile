@@ -1,16 +1,16 @@
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/section.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/label.dart';
+import 'package:totodo/data/model/project.dart';
+import 'package:totodo/data/model/task.dart';
 import 'package:totodo/data/local/model/local_task.dart';
 
 class LocalTaskMapper {
   List<Project> listProject;
   List<Label> listLabel;
-  List<Section> listSection;
 
-  LocalTaskMapper(
-      {this.listLabel, this.listProject, this.listSection = const []});
+  LocalTaskMapper({
+    this.listLabel,
+    this.listProject,
+  });
 
   Task mapFromLocal(LocalTask localTask) {
     return Task(
@@ -23,7 +23,7 @@ class LocalTaskMapper {
       isCompleted: localTask.isCompleted,
       isStarred: localTask.isStarred,
       isTrashed: localTask.isTrashed,
-      isLocal: localTask.isLocal,
+      isCreatedOnLocal: localTask.isCreatedOnLocal,
       priority: localTask.priority,
       completedDate: localTask.completedDate,
       crontabSchedule: localTask.crontabSchedule,
@@ -50,7 +50,7 @@ class LocalTaskMapper {
         isCompleted: task.isCompleted,
         isStarred: task.isStarred,
         isTrashed: task.isTrashed,
-        isLocal: task.isLocal,
+        isCreatedOnLocal: task.isCreatedOnLocal,
         priority: task.priority,
         projectId: task.project?.id,
         sectionId: task.sectionId,
@@ -64,7 +64,8 @@ class LocalTaskMapper {
 
   Project getProjectFromId(String id) {
     // log('idProjectTest', id);
-    return listProject.firstWhere((element) => element.id == id);
+    return listProject.firstWhere((element) => element.id == id,
+        orElse: () => null);
   }
 
   List<Label> getListLabelFromListId(List<String> labelIds) {

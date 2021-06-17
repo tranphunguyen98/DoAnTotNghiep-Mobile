@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:totodo/data/entity/check_item.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/check_item.dart';
+import 'package:totodo/data/model/task.dart';
 
 abstract class TaskDetailEvent extends Equatable {
   @override

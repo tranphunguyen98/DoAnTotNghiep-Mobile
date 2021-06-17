@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 import 'package:totodo/utils/my_const/map_const.dart';
 

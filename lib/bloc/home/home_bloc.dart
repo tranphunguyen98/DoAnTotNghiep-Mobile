@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/task.dart';
-import 'package:totodo/data/remote/unauthenticated_exception.dart';
+import 'package:totodo/data/model/label.dart';
+import 'package:totodo/data/model/project.dart';
+import 'package:totodo/data/model/task.dart';
+import 'package:totodo/data/remote/exception/unauthenticated_exception.dart';
+import 'package:totodo/data/repository_interface/i_task_repository.dart';
+import 'package:totodo/data/repository_interface/i_user_repository.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/utils/util.dart';
 
@@ -149,17 +149,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  // Stream<HomeState> _mapDataListSectionChangedToState() async* {
-  //   try {
-  //     // final listSection = await _taskRepository.getSections();
-  //     //TODO Handle sector
-  //     // yield state.copyWith(listSection: listSection);
-  //   } catch (e, stackTrace) {
-  //     log("error:( $stackTrace");
-  //     yield HomeState.error(e.toString());
-  //   }
-  // }
-
   Stream<HomeState> _mapShowCompletedTaskChangeToState() async* {
     yield state.copyWith(isShowCompletedTask: !state.isShowCompletedTask);
   }
@@ -287,9 +276,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       await _taskRepository.checkServer();
       checkServerSuccess = true;
-    } on UnauthenticatedException catch (e) {
+    } on UnauthenticatedException {
       _userRepository.renewUser();
       checkServerSuccess = true;
+    } on Exception catch (e, stackTrace) {
+      log('testAsync', stackTrace);
     }
 
     if (checkServerSuccess) {

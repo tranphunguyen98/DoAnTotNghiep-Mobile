@@ -2,7 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications/awesome_notifications.dart'
     hide DateUtils;
 import 'package:flutter/material.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/task.dart';
 
 const String kKeyPayloadNotificationIdTask = 'idTask';
 const String kKeyButtonActionComplete = 'complete';

@@ -12,6 +12,7 @@ class CircleAvatarNetwork extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO update cache image
     return Container(
       width: size,
       height: size,

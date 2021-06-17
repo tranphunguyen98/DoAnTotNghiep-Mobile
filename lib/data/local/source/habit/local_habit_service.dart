@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
-import 'package:totodo/data/entity/habit/habit_progress_item.dart';
+import 'package:totodo/data/model/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit_progress_item.dart';
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';

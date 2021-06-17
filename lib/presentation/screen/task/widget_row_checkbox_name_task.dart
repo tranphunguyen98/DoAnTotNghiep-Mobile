@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/task.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
 class RowCheckBoxAndNameTask extends StatelessWidget {

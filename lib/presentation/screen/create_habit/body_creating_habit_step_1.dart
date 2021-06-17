@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:totodo/bloc/create_habit/bloc.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
-import 'package:totodo/data/entity/habit/habit_icon.dart';
+import 'package:totodo/data/model/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit_icon.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
 

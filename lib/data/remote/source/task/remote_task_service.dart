@@ -1,15 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:totodo/data/response/label_list_response.dart';
-import 'package:totodo/data/response/label_response.dart';
-import 'package:totodo/data/response/message_response.dart';
-import 'package:totodo/data/response/project_list_response.dart';
-import 'package:totodo/data/response/project_response.dart';
-import 'package:totodo/data/response/section_response.dart';
-import 'package:totodo/data/response/task_list_response.dart';
-import 'package:totodo/data/response/task_response.dart';
-import 'package:totodo/utils/util.dart';
+import 'package:totodo/data/remote/response/label_list_response.dart';
+import 'package:totodo/data/remote/response/label_response.dart';
+import 'package:totodo/data/remote/response/message_response.dart';
+import 'package:totodo/data/remote/response/project_list_response.dart';
+import 'package:totodo/data/remote/response/project_response.dart';
+import 'package:totodo/data/remote/response/section_response.dart';
+import 'package:totodo/data/remote/response/task_list_response.dart';
+import 'package:totodo/data/remote/response/task_response.dart';
 
 part 'remote_task_service.g.dart';
 
@@ -22,17 +21,19 @@ abstract class RemoteTaskService {
     @Header("authorization") String authorization,
   );
 
+  @GET("tasks/{taskId}")
+  Future<TaskResponse> getTaskDetail(
+      @Header("authorization") String authorization, @Path() String taskId);
+
   @POST("/tasks")
-  Future<TaskResponse> addTask(
+  Future<TaskListResponse> addTask(
     @Header("authorization") String authorization,
     @Body() Map<String, dynamic> body,
   );
 
   @PUT("/tasks/{taskId}")
-  Future<MessageResponse> updateTask(
-      @Header("authorization") String authorization,
-      @Path() String taskId,
-      @Body() Map<String, dynamic> body);
+  Future<TaskResponse> updateTask(@Header("authorization") String authorization,
+      @Path() String taskId, @Body() Map<String, dynamic> body);
 
   @DELETE("/tasks/{taskId}")
   Future<MessageResponse> deleteTask(

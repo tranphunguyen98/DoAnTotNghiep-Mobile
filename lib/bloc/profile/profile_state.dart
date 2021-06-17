@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/data/entity/user.dart';
+import 'package:totodo/data/model/user.dart';
 import 'package:totodo/presentation/screen/profile/data_ui/item_data_static_day.dart';
 import 'package:totodo/presentation/screen/profile/data_ui/item_data_statistic_project.dart';
 

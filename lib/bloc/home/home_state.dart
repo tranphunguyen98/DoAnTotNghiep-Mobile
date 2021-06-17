@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/section.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/label.dart';
+import 'package:totodo/data/model/project.dart';
+import 'package:totodo/data/model/section.dart';
+import 'package:totodo/data/model/task.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/util.dart';
@@ -403,8 +403,6 @@ class HomeState extends Equatable {
       for (final section in sections) {
         final test =
             section.listTask.where((element) => element.isCompleted == null);
-
-        log('testAsync132', test);
 
         completedTasks.addAll(
             section.listTask.where((task) => task.isCompleted).toList());

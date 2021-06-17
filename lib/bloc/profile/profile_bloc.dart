@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/task.dart';
+import 'package:totodo/data/repository_interface/i_task_repository.dart';
+import 'package:totodo/data/repository_interface/i_user_repository.dart';
 import 'package:totodo/presentation/screen/profile/data_ui/item_data_static_day.dart';
 import 'package:totodo/presentation/screen/profile/data_ui/item_data_statistic_project.dart';
 import 'package:totodo/utils/date_helper.dart';

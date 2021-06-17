@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/section.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/project.dart';
+import 'package:totodo/data/model/section.dart';
+import 'package:totodo/data/model/task.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/task/widget_empty_data.dart';
 import 'package:totodo/presentation/screen/task/widget_header_section.dart';
 import 'package:totodo/presentation/screen/task/widget_item_task.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
+import 'package:totodo/utils/util.dart';
 
 import '../../router.dart';
 
@@ -48,19 +49,26 @@ class _TaskScreenState extends State<TaskScreen> {
           } else {
             final listWidgetSection =
                 getListWidgetSection(state.listSectionDataDisplay());
-            return state.isInProject() ||
-                    state.indexDrawerSelected == HomeState.kDrawerIndexInbox
-                ? ReorderableListView.builder(
-                    itemBuilder: (context, index) => listWidgetSection[index],
-                    itemCount: listWidgetSection.length,
-                    onReorder: (oldIndex, newIndex) {
-                      _onReorder(oldIndex, newIndex, listWidgetSection);
-                    },
-                  )
-                : ListView.builder(
-                    itemBuilder: (context, index) => listWidgetSection[index],
-                    itemCount: listWidgetSection.length,
-                  );
+            return RefreshIndicator(
+              onRefresh: () async {
+                _homeBloc.add(AsyncData());
+              },
+              child: state.isInProject() ||
+                      state.indexDrawerSelected == HomeState.kDrawerIndexInbox
+                  ? ReorderableListView.builder(
+                      itemBuilder: (context, index) => listWidgetSection[index],
+                      itemCount: listWidgetSection.length,
+                      onReorder: (oldIndex, newIndex) {
+                        Future.delayed(Duration(milliseconds: 100), () {
+                          _onReorder(oldIndex, newIndex, listWidgetSection);
+                        });
+                      },
+                    )
+                  : ListView.builder(
+                      itemBuilder: (context, index) => listWidgetSection[index],
+                      itemCount: listWidgetSection.length,
+                    ),
+            );
           }
         }
 
@@ -159,9 +167,10 @@ class _TaskScreenState extends State<TaskScreen> {
         if (dataDrawerItem is Project) {
           project = dataDrawerItem;
         }
+        log('GlobalKeyTest section', section.id);
         listWidget.add(
           HeaderSection(
-            key: ValueKey(section.id),
+            key: ValueKey('section${section.id}'),
             sectionName: section.name,
             sectionId: section.id,
             style: kFontSemiboldBlack,
@@ -173,9 +182,10 @@ class _TaskScreenState extends State<TaskScreen> {
         );
       }
       for (final task in section.listTask) {
+        log('GlobalKeyTest task', task.id);
         listWidget.add(
           ItemTask(
-            key: ValueKey(task.id),
+            key: ValueKey('task${task.id}'),
             task: task,
             updateTask: (task) {
               _homeBloc.add(UpdateTaskEvent(task));

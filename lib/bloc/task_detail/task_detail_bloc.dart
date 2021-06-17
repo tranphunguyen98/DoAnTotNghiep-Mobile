@@ -1,9 +1,9 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/bloc/repository_interface/i_task_repository.dart';
-import 'package:totodo/data/entity/check_item.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/check_item.dart';
+import 'package:totodo/data/model/task.dart';
+import 'package:totodo/data/repository_interface/i_task_repository.dart';
 import 'package:totodo/utils/notification_helper.dart';
 
 import 'bloc.dart';
@@ -123,7 +123,6 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
 
   Stream<TaskDetailState> _mapDeleteTaskToState() async* {
     await _taskRepository.deleteTask(state.taskEdit);
-    yield state.copyWith(
-        taskEdit: state.taskEdit.copyWith(isTrashed: true, isLocal: true));
+    yield state.copyWith(taskEdit: state.taskEdit.copyWith(isTrashed: true));
   }
 }

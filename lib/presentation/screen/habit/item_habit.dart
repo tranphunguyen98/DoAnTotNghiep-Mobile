@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/habit/bloc.dart';
 import 'package:totodo/bloc/habit/habit_bloc.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';

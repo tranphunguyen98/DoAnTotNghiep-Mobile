@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/detail_habit/bloc.dart';
-import 'package:totodo/data/entity/habit/habit_progress_item.dart';
+import 'package:totodo/data/model/habit/habit_progress_item.dart';
 import 'package:totodo/presentation/screen/create_habit/container_info.dart';
 import 'package:totodo/presentation/screen/detail_habit/item_diary.dart';
 import 'package:totodo/utils/my_const/my_const.dart';

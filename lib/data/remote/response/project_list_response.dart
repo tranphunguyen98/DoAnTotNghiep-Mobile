@@ -1,4 +1,4 @@
-import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/model/project.dart';
 
 class ProjectListResponse {
   final bool succeeded;

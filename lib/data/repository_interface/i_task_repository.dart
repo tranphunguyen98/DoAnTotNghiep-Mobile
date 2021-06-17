@@ -1,10 +1,10 @@
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
-import 'package:totodo/data/entity/section.dart';
-import 'package:totodo/data/entity/task.dart';
+import 'package:totodo/data/model/label.dart';
+import 'package:totodo/data/model/project.dart';
+import 'package:totodo/data/model/section.dart';
+import 'package:totodo/data/model/task.dart';
 
 abstract class ITaskRepository {
-  Future<bool> addTask(Task task);
+  Future<void> addTask(Task task);
   Future<bool> updateTask(Task task);
   Future<Task> getDetailTask(String id);
   Future<List<Task>> getAllTask();

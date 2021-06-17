@@ -1,6 +1,6 @@
 import 'package:totodo/data/data_source/habit/remote_habit_data_source.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
-import 'package:totodo/data/remote/habit/remote_habit_service.dart';
+import 'package:totodo/data/model/habit/habit.dart';
+import 'package:totodo/data/remote/source/habit/remote_habit_service.dart';
 
 class RemoteHabitDataSourceImpl implements RemoteHabitDataSource {
   final RemoteHabitService _habitService;

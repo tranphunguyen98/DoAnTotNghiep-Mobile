@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:totodo/bloc/repository_interface/i_user_repository.dart';
+import 'package:totodo/data/repository_interface/i_user_repository.dart';
 
 import '../../../bloc/login/bloc.dart';
 import '../../../di/injection.dart';

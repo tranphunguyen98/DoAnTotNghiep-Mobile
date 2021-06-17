@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/data/entity/habit/habit.dart';
-import 'package:totodo/data/entity/habit/habit_progress_item.dart';
+import 'package:totodo/data/model/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit_progress_item.dart';
 import 'package:totodo/presentation/screen/diary/item_diary.dart';
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/map_const.dart';

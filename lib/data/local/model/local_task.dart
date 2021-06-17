@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
-import 'package:totodo/data/entity/check_item.dart';
+import 'package:totodo/data/model/check_item.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
+import 'package:totodo/utils/util.dart';
 
 part 'local_task.g.dart';
 
@@ -41,7 +42,7 @@ class LocalTask {
   @HiveField(16)
   final List<String> preciseSchedules;
   @HiveField(17)
-  final bool isLocal;
+  final bool isCreatedOnLocal;
 
   // precise datetime - reminder
 
@@ -52,9 +53,11 @@ class LocalTask {
     this.priority,
     this.name,
     this.description,
-    this.isCompleted,
-    this.isStarred,
-    this.isTrashed,
+    bool isCompleted,
+    bool isStarred,
+    bool isTrashed,
+    bool isCreatedOnLocal,
+    this.preciseSchedules,
     this.dueDate,
     this.projectId,
     this.labelIds,
@@ -62,11 +65,13 @@ class LocalTask {
     this.checkList,
     this.completedDate,
     this.crontabSchedule,
-    this.preciseSchedules,
-    this.isLocal,
-  });
+  })  : isTrashed = isTrashed ?? false,
+        isCompleted = isCompleted ?? false,
+        isStarred = isStarred ?? false,
+        isCreatedOnLocal = isCreatedOnLocal ?? false;
 
   factory LocalTask.fromJson(Map<String, dynamic> map) {
+    log("testAsync null", map);
     return LocalTask(
       id: map['_id'] as String,
       createdAt: map['createdAt'] as String,
@@ -76,11 +81,15 @@ class LocalTask {
       description: map['description'] as String,
       isCompleted: map['isCompleted'] as bool,
       isStarred: map['isStarred'] as bool,
-      isTrashed: map['isTrashed'] as bool,
+      isTrashed: map['isTrashed'] as bool ?? false,
       dueDate: map['dueDate'] as String,
       projectId: map['projectId'] as String,
-      labelIds:
-          (map['labelIds'] as List)?.map((e) => e as String)?.toList() ?? [],
+      labelIds: [],
+      //TODO labelIds
+      // ((map['labelIds'] ?? []) as List)
+      //         ?.map((e) => e as String)
+      //         ?.toList() ??
+      //     [],
       sectionId: map['sectionId'] as String,
       checkList: [],
       completedDate: map['completedDate'] as String,
@@ -92,7 +101,7 @@ class LocalTask {
   Map<String, dynamic> toJson() {
     // ignore: unnecessary_cast
     return {
-      'id': id,
+      '_id': id,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'priority': priority,
@@ -130,7 +139,7 @@ class LocalTask {
     String completedDate,
     String crontabSchedule,
     List<String> preciseSchedules,
-    bool isLocal,
+    bool isOnlyCreatedOnLocal,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (createdAt == null || identical(createdAt, this.createdAt)) &&
@@ -152,7 +161,8 @@ class LocalTask {
             identical(crontabSchedule, this.crontabSchedule)) &&
         (preciseSchedules == null ||
             identical(preciseSchedules, this.preciseSchedules)) &&
-        (isLocal == null || identical(isLocal, this.isLocal))) {
+        (isOnlyCreatedOnLocal == null ||
+            identical(isOnlyCreatedOnLocal, this.isCreatedOnLocal))) {
       return this;
     }
 
@@ -174,12 +184,17 @@ class LocalTask {
       completedDate: completedDate ?? this.completedDate,
       crontabSchedule: crontabSchedule ?? this.crontabSchedule,
       preciseSchedules: preciseSchedules ?? this.preciseSchedules,
-      isLocal: isLocal ?? this.isLocal,
+      isCreatedOnLocal: isOnlyCreatedOnLocal ?? this.isCreatedOnLocal,
     );
   }
 
   @override
   String toString() {
-    return 'LocalTask{id: $id, createdAt: $createdAt, updatedAt: $updatedAt, priority: $priority, name: $name, description: $description, isCompleted: $isCompleted, isStarred: $isStarred, isTrashed: $isTrashed, dueDate: $dueDate, projectId: $projectId, labelIds: $labelIds, sectionId: $sectionId, checkList: $checkList, completedDate: $completedDate, crontabSchedule: $crontabSchedule, preciseSchedules: $preciseSchedules, isLocal: $isLocal}';
+    return 'LocalTask{id: $id, name: $name, updatedAt: $updatedAt';
+    return 'LocalTask{id: $id, name: $name, createdAt: $createdAt, updatedAt: $updatedAt,'
+        ' priority: $priority, description: $description, isCompleted: $isCompleted,'
+        ' isStarred: $isStarred, isTrashed: $isTrashed, dueDate: $dueDate, projectId: $projectId,'
+        ' labelIds: $labelIds, sectionId: $sectionId, checkList: $checkList, completedDate: $completedDate,'
+        ' crontabSchedule: $crontabSchedule, preciseSchedules: $preciseSchedules, isLocal: $isCreatedOnLocal}';
   }
 }

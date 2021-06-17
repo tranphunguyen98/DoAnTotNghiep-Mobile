@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
-import 'package:totodo/data/entity/label.dart';
-import 'package:totodo/data/entity/project.dart';
+import 'package:totodo/data/model/label.dart';
+import 'package:totodo/data/model/project.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/router.dart';
 import 'package:totodo/presentation/screen/home/bottom_sheet_add_section.dart';
