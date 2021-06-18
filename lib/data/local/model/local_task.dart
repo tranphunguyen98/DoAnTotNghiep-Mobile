@@ -1,7 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:totodo/data/model/check_item.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
-import 'package:totodo/utils/util.dart';
 
 part 'local_task.g.dart';
 
@@ -71,7 +70,7 @@ class LocalTask {
         isCreatedOnLocal = isCreatedOnLocal ?? false;
 
   factory LocalTask.fromJson(Map<String, dynamic> map) {
-    log("testAsync null", map);
+    // log("testAsync null", map);
     return LocalTask(
       id: map['_id'] as String,
       createdAt: map['createdAt'] as String,

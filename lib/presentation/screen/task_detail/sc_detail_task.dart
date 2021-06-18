@@ -46,8 +46,12 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
   final List<DropdownChoices> dropdownChoices = [];
 
   final TextEditingController _nameTaskController = TextEditingController();
+  final TextEditingController _descriptionTaskController =
+      TextEditingController();
   final TextEditingController _checkListNameController =
       TextEditingController();
+
+  final String _idDebounce = 'debounceDetailTask';
 
   @override
   void initState() {
@@ -81,7 +85,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
           onWillPop: () async {
             _saveNameTask(state);
             //TODO fix save name
-            _homeBloc.add(DataListTaskChanged());
+            // _homeBloc.add(DataListTaskChanged());
             Navigator.pop(context);
             return true;
           },
@@ -154,11 +158,18 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
   void dispose() {
     _checkListNameController.dispose();
     _nameTaskController.dispose();
+    _descriptionTaskController.dispose();
     super.dispose();
   }
 
   void _saveNameTask(TaskDetailState state) {
-    if (_nameTaskController.text.isNotEmpty) {
+    if (_descriptionTaskController.text.isNotEmpty &&
+        _descriptionTaskController.text != state.taskEdit.description) {
+      _taskDetailBloc.add(SubmitEditTask(state.taskEdit
+          .copyWith(description: _descriptionTaskController.text)));
+    }
+    if (_nameTaskController.text.isNotEmpty &&
+        _nameTaskController.text != state.taskEdit.name) {
       _taskDetailBloc.add(SubmitEditTask(
           state.taskEdit.copyWith(name: _nameTaskController.text)));
     }
@@ -230,10 +241,22 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
   }
 
   Widget _buildDescription(TaskDetailState state) {
-    return TextFieldNonBorder(
-      hint: 'Description',
-      minLine: 3,
-      autoFocus: false,
+    _descriptionTaskController.text = state.taskEdit.description;
+    return TextFormField(
+      controller: _descriptionTaskController,
+      minLines: 3,
+      maxLines: 3,
+      decoration: const InputDecoration(
+        border: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        hintText: 'Mô tả',
+      ),
+      style: state.taskEdit.isCompleted
+          ? kFontRegularGray1_14
+          : kFontRegularBlack2_14,
     );
   }
 
