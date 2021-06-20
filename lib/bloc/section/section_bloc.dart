@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/data/repository_interface/i_task_repository.dart';
+import 'package:totodo/utils/util.dart';
 
 import 'bloc.dart';
 
@@ -54,7 +55,8 @@ class AddSectionBloc extends Bloc<AddSectionEvent, AddSectionState> {
         await _taskRepository.addSection(state.projectId, state.section);
         yield state.copyWith(isSuccess: true);
       }
-    } catch (e) {
+    } catch (e, traceStack) {
+      log("My Unhandled", traceStack);
       yield state.failed(e.toString());
     }
   }

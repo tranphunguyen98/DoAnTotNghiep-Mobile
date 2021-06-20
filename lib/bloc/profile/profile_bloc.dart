@@ -61,8 +61,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
 
     final listTaskToday = _listAllTask.where((task) =>
-        !(task.taskDate?.isEmpty ?? true) &&
-        DateHelper.isSameDayString(task.taskDate, dateTimeStr));
+        !(task.dueDate?.isEmpty ?? true) &&
+        DateHelper.isSameDayString(task.dueDate, dateTimeStr));
     final int completedTask =
         listTaskToday.where((element) => element.isCompleted).length;
 

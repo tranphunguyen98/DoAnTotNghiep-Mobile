@@ -19,7 +19,7 @@ class Task extends Equatable {
   final bool isCompleted;
   final bool isStarred;
   final bool isTrashed;
-  final String taskDate;
+  final String dueDate;
   final Project project;
   final String sectionId;
   final List<Label> labels;
@@ -37,7 +37,7 @@ class Task extends Equatable {
       this.updatedAt,
       this.name,
       this.description,
-      this.taskDate,
+      this.dueDate,
       this.project,
       this.labels = const [],
       this.priority = kPriority4,
@@ -80,7 +80,7 @@ class Task extends Equatable {
         (isCompleted == null || identical(isCompleted, this.isCompleted)) &&
         (isStarred == null || identical(isStarred, this.isStarred)) &&
         (isTrashed == null || identical(isTrashed, this.isTrashed)) &&
-        (taskDate == null || identical(taskDate, this.taskDate)) &&
+        (taskDate == null || identical(taskDate, this.dueDate)) &&
         (project == null || identical(project, this.project)) &&
         (sectionId == null || identical(sectionId, this.sectionId)) &&
         (labels == null || identical(labels, this.labels)) &&
@@ -106,7 +106,7 @@ class Task extends Equatable {
       isCompleted: isCompleted ?? this.isCompleted,
       isStarred: isStarred ?? this.isStarred,
       isTrashed: isTrashed ?? this.isTrashed,
-      taskDate: taskDate ?? this.taskDate,
+      dueDate: taskDate ?? this.dueDate,
       project: project ?? this.project,
       sectionId: sectionId ?? this.sectionId,
       labels: labels ?? this.labels,
@@ -128,7 +128,7 @@ class Task extends Equatable {
         // ' description: $description,'
         ' isCompleted: $isCompleted,'
         ' isTrashed: $isTrashed,'
-        ' taskDate: $taskDate,'
+        ' taskDate: $dueDate,'
         ' project: ${project?.name},'
         ' sectionId: $sectionId, labels: $labels,';
     // ' checkList: $checkList, completedDate: $completedDate,'
@@ -190,7 +190,7 @@ class Task extends Equatable {
         createdAt,
         updatedAt,
         priority,
-        taskDate,
+        dueDate,
         name,
         description,
         isCompleted,

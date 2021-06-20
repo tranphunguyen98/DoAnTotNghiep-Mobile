@@ -242,7 +242,7 @@ class LocalTaskService {
     final Project project = await getProjectById(projectId);
 
     final List<Section> sections = [];
-    sections.addAll(project.sections);
+    sections.addAll(project?.sections ?? []);
 
     if (section.id?.isEmpty ?? true) {
       log('local', section);

@@ -110,7 +110,7 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
   Stream<TaskDetailState> _mapTaskSubmitDateChangedToState(
       String taskDate) async* {
     var taskEdit = state.taskEdit;
-    if (taskDate != taskEdit.taskDate) {
+    if (taskDate != taskEdit.dueDate) {
       await AwesomeNotifications().cancelSchedule(taskEdit.id.hashCode);
       if (taskDate != null) {
         taskEdit = taskEdit.copyWith(taskDate: taskDate);

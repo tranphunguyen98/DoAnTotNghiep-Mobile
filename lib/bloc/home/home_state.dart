@@ -226,8 +226,8 @@ class HomeState extends Equatable {
       List<Section> listSectionNoData) {
     final listSectionWithData = listSectionNoData.map((section) {
       final listTaskWithSection = _listAllTask.where((task) {
-        return !(task.taskDate?.isEmpty ?? true) &&
-            section.dateCondition(task.taskDate);
+        return !(task.dueDate?.isEmpty ?? true) &&
+            section.dateCondition(task.dueDate);
       }).toList();
       return section.copyWith(listTask: listTaskWithSection);
     }).toList();
@@ -347,7 +347,9 @@ class HomeState extends Equatable {
 
   List<Section> _getListSectionWithTaskHaveSection() {
     final projectSelected = drawerItems[indexDrawerSelected].data as Project;
-
+    if (projectSelected?.sections?.isEmpty ?? true) {
+      return [];
+    }
     //Add data to listSection
     final listSectionWithData = projectSelected.sections.map((section) {
       final listTaskWithSection = _listAllTask.where((task) {
@@ -375,23 +377,23 @@ class HomeState extends Equatable {
   void _sortListTask(List<Section> sections) {
     for (final section in sections) {
       section.listTask.sort((task1, task2) {
-        final bool isBothNoDay = (task1.taskDate?.isEmpty ?? true) &&
-            (task2.taskDate?.isEmpty ?? true);
+        final bool isBothNoDay = (task1.dueDate?.isEmpty ?? true) &&
+            (task2.dueDate?.isEmpty ?? true);
 
-        final bool isSameDay = (!(task1.taskDate?.isEmpty ?? true) &&
-                !(task2.taskDate?.isEmpty ?? true)) &&
-            DateHelper.isSameDayString(task1.taskDate, task2.taskDate);
+        final bool isSameDay = (!(task1.dueDate?.isEmpty ?? true) &&
+                !(task2.dueDate?.isEmpty ?? true)) &&
+            DateHelper.isSameDayString(task1.dueDate, task2.dueDate);
 
         if (isBothNoDay || isSameDay) {
           return task1.priority.compareTo(task2.priority);
         } else {
-          if (task1.taskDate?.isEmpty ?? true) {
+          if (task1.dueDate?.isEmpty ?? true) {
             return 1;
           }
-          if (task2.taskDate?.isEmpty ?? true) {
+          if (task2.dueDate?.isEmpty ?? true) {
             return -1;
           }
-          return DateHelper.compareStringDay(task1.taskDate, task2.taskDate);
+          return DateHelper.compareStringDay(task1.dueDate, task2.dueDate);
         }
       });
     }

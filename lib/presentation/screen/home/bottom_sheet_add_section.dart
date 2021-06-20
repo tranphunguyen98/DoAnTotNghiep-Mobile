@@ -49,7 +49,7 @@ class BottomSheetAddSection extends StatelessWidget {
       children: [
         Expanded(
           child: TextFieldNonBorder(
-              hint: 'Tkn Section',
+              hint: 'Tên Section',
               controller: _textNameSectionController,
               onChanged: (value) {
                 _addSectionBloc.add(NameSectionAddChanged(name: value));

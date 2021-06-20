@@ -1,7 +1,7 @@
+import 'package:totodo/data/local/model/local_task.dart';
 import 'package:totodo/data/model/label.dart';
 import 'package:totodo/data/model/project.dart';
 import 'package:totodo/data/model/task.dart';
-import 'package:totodo/data/local/model/local_task.dart';
 
 class LocalTaskMapper {
   List<Project> listProject;
@@ -16,7 +16,7 @@ class LocalTaskMapper {
     return Task(
       id: localTask.id,
       name: localTask.name,
-      taskDate: localTask.dueDate,
+      dueDate: localTask.dueDate,
       createdAt: localTask.createdAt,
       updatedAt: localTask.updatedAt,
       description: localTask.description,
@@ -43,7 +43,7 @@ class LocalTaskMapper {
     return LocalTask(
         id: task.id,
         name: task.name,
-        dueDate: task.taskDate,
+        dueDate: task.dueDate,
         createdAt: task.createdAt,
         updatedAt: task.updatedAt,
         description: task.description,

@@ -74,7 +74,7 @@ Future<void> showNotificationScheduledWithTask(Task task) async {
       id: task.id.hashCode,
       body: task.name,
       payload: {kKeyPayloadNotificationIdTask: task.id},
-      scheduleTime: DateTime.parse(task.taskDate),
+      scheduleTime: DateTime.parse(task.dueDate),
       channelKey:
           task.priority == Task.kPriority1 ? kChannelKeyMax : kChannelKeyHigh,
       color: getColorFromPriority(task.priority));

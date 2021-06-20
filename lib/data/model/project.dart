@@ -29,9 +29,9 @@ class Project extends Equatable {
     this.color,
     this.createdAt,
     this.updatedAt,
-    this.sections,
+    List<Section> sections,
     this.isLocal,
-  });
+  }) : sections = sections ?? const [];
 
   Project copyWith({
     String id,

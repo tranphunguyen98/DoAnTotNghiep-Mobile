@@ -40,13 +40,13 @@ class TaskRepositoryImpl implements ITaskRepository {
     // log('testAsync id: ${localTask.id}');
 
     try {
-      _remoteTaskDataSource
-          .addTask(user.authorization, localTask)
-          .then((value) async {
-        final updatedLocalTask = await _remoteTaskDataSource.getDetailTask(
-            user.authorization, localTask.id);
-        await _localTaskDataSource.updateTaskAsync(updatedLocalTask);
-      });
+      // _remoteTaskDataSource
+      //     .addTask(user.authorization, localTask)
+      //     .then((value) async {
+      //   final updatedLocalTask = await _remoteTaskDataSource.getDetailTask(
+      //       user.authorization, localTask.id);
+      //   await _localTaskDataSource.updateTaskAsync(updatedLocalTask);
+      // });
 
       return _localTaskDataSource.addTask(localTask);
     } on UnauthenticatedException catch (e) {
@@ -87,19 +87,19 @@ class TaskRepositoryImpl implements ITaskRepository {
     final user = await _localUserDataSource.getUser();
     final localTask = _localTaskMapper.mapToLocal(task);
 
-    _remoteTaskDataSource
-        .updateTask(user.authorization, localTask)
-        .then((value) async {
-      // log('testAsync updated task', updatedLocalTask);
-      // log('testAsync updated task1',
-      // await _localTaskDataSource.getDetailTask(updatedLocalTask.id));
-      final updatedLocalTask = await _remoteTaskDataSource.getDetailTask(
-          user.authorization, localTask.id);
-      await _localTaskDataSource.updateTaskAsync(updatedLocalTask);
-
-      // log('testAsync updated task1',
-      //     await _localTaskDataSource.getDetailTask(updatedLocalTask.id));
-    });
+    // _remoteTaskDataSource
+    //     .updateTask(user.authorization, localTask)
+    //     .then((value) async {
+    //   // log('testAsync updated task', updatedLocalTask);
+    //   // log('testAsync updated task1',
+    //   // await _localTaskDataSource.getDetailTask(updatedLocalTask.id));
+    //   final updatedLocalTask = await _remoteTaskDataSource.getDetailTask(
+    //       user.authorization, localTask.id);
+    //   await _localTaskDataSource.updateTaskAsync(updatedLocalTask);
+    //
+    //   // log('testAsync updated task1',
+    //   //     await _localTaskDataSource.getDetailTask(updatedLocalTask.id));
+    // });
 
     return _localTaskDataSource.updateTask(localTask);
   }
@@ -107,9 +107,10 @@ class TaskRepositoryImpl implements ITaskRepository {
   @override
   Future<void> addProject(Project project) async {
     final user = await _localUserDataSource.getUser();
-    final serverProject =
-        await _remoteTaskDataSource.addProject(user.authorization, project);
-    return _localTaskDataSource.addProject(serverProject);
+    // final serverProject =
+    //     await _remoteTaskDataSource.addProject(user.authorization, project);
+    // return _localTaskDataSource.addProject(serverProject);
+    return _localTaskDataSource.addProject(project);
   }
 
   @override
@@ -119,12 +120,12 @@ class TaskRepositoryImpl implements ITaskRepository {
 
   @override
   Future<List<Project>> getProjects({bool onlyRemote = false}) async {
-    if (onlyRemote) {
-      final user = await _localUserDataSource.getUser();
-      final List<Project> projects =
-          await _remoteTaskDataSource.getProjects(user.authorization);
-      return projects;
-    }
+    // if (onlyRemote) {
+    //   final user = await _localUserDataSource.getUser();
+    //   final List<Project> projects =
+    //       await _remoteTaskDataSource.getProjects(user.authorization);
+    //   return projects;
+    // }
     return _localTaskDataSource.getProjects();
   }
 
@@ -132,14 +133,14 @@ class TaskRepositoryImpl implements ITaskRepository {
   Future<void> addLabel(Label label) async {
     final user = await _localUserDataSource.getUser();
     // try {
-    final serverLabel =
-        await _remoteTaskDataSource.addLabel(user.authorization, label);
-    return _localTaskDataSource.addLabel(serverLabel);
-    // } catch (e) {
-    //   // TODO try remove :v
-    //   rethrow;
-    // }
-    // return _localTaskDataSource.addLabel(label);
+    // final serverLabel =
+    //     await _remoteTaskDataSource.addLabel(user.authorization, label);
+    // return _localTaskDataSource.addLabel(serverLabel);
+    // // } catch (e) {
+    // //   // TODO try remove :v
+    // //   rethrow;
+    // // }
+    return _localTaskDataSource.addLabel(label);
   }
 
   @override
@@ -162,8 +163,8 @@ class TaskRepositoryImpl implements ITaskRepository {
   Future<void> addSection(String projectId, Section section) async {
     // return _localTaskDataSource.addSection(projectId, section);
     final user = await _localUserDataSource.getUser();
-    final serverSection = await _remoteTaskDataSource.addSection(
-        user.authorization, projectId, section);
+    // final serverSection = await _remoteTaskDataSource.addSection(
+    //     user.authorization, projectId, section);
     await _localTaskDataSource.addSection(projectId, section);
   }
 
@@ -181,17 +182,17 @@ class TaskRepositoryImpl implements ITaskRepository {
   @override
   Future<void> saveDataToLocal() async {
     final user = await _localUserDataSource.getUser();
-
-    final List<Project> projects =
-        await _remoteTaskDataSource.getProjects(user.authorization);
-    final List<Label> labels =
-        await _remoteTaskDataSource.getLabels(user.authorization);
-    final List<LocalTask> tasks =
-        await _remoteTaskDataSource.getAllTask(user.authorization);
-
-    await _localTaskDataSource.saveProjects(projects);
-    await _localTaskDataSource.saveLabels(labels);
-    await _localTaskDataSource.saveTasks(tasks);
+    //
+    // final List<Project> projects =
+    //     await _remoteTaskDataSource.getProjects(user.authorization);
+    // final List<Label> labels =
+    //     await _remoteTaskDataSource.getLabels(user.authorization);
+    // final List<LocalTask> tasks =
+    //     await _remoteTaskDataSource.getAllTask(user.authorization);
+    //
+    // await _localTaskDataSource.saveProjects(projects);
+    // await _localTaskDataSource.saveLabels(labels);
+    // await _localTaskDataSource.saveTasks(tasks);
   }
 
   @override
@@ -204,10 +205,10 @@ class TaskRepositoryImpl implements ITaskRepository {
     //TODO handle access token
     final user = await _localUserDataSource.getUser();
     final localTask = _localTaskMapper.mapToLocal(task);
-
-    _remoteTaskDataSource.deleteTask(user.authorization, task.id).then((value) {
-      _localTaskDataSource.deleteTask(task.id);
-    });
+    //
+    // _remoteTaskDataSource.deleteTask(user.authorization, task.id).then((value) {
+    //   _localTaskDataSource.deleteTask(task.id);
+    // });
 
     return _localTaskDataSource.updateTask(localTask.copyWith(isTrashed: true));
   }
@@ -376,9 +377,10 @@ class TaskRepositoryImpl implements ITaskRepository {
 
   @override
   Future<void> checkServer() async {
+    return true;
     final user = await _localUserDataSource.getUser();
     try {
-      await _remoteTaskDataSource.getLabels(user.authorization);
+      // await _remoteTaskDataSource.getLabels(user.authorization);
     } catch (e) {
       rethrow;
     }

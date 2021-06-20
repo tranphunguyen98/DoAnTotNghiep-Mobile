@@ -202,13 +202,13 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
           flex: 8,
           child: IconOutlineButton(
             DateHelper.getDisplayTextDateFromDate(
-                    addState.taskAdd.taskDate ?? "") ??
+                    addState.taskAdd.dueDate ?? "") ??
                 "No Date",
             Icons.calendar_today,
             colorIcon:
-                addState.taskAdd.taskDate != null ? Colors.green : kColorGray1,
+                addState.taskAdd.dueDate != null ? Colors.green : kColorGray1,
             colorBorder:
-                addState.taskAdd.taskDate != null ? Colors.green : kColorGray1,
+                addState.taskAdd.dueDate != null ? Colors.green : kColorGray1,
             onPressed: () async {
               await onPressedPickDate();
             },
@@ -217,7 +217,7 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
         const SizedBox(
           width: 8.0,
         ),
-        Expanded(flex:6, child: _buildPopupProject()),
+        Expanded(flex: 6, child: _buildPopupProject()),
         const SizedBox(
           width: 8.0,
         ),
@@ -279,6 +279,7 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
             ? Icons.calendar_today
             : Icons.circle,
         onPressed: openPopup,
+        isExpanded: true,
         colorIcon: addState.taskAdd.project?.color?.isEmpty ?? true
             ? kColorGray1
             : getColorDefaultFromValue(addState.taskAdd.project.color),
@@ -297,14 +298,14 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
     final picker = await showCustomDatePicker(
         context: context,
         initialDate: DateTime.parse(
-            addState.taskAdd.taskDate ?? DateTime.now().toIso8601String()),
+            addState.taskAdd.dueDate ?? DateTime.now().toIso8601String()),
         firstDate: DateTime(
           DateTime.now().year,
           DateTime.now().month,
         ),
         lastDate: DateTime(2100),
         selectedTimeOfDay:
-            DateHelper.getTimeOfDayFromDateString(addState.taskAdd.taskDate));
+            DateHelper.getTimeOfDayFromDateString(addState.taskAdd.dueDate));
     setState(() {
       visible = true;
     });

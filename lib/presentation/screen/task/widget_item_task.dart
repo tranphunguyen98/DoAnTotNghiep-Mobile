@@ -35,8 +35,8 @@ class ItemTask extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 32.0),
                   child: Row(
                     children: [
-                      if (!(task?.taskDate?.isEmpty ?? true))
-                        buildRowDate(task.taskDate),
+                      if (!(task?.dueDate?.isEmpty ?? true))
+                        buildRowDate(task.dueDate),
                       const SizedBox(
                         width: 8.0,
                       ),
@@ -132,9 +132,8 @@ class ItemTask extends StatelessWidget {
   }
 
   Row buildRowDate(String taskDate) {
-    final displayTextDate =
-        DateHelper.getDisplayTextDateFromDate(task.taskDate);
-    final isOverDue = DateHelper.isOverDueString(task.taskDate);
+    final displayTextDate = DateHelper.getDisplayTextDateFromDate(task.dueDate);
+    final isOverDue = DateHelper.isOverDueString(task.dueDate);
     return Row(
       children: [
         Icon(

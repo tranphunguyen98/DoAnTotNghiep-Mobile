@@ -85,7 +85,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
           onWillPop: () async {
             _saveNameTask(state);
             //TODO fix save name
-            // _homeBloc.add(DataListTaskChanged());
+            _homeBloc.add(DataListTaskChanged());
             Navigator.pop(context);
             return true;
           },
@@ -135,7 +135,10 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
                           child: _buildRowFunction(context, state),
                         ),
                         _buildListLabel(state),
-                        _buildDescription(state),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: _buildDescription(state),
+                        ),
                         const Padding(
                           padding: EdgeInsets.only(left: 8.0),
                           child: Divider(),
@@ -307,15 +310,15 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
 
   Widget _buildButtonDate(TaskDetailState state, BuildContext context) {
     Color colorButton = kColorGray1;
-    if (!(state.taskEdit.taskDate?.isEmpty ?? true)) {
-      if (DateHelper.isOverDueString(state.taskEdit.taskDate)) {
+    if (!(state.taskEdit.dueDate?.isEmpty ?? true)) {
+      if (DateHelper.isOverDueString(state.taskEdit.dueDate)) {
         colorButton = Colors.red;
       } else {
         colorButton = Colors.green;
       }
     }
     return IconOutlineButton(
-      DateHelper.getDisplayTextDateFromDate(state.taskEdit.taskDate ?? "") ??
+      DateHelper.getDisplayTextDateFromDate(state.taskEdit.dueDate ?? "") ??
           "No Date",
       Icons.calendar_today,
       colorIcon: colorButton,
@@ -388,14 +391,14 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
     final picker = await showCustomDatePicker(
         context: context,
         initialDate: DateTime.parse(
-            state.taskEdit.taskDate ?? DateTime.now().toIso8601String()),
+            state.taskEdit.dueDate ?? DateTime.now().toIso8601String()),
         firstDate: DateTime(
           DateTime.now().year,
           DateTime.now().month,
         ),
         lastDate: DateTime(2100),
         selectedTimeOfDay:
-            DateHelper.getTimeOfDayFromDateString(state.taskEdit.taskDate));
+            DateHelper.getTimeOfDayFromDateString(state.taskEdit.dueDate));
     if (picker != null) {
       _taskDetailBloc.add(TaskSubmitDateChanged(picker.toIso8601String()));
     }

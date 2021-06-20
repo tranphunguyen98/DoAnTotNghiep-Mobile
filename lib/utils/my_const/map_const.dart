@@ -50,6 +50,7 @@ const Map<int, String> kEnDailyDays = {
 };
 
 enum EHabitMissionUnit { count, cup, milliliter, minute, hour, kilometer, page }
+
 const Map<int, String> kHabitMissionDayUnit = {
   0: 'Lần',
   1: 'Cốc',
@@ -61,6 +62,7 @@ const Map<int, String> kHabitMissionDayUnit = {
 };
 
 enum EHabitMissionDayCheckIn { auto, manual, completedAll }
+
 const Map<int, String> kHabitMissionDayCheckIn = {
   0: 'Tự động',
   1: 'Bằng tay',
@@ -68,6 +70,7 @@ const Map<int, String> kHabitMissionDayCheckIn = {
 };
 
 enum EHabitGoal { archiveItAll, reachACertainAmount }
+
 const Map<int, String> kHabitGoalType = {
   0: 'Đạt 1 lần cho tất cả',
   1: 'Đạt đến số lượng nhất định',
@@ -91,28 +94,18 @@ const List<String> kListDefaultQuotation = [
 final List<String> kListIconDefault = [
   kIconMeditation,
   kIconPushUp,
-  kIconMeditation,
-  kIconPushUp,
-  kIconMeditation,
-  kIconPushUp,
-  kIconMeditation,
-  kIconPushUp,
-  kIconMeditation,
-  kIconPushUp,
-  kIconMeditation,
-  kIconPushUp,
-  kIconMeditation,
-  kIconPushUp,
-  kIconMeditation,
-  kIconPushUp,
-  kIconMeditation,
-  kIconPushUp,
-  kIconMeditation,
-  kIconPushUp,
-  kIconMeditation,
-  kIconPushUp,
-  kIconMeditation,
-  kIconPushUp,
+  kBike,
+  kBook,
+  kBreakfast,
+  kCash,
+  kDiary,
+  kKaraoke,
+  kQuotation,
+  kSleep,
+  kSun,
+  kSwimming,
+  kWalking,
+  kWater,
 ];
 
 final List<Habit> kListHabitDefault = [
@@ -129,63 +122,45 @@ final List<Habit> kListHabitDefault = [
     type: 2,
   ),
   Habit(
-    name: 'Thiền',
-    icon: HabitIcon(iconImage: kIconMeditation),
+    name: 'Bơi',
+    icon: HabitIcon(iconImage: kSwimming),
     motivation: HabitMotivation(text: kListDefaultQuotation[0]),
     type: 1,
   ),
   Habit(
-    name: 'Hít Đất',
-    icon: HabitIcon(iconImage: kIconPushUp),
+    name: 'Chạy bộ',
+    icon: HabitIcon(iconImage: kWalking),
     motivation: HabitMotivation(text: kListDefaultQuotation[1]),
     type: 2,
   ),
   Habit(
-    name: 'Thiền',
-    icon: HabitIcon(iconImage: kIconMeditation),
+    name: 'Đọc sách',
+    icon: HabitIcon(iconImage: kBook),
     motivation: HabitMotivation(text: kListDefaultQuotation[0]),
     type: 1,
   ),
   Habit(
-    name: 'Hít Đất',
-    icon: HabitIcon(iconImage: kIconPushUp),
+    name: 'Ăn sáng',
+    icon: HabitIcon(iconImage: kBreakfast),
     motivation: HabitMotivation(text: kListDefaultQuotation[1]),
     type: 2,
   ),
   Habit(
-    name: 'Thiền',
-    icon: HabitIcon(iconImage: kIconMeditation),
+    name: 'Tiết kiệm',
+    icon: HabitIcon(iconImage: kCash),
     motivation: HabitMotivation(text: kListDefaultQuotation[0]),
     type: 1,
   ),
   Habit(
-    name: 'Hít Đất',
-    icon: HabitIcon(iconImage: kIconPushUp),
+    name: 'Viết nhật ký',
+    icon: HabitIcon(iconImage: kDiary),
     motivation: HabitMotivation(text: kListDefaultQuotation[1]),
     type: 2,
   ),
   Habit(
-    name: 'Thiền',
-    icon: HabitIcon(iconImage: kIconMeditation),
+    name: 'Ngủ sớm',
+    icon: HabitIcon(iconImage: kSleep),
     motivation: HabitMotivation(text: kListDefaultQuotation[0]),
     type: 1,
-  ),
-  Habit(
-    name: 'Hít Đất',
-    icon: HabitIcon(iconImage: kIconPushUp),
-    motivation: HabitMotivation(text: kListDefaultQuotation[1]),
-    type: 2,
-  ),
-  Habit(
-    name: 'Thiền',
-    icon: HabitIcon(iconImage: kIconMeditation),
-    motivation: HabitMotivation(text: kListDefaultQuotation[0]),
-    type: 1,
-  ),
-  Habit(
-    name: 'Hít Đất',
-    icon: HabitIcon(iconImage: kIconPushUp),
-    motivation: HabitMotivation(text: kListDefaultQuotation[1]),
-    type: 2,
   ),
 ];

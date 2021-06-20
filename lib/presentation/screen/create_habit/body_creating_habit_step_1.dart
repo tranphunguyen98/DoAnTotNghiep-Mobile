@@ -53,7 +53,7 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildName(),
-              _buildCategory(),
+              // _buildCategory(),
               _buildIcon(),
               _buildQuote(),
               _buildImage(),
@@ -177,11 +177,11 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
             height: 16.0,
           ),
           SizedBox(
-            height: 52 * 3.0,
+            height: 50 * 2.0,
             child: GridView.builder(
               scrollDirection: Axis.horizontal,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
+                  crossAxisCount: 2,
                   crossAxisSpacing: 8.0,
                   mainAxisSpacing: 8.0),
               itemCount: kListIconDefault.length,
@@ -193,8 +193,8 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
                     },
                     child: Image.asset(
                       kListIconDefault[index],
-                      width: 52,
-                      height: 52,
+                      width: 50,
+                      height: 50,
                     ),
                   ),
                   if (index == indexIcon)
