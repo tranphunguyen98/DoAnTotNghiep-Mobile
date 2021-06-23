@@ -4,7 +4,7 @@ import 'package:totodo/utils/my_const/my_const.dart';
 class Indicator extends StatelessWidget {
   final Color color;
   final String label;
-  final double percent;
+  final int value;
   final double percentIncrease;
   final double percentDecrease;
 
@@ -12,7 +12,7 @@ class Indicator extends StatelessWidget {
       {Key key,
       this.color,
       this.label,
-      this.percent,
+      this.value,
       this.percentIncrease,
       this.percentDecrease})
       : super(key: key);
@@ -22,46 +22,54 @@ class Indicator extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          Icons.circle,
-          size: 8.0,
+        Container(
           color: color,
+          height: 38,
+          width: 4,
         ),
         SizedBox(
-          width: 4.0,
+          width: 8.0,
         ),
-        Text(
-          label,
-          style: kFontMediumBlack_12,
-        ),
-        if (percent != null)
-          Text(
-            ' - $percent%',
-            style: kFontRegularDefault_12,
-          ),
-        if (percentIncrease != null || percentDecrease != null) Spacer(),
-        if (percentIncrease != null)
-          Row(
-            children: [
-              Text('$percentIncrease%', style: kFontRegularDefault_12),
-              Icon(
-                Icons.arrow_upward,
-                size: 8.0,
-                color: Colors.green,
-              )
+        SizedBox(
+          height: 38,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                label,
+                style: kFontMediumGray_12,
+              ),
+              Spacer(),
+              Text(
+                '$value',
+                style: kFontSemiboldBlack_14,
+              ),
             ],
           ),
-        if (percentDecrease != null)
-          Row(
-            children: [
-              Text('$percentDecrease%', style: kFontRegularDefault_12),
-              Icon(
-                Icons.arrow_downward,
-                size: 8.0,
-                color: Colors.red,
-              )
-            ],
-          )
+        ),
+        // if (percentIncrease != null || percentDecrease != null) Spacer(),
+        // if (percentIncrease != null)
+        //   Row(
+        //     children: [
+        //       Text('$percentIncrease%', style: kFontRegularDefault_12),
+        //       Icon(
+        //         Icons.arrow_upward,
+        //         size: 8.0,
+        //         color: Colors.green,
+        //       )
+        //     ],
+        //   ),
+        // if (percentDecrease != null)
+        //   Row(
+        //     children: [
+        //       Text('$percentDecrease%', style: kFontRegularDefault_12),
+        //       Icon(
+        //         Icons.arrow_downward,
+        //         size: 8.0,
+        //         color: Colors.red,
+        //       )
+        //     ],
+        //   )
       ],
     );
   }

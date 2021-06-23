@@ -69,9 +69,10 @@ class ItemHabit extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                0.toString(), // TODO add total day
+                _habit.totalDay.toString(),
                 style: kFontMediumBlack_14,
               ),
+              //TODO error title
               Text(
                 'Tổng ngày',
                 style: kFontRegularGray1_12,

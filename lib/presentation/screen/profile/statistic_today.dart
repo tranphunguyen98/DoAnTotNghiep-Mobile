@@ -60,7 +60,7 @@ class StatisticToday extends StatelessWidget {
       animation: true,
       percent: percent,
       center: Text(
-        "${percent * 100}%",
+        "${(percent * 100).toStringAsFixed(2)}%",
         style: kFontMediumDefault.copyWith(fontSize: 18),
       ),
       circularStrokeCap: CircularStrokeCap.round,

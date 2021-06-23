@@ -1,14 +1,21 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:totodo/presentation/screen/profile/indicator.dart';
+import 'package:totodo/bloc/profile/profile_state.dart';
 
 class WeekPieChart extends StatefulWidget {
+  final CompletionRateData completionRateData;
+
+  const WeekPieChart({Key key, this.completionRateData}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() => PieChart2State();
+  State<StatefulWidget> createState() => PieChart2State(completionRateData);
 }
 
 class PieChart2State extends State {
   int touchedIndex;
+  final CompletionRateData completionRateData;
+
+  PieChart2State(this.completionRateData);
 
   @override
   Widget build(BuildContext context) {
@@ -33,52 +40,8 @@ class PieChart2State extends State {
                   show: false,
                 ),
                 sectionsSpace: 0,
-                centerSpaceRadius: 40,
+                centerSpaceRadius: 48,
                 sections: showingSections()),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const <Widget>[
-              Indicator(
-                color: Colors.green,
-                label: 'Đúng giờ',
-                percent: 40,
-                percentIncrease: 2,
-              ),
-              SizedBox(
-                height: 2,
-              ),
-              Indicator(
-                color: Colors.red,
-                label: 'Trễ giờ',
-                percent: 30,
-                percentDecrease: 3,
-              ),
-              SizedBox(
-                height: 2,
-              ),
-              Indicator(
-                color: Colors.yellow,
-                label: 'Không có thời gian',
-                percent: 15,
-                percentIncrease: 2,
-              ),
-              SizedBox(
-                height: 2,
-              ),
-              Indicator(
-                color: Colors.blueGrey,
-                label: 'Chưa hoàn thành',
-                percent: 15,
-                percentIncrease: 2,
-              ),
-              SizedBox(
-                height: 18,
-              ),
-            ],
           ),
         ),
       ],
@@ -89,12 +52,12 @@ class PieChart2State extends State {
     return List.generate(4, (i) {
       final isTouched = i == touchedIndex;
       final double fontSize = isTouched ? 25 : 16;
-      final double radius = isTouched ? 40 : 36;
+      final double radius = isTouched ? 26 : 18;
       switch (i) {
         case 0:
           return PieChartSectionData(
             color: Colors.green[400],
-            value: 40,
+            value: completionRateData.getPercent(completionRateData.onTime),
             title: '40%',
             showTitle: false,
             radius: radius,
@@ -106,7 +69,7 @@ class PieChart2State extends State {
         case 1:
           return PieChartSectionData(
             color: Colors.red[400],
-            value: 30,
+            value: completionRateData.getPercent(completionRateData.overdue),
             title: '30%',
             showTitle: false,
             radius: radius,
@@ -118,7 +81,7 @@ class PieChart2State extends State {
         case 2:
           return PieChartSectionData(
             color: Colors.yellow[400],
-            value: 15,
+            value: completionRateData.getPercent(completionRateData.undated),
             showTitle: false,
             title: '15%',
             radius: radius,
@@ -130,7 +93,8 @@ class PieChart2State extends State {
         case 3:
           return PieChartSectionData(
             color: Colors.blueGrey[200],
-            value: 15,
+            value:
+                completionRateData.getPercent(completionRateData.uncompleted),
             showTitle: false,
             radius: radius,
           );

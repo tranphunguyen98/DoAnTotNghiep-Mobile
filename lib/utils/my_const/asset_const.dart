@@ -4,6 +4,8 @@ const String kIconLabel = "assets/ic_label_64.png";
 const String kIconCircle = "assets/ic_circle_64.png";
 
 const String kImageMotivation = "assets/habit/motivation.jpg";
+const String kImageMotivationGym = "assets/habit/motivation_gym.jpg";
+const String kImageMotivationArm = "assets/habit/motivation_arm.jpg";
 const String kImageTag = "assets/habit/ic_tag_256.png";
 
 const String kBackgroundDiary = "assets/background_diary.jpg";

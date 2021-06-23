@@ -3,6 +3,33 @@ import 'package:intl/intl.dart';
 import 'package:totodo/utils/util.dart';
 
 class DateHelper {
+  static List<String> getListDayOfMonth(int subtractMonth) {
+    final date = DateUtils.addMonthsToMonthDate(DateTime.now(), -subtractMonth);
+    log('testStatistic', date);
+
+    final List<int> dayOfMonth = List<int>.generate(
+        DateUtils.getDaysInMonth(date.year, date.month), (index) => index + 1);
+
+    final result = dayOfMonth
+        .map((day) => DateTime(date.year, date.month, day).toIso8601String())
+        .toList();
+    log('testStatistic', result);
+    return result;
+  }
+
+  static List<String> getListDayOfWeek(int subtractWeek) {
+    final List<String> result = [];
+    for (final day in [0, -1, -2, -3, -4, -5, -6]) {
+      result.add(DateTime.now()
+          .subtract(Duration(
+              days: day +
+                  (DateTime.now().weekday - DateTime.monday) +
+                  subtractWeek * 7))
+          .toIso8601String());
+    }
+    return result;
+  }
+
   static bool isSameDay(DateTime dateTimeSource, DateTime dateTimeDestination) {
     return dateTimeSource.year == dateTimeDestination.year &&
         dateTimeSource.month == dateTimeDestination.month &&

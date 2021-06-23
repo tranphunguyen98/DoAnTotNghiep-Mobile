@@ -26,7 +26,14 @@ class RowCheckBoxAndNameTask extends StatelessWidget {
             child: Checkbox(
               value: task.isCompleted,
               onChanged: (value) {
-                updateTask(task.copyWith(isCompleted: value));
+                if (value) {
+                  updateTask(task.copyWith(
+                      isCompleted: value,
+                      completedDate: DateTime.now().toIso8601String()));
+                } else {
+                  updateTask(
+                      task.copyWith(isCompleted: value, completedDate: ""));
+                }
               },
               checkColor: Colors.white,
               activeColor: kListColorPriority[task.priority - 1],

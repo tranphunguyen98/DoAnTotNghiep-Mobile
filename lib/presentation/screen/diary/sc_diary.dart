@@ -38,6 +38,11 @@ class _DiaryScreenState extends State<DiaryScreen> {
       cubit: _diaryBloc,
       builder: (context, state) {
         _state = state;
+        final tempDiary = state.diaries;
+        if (tempDiary.isNotEmpty) {
+          tempDiary[0] = tempDiary[0]
+              .copyWith(images: [kImageMotivationArm, kImageMotivationGym]);
+        }
         return Scaffold(
           backgroundColor: kColorBlueLight,
           body: CustomScrollView(slivers: [
@@ -80,7 +85,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                 ),
               ],
             ),
-            if (!(state.diaries?.isEmpty ?? true))
+            if (!(tempDiary.isEmpty ?? true))
               SliverList(
                 delegate: SliverChildListDelegate([
                   SizedBox(

@@ -94,13 +94,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _mapUpdateTaskEventToState(Task updateTask) async* {
     try {
       if (updateTask != null) {
-        if (updateTask.isCompleted) {
-          await _taskRepository.updateTask(updateTask.copyWith(
-              completedDate: DateTime.now().toIso8601String()));
-        } else {
-          await _taskRepository
-              .updateTask(updateTask.copyWith(completedDate: ''));
-        }
+        await _taskRepository.updateTask(updateTask);
+        // if (updateTask.isCompleted) {
+        //   await _taskRepository.updateTask(updateTask.copyWith(
+        //       completedDate: DateTime.now().toIso8601String()));
+        // } else {
+        //   await _taskRepository
+        //       .updateTask(updateTask.copyWith(completedDate: ''));
+        // }
 
         final listAllTask = await _taskRepository.getAllTask();
         yield state.copyWith(listAllTask: listAllTask);

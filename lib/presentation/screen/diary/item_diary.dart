@@ -65,32 +65,28 @@ class ItemDiary extends StatelessWidget {
             SizedBox(
               height: 8.0,
             ),
-          Row(children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset(
-                kImageMotivation,
-                height: 80.0,
-              ),
-            ),
-            SizedBox(
-              width: 8.0,
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset(
-                kImageMotivation,
-                height: 80.0,
-              ),
-            ),
-          ]
-              // data.images
-              //     .map((e) => Image.asset(
-              //           kImageMotivation,
-              //           height: 64.0,
-              //         ))
-              //     .toList(),
+          if (!(data?.images?.isEmpty ?? true))
+            Row(children: [
+              ...data.images.map(
+                (e) => Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.asset(
+                      e,
+                      height: 80.0,
+                    ),
+                  ),
+                ),
               )
+            ]
+                // data.images
+                //     .map((e) => Image.asset(
+                //           kImageMotivation,
+                //           height: 64.0,
+                //         ))
+                //     .toList(),
+                )
         ],
       ),
     );
@@ -111,4 +107,28 @@ class DiaryItemData {
     this.content,
     this.images,
   });
+
+  DiaryItemData copyWith({
+    DateTime date,
+    String title,
+    String content,
+    List<String> images,
+    int emotional,
+  }) {
+    if ((date == null || identical(date, this.date)) &&
+        (title == null || identical(title, this.title)) &&
+        (content == null || identical(content, this.content)) &&
+        (images == null || identical(images, this.images)) &&
+        (emotional == null || identical(emotional, this.emotional))) {
+      return this;
+    }
+
+    return new DiaryItemData(
+      date: date ?? this.date,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      images: images ?? this.images,
+      emotional: emotional ?? this.emotional,
+    );
+  }
 }

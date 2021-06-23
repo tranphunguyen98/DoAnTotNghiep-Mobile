@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/profile/bloc.dart';
 import 'package:totodo/presentation/screen/profile/chart_task_week.dart';
-import 'package:totodo/presentation/screen/profile/item_statistic_project.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
 class StatisticEveryDayOfWeek extends StatelessWidget {
@@ -25,14 +24,15 @@ class StatisticEveryDayOfWeek extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${((state.completedTaskInWeek / state.allTaskInWeek) * 100).toStringAsFixed(2)}%',
+                  state.allTaskInWeek > 0
+                      ? '${((state.completedTaskInWeek / state.allTaskInWeek) * 100).toStringAsFixed(2)}%'
+                      : '0%',
                   style: kFontMediumBlack_22,
                 ),
                 const SizedBox(
                   width: 32.0,
                 ),
-                Expanded(
-                    child: ChartTaskWeek(state.listDataStatisticLast7Days)),
+                Expanded(child: ChartTaskWeek(state.listDataStatisticThisWeek)),
               ],
             ),
             Padding(
@@ -43,26 +43,26 @@ class StatisticEveryDayOfWeek extends StatelessWidget {
               ),
             ),
             _buildRowStatistic(state),
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Divider(
-                height: 32.0,
-                color: Colors.grey[300],
-              ),
-            ),
-            GridView.builder(
-              itemCount: state.listDataStaticProject.length,
-              padding: const EdgeInsets.only(right: 16.0),
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 32,
-                  childAspectRatio: 5),
-              itemBuilder: (context, index) {
-                return ItemStatisticProject(state.listDataStaticProject[index]);
-              },
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(right: 16.0),
+            //   child: Divider(
+            //     height: 32.0,
+            //     color: Colors.grey[300],
+            //   ),
+            // ),
+            // GridView.builder(
+            //   itemCount: state.listDataStaticProject.length,
+            //   padding: const EdgeInsets.only(right: 16.0),
+            //   shrinkWrap: true,
+            //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            //       crossAxisCount: 2,
+            //       mainAxisSpacing: 8,
+            //       crossAxisSpacing: 32,
+            //       childAspectRatio: 5),
+            //   itemBuilder: (context, index) {
+            //     return ItemStatisticProject(state.listDataStaticProject[index]);
+            //   },
+            // ),
             const SizedBox(
               height: 16.0,
             )

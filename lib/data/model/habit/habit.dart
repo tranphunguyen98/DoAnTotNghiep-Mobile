@@ -66,6 +66,10 @@ class Habit extends Equatable {
     return "";
   }
 
+  int get totalDay {
+    return habitProgress?.where((element) => element.isDone)?.length ?? 0;
+  }
+
   bool isDoneOnDay(String day) {
     for (final habitProgress in habitProgress) {
       if (DateHelper.isSameDayString(habitProgress.day, day)) {
@@ -117,6 +121,7 @@ class Habit extends Equatable {
             ),
         reminds = reminds ?? <HabitRemind>[],
         habitProgress = habitProgress ?? <HabitProgressItem>[];
+
   Habit copyWith({
     String id,
     String name,

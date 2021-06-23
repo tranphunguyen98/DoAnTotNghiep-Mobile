@@ -5,7 +5,7 @@ import 'package:totodo/data/repository_interface/i_task_repository.dart';
 import 'package:totodo/data/repository_interface/i_user_repository.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/profile/header_profile.dart';
-import 'package:totodo/presentation/screen/profile/statistic_life.dart';
+import 'package:totodo/presentation/screen/profile/statistic_completed_tasks.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 
@@ -25,7 +25,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         userRepository: getIt<IUserRepository>(),
       )..add(InitDataStatistic()),
       child: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 2.0,
           title: Text(
@@ -45,21 +44,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 labelColor: kColorPrimary,
                 tabs: const [
                   Tab(
-                    text: 'TASK',
+                    text: 'Ngày',
                   ),
                   Tab(
-                    text: 'LIFE',
+                    text: 'Tuần',
                   ),
                   Tab(
-                    text: 'HABIT',
+                    text: 'Tháng',
                   )
                 ],
               ),
               Expanded(
                 child: TabBarView(
                   children: [
-                    StatisticTask(),
-                    StatisticLife(),
+                    StatisticTask(StatisticType.kToday),
+                    // StatisticTask(StatisticType.kWeek),
+                    const Icon(Icons.directions_bike),
                     const Icon(Icons.directions_bike),
                   ],
                 ),

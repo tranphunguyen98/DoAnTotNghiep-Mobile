@@ -9,7 +9,6 @@ import 'package:totodo/presentation/screen/task/widget_empty_data.dart';
 import 'package:totodo/presentation/screen/task/widget_header_section.dart';
 import 'package:totodo/presentation/screen/task/widget_item_task.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
-import 'package:totodo/utils/util.dart';
 
 import '../../router.dart';
 
@@ -95,9 +94,9 @@ class _TaskScreenState extends State<TaskScreen> {
           _homeBloc.add(
             UpdateTaskEvent(
               (listWidgetSection[oldIndex] as ItemTask).task.copyWith(
-                    sectionId: idSectionAbove ?? '',
-                    isCompleted: false,
-                  ),
+                  sectionId: idSectionAbove ?? '',
+                  isCompleted: false,
+                  completedDate: ""),
             ),
           );
         } else {
@@ -115,6 +114,7 @@ class _TaskScreenState extends State<TaskScreen> {
             UpdateTaskEvent(
               (listWidgetSection[oldIndex] as ItemTask).task.copyWith(
                     isCompleted: true,
+                    completedDate: DateTime.now().toIso8601String(),
                   ),
             ),
           );
@@ -167,7 +167,7 @@ class _TaskScreenState extends State<TaskScreen> {
         if (dataDrawerItem is Project) {
           project = dataDrawerItem;
         }
-        log('GlobalKeyTest section', section.id);
+        // log('GlobalKeyTest section', section.id);
         listWidget.add(
           HeaderSection(
             key: ValueKey('section${section.id}'),
@@ -182,7 +182,7 @@ class _TaskScreenState extends State<TaskScreen> {
         );
       }
       for (final task in section.listTask) {
-        log('GlobalKeyTest task', task.id);
+        // log('GlobalKeyTest task', task.id);
         listWidget.add(
           ItemTask(
             key: ValueKey('task${task.id}'),

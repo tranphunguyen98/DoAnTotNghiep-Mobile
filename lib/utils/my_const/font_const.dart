@@ -78,6 +78,9 @@ final kFontMediumBlack_16 = kFontMediumBlack.copyWith(fontSize: 16);
 final kFontMediumBlack_18 = kFontMediumBlack.copyWith(fontSize: 18);
 final kFontMediumBlack_22 = kFontMediumBlack.copyWith(fontSize: 22);
 
+final kFontMediumGray = kFontMedium.copyWith(color: kColorGray7);
+final kFontMediumGray_12 = kFontMediumGray.copyWith(fontSize: 12);
+final kFontMediumGray_14 = kFontMediumGray.copyWith(fontSize: 14);
 //SEMI_BOLD
 final kFontSemiboldWhite = kFontSemibold.copyWith(color: kColorWhite);
 final kFontSemiboldWhite_10 = kFontSemiboldWhite.copyWith(fontSize: 10);
@@ -85,8 +88,12 @@ final kFontSemiboldWhite_16 = kFontSemiboldWhite.copyWith(fontSize: 16);
 final kFontSemiboldWhite_18 = kFontSemiboldWhite.copyWith(fontSize: 18);
 
 final kFontSemiboldBlack = kFontSemibold.copyWith(color: kColorBlack2);
+final kFontSemiboldBlack_14 = kFontSemiboldBlack.copyWith(fontSize: 14);
 final kFontSemiboldBlack_16 = kFontSemiboldBlack.copyWith(fontSize: 16);
 final kFontSemiboldBlack_22 = kFontSemiboldBlack.copyWith(fontSize: 22);
 
 final kFontSemiboldGray = kFontSemibold.copyWith(color: kColorGray1_50);
 final kFontSemiboldGray_16 = kFontSemiboldGray.copyWith(fontSize: 16);
+
+final kFontSemiboldPrimary = kFontSemibold.copyWith(color: kColorPrimary);
+final kFontSemiboldPrimary_16 = kFontSemiboldPrimary.copyWith(fontSize: 16);

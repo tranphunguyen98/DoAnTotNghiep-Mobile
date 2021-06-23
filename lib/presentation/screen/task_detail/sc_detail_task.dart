@@ -208,25 +208,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
           size: 24.0,
           color: kColorPrimary,
           onPressed: () {
-            if (_checkListNameController.text.isNotEmpty) {
-              final checkList = <CheckItem>[];
-              checkList.addAll(state.taskEdit.checkList ?? []);
-              checkList.add(
-                CheckItem(
-                  id: DateTime.now().microsecondsSinceEpoch.toString(),
-                  name: _checkListNameController.text,
-                ),
-              );
-              //TODO add description
-              _checkListNameController.text = '';
-              _taskDetailBloc.add(
-                SubmitEditTask(
-                  state.taskEdit.copyWith(
-                    checkList: checkList,
-                  ),
-                ),
-              );
-            }
+            _addCheckList(state);
           },
         ),
         const SizedBox(
@@ -237,10 +219,32 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
             autoFocus: false,
             hint: 'Thêm Checklist',
             controller: _checkListNameController,
+            onFieldSubmitted: (value) => _addCheckList(state),
           ),
         ),
       ],
     );
+  }
+
+  void _addCheckList(TaskDetailState state) {
+    if (_checkListNameController.text.isNotEmpty) {
+      final checkList = <CheckItem>[];
+      checkList.addAll(state.taskEdit.checkList ?? []);
+      checkList.add(
+        CheckItem(
+          id: DateTime.now().microsecondsSinceEpoch.toString(),
+          name: _checkListNameController.text,
+        ),
+      );
+      _checkListNameController.text = '';
+      _taskDetailBloc.add(
+        SubmitEditTask(
+          state.taskEdit.copyWith(
+            checkList: checkList,
+          ),
+        ),
+      );
+    }
   }
 
   Widget _buildDescription(TaskDetailState state) {
@@ -345,8 +349,14 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
             child: Checkbox(
               value: state.taskEdit.isCompleted,
               onChanged: (value) {
-                _taskDetailBloc.add(SubmitEditTask(
-                    state.taskEdit.copyWith(isCompleted: value)));
+                if (value) {
+                  _taskDetailBloc.add(SubmitEditTask(state.taskEdit.copyWith(
+                      isCompleted: value,
+                      completedDate: DateTime.now().toIso8601String())));
+                } else {
+                  _taskDetailBloc.add(SubmitEditTask(state.taskEdit
+                      .copyWith(isCompleted: value, completedDate: "")));
+                }
               },
               checkColor: Colors.white,
               activeColor: kListColorPriority[state.taskEdit.priority - 1],
