@@ -56,11 +56,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Expanded(
                 child: TabBarView(
-                  children: [
+                  children: const [
                     StatisticTask(StatisticType.kToday),
-                    // StatisticTask(StatisticType.kWeek),
-                    const Icon(Icons.directions_bike),
-                    const Icon(Icons.directions_bike),
+                    StatisticTask(StatisticType.kWeek),
+                    StatisticTask(StatisticType.kMonth),
                   ],
                 ),
               ),

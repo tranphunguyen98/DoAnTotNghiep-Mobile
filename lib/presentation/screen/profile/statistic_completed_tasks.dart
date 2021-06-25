@@ -72,6 +72,7 @@ class OverviewTasksStatistic extends StatelessWidget {
   double _getValue(ProfileState state) {
     final dataStatisticToday = state.dataStatisticToday;
     final dataStatisticThisWeek = state.listDataStatisticThisWeek;
+    final dataStatisticThisMonth = state.listDataStatisticThisMonth;
     if (statisticType == StatisticType.kToday &&
         indicatorType == IndicatorTypeEnum.kValue) {
       return dataStatisticToday.completedTask.toDouble();
@@ -92,11 +93,34 @@ class OverviewTasksStatistic extends StatelessWidget {
 
     if (statisticType == StatisticType.kWeek &&
         indicatorType == IndicatorTypeEnum.kPercent) {
-      final double allTask = dataStatisticThisWeek.fold(
-          0.0, (value, element) => value + element.allTask);
-      final double completedTask = dataStatisticThisWeek.fold(
+      final int allTask = dataStatisticThisWeek.fold(
+          0, (value, element) => value + element.allTask);
+      final int completedTask = dataStatisticThisWeek.fold(
+          0, (value, element) => value + element.completedTask);
+      if (allTask == 0) {
+        return 0.0;
+      }
+      final result = completedTask.toDouble() / allTask;
+      return result * 100;
+    }
+
+    if (statisticType == StatisticType.kMonth &&
+        indicatorType == IndicatorTypeEnum.kValue) {
+      return dataStatisticThisMonth.fold(
           0.0, (value, element) => value + element.completedTask);
-      return completedTask / allTask;
+    }
+
+    if (statisticType == StatisticType.kMonth &&
+        indicatorType == IndicatorTypeEnum.kPercent) {
+      final int allTask = dataStatisticThisMonth.fold(
+          0, (value, element) => value + element.allTask);
+      final int completedTask = dataStatisticThisMonth.fold(
+          0, (value, element) => value + element.completedTask);
+      if (allTask == 0) {
+        return 0.0;
+      }
+      final result = completedTask.toDouble() / allTask;
+      return result * 100;
     }
     return 0.0;
   }
@@ -106,6 +130,9 @@ class OverviewTasksStatistic extends StatelessWidget {
     final dataStatisticYesterday = state.dataStatisticYesterday;
     final dataStatisticThisWeek = state.listDataStatisticThisWeek;
     final dataStatisticPreviousWeek = state.listDataStatisticPreviousWeek;
+    final dataStatisticThisMonth = state.listDataStatisticThisMonth;
+    final dataStatisticPreviousMonth = state.listDataStatisticPreviousMonth;
+
     if (statisticType == StatisticType.kToday &&
         indicatorType == IndicatorTypeEnum.kValue) {
       return dataStatisticToday.completedTask.toDouble() -
@@ -135,19 +162,51 @@ class OverviewTasksStatistic extends StatelessWidget {
 
     if (statisticType == StatisticType.kWeek &&
         indicatorType == IndicatorTypeEnum.kPercent) {
-      final double thisWeekAllTask = dataStatisticThisWeek.fold(
-          0.0, (value, element) => value + element.allTask);
-      final double thisWeekCompletedTask = dataStatisticThisWeek.fold(
-          0.0, (value, element) => value + element.completedTask);
-
-      final double previousWeekAllTask = dataStatisticPreviousWeek.fold(
-          0.0, (value, element) => value + element.allTask);
-      final double previousWeekCompletedTask = dataStatisticPreviousWeek.fold(
-          0.0, (value, element) => value + element.completedTask);
-
-      return thisWeekCompletedTask / thisWeekAllTask -
-          previousWeekCompletedTask / previousWeekAllTask;
+      final int thisWeekAllTask = dataStatisticThisWeek.fold(
+          0, (value, element) => value + element.allTask);
+      final int thisWeeCompletedTask = dataStatisticThisWeek.fold(
+          0, (value, element) => value + element.completedTask);
+      final int previousWeekAllTask = dataStatisticPreviousWeek.fold(
+          0, (value, element) => value + element.allTask);
+      final int previousWeeCompletedTask = dataStatisticPreviousWeek.fold(
+          0, (value, element) => value + element.completedTask);
+      final double thisWeekPercent =
+          thisWeekAllTask > 0 ? thisWeeCompletedTask / thisWeekAllTask : 0.0;
+      final double previousWeekPercent = previousWeekAllTask > 0
+          ? previousWeeCompletedTask / previousWeekAllTask
+          : 0.0;
+      final result = thisWeekPercent - previousWeekPercent;
+      return result * 100;
     }
+
+    if (statisticType == StatisticType.kMonth &&
+        indicatorType == IndicatorTypeEnum.kValue) {
+      final double thisMonthCompletedTask = dataStatisticThisMonth.fold(
+          0.0, (value, element) => value + element.completedTask);
+      final double previousMonthCompletedTask = dataStatisticPreviousMonth.fold(
+          0.0, (value, element) => value + element.completedTask);
+      return thisMonthCompletedTask - previousMonthCompletedTask;
+    }
+
+    if (statisticType == StatisticType.kMonth &&
+        indicatorType == IndicatorTypeEnum.kPercent) {
+      final int thisMonthAllTask = dataStatisticThisMonth.fold(
+          0, (value, element) => value + element.allTask);
+      final int thisWeeCompletedTask = dataStatisticThisMonth.fold(
+          0, (value, element) => value + element.completedTask);
+      final int previousMonthAllTask = dataStatisticPreviousMonth.fold(
+          0, (value, element) => value + element.allTask);
+      final int previousMonthCompletedTask = dataStatisticPreviousMonth.fold(
+          0, (value, element) => value + element.completedTask);
+      final double thisMonthPercent =
+          thisMonthAllTask > 0 ? thisWeeCompletedTask / thisMonthAllTask : 0.0;
+      final double previousMonthPercent = previousMonthAllTask > 0
+          ? previousMonthCompletedTask / previousMonthAllTask
+          : 0.0;
+      final result = thisMonthPercent - previousMonthPercent;
+      return result * 100;
+    }
+
     return 0.0;
   }
 }

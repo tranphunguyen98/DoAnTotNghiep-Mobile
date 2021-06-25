@@ -46,8 +46,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               await _getStatisticDayOfWeek(yesterday.toIso8601String()),
           listDataStatisticThisWeek: await _getStatisticWeek(0),
           listDataStatisticPreviousWeek: await _getStatisticWeek(1),
+          listDataStatisticThisMonth: await _getStatisticMonth(0),
+          listDataStatisticPreviousMonth: await _getStatisticMonth(1),
           completionRateToday: await _getTodayCompletionRate(),
           completionRateWeek: await _getWeekCompletionRate(),
+          completionRateMonth: await _getMonthCompletionRate(),
         );
       }
     } catch (error, stackTrace) {
@@ -104,30 +107,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     return listDataStatisticWeek;
   }
 
-  //
-  // final List<ItemDataStatisticProject> _listDataStatisticProjectMockUp = const [
-  //   ItemDataStatisticProject(
-  //       nameProject: 'Website Marketing',
-  //       totalTask: 10,
-  //       completedTask: 9,
-  //       projectColor: Colors.purpleAccent),
-  //   ItemDataStatisticProject(
-  //       nameProject: 'Mobile',
-  //       totalTask: 10,
-  //       completedTask: 5,
-  //       projectColor: Colors.redAccent),
-  //   ItemDataStatisticProject(
-  //       nameProject: 'Personal Marketing',
-  //       totalTask: 10,
-  //       completedTask: 5,
-  //       projectColor: Colors.green),
-  //   ItemDataStatisticProject(
-  //       nameProject: 'Learn English',
-  //       totalTask: 10,
-  //       completedTask: 7,
-  //       projectColor: Colors.orange),
-  // ];
-
   Future<CompletionRateData> _getTodayCompletionRate() async {
     return _getCompletionRateStatisticDayOfWeek(
         DateTime.now().toIso8601String());
@@ -183,6 +162,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         onTime: onTime,
         undated: undated,
         uncompleted: uncompleted);
+  }
+
+  Future<CompletionRateData> _getMonthCompletionRate() async {
+    final days = DateHelper.getListDayOfMonth(0);
+    final completionRateDateList = await Stream.fromIterable(days)
+        .asyncMap((event) => _getCompletionRateStatisticDayOfWeek(event))
+        .toList();
+
+    return completionRateDateList.reduce((value, element) => value + element);
   }
 
   Future<CompletionRateData> _getWeekCompletionRate() async {

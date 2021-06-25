@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:totodo/presentation/screen/profile/long_indicator.dart';
 import 'package:totodo/presentation/screen/profile/static_week.dart';
 import 'package:totodo/presentation/screen/profile/statistic_completed_tasks.dart';
+import 'package:totodo/presentation/screen/profile/statistic_every_day_of_week.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 
 class StatisticTask extends StatelessWidget {
@@ -33,6 +34,11 @@ class StatisticTask extends StatelessWidget {
               height: 8.0,
             ),
             CompletionRateDistributionStatistic(statisticType: statisticType),
+            SizedBox(
+              height: 8.0,
+            ),
+            if (statisticType != StatisticType.kToday)
+              StatisticEveryDayOfWeek(statisticType),
             // StatisticToday(),
             // Divider(
             //   height: 32,
