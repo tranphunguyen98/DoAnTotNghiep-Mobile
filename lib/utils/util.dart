@@ -37,6 +37,12 @@ Map<String, dynamic> getHabitTypeFromId(int id) {
   return mapHabitType;
 }
 
+bool isInt(String s) {
+  if (s == null) {
+    return false;
+  }
+  return int.tryParse(s) != null;
+}
 // Function debounce(Function() func, int milliseconds) {
 //   Timer timer;
 //   return () {

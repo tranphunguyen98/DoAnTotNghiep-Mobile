@@ -28,7 +28,7 @@ class HeaderProfile extends StatelessWidget {
                     ),
                     const SizedBox(height: 4.0),
                     Text(
-                      'Bạn đã hoàn thành 120 Task',
+                      'Bạn đã hoàn thành ${state.allCompletedTask} nhiệm vụ',
                       style: kFontMediumBlack_14.copyWith(color: kColorPrimary),
                     ),
                   ],

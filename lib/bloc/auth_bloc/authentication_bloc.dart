@@ -41,7 +41,6 @@ class AuthenticationBloc
     try {
       final isSignedIn = await _userRepository.isSignedIn();
 
-      //TODO check AccessToken
       if (isSignedIn) {
         final user = await _userRepository.getUser();
         yield Authenticated(user);

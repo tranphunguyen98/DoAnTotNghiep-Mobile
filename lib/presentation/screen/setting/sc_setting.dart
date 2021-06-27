@@ -14,13 +14,15 @@ class SettingScreen extends StatelessWidget {
     final _authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
     return Scaffold(
         appBar: AppBar(
+          iconTheme: const IconThemeData(color: Colors.white),
           title: const Text("Cài đặt"),
         ),
         body: Column(
           children: [
             if ((_authenticationBloc.state as Authenticated).user.type ==
                 User.kTypeEmail)
-              DrawerItemNormal("Change Password", Icons.account_circle, () {
+              DrawerItemNormal("Thay đổi mật khẩu", Icons.account_circle,
+                  () {
                 Future.delayed(Duration.zero, () {
                   Navigator.of(context).pushNamed(AppRouter.kChangePassword);
                 });

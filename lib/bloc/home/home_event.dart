@@ -38,6 +38,30 @@ class SelectedBottomNavigationIndexChanged extends HomeEvent {
   }
 }
 
+class Snoozed extends HomeEvent {
+  final int minutes;
+  final String taskId;
+
+  Snoozed(this.minutes, this.taskId);
+
+  @override
+  List<Object> get props => [minutes, taskId];
+}
+
+class CompletedTask extends HomeEvent {
+  final String taskId;
+
+  CompletedTask(this.taskId);
+
+  @override
+  List<Object> get props => [taskId];
+
+  @override
+  String toString() {
+    return 'CompletedTask{taskId: $taskId}';
+  }
+}
+
 class UpdateTaskEvent extends HomeEvent {
   final Task task;
 

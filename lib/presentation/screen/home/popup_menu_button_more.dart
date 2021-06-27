@@ -55,8 +55,8 @@ class _PopupMenuButtonMoreState extends State<PopupMenuButtonMore> {
     dropdownChoices.addAll([
       DropdownChoices(
           title: state.isShowCompletedTask
-              ? 'Hide completed tasks'
-              : 'Show completed tasks',
+              ? 'Ẩn nhiệm vụ đã hoàn thành'
+              : 'Hiển thị nhiệm vụ đã hoàn thành',
           onPressed: (context) {
             _homeBloc.add(ShowCompletedTaskChange());
           })
@@ -64,7 +64,7 @@ class _PopupMenuButtonMoreState extends State<PopupMenuButtonMore> {
     if (state.isInProject()) {
       dropdownChoices.addAll([
         DropdownChoices(
-          title: "Add Section",
+          title: "Thêm section",
           onPressed: (context) {
             showModalBottomSheet(
               isScrollControlled: true,
@@ -81,7 +81,7 @@ class _PopupMenuButtonMoreState extends State<PopupMenuButtonMore> {
           },
         ),
         DropdownChoices(
-            title: "Edit Project",
+            title: "Chỉnh sửa dự án",
             onPressed: (context) {
               Navigator.of(context).pushNamed(AppRouter.kAddProject,
                   arguments: _homeBloc
@@ -90,7 +90,7 @@ class _PopupMenuButtonMoreState extends State<PopupMenuButtonMore> {
                       .data as Project);
             }),
         DropdownChoices(
-            title: "Delete Project",
+            title: "Xóa dự án",
             onPressed: (context) {
               _homeBloc.add(DeleteProject());
             }),
@@ -99,13 +99,13 @@ class _PopupMenuButtonMoreState extends State<PopupMenuButtonMore> {
     if (state.isInLabel()) {
       dropdownChoices.addAll([
         DropdownChoices(
-          title: 'Delete Label',
+          title: 'Xóa thẻ',
           onPressed: (context) {
             _homeBloc.add(DeleteLabel());
           },
         ),
         DropdownChoices(
-          title: 'Edit Label',
+          title: 'Sửa thẻ',
           onPressed: (context) {
             Navigator.of(context).pushNamed(AppRouter.kAddLabel,
                 arguments: _homeBloc

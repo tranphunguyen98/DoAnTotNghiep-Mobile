@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'color_const.dart';
 
 final kFontRegular = TextStyle(
-    fontFamily: 'Poppins', fontWeight: FontWeight.w400, color: kColorBlack);
+    fontFamily: 'OpenSans', fontWeight: FontWeight.w400, color: kColorBlack);
 
 final kFontMedium = TextStyle(
-  fontFamily: 'Poppins',
+  fontFamily: 'OpenSans',
   fontWeight: FontWeight.w500,
   color: kColorBlack,
 );
 
 final kFontSemibold = TextStyle(
-  fontFamily: 'Poppins',
+  fontFamily: 'OpenSans',
   fontWeight: FontWeight.w600,
   color: kColorBlack,
 );

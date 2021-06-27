@@ -505,12 +505,6 @@ class _DatePickerDialogState extends State<_DatePickerDialog> {
                       onRemoveTime: _removeTime,
                     ),
                     // if (_entryMode == DatePickerEntryMode.calendar)
-                    ItemFunctionReminder(
-                      iconData: Icons.replay,
-                      title: 'Không lặp lại',
-                      onPressed: () {},
-                      onRemoveTime: () {},
-                    ),
                     actions,
                   ],
                 );

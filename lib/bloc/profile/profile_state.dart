@@ -7,6 +7,7 @@ import 'package:totodo/presentation/screen/profile/data_ui/item_data_statistic_p
 @immutable
 class ProfileState extends Equatable {
   final User user;
+  final int allCompletedTask;
   final List<ItemDataStatisticProject> listDataStaticProject;
   final ItemDataStatisticDay dataStatisticToday;
   final ItemDataStatisticDay dataStatisticYesterday;
@@ -32,6 +33,7 @@ class ProfileState extends Equatable {
     this.completionRateToday,
     this.completionRateWeek,
     this.completionRateMonth,
+    this.allCompletedTask,
   });
 
   factory ProfileState.loading() => const ProfileState(loading: true);
@@ -63,6 +65,7 @@ class ProfileState extends Equatable {
 
   ProfileState copyWith({
     User user,
+    int allCompletedTask,
     List<ItemDataStatisticProject> listDataStaticProject,
     ItemDataStatisticDay dataStatisticToday,
     ItemDataStatisticDay dataStatisticYesterday,
@@ -76,6 +79,8 @@ class ProfileState extends Equatable {
     bool loading,
   }) {
     if ((user == null || identical(user, this.user)) &&
+        (allCompletedTask == null ||
+            identical(allCompletedTask, this.allCompletedTask)) &&
         (listDataStaticProject == null ||
             identical(listDataStaticProject, this.listDataStaticProject)) &&
         (dataStatisticToday == null ||
@@ -106,6 +111,7 @@ class ProfileState extends Equatable {
 
     return new ProfileState(
       user: user ?? this.user,
+      allCompletedTask: allCompletedTask ?? this.allCompletedTask,
       listDataStaticProject:
           listDataStaticProject ?? this.listDataStaticProject,
       dataStatisticToday: dataStatisticToday ?? this.dataStatisticToday,

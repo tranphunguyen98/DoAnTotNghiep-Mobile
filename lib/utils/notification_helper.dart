@@ -19,6 +19,8 @@ const String kChannelNameHigh = 'Basic notifications Totodo High';
 const String kChannelDescriptionHigh =
     'Notification channel for high importance';
 
+const String kDoneNotificationKey = 'done';
+const String kSnoozedNotificationKey = 'snoozed';
 void initNotification() {
   AwesomeNotifications().initialize(
     // set the icon to null if you want to use the default app icon
@@ -52,7 +54,7 @@ Future<void> showNotificationAtScheduleCron({
   Color color,
 }) async {
   await AwesomeNotifications().createNotification(
-    content: NotificationContent(
+      content: NotificationContent(
         id: id,
         channelKey: channelKey ?? kChannelKeyHigh,
         body: body,
@@ -61,12 +63,23 @@ Future<void> showNotificationAtScheduleCron({
         displayOnForeground: true,
         displayOnBackground: true,
         backgroundColor: color,
-        color: color),
-    schedule: NotificationSchedule(
-      crontabSchedule:
-          CronHelper.instance.atDate(scheduleTime.toUtc(), initialSecond: 0),
-    ),
-  );
+        color: color,
+      ),
+      schedule: NotificationSchedule(
+        crontabSchedule:
+            CronHelper.instance.atDate(scheduleTime.toUtc(), initialSecond: 0),
+      ),
+      actionButtons: [
+        NotificationActionButton(
+          key: kDoneNotificationKey,
+          label: 'Hoàn thành',
+        ),
+        NotificationActionButton(
+          key: kSnoozedNotificationKey,
+          label: 'Hoãn lại (Phút)',
+          buttonType: ActionButtonType.InputField,
+        )
+      ]);
 }
 
 Future<void> showNotificationScheduledWithTask(Task task) async {

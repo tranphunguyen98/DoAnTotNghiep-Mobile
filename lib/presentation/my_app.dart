@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:hive/hive.dart';
 import 'package:totodo/bloc/auth_bloc/bloc.dart';
+import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/data/repository_interface/i_habit_repository.dart';
 import 'package:totodo/data/repository_interface/i_task_repository.dart';
 import 'package:totodo/data/repository_interface/i_user_repository.dart';
@@ -14,6 +15,7 @@ import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/simple_bloc_delegate.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/notification_helper.dart';
+import 'package:totodo/utils/util.dart';
 
 import '../app_config.dart';
 import 'router.dart';
@@ -60,11 +62,23 @@ class _MyAppState extends State<MyApp> {
       }
     });
     AwesomeNotifications().actionStream.listen((receivedNotification) async {
-      await _navigatorKey.currentState.pushNamed(
-        AppRouter.kDetailTask,
-        arguments: receivedNotification.payload[kKeyPayloadNotificationIdTask]
-            as String,
-      );
+      log('testNotification', receivedNotification);
+      final taskId = receivedNotification.payload[kKeyPayloadNotificationIdTask]
+          .toString();
+      if (receivedNotification.buttonKeyPressed == kDoneNotificationKey) {
+        getIt.get<HomeBloc>().add(CompletedTask(taskId));
+      } else if (receivedNotification.buttonKeyPressed ==
+          kSnoozedNotificationKey) {
+        if (isInt(receivedNotification.buttonKeyInput)) {
+          getIt.get<HomeBloc>().add(
+              Snoozed(int.parse(receivedNotification.buttonKeyInput), taskId));
+        }
+      } else {
+        await _navigatorKey.currentState.pushNamed(
+          AppRouter.kDetailTask,
+          arguments: taskId,
+        );
+      }
     });
     super.initState();
   }

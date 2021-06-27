@@ -61,7 +61,7 @@ class Task extends Equatable {
     bool isCompleted,
     bool isStarred,
     bool isTrashed,
-    String taskDate,
+    String dueDate,
     Project project,
     String sectionId,
     List<Label> labels,
@@ -80,7 +80,7 @@ class Task extends Equatable {
         (isCompleted == null || identical(isCompleted, this.isCompleted)) &&
         (isStarred == null || identical(isStarred, this.isStarred)) &&
         (isTrashed == null || identical(isTrashed, this.isTrashed)) &&
-        (taskDate == null || identical(taskDate, this.dueDate)) &&
+        (dueDate == null || identical(dueDate, this.dueDate)) &&
         (project == null || identical(project, this.project)) &&
         (sectionId == null || identical(sectionId, this.sectionId)) &&
         (labels == null || identical(labels, this.labels)) &&
@@ -106,7 +106,7 @@ class Task extends Equatable {
       isCompleted: isCompleted ?? this.isCompleted,
       isStarred: isStarred ?? this.isStarred,
       isTrashed: isTrashed ?? this.isTrashed,
-      dueDate: taskDate ?? this.dueDate,
+      dueDate: dueDate ?? this.dueDate,
       project: project ?? this.project,
       sectionId: sectionId ?? this.sectionId,
       labels: labels ?? this.labels,

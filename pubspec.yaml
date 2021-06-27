@@ -107,13 +107,13 @@ flutter:
   uses-material-design: true
 
   fonts:
-    - family: Poppins
+    - family: OpenSans
       fonts:
-        - asset: fonts/Poppins-Regular.otf
+        - asset: fonts/OpenSans-Regular.ttf
           weight: 400
-        - asset: fonts/Poppins-Medium.otf
+        - asset: fonts/OpenSans-SemiBold.ttf
           weight: 500
-        - asset: fonts/Poppins-SemiBold.otf
+        - asset: fonts/OpenSans-Bold.ttf
           weight: 600
     - family: Oswald
       fonts:

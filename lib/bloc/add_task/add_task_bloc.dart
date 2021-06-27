@@ -31,7 +31,7 @@ class TaskAddBloc extends Bloc<TaskAddEvent, TaskAddState> {
     var taskAdd = state.taskAdd;
     taskAdd = taskAdd.copyWith(name: event.taskName);
     taskAdd = taskAdd.copyWith(priority: event.priority);
-    taskAdd = taskAdd.copyWith(taskDate: event.taskDate);
+    taskAdd = taskAdd.copyWith(dueDate: event.taskDate);
     taskAdd = taskAdd.copyWith(project: event.project);
     taskAdd = taskAdd.copyWith(labels: event.labels);
     taskAdd = taskAdd.copyWith(sectionId: event.sectionId);

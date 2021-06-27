@@ -3,6 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:totodo/utils/util.dart';
 
 class DateHelper {
+  static String getStringAddedDurationDate(String date, Duration duration) {
+    return DateTime.parse(date).add(duration).toIso8601String();
+  }
+
   static List<String> getListDayOfMonth(int subtractMonth) {
     final date = DateUtils.addMonthsToMonthDate(DateTime.now(), -subtractMonth);
     log('testStatistic', date);

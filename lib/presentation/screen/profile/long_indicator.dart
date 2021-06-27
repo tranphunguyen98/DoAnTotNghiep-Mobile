@@ -25,7 +25,7 @@ class CompareIndicator extends StatelessWidget {
       children: [
         if (value != null)
           Text(
-            '${value >= 0 ? 'Tăng' : 'Giam'}${' ${value.abs().toInt()}${type == IndicatorTypeEnum.kPercent ? '%' : ''} $label'}',
+            '${value >= 0 ? 'Tăng' : 'Giảm'}${' ${value.abs().toInt()}${type == IndicatorTypeEnum.kPercent ? '%' : ''} $label'}',
             style: kFontRegularDefault_10,
           ),
         SizedBox(

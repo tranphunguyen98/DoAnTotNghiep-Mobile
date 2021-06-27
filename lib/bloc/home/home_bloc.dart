@@ -7,6 +7,8 @@ import 'package:totodo/data/remote/exception/unauthenticated_exception.dart';
 import 'package:totodo/data/repository_interface/i_task_repository.dart';
 import 'package:totodo/data/repository_interface/i_user_repository.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
+import 'package:totodo/utils/date_helper.dart';
+import 'package:totodo/utils/notification_helper.dart';
 import 'package:totodo/utils/util.dart';
 
 import 'bloc.dart';
@@ -51,6 +53,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _mapAsyncDataToState();
     } else if (event is DeleteSectionEvent) {
       yield* _mapDeleteSectionEventToState(event.projectId, event.sectionId);
+    } else if (event is CompletedTask) {
+      yield* _mapCompletedTaskToState(event.taskId);
+    } else if (event is Snoozed) {
+      yield* _mapSnoozedToState(event.minutes, event.taskId);
     }
   }
 
@@ -95,14 +101,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       if (updateTask != null) {
         await _taskRepository.updateTask(updateTask);
-        // if (updateTask.isCompleted) {
-        //   await _taskRepository.updateTask(updateTask.copyWith(
-        //       completedDate: DateTime.now().toIso8601String()));
-        // } else {
-        //   await _taskRepository
-        //       .updateTask(updateTask.copyWith(completedDate: ''));
-        // }
-
         final listAllTask = await _taskRepository.getAllTask();
         yield state.copyWith(listAllTask: listAllTask);
       }
@@ -290,5 +288,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       await _taskRepository.asyncData();
       yield* _mapOpenHomeScreenToState();
     }
+  }
+
+  Stream<HomeState> _mapCompletedTaskToState(String taskId) async* {
+    final task = await _taskRepository.getDetailTask(taskId);
+    yield* _mapUpdateTaskEventToState(task.copyWith(
+        isCompleted: true, completedDate: DateTime.now().toIso8601String()));
+  }
+
+  Stream<HomeState> _mapSnoozedToState(int minutes, String taskId) async* {
+    final task = await _taskRepository.getDetailTask(taskId);
+    await showNotificationScheduledWithTask(task.copyWith(
+        dueDate: DateHelper.getStringAddedDurationDate(
+            task.dueDate, Duration(minutes: minutes))));
   }
 }

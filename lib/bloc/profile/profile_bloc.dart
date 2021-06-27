@@ -40,6 +40,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         yield state.copyWith(
           loading: false,
           user: user,
+          allCompletedTask: await _getAllCompletedTask(),
           dataStatisticToday:
               await _getStatisticDayOfWeek(today.toIso8601String()),
           dataStatisticYesterday:
@@ -60,7 +61,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Future<ItemDataStatisticDay> _getStatisticDayOfWeek(String dateTimeStr,
       {List<Task> allTask}) async {
-    //TODO handle NoDate
     List<Task> _listAllTask = [];
     if (allTask == null) {
       _listAllTask = await _taskRepository.getAllTask();
@@ -180,5 +180,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             .toList();
 
     return completionRateDateList.reduce((value, element) => value + element);
+  }
+
+  Future<int> _getAllCompletedTask() async {
+    return (await _taskRepository.getAllTask())
+        .where((element) => element.isCompleted)
+        .length;
   }
 }
