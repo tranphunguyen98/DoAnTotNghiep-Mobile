@@ -15,6 +15,9 @@ import 'package:totodo/presentation/screen/detail_habit/popup_menu_habit_detail.
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
+const kDataKey = 'data';
+const kTitleKey = 'title';
+
 class HabitDetailScreen extends StatefulWidget {
   static const kTypeHabit = 'habit';
   static const kTypeChosenDay = 'chosenDay';
@@ -94,7 +97,10 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                           color: Colors.white,
                           onPressed: () {
                             Navigator.of(context).pushNamed(AppRouter.kDiary,
-                                arguments: state.listDiary);
+                                arguments: {
+                                  kDataKey: state.listDiary,
+                                  kTitleKey: state.habit.name
+                                });
                           },
                         ),
                         PopupMenuHabitDetail(
@@ -123,6 +129,11 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                         if (state.habit.typeHabitGoal ==
                             EHabitGoal.reachACertainAmount.index)
                           _buildDailyGoals(),
+                        if (state.habit.typeHabitGoal !=
+                            EHabitGoal.reachACertainAmount.index)
+                          SizedBox(
+                            height: 80,
+                          ),
                       ]),
                     ),
                   ],
@@ -201,7 +212,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
     return TableCalendar(
       firstDay: DateTime.utc(2010, 10, 16),
       lastDay: DateTime.now().toUtc(),
-      focusedDay: DateTime.now(),
+      focusedDay: DateTime.now().toUtc(),
       availableCalendarFormats: const {
         CalendarFormat.month: 'Month',
       },

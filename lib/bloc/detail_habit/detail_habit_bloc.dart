@@ -1,10 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:objectid/objectid.dart';
 import 'package:totodo/data/model/habit/diary_item.dart';
 import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/data/model/habit/habit_progress_item.dart';
 import 'package:totodo/data/repository_interface/i_habit_repository.dart';
 import 'package:totodo/utils/date_helper.dart';
+import 'package:totodo/utils/file_helper.dart';
+import 'package:totodo/utils/util.dart';
 
 import 'bloc.dart';
 
@@ -43,17 +46,43 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
   }
 
   Stream<DetailHabitState> _mapAddDiaryToState(
-      DiaryItem item, String dateString) async* {
+      DiaryItem diaryItem, String dateString) async* {
     final List<HabitProgressItem> habitProgress = [];
     habitProgress.addAll(state.habit.habitProgress);
 
     final int index = habitProgress.indexWhere(
         (element) => DateHelper.isSameDayString(element.day, dateString));
-    habitProgress[index] = habitProgress[index].copyWith(diary: item);
+
+    final List<String> newImagePaths = [];
+    if (diaryItem.images?.isNotEmpty ?? false) {
+      for (final imagePath in diaryItem.images) {
+        final newPath = await saveImage(
+            imagePath, ObjectId().hexString + getExtensionFromPath(imagePath));
+        newImagePaths.add(newPath);
+      }
+      diaryItem.images.forEach((imagePath) async {});
+      log('testImage', newImagePaths);
+    }
+    habitProgress[index] = habitProgress[index]
+        .copyWith(diary: diaryItem.copyWith(images: newImagePaths));
 
     final habit = state.habit.copyWith(habitProgress: habitProgress);
     await _habitRepository.updateHabit(habit);
     yield state.copyWith(habit: habit);
+  }
+
+  Future<void> saveImages() async {
+    if (state.habit.motivation?.images?.isNotEmpty ?? false) {
+      final List<String> newImagePaths = [];
+      for (final imagePath in state.habit.motivation.images) {
+        final newPath = await saveImage(
+            imagePath, ObjectId().hexString + getExtensionFromPath(imagePath));
+        newImagePaths.add(newPath);
+      }
+      state.habit.copyWith(
+          motivation: state.habit.motivation.copyWith(images: newImagePaths));
+      log('testImage', newImagePaths);
+    }
   }
 
   Stream<DetailHabitState> _mapDeleteHabitToState() async* {

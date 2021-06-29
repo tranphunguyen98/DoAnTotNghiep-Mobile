@@ -81,6 +81,7 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
 
   @override
   Future<void> clearData() {
+    //TODO Clear images
     return _taskService.clearData();
   }
 

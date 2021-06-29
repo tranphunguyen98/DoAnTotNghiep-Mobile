@@ -2,9 +2,13 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications/awesome_notifications.dart'
     hide DateUtils;
 import 'package:flutter/material.dart';
+import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/data/model/task.dart';
 
-const String kKeyPayloadNotificationIdTask = 'idTask';
+const String kValuePayloadNotificationTaskType = 'task';
+const String kValuePayloadNotificationHabitType = 'habit';
+const String kKeyPayloadNotificationType = 'type';
+const String kKeyPayloadNotificationId = 'idTask';
 const String kKeyButtonActionComplete = 'complete';
 const String kIcon = 'resource://drawable/icon';
 
@@ -47,28 +51,70 @@ void initNotification() {
 
 Future<void> showNotificationAtScheduleCron({
   int id,
+  String title,
   String body,
   Map<String, String> payload,
   DateTime scheduleTime,
+  String crontab,
   String channelKey,
   Color color,
+  String picture,
+  NotificationLayout notificationLayout,
+  List<NotificationActionButton> actionButtons,
 }) async {
   await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: id,
-        channelKey: channelKey ?? kChannelKeyHigh,
-        body: body,
-        payload: payload,
-        autoCancel: false,
-        displayOnForeground: true,
-        displayOnBackground: true,
-        backgroundColor: color,
-        color: color,
-      ),
+          id: id,
+          channelKey: channelKey ?? kChannelKeyHigh,
+          title: title ?? '',
+          body: body,
+          payload: payload,
+          notificationLayout: notificationLayout,
+          autoCancel: false,
+          displayOnForeground: true,
+          displayOnBackground: true,
+          backgroundColor: color,
+          color: color,
+          bigPicture: picture),
       schedule: NotificationSchedule(
-        crontabSchedule:
+        crontabSchedule: crontab ??
             CronHelper.instance.atDate(scheduleTime.toUtc(), initialSecond: 0),
       ),
+      actionButtons: actionButtons);
+}
+
+Future<void> showNotificationScheduledWithHabit(Habit habit) async {
+  habit.reminds.forEach((remind) {
+    showNotificationAtScheduleCron(
+        id: '${habit.id}${remind.minute}${remind.hour}'.hashCode,
+        title: habit.name,
+        body: habit.motivation.text ?? '',
+        payload: {
+          kKeyPayloadNotificationType: kValuePayloadNotificationHabitType,
+          kKeyPayloadNotificationId: habit.id
+        },
+        channelKey: kChannelKeyHigh,
+        crontab: habit.cronReminder(remind),
+        notificationLayout: NotificationLayout.BigPicture,
+        picture: (habit.motivation?.images?.isNotEmpty ?? false)
+            ? "file:/${habit.motivation.images[0]}"
+            : null,
+        color: Colors.blue);
+  });
+}
+
+Future<void> showNotificationScheduledWithTask(Task task) async {
+  showNotificationAtScheduleCron(
+      id: task.id.hashCode,
+      title: task.name,
+      payload: {
+        kKeyPayloadNotificationType: kValuePayloadNotificationTaskType,
+        kKeyPayloadNotificationId: task.id
+      },
+      scheduleTime: DateTime.parse(task.dueDate),
+      channelKey:
+          task.priority == Task.kPriority1 ? kChannelKeyMax : kChannelKeyHigh,
+      color: getColorFromPriority(task.priority),
       actionButtons: [
         NotificationActionButton(
           key: kDoneNotificationKey,
@@ -80,17 +126,6 @@ Future<void> showNotificationAtScheduleCron({
           buttonType: ActionButtonType.InputField,
         )
       ]);
-}
-
-Future<void> showNotificationScheduledWithTask(Task task) async {
-  showNotificationAtScheduleCron(
-      id: task.id.hashCode,
-      body: task.name,
-      payload: {kKeyPayloadNotificationIdTask: task.id},
-      scheduleTime: DateTime.parse(task.dueDate),
-      channelKey:
-          task.priority == Task.kPriority1 ? kChannelKeyMax : kChannelKeyHigh,
-      color: getColorFromPriority(task.priority));
 }
 
 Color getColorFromPriority(int priority) {

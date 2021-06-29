@@ -297,6 +297,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Stream<HomeState> _mapSnoozedToState(int minutes, String taskId) async* {
+    // TODO handle when app terminal
     final task = await _taskRepository.getDetailTask(taskId);
     await showNotificationScheduledWithTask(task.copyWith(
         dueDate: DateHelper.getStringAddedDurationDate(

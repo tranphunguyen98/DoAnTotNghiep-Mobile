@@ -139,6 +139,12 @@ class DateHelper {
     return DateTime(date.year, date.month, date.day);
   }
 
+  static DateTime timeDateWithStringDate(
+      String dateString, int hour, int minute) {
+    final DateTime date = DateTime.parse(dateString);
+    return DateTime(date.year, date.month, date.day, hour, minute);
+  }
+
   static DateTime getDefaultTimeReminder(DateTime date) {
     return DateTime(date.year, date.month, date.day, 9);
   }

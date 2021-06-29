@@ -70,7 +70,7 @@ class _CreateHabitScreenState extends State<CreateHabitScreen> {
   }
 
   Widget _buildBottomContainer(CreatingHabitStep _step) {
-    return BlocListener<CreateHabitBloc, CreateHabitState>(
+    return BlocConsumer<CreateHabitBloc, CreateHabitState>(
       cubit: _createHabitBloc,
       listenWhen: (previous, current) => previous.success != current.success,
       listener: (context, state) {
@@ -78,26 +78,33 @@ class _CreateHabitScreenState extends State<CreateHabitScreen> {
           Navigator.pop(context, true);
         }
       },
-      child: Container(
-        height: 60,
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        color: kColorWhite,
-        child: ElevatedButton(
-          onPressed: () {
-            _onClickButton(_step);
-          },
-          child: Text(
-            _step.index == CreatingHabitStep.kStep1 ? 'Tiếp tục' : 'Lưu',
-            style: kFontMediumWhite_12,
+      builder: (context, state) {
+        return Container(
+          height: 60,
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          color: kColorWhite,
+          child: ElevatedButton(
+            onPressed: () {
+              _onClickButton(state, _step);
+            },
+            child: Text(
+              _step.index == CreatingHabitStep.kStep1 ? 'Tiếp tục' : 'Lưu',
+              style: kFontMediumWhite_12,
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  void _onClickButton(CreatingHabitStep _step) {
+  void _onClickButton(CreateHabitState state, CreatingHabitStep _step) {
+    if (state?.habit?.name?.isEmpty ?? true) {
+      _createHabitBloc.add(AddError('Tên không được rỗng'));
+      return;
+    }
     if (_step.index == CreatingHabitStep.kStep1) {
+      _createHabitBloc.add(AddError(''));
       _step.index = CreatingHabitStep.kStep2;
     } else {
       _createHabitBloc.add(SubmitCreatingHabit());

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:totodo/bloc/create_habit/bloc.dart';
 import 'package:totodo/data/model/habit/habit_remind.dart';
@@ -52,9 +51,9 @@ class _BodyCreatingHabitStep2State extends State<BodyCreatingHabitStep2> {
                 if (state.habit.frequency.typeFrequency ==
                     EHabitFrequency.weekly.index)
                   _buildWeeklyFrequency(),
-                if (state.habit.frequency.typeFrequency ==
-                    EHabitFrequency.interval.index)
-                  _buildIntervalFrequency(),
+                // if (state.habit.frequency.typeFrequency ==
+                //     EHabitFrequency.interval.index)
+                //   _buildIntervalFrequency(),
                 _buildGoal(),
                 _buildReminder(),
               ],
@@ -185,15 +184,28 @@ class _BodyCreatingHabitStep2State extends State<BodyCreatingHabitStep2> {
   }
 
   Widget _buildReminder() {
+    final reminds = _state.habit.reminds;
+    reminds.sort((a, b) {
+      if (a.hour > b.hour) {
+        return 1;
+      } else if (a.hour == b.hour) {
+        return a.minute > b.minute ? 1 : -1;
+      } else if (a.hour < b.hour) {
+        return -1;
+      }
+      return 0;
+    });
     return ContainerInfo(
       title: 'Nhắc nhở',
       child: Wrap(
         children: [
           ..._state.habit.reminds
-              .map((e) => ItemReminderHabit(
-                    text: DateFormat("HH:mm")
-                        .format(DateTime(0, 0, 0, e.hour, e.minute)),
-                  ))
+              .map(
+                (e) => ItemReminderHabit(
+                  habitRemind: e,
+                  onTap: _onRemoveRemind,
+                ),
+              )
               .toList(),
           GestureDetector(
             onTap: () async {
@@ -208,8 +220,8 @@ class _BodyCreatingHabitStep2State extends State<BodyCreatingHabitStep2> {
             },
             child: Container(
               height: 36.0,
-              width: 86.0,
-              margin: EdgeInsets.only(right: 8.0, bottom: 8.0),
+              width: 82.0,
+              margin: EdgeInsets.only(right: 8.0, bottom: 8.0, top: 8.0),
               padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
@@ -264,7 +276,24 @@ class _BodyCreatingHabitStep2State extends State<BodyCreatingHabitStep2> {
   void _onHabitRemindsChanged(HabitRemind habitRemind) {
     final reminds = <HabitRemind>[];
     reminds.addAll(_state.habit.reminds);
-    reminds.add(habitRemind);
+    if (!reminds.contains(habitRemind)) {
+      reminds.add(habitRemind);
+      _createHabitBloc.add(
+        CreatingHabitDataChanged(reminds: reminds),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Trùng giờ'),
+        duration: Duration(milliseconds: 300),
+        backgroundColor: Colors.black87,
+      ));
+    }
+  }
+
+  void _onRemoveRemind(HabitRemind habitRemind) {
+    final reminds = <HabitRemind>[];
+    reminds.addAll(_state.habit.reminds);
+    reminds.remove(habitRemind);
     _createHabitBloc.add(
       CreatingHabitDataChanged(reminds: reminds),
     );

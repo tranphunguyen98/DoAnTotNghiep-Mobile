@@ -49,7 +49,7 @@ class ItemHabit extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _habit.name,
+                _habit?.name ?? '',
                 style: kFontMediumBlack_14,
               ),
               if (_habit.typeHabitGoal == EHabitGoal.reachACertainAmount.index)

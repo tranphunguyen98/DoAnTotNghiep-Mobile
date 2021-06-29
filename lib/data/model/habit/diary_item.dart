@@ -17,6 +17,21 @@ class DiaryItem extends Equatable {
     @required this.images,
   });
 
+  DiaryItem copyWith({
+    String text,
+    List<String> images,
+  }) {
+    if ((text == null || identical(text, this.text)) &&
+        (images == null || identical(images, this.images))) {
+      return this;
+    }
+
+    return DiaryItem(
+      text: text ?? this.text,
+      images: images ?? this.images,
+    );
+  }
+
   @override
   List<Object> get props => [text, images];
 }

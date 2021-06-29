@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
@@ -72,9 +74,11 @@ class ItemDiary extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 8.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child: Image.asset(
-                      e,
+                    child: Image.file(
+                      File(e),
+                      width: 80,
                       height: 80.0,
+                      fit: BoxFit.fitWidth,
                     ),
                   ),
                 ),

@@ -20,8 +20,11 @@ class HabitRepositoryImpl implements IHabitRepository {
   }
 
   @override
-  Future<List<Habit>> getAllHabit() {
-    return _localHabitDataSource.getAllHabit();
+  Future<List<Habit>> getAllHabit() async {
+    return (await _localHabitDataSource.getAllHabit())
+        .where(
+            (element) => element.isTrashed == null || element.isTrashed != true)
+        .toList();
   }
 
   @override

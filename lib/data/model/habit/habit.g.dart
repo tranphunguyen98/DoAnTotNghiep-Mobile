@@ -31,8 +31,8 @@ class HabitAdapter extends TypeAdapter<Habit> {
       isFinished: fields[10] as bool,
       isTrashed: fields[17] as bool,
       type: fields[12] as int,
-      createdDate: fields[16] as String,
-      updatedDate: fields[18] as String,
+      createdAt: fields[16] as String,
+      updatedAt: fields[18] as String,
       reminds: (fields[5] as List)?.cast<HabitRemind>(),
       frequency: fields[13] as HabitFrequency,
       habitProgress: (fields[11] as List)?.cast<HabitProgressItem>(),
@@ -76,11 +76,11 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(15)
       ..write(obj.typeHabitGoal)
       ..writeByte(16)
-      ..write(obj.createdDate)
+      ..write(obj.createdAt)
       ..writeByte(17)
       ..write(obj.isTrashed)
       ..writeByte(18)
-      ..write(obj.updatedDate);
+      ..write(obj.updatedAt);
   }
 
   @override

@@ -39,7 +39,7 @@ class PopupMenuHabitDetail extends StatelessWidget {
   List<DropdownChoices> getDropdownChoices() {
     final listDropdownChoices = [
       DropdownChoices(
-          title: 'Sửa',
+          title: 'Sửa thói quen',
           onPressed: (context) {
             onEditHabit();
           }),
@@ -49,7 +49,7 @@ class PopupMenuHabitDetail extends StatelessWidget {
             onArchiveHabit();
           }),
       DropdownChoices(
-          title: 'Xóa',
+          title: 'Xóa thói quen',
           onPressed: (context) {
             onDeleteHabit();
           })

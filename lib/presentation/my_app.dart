@@ -63,21 +63,40 @@ class _MyAppState extends State<MyApp> {
     });
     AwesomeNotifications().actionStream.listen((receivedNotification) async {
       log('testNotification', receivedNotification);
-      final taskId = receivedNotification.payload[kKeyPayloadNotificationIdTask]
-          .toString();
-      if (receivedNotification.buttonKeyPressed == kDoneNotificationKey) {
-        getIt.get<HomeBloc>().add(CompletedTask(taskId));
-      } else if (receivedNotification.buttonKeyPressed ==
-          kSnoozedNotificationKey) {
-        if (isInt(receivedNotification.buttonKeyInput)) {
-          getIt.get<HomeBloc>().add(
-              Snoozed(int.parse(receivedNotification.buttonKeyInput), taskId));
+      final type = receivedNotification.payload[kKeyPayloadNotificationType];
+      final id =
+          receivedNotification.payload[kKeyPayloadNotificationId].toString();
+
+      if (type == kValuePayloadNotificationTaskType) {
+        if (receivedNotification.buttonKeyPressed == kDoneNotificationKey) {
+          getIt.get<HomeBloc>().add(CompletedTask(id));
+        } else if (receivedNotification.buttonKeyPressed ==
+            kSnoozedNotificationKey) {
+          if (isInt(receivedNotification.buttonKeyInput)) {
+            getIt.get<HomeBloc>().add(
+                Snoozed(int.parse(receivedNotification.buttonKeyInput), id));
+          }
+        } else {
+          await _navigatorKey.currentState.pushNamed(
+            AppRouter.kDetailTask,
+            arguments: id,
+          );
         }
       } else {
-        await _navigatorKey.currentState.pushNamed(
-          AppRouter.kDetailTask,
-          arguments: taskId,
-        );
+        if (receivedNotification.buttonKeyPressed == kDoneNotificationKey) {
+          getIt.get<HomeBloc>().add(CompletedTask(id));
+        } else if (receivedNotification.buttonKeyPressed ==
+            kSnoozedNotificationKey) {
+          if (isInt(receivedNotification.buttonKeyInput)) {
+            getIt.get<HomeBloc>().add(
+                Snoozed(int.parse(receivedNotification.buttonKeyInput), id));
+          }
+        } else {
+          await _navigatorKey.currentState.pushNamed(
+            AppRouter.kDetailTask,
+            arguments: id,
+          );
+        }
       }
     });
     super.initState();

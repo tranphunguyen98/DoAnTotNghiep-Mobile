@@ -30,8 +30,11 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
   @override
   void initState() {
     _createHabitBloc = BlocProvider.of<CreateHabitBloc>(context);
-    _quoteController.text = widget._habit?.motivation?.text ?? '';
-    _nameController.text = widget._habit?.name ?? '';
+    _nameController.text =
+        _createHabitBloc.state.habit?.name ?? widget._habit?.name ?? '';
+    _quoteController.text = _createHabitBloc.state.habit?.motivation?.text ??
+        widget._habit?.motivation?.text ??
+        '';
     super.initState();
   }
 
@@ -48,6 +51,7 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
       cubit: _createHabitBloc,
       builder: (context, state) {
         _state = state;
+
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,15 +73,15 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
 
     setState(() {
       if (pickedFile != null) {
-        final image = File(pickedFile.path);
+        final imageFile = File(pickedFile.path);
         final List<String> images = [];
         images.addAll(_state.habit.motivation.images ?? []);
-        images.add(image.path);
+        images.add(imageFile.path);
 
         _createHabitBloc.add(
           CreatingHabitDataChanged(
             motivation: _state.habit.motivation.copyWith(
-              images: images, //TODO Save Image to local storage
+              images: images,
             ),
           ),
         );
@@ -115,6 +119,8 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
                   onChanged: _onNameHabitChanged,
                   decoration: InputDecoration(
                     hintText: 'Thiền',
+                    errorText:
+                        _state?.msg?.isNotEmpty ?? false ? _state.msg : null,
                     hintStyle: kFontRegularGray1_14,
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: kColorGray1, width: 0.5),
@@ -255,14 +261,15 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
 
   Widget _buildImage() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(
+          top: 8.0, left: 16.0, right: 16.0, bottom: 16.0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
           'Hình ảnh tạo động lực',
           style: kFontMediumBlack_14,
         ),
         const SizedBox(
-          height: 16.0,
+          height: 8.0,
         ),
         Wrap(
           spacing: 8.0,
@@ -274,22 +281,48 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
 
   List<Widget> _getWidgetListMotivationImage() {
     final List<Widget> widgetList = [];
-    final double imageSize = (MediaQuery.of(context).size.width - 56) / 3;
+    final double imageSize = (MediaQuery.of(context).size.width - 80) / 3;
 
     if (_state.habit?.motivation?.images != null) {
       widgetList.addAll(_state.habit.motivation.images
           .map(
-            (image) => Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16.0),
-                child: Image.file(
-                  File(image),
-                  height: imageSize,
-                  width: imageSize,
-                  fit: BoxFit.fitWidth,
+            (image) => Stack(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 8.0, top: 8.0, right: 8.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: Image.file(
+                      File(image),
+                      height: imageSize,
+                      width: imageSize,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
                 ),
-              ),
+                Positioned(
+                  right: 0.0,
+                  top: 0.0,
+                  child: Icon(
+                    Icons.circle,
+                    color: Colors.white,
+                  ),
+                ),
+                Positioned(
+                  right: 0.0,
+                  top: 0.0,
+                  child: GestureDetector(
+                    onTap: () {
+                      _onTap(image);
+                    },
+                    child: Icon(
+                      Icons.cancel,
+                      color: Colors.redAccent,
+                    ),
+                  ),
+                ),
+              ],
             ),
           )
           .toList());
@@ -301,7 +334,7 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
         child: Container(
           height: imageSize,
           width: imageSize,
-          margin: const EdgeInsets.only(bottom: 8.0),
+          margin: const EdgeInsets.only(bottom: 8.0, top: 8, right: 8),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(16.0)),
             border: Border.all(color: Colors.grey[300]),
@@ -342,6 +375,20 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
       CreatingHabitDataChanged(
         motivation: _state.habit.motivation.copyWith(
           text: value,
+        ),
+      ),
+    );
+  }
+
+  void _onTap(String image) {
+    final List<String> images = [];
+    images.addAll(_state.habit.motivation.images ?? []);
+    images.remove(image);
+
+    _createHabitBloc.add(
+      CreatingHabitDataChanged(
+        motivation: _state.habit.motivation.copyWith(
+          images: images,
         ),
       ),
     );

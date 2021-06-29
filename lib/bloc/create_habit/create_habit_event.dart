@@ -25,6 +25,15 @@ class OpenScreenCreateHabit extends CreateHabitEvent {
   }
 }
 
+class AddError extends CreateHabitEvent {
+  final String error;
+
+  AddError(this.error);
+
+  @override
+  List<Object> get props => [error];
+}
+
 class CreatingHabitDataChanged extends CreateHabitEvent {
   final String name;
   final int type;

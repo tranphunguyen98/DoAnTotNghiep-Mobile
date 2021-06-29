@@ -150,10 +150,13 @@ class AppRouter {
   }
 
   static MaterialPageRoute _buildDiaryScreen(RouteSettings settings) {
-    if (settings.arguments is List<DiaryItemData>) {
+    if (settings.arguments is Map<String, Object>) {
       return MaterialPageRoute(
-          builder: (_) =>
-              DiaryScreen(listData: settings.arguments as List<DiaryItemData>));
+          builder: (_) => DiaryScreen(
+              title: (settings.arguments as Map<String, Object>)[kTitleKey]
+                  as String,
+              listData: (settings.arguments as Map<String, Object>)[kDataKey]
+                  as List<DiaryItemData>));
     }
     return MaterialPageRoute(builder: (_) => const DiaryScreen());
   }

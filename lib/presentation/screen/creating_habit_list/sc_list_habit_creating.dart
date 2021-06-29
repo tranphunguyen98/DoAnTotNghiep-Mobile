@@ -18,49 +18,12 @@ class ListHabitCreatingScreen extends StatelessWidget {
             'Tạo thói quen',
             style: kFontMediumBlack_18,
           ),
-          bottom: TabBar(
-            isScrollable: true,
-            indicatorColor: kColorGray1,
-            tabs: [
-              Tab(
-                text: 'GỢI Ý',
-              ),
-              Tab(
-                text: 'CUỘC SỐNG',
-              ),
-              Tab(
-                text: 'SỨC KHỎE',
-              ),
-              Tab(
-                text: 'THỂ THAO',
-              ),
-              Tab(
-                text: 'SỰ NGHIỆP',
-              )
-            ],
-          ),
         ),
         body: Column(
           children: [
             Expanded(
-              child: TabBarView(
-                children: [
-                  CreatingHabitList(
-                    listHabit: kListHabitDefault,
-                  ),
-                  CreatingHabitList(
-                    listHabit: kListHabitDefault,
-                  ),
-                  CreatingHabitList(
-                    listHabit: kListHabitDefault,
-                  ),
-                  CreatingHabitList(
-                    listHabit: kListHabitDefault,
-                  ),
-                  CreatingHabitList(
-                    listHabit: kListHabitDefault,
-                  ),
-                ],
+              child: CreatingHabitList(
+                listHabit: kListHabitDefault,
               ),
             ),
             Container(

@@ -41,12 +41,12 @@ class LocalTaskService {
       );
       _taskBox.add(taskWithId);
       return taskWithId.id;
+    } else {
+      _taskBox.add(localTask.copyWith(
+        createdAt: localTask.createdAt ?? currentDateString,
+        updatedAt: localTask.updatedAt ?? currentDateString,
+      ));
     }
-
-    _taskBox.add(localTask.copyWith(
-      createdAt: localTask.createdAt ?? currentDateString,
-      updatedAt: localTask.updatedAt ?? currentDateString,
-    ));
 
     return localTask.id;
   }

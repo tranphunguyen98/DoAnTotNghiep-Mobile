@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -47,8 +49,8 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
         _state = state;
         return LayoutBuilder(
           builder: (context, constraints) {
-            final expandRatio = _calculateExpandRatio(constraints);
-            final animation = AlwaysStoppedAnimation(expandRatio);
+            // final expandRatio = _calculateExpandRatio(constraints);
+            // final animation = AlwaysStoppedAnimation(expandRatio);
             return _buildContainerCheck();
           },
         );
@@ -56,13 +58,13 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
     );
   }
 
-  double _calculateExpandRatio(BoxConstraints constraints) {
-    var expandRatio = (constraints.maxHeight - widget.minHeight) /
-        (widget.maxHeight - widget.minHeight);
-    if (expandRatio > 1.0) expandRatio = 1.0;
-    if (expandRatio < 0.0) expandRatio = 0.0;
-    return expandRatio;
-  }
+  // double _calculateExpandRatio(BoxConstraints constraints) {
+  //   var expandRatio = (constraints.maxHeight - widget.minHeight) /
+  //       (widget.maxHeight - widget.minHeight);
+  //   if (expandRatio > 1.0) expandRatio = 1.0;
+  //   if (expandRatio < 0.0) expandRatio = 0.0;
+  //   return expandRatio;
+  // }
 
   Align _buildTitle(Animation<double> animation) {
     return Align(
@@ -97,18 +99,24 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       color: kColorGreenLight,
+      // color: Colors.red,
       height: MediaQuery.of(_context).size.height,
       child: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
-              height:
-                  !_state.habit.isDoneOnDay(_state.chosenDay) ? 220.0 : 180.0,
+              height: !_state.habit.isDoneOnDay(_state.chosenDay)
+                  ? (_state.habit?.motivation?.images?.isNotEmpty ?? false)
+                      ? 160
+                      : 220.0
+                  : (_state.habit?.motivation?.images?.isNotEmpty ?? false)
+                      ? 120
+                      : 180.0,
             ),
             Image.asset(
               kImageTag,
-              width: 160.0,
-              height: 160.0,
+              width: 120.0,
+              height: 120.0,
             ),
             SizedBox(
               height: 48.0,
@@ -125,6 +133,26 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
               style: kFontRegularWhite_14_80,
               textAlign: TextAlign.center,
             ),
+            SizedBox(
+              height: 16.0,
+            ),
+            if (_state.habit?.motivation?.images?.isNotEmpty ?? false)
+              Wrap(children: [
+                ..._state.habit.motivation.images.map(
+                  (imagePath) => Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: Image.file(
+                        File(imagePath),
+                        height: 120,
+                        width: 120,
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                  ),
+                ),
+              ]),
             SizedBox(
               height: 32.0,
             ),
@@ -187,13 +215,16 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
   }
 
   Future<void> _showDialogAddDiary() async {
-    final result = await showDialog<String>(
+    final result = await showDialog<Map<String, Object>>(
       context: context,
       builder: (BuildContext dialogContext) {
         return DialogCompleteHabit(_state.habit.name);
       },
     );
-    _detailHabitBloc
-        .add(AddDiary(DiaryItem(text: result, images: []), _state.chosenDay));
+    _detailHabitBloc.add(AddDiary(
+        DiaryItem(
+            text: result[kCompletedHabitDialogTextKey] as String,
+            images: result[kCompletedHabitDialogImagesKey] as List<String>),
+        _state.chosenDay));
   }
 }

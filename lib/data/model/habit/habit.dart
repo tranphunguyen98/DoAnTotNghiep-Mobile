@@ -16,6 +16,7 @@ part 'habit.g.dart';
 
 @HiveType(typeId: kHiveTypeHabit)
 class Habit extends Equatable {
+  //TODO add default images
   @HiveField(0)
   final String id;
   @HiveField(1)
@@ -49,19 +50,34 @@ class Habit extends Equatable {
   @HiveField(15)
   final int typeHabitGoal;
   @HiveField(16)
-  final String createdDate;
+  final String createdAt;
   @HiveField(17)
   final bool isTrashed;
   @HiveField(18)
-  final String updatedDate;
-
+  final String updatedAt;
+  @HiveField(19)
   String get cronDay {
     if (frequency.typeFrequency == EHabitFrequency.daily.index) {
       return CronHelper.instance.dailyDays(frequency.dailyDays,
-          referenceUtcDate: DateHelper.dateOnlyWithStringDate(createdDate));
+          referenceUtcDate: DateHelper.dateOnlyWithStringDate(createdAt));
     } else if (frequency.typeFrequency == EHabitFrequency.weekly.index) {
       return CronHelper.instance.daily(
-          referenceUtcDate: DateHelper.dateOnlyWithStringDate(createdDate));
+          referenceUtcDate: DateHelper.dateOnlyWithStringDate(createdAt));
+    }
+    return "";
+  }
+
+  String cronReminder(HabitRemind remind) {
+    if (frequency.typeFrequency == EHabitFrequency.daily.index) {
+      return CronHelper.instance.dailyDays(frequency.dailyDays,
+          referenceUtcDate: DateHelper.timeDateWithStringDate(
+                  createdAt, remind.hour, remind.minute)
+              .toUtc());
+    } else if (frequency.typeFrequency == EHabitFrequency.weekly.index) {
+      return CronHelper.instance.daily(
+          referenceUtcDate: DateHelper.timeDateWithStringDate(
+                  createdAt, remind.hour, remind.minute)
+              .toUtc());
     }
     return "";
   }
@@ -107,8 +123,8 @@ class Habit extends Equatable {
     this.isFinished = false,
     this.isTrashed = false,
     this.type = 0,
-    this.createdDate,
-    this.updatedDate,
+    this.createdAt,
+    this.updatedAt,
     List<HabitRemind> reminds,
     HabitFrequency frequency,
     List<HabitProgressItem> habitProgress,
@@ -139,9 +155,9 @@ class Habit extends Equatable {
     HabitFrequency frequency,
     int typeHabitMissionDayCheckIn,
     int typeHabitGoal,
-    String createdDate,
+    String createdAt,
     bool isTrashed,
-    String updatedDate,
+    String updatedAt,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (name == null || identical(name, this.name)) &&
@@ -166,9 +182,9 @@ class Habit extends Equatable {
                 typeHabitMissionDayCheckIn, this.typeHabitMissionDayCheckIn)) &&
         (typeHabitGoal == null ||
             identical(typeHabitGoal, this.typeHabitGoal)) &&
-        (createdDate == null || identical(createdDate, this.createdDate)) &&
+        (createdAt == null || identical(createdAt, this.createdAt)) &&
         (isTrashed == null || identical(isTrashed, this.isTrashed)) &&
-        (updatedDate == null || identical(updatedDate, this.updatedDate))) {
+        (updatedAt == null || identical(updatedAt, this.updatedAt))) {
       return this;
     }
 
@@ -191,15 +207,15 @@ class Habit extends Equatable {
       typeHabitMissionDayCheckIn:
           typeHabitMissionDayCheckIn ?? this.typeHabitMissionDayCheckIn,
       typeHabitGoal: typeHabitGoal ?? this.typeHabitGoal,
-      createdDate: createdDate ?? this.createdDate,
+      createdAt: createdAt ?? this.createdAt,
       isTrashed: isTrashed ?? this.isTrashed,
-      updatedDate: updatedDate ?? this.updatedDate,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   @override
   String toString() {
-    return 'Habit{id: $id, name: $name, icon: $icon, images: $images, isSaveDiary: $isSaveDiary, reminds: $reminds, motivation: $motivation, missionDayUnit: $missionDayUnit, missionDayCheckInStep: $missionDayCheckInStep, totalDayAmount: $totalDayAmount, isFinished: $isFinished, habitProgress: $habitProgress, type: $type, frequency: $frequency, typeHabitMissionDayCheckIn: $typeHabitMissionDayCheckIn, typeHabitGoal: $typeHabitGoal, createdDate: $createdDate, isTrashed: $isTrashed, updatedDate: $updatedDate}';
+    return 'Habit{id: $id, name: $name, icon: $icon, images: $images, isSaveDiary: $isSaveDiary, reminds: $reminds, motivation: $motivation, missionDayUnit: $missionDayUnit, missionDayCheckInStep: $missionDayCheckInStep, totalDayAmount: $totalDayAmount, isFinished: $isFinished, habitProgress: $habitProgress, type: $type, frequency: $frequency, typeHabitMissionDayCheckIn: $typeHabitMissionDayCheckIn, typeHabitGoal: $typeHabitGoal, createdAt: $createdAt, isTrashed: $isTrashed, updatedAt: $updatedAt}';
   }
 
   @override
@@ -223,9 +239,9 @@ class Habit extends Equatable {
           frequency == other.frequency &&
           typeHabitMissionDayCheckIn == other.typeHabitMissionDayCheckIn &&
           typeHabitGoal == other.typeHabitGoal &&
-          createdDate == other.createdDate &&
+          createdAt == other.createdAt &&
           isTrashed == other.isTrashed &&
-          updatedDate == other.updatedDate);
+          updatedAt == other.updatedAt);
 
   @override
   int get hashCode =>
@@ -245,9 +261,9 @@ class Habit extends Equatable {
       frequency.hashCode ^
       typeHabitMissionDayCheckIn.hashCode ^
       typeHabitGoal.hashCode ^
-      createdDate.hashCode ^
+      createdAt.hashCode ^
       isTrashed.hashCode ^
-      updatedDate.hashCode;
+      updatedAt.hashCode;
 
   factory Habit.fromMap(Map<String, dynamic> map) {
     return Habit(
@@ -267,9 +283,9 @@ class Habit extends Equatable {
       frequency: map['frequency'] as HabitFrequency,
       typeHabitMissionDayCheckIn: map['typeHabitMissionDayCheckIn'] as int,
       typeHabitGoal: map['typeHabitGoal'] as int,
-      createdDate: map['createdDate'] as String,
+      createdAt: map['createdAt'] as String,
       isTrashed: map['isTrashed'] as bool,
-      updatedDate: map['updatedDate'] as String,
+      updatedAt: map['updatedAt'] as String,
     );
   }
 
@@ -292,9 +308,9 @@ class Habit extends Equatable {
       'frequency': frequency,
       'typeHabitMissionDayCheckIn': typeHabitMissionDayCheckIn,
       'typeHabitGoal': typeHabitGoal,
-      'createdDate': createdDate,
+      'createdAt': createdAt,
       'isTrashed': isTrashed,
-      'updatedDate': updatedDate,
+      'updatedAt': updatedAt,
     } as Map<String, dynamic>;
   }
 
@@ -317,8 +333,8 @@ class Habit extends Equatable {
         type,
         frequency,
         typeHabitMissionDayCheckIn,
-        createdDate,
+        createdAt,
         isTrashed,
-        updatedDate,
+        updatedAt,
       ];
 }

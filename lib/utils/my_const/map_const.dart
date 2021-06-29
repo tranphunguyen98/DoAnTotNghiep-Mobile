@@ -19,7 +19,7 @@ enum EHabitFrequency { daily, weekly, interval }
 Map<int, String> kHabitFrequency = {
   EHabitFrequency.daily.index: 'Daily',
   EHabitFrequency.weekly.index: 'Weekly',
-  EHabitFrequency.interval.index: 'Interval',
+  // EHabitFrequency.interval.index: 'Interval',
 };
 
 Map<int, String> kDateFilterHabit = {
