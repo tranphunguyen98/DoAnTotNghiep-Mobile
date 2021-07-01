@@ -32,13 +32,13 @@ class _HomeAppBarState extends State<HomeAppBar> {
           return AppBar(
             elevation: 0.0,
             title: getTitle(),
-            backgroundColor: state.indexNavigationBarSelected ==
-                    HomeState.kBottomNavigationTask
+            backgroundColor: state.indexNavigationBarSelected !=
+                    HomeState.kBottomNavigationHabit
                 ? kColorPrimary
                 : kColorWhite,
             iconTheme: IconThemeData(
-                color: state.indexNavigationBarSelected ==
-                        HomeState.kBottomNavigationTask
+                color: state.indexNavigationBarSelected !=
+                        HomeState.kBottomNavigationHabit
                     ? kColorWhite
                     : kColorGray4),
             actions: [
@@ -80,11 +80,19 @@ class _HomeAppBarState extends State<HomeAppBar> {
       String title = 'ToDoDo';
       if (_state.indexDrawerSelected == HomeState.kDrawerIndexToday) {
         title = 'Hôm nay';
+      } else if (_state.indexDrawerSelected == HomeState.kDrawerIndexNextWeek) {
+        title = '7 ngày tiếp theo';
       }
       return Text(title);
-    } else {
+    } else if (_state.indexNavigationBarSelected ==
+        HomeState.kBottomNavigationHabit) {
       return Text(
         'Habit',
+        style: kFontRegularGray4_16,
+      );
+    } else {
+      return Text(
+        'Cài Đặt',
         style: kFontRegularGray4_16,
       );
     }

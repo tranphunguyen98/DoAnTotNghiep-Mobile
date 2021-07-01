@@ -29,7 +29,7 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     //TODO add try catch
     state.copyWith(loading: true);
     final listHabit = <Habit>[];
-    listHabit.addAll(await _habitRepository.getAllHabit());
+    listHabit.addAll(await _habitRepository.getHabits());
     yield state.copyWith(
         listHabit: listHabit.where((habit) => !habit.isTrashed).toList(),
         loading: false);
@@ -43,7 +43,7 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
       Habit habit, int amount) async* {
     bool isDone = false;
     for (final habitProgress in habit.habitProgress) {
-      if (DateHelper.isSameDayString(habitProgress.day, state.chosenDay)) {
+      if (DateHelper.isSameDayString(habitProgress.date, state.chosenDay)) {
         if (habitProgress.isDone) {
           isDone = true;
         }
@@ -57,7 +57,7 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
       await _habitRepository.resetHabitOnDay(habit, state.chosenDay);
     }
 
-    final listHabit = await _habitRepository.getAllHabit();
+    final listHabit = await _habitRepository.getHabits();
 
     yield state.copyWith(listHabit: listHabit);
   }

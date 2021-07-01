@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
+import 'package:totodo/utils/util.dart';
 
 class ItemDiary extends StatelessWidget {
   final DiaryItemData data;
@@ -42,7 +43,7 @@ class ItemDiary extends StatelessWidget {
               ),
               Spacer(),
               Image.asset(
-                kIconHappy,
+                getOnEmotion(data.emotional),
                 height: 24.0,
                 width: 24.0,
               ),
@@ -78,7 +79,7 @@ class ItemDiary extends StatelessWidget {
                       File(e),
                       width: 80,
                       height: 80.0,
-                      fit: BoxFit.fitWidth,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -127,7 +128,7 @@ class DiaryItemData {
       return this;
     }
 
-    return new DiaryItemData(
+    return DiaryItemData(
       date: date ?? this.date,
       title: title ?? this.title,
       content: content ?? this.content,

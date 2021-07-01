@@ -29,7 +29,7 @@ class InitDataDetailHabit extends DetailHabitEvent {
 class CheckInHabit extends DetailHabitEvent {}
 
 class AddDiary extends DetailHabitEvent {
-  final DiaryItem item;
+  final Diary item;
   final String date;
 
   const AddDiary(this.item, this.date);

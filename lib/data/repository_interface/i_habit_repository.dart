@@ -1,17 +1,28 @@
+import 'package:totodo/data/model/habit/diary_item.dart';
 import 'package:totodo/data/model/habit/habit.dart';
 
 abstract class IHabitRepository {
-  Future<bool> addHabit(Habit habit);
+  Future<void> addHabit(Habit habit);
 
-  Future<bool> updateHabit(Habit habit);
+  Future<void> updateHabit(Habit habit);
+
+  Future<void> deleteHabit(Habit habit);
 
   Future<Habit> getDetailHabit(String id);
 
-  Future<bool> checkInHabit(Habit habit, String chosenDay, [int checkInAmount]);
+  Future<void> checkInHabit(Habit habit, String chosenDay, [int checkInAmount]);
 
-  Future<bool> resetHabitOnDay(Habit habit, String chosenDay);
+  Future<void> resetHabitOnDay(Habit habit, String chosenDay);
 
-  Future<List<Habit>> getAllHabit();
+  Future<List<Habit>> getHabits();
+
+  Future<void> addDiary(Diary diary);
+
+  Future<List<Diary>> getDiaries();
+
+  Future<List<Diary>> getDiaryByHabitId(String habitId);
+
+  Future<void> saveDataOnLocal();
 
   Future<void> clearOffline();
 }

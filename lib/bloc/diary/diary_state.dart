@@ -57,6 +57,16 @@ class DiaryState extends Equatable {
     );
   }
 
+  DiaryState setHabitFilterNull() {
+    return DiaryState(
+      diaries: this.diaries,
+      dateFilter: this.dateFilter,
+      habits: this.habits,
+      msg: this.msg,
+      isSuccess: this.isSuccess,
+    );
+  }
+
   @override
   String toString() {
     return 'DiaryState{diaries: $diaries, dateFilter: $dateFilter, habitFilter: $habitFilter, habits: $habits, msg: $msg, isSuccess: $isSuccess}';

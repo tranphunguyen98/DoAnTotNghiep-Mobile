@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:totodo/di/injection.dart';
-import 'package:totodo/utils/my_const/map_const.dart';
 
 import 'my_const/color_const.dart';
 
@@ -31,11 +30,11 @@ Color getColorDefaultFromValue(String value) {
   return dataColor[keyListColorColor] as Color;
 }
 
-Map<String, dynamic> getHabitTypeFromId(int id) {
-  final mapHabitType =
-      kHabitType.firstWhere((element) => element[kKeyHabitTypeId] as int == id);
-  return mapHabitType;
-}
+// Map<String, dynamic> getHabitTypeFromId(int id) {
+//   final mapHabitType =
+//       kHabitType.firstWhere((element) => element[kKeyHabitTypeId] as int == id);
+//   return mapHabitType;
+// }
 
 bool isInt(String s) {
   if (s == null) {
@@ -43,6 +42,23 @@ bool isInt(String s) {
   }
   return int.tryParse(s) != null;
 }
+
+String getAssetIcon(int index) {
+  return 'assets/Habit Icons/habit-icon-Artboard $index.png';
+}
+
+String getAssetCheckIn(int index) {
+  return 'assets/Habit Checkin Imgs/habit-checkin-Artboard $index.png';
+}
+
+String getOnEmotion(int index) {
+  return 'assets/habit/on-$index.png';
+}
+
+String getOffEmotion(int index) {
+  return 'assets/habit/off-$index.png';
+}
+
 // Function debounce(Function() func, int milliseconds) {
 //   Timer timer;
 //   return () {

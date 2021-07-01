@@ -13,6 +13,7 @@ import 'package:totodo/data/model/task.dart';
 import 'package:totodo/data/remote/exception/unauthenticated_exception.dart';
 import 'package:totodo/data/repository_interface/i_task_repository.dart';
 import 'package:totodo/utils/date_helper.dart';
+import 'package:totodo/utils/file_helper.dart';
 import 'package:totodo/utils/util.dart';
 
 //TODO refactor localMapper
@@ -155,8 +156,9 @@ class TaskRepositoryImpl implements ITaskRepository {
   }
 
   @override
-  Future<void> clearDataOffline() {
-    return _localTaskDataSource.clearData();
+  Future<void> clearDataOffline() async {
+    await _localTaskDataSource.clearData();
+    await clearImages();
   }
 
   @override

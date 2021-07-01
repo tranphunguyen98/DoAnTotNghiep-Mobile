@@ -3,11 +3,14 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:objectid/objectid.dart';
 import 'package:totodo/data/model/habit/habit.dart';
+import 'package:totodo/data/model/habit/habit_image.dart';
 import 'package:totodo/data/repository_interface/i_habit_repository.dart';
 import 'package:totodo/utils/file_helper.dart';
+import 'package:totodo/utils/my_const/map_const.dart';
 import 'package:totodo/utils/notification_helper.dart';
 import 'package:totodo/utils/util.dart';
 
+import '../../utils/util.dart';
 import 'bloc.dart';
 
 class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
@@ -16,7 +19,7 @@ class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
   CreateHabitBloc({@required IHabitRepository habitRepository})
       : assert(habitRepository != null),
         _habitRepository = habitRepository,
-        super(CreateHabitState());
+        super(CreateHabitState(loading: true));
 
   @override
   Stream<CreateHabitState> mapEventToState(CreateHabitEvent event) async* {
@@ -33,7 +36,7 @@ class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
 
   Stream<CreateHabitState> _mapOpenScreenCreateHabitToState(
       Habit habit) async* {
-    yield state.copyWith(habit: habit);
+    yield state.copyWith(habit: habit, loading: false);
   }
 
   Stream<CreateHabitState> _mapSubmitEditingHabitToState() async* {
@@ -56,23 +59,30 @@ class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
   Stream<CreateHabitState> _mapSubmitCreatingHabitToState() async* {
     Habit habit = state.habit;
 
-    if (state.habit.id?.isEmpty ?? true) {
-      await saveImages();
-      habit = state.habit.copyWith(
-        id: state.habit.id ?? ObjectId().hexString,
-        createdAt: DateTime.now().toIso8601String(),
-      );
+    if (habit.id?.isEmpty ?? true) {
+      habit = await saveImages(habit.copyWith(
+          id: state.habit.id ?? ObjectId().hexString,
+          createdAt: DateTime.now().toIso8601String(),
+          updatedAt: DateTime.now().toIso8601String(),
+          images: HabitImage(
+              imgBg: (habit.icon?.iconImage?.isNotEmpty ?? false)
+                  ? kCheckInColor[int.parse(habit.icon.iconImage)]
+                  : kCheckInColor[0],
+              imgUnCheckIn: habit.icon.iconImage,
+              imgCheckIn: habit.icon.iconImage)));
+
       log('testNotification', habit);
       showNotificationScheduledWithHabit(habit);
-      await _habitRepository.addHabit(habit);
+      await _habitRepository.addHabit(habit.copyWith());
     } else {
       //Edit habit
       final oldHabit = await _habitRepository.getDetailHabit(state.habit.id);
-      if ((state.habit.motivation?.images?.isNotEmpty ?? false) &&
+      if (((state.habit.motivation?.images?.isNotEmpty ?? false) &&
+              state.habit.motivation.images.length <= 2) &&
           state.habit.motivation.images != oldHabit.motivation.images) {
-        await saveImages();
+        habit = await saveImages(habit);
       }
-      habit = state.habit.copyWith(updatedAt: DateTime.now().toIso8601String());
+      habit = habit.copyWith(updatedAt: DateTime.now().toIso8601String());
       await AwesomeNotifications().cancelSchedule(habit.id.hashCode);
       showNotificationScheduledWithHabit(habit);
       await _habitRepository.updateHabit(habit);
@@ -87,18 +97,21 @@ class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
     );
   }
 
-  Future<void> saveImages() async {
-    if (state.habit.motivation?.images?.isNotEmpty ?? false) {
+  Future<Habit> saveImages(Habit habit) async {
+    if (habit.motivation?.images?.isNotEmpty ?? false) {
       final List<String> newImagePaths = [];
-      state.habit.motivation.images.forEach((imagePath) async {
-        final newPath = await saveImage(
-            imagePath, ObjectId().hexString + getExtensionFromPath(imagePath));
+      habit.motivation.images.forEach((imagePath) async {
+        final imageFilePath =
+            "${ObjectId().hexString}${getExtensionFromPath(imagePath)}";
+        final newPath =
+            await saveImageFromGallery(imagePath, habit.id, imageFilePath);
         newImagePaths.add(newPath);
       });
-      state.habit.copyWith(
-          motivation: state.habit.motivation.copyWith(images: newImagePaths));
+      return habit.copyWith(
+          motivation: habit.motivation.copyWith(images: newImagePaths));
       log('testImage', newImagePaths);
     }
+    return habit;
   }
 
   Stream<CreateHabitState> _mapCreatingHabitDataChangedToState(
@@ -109,10 +122,10 @@ class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
     habit = habit.copyWith(motivation: event.motivation);
     habit = habit.copyWith(type: event.type);
     habit = habit.copyWith(frequency: event.frequency);
-    habit = habit.copyWith(reminds: event.reminds);
+    habit = habit.copyWith(remind: event.remind);
     habit = habit.copyWith(missionDayUnit: event.missionDayUnit);
     habit = habit.copyWith(missionDayCheckInStep: event.missionDayCheckInStep);
-    habit = habit.copyWith(totalDayAmount: event.totalDayAmount);
+    habit = habit.copyWith(missionDayTarget: event.missionDayTarget);
     habit = habit.copyWith(typeHabitGoal: event.typeHabitGoal);
     habit = habit.copyWith(
         typeHabitMissionDayCheckIn: event.typeHabitMissionDayCheckIn);

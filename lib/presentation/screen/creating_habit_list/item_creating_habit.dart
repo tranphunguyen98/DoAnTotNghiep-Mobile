@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
+import 'package:totodo/utils/util.dart';
 
 class ItemCreatingHabit extends StatelessWidget {
   final Habit habit;
@@ -18,7 +19,7 @@ class ItemCreatingHabit extends StatelessWidget {
         child: Row(
           children: [
             Image.asset(
-              habit.icon.iconImage,
+              getAssetIcon(int.parse(habit.icon.iconImage)),
               width: 48,
               height: 48,
             ),
@@ -36,7 +37,7 @@ class ItemCreatingHabit extends StatelessWidget {
                   height: 4.0,
                 ),
                 Text(
-                  habit.motivation.text,
+                  habit.motivation.content,
                   style: kFontRegularBlack2_12,
                 ),
               ],

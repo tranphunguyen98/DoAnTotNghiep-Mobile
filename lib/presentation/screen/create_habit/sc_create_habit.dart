@@ -28,12 +28,12 @@ class _CreateHabitScreenState extends State<CreateHabitScreen> {
   @override
   void initState() {
     _createHabitBloc =
-        CreateHabitBloc(habitRepository: getIt<IHabitRepository>());
-    if (widget._habit != null) {
+        CreateHabitBloc(habitRepository: getIt<IHabitRepository>())
+          ..add(OpenScreenCreateHabit(widget._habit));
+    if (widget._habit == null) {
       _createHabitBloc.add(OpenScreenCreateHabit(widget._habit));
-    } else {
-      _createHabitBloc.add(CreatingHabitDataChanged(
-          icon: HabitIcon(iconImage: kListIconDefault[0])));
+      _createHabitBloc
+          .add(CreatingHabitDataChanged(icon: HabitIcon(iconImage: "1")));
     }
     super.initState();
   }

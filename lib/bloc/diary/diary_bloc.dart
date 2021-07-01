@@ -19,48 +19,68 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
   @override
   Stream<DiaryState> mapEventToState(DiaryEvent event) async* {
     if (event is InitDataDiary) {
-      yield* _mapInitDataDiaryToState(event.diaries);
+      yield* _mapInitDataDiaryToState(event.habitId);
     } else if (event is FilterChanged) {
       yield* _mapFilterChangedToState(event.dateFilter, event.habitFilter);
     }
   }
 
-  Stream<DiaryState> _mapInitDataDiaryToState(
-      List<DiaryItemData> diaries) async* {
-    final List<Habit> habits = await _habitRepository.getAllHabit();
-    if (diaries != null) {
-      yield DiaryState(diaries: diaries, habits: habits);
+  Stream<DiaryState> _mapInitDataDiaryToState(String habitId) async* {
+    final List<Habit> habits = await _habitRepository.getHabits();
+
+    if (habitId != null) {
+      final Habit habitFilter = habits
+          .firstWhere((element) => element.id == habitId, orElse: () => null);
+
+      final List<DiaryItemData> diaries =
+          (await _habitRepository.getDiaryByHabitId(habitId))
+              .map(
+                (diary) => DiaryItemData(
+                    date: DateTime.parse(diary.time),
+                    title: habitFilter.name,
+                    content: diary.text,
+                    images: diary.images,
+                    emotional: diary.feeling),
+              )
+              .toList();
+      diaries.sort((a, b) => b.date.compareTo(a.date));
+      yield DiaryState(
+          diaries: diaries, habits: habits, habitFilter: habitFilter);
     } else {
       //default get diaries this month
       final List<DiaryItemData> diaries =
-          await getDiariesByDateFilter(DiaryState.kFilterDateThisMonth);
+          await getDiariesByDateFilter(DiaryState.kFilterDateNoDate);
       yield DiaryState(
           diaries: diaries,
-          dateFilter: DiaryState.kFilterDateThisMonth,
+          dateFilter: DiaryState.kFilterDateNoDate,
           habits: habits);
     }
   }
 
   Stream<DiaryState> _mapFilterChangedToState(
       int dateFilter, Habit habitFilter) async* {
-    yield state.copyWith(
+    final newState = state.copyWith(
       diaries: await getDiariesByDateFilter(dateFilter, habitFilter),
       dateFilter: dateFilter,
       habitFilter: habitFilter,
     );
+    if (habitFilter != null) {
+      yield newState;
+    } else {
+      yield newState.setHabitFilterNull();
+    }
   }
 
   Future<List<DiaryItemData>> getDiariesByDateFilter(int dateFilter,
       [Habit habitFilter]) async {
     final List<DiaryItemData> diaries = [];
-
     if (habitFilter != null) {
-      diaries.addAll(getListOfDiaryFromHabit(dateFilter, habitFilter));
+      diaries.addAll(await getListOfDiaryFromHabit(dateFilter, habitFilter));
     } else {
-      final listHabit = await _habitRepository.getAllHabit();
+      final listHabit = await _habitRepository.getHabits();
       listHabit.removeWhere((habit) => habit.habitProgress.isEmpty ?? true);
       for (final habit in listHabit) {
-        diaries.addAll(getListOfDiaryFromHabit(dateFilter, habit));
+        diaries.addAll(await getListOfDiaryFromHabit(dateFilter, habit));
       }
     }
 
@@ -69,36 +89,35 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
     return diaries;
   }
 
-  List<DiaryItemData> getListOfDiaryFromHabit(int dateFilter, Habit habit) {
-    final listDiary = habit.habitProgress
-        .where((habitProgress) {
+  Future<List<DiaryItemData>> getListOfDiaryFromHabit(
+      int dateFilter, Habit habit) async {
+    final diaries = await _habitRepository.getDiaryByHabitId(habit.id);
+    final listDiary = diaries
+        .where((diary) {
           bool dateCondition = true;
           switch (dateFilter) {
             case DiaryState.kFilterDateNoDate:
               dateCondition = true;
               break;
             case DiaryState.kFilterDateThisWeek:
-              dateCondition =
-                  DateHelper.isInCurrentWeekString(habitProgress.day);
+              dateCondition = DateHelper.isInCurrentWeekString(diary.time);
               break;
             case DiaryState.kFilterDateThisMonth:
-              dateCondition =
-                  DateHelper.isInCurrentMonthString(habitProgress.day);
+              dateCondition = DateHelper.isInCurrentMonthString(diary.time);
               break;
             case DiaryState.kFilterDateThisYear:
-              dateCondition =
-                  DateHelper.isInCurrentYearString(habitProgress.day);
+              dateCondition = DateHelper.isInCurrentYearString(diary.time);
               break;
           }
-          return habitProgress.diary != null && dateCondition;
+          return dateCondition;
         })
         .map(
-          (itemProgress) => DiaryItemData(
-            date: DateTime.parse(itemProgress.day),
-            title: habit.name,
-            content: itemProgress.diary.text,
-            images: itemProgress.diary.images,
-          ),
+          (diary) => DiaryItemData(
+              date: DateTime.parse(diary.time),
+              title: habit.name,
+              content: diary.text,
+              images: diary.images,
+              emotional: diary.feeling),
         )
         .toList();
     return listDiary;

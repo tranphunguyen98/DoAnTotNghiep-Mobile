@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:totodo/data/model/habit/habit.dart';
-import 'package:totodo/presentation/screen/diary/item_diary.dart';
 
 abstract class DiaryEvent extends Equatable {
   const DiaryEvent();
@@ -11,16 +10,16 @@ abstract class DiaryEvent extends Equatable {
 }
 
 class InitDataDiary extends DiaryEvent {
-  final List<DiaryItemData> diaries;
+  final String habitId;
 
-  const InitDataDiary({this.diaries});
+  const InitDataDiary({this.habitId});
 
   @override
-  List<Object> get props => [diaries];
+  List<Object> get props => [habitId];
 
   @override
   String toString() {
-    return 'InitDataDiary{diaries: $diaries}';
+    return 'InitDataDiary{diaries: $habitId}';
   }
 }
 

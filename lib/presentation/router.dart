@@ -9,7 +9,6 @@ import 'package:totodo/data/repository_interface/i_task_repository.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/screen/create_habit/sc_create_habit.dart';
 import 'package:totodo/presentation/screen/detail_habit/sc_habit_detail.dart';
-import 'package:totodo/presentation/screen/diary/item_diary.dart';
 import 'package:totodo/presentation/screen/diary/sc_diary.dart';
 import 'package:totodo/presentation/screen/list_habit/sc_list_habit.dart';
 import 'package:totodo/presentation/screen/profile/sc_profile.dart';
@@ -155,8 +154,8 @@ class AppRouter {
           builder: (_) => DiaryScreen(
               title: (settings.arguments as Map<String, Object>)[kTitleKey]
                   as String,
-              listData: (settings.arguments as Map<String, Object>)[kDataKey]
-                  as List<DiaryItemData>));
+              habitId: (settings.arguments as Map<String, Object>)[kDataKey]
+                  as String));
     }
     return MaterialPageRoute(builder: (_) => const DiaryScreen());
   }

@@ -8,30 +8,45 @@ part 'habit_motivation.g.dart';
 @HiveType(typeId: kHiveTypeHabitMotivation)
 class HabitMotivation extends Equatable {
   @HiveField(0)
-  final String text;
+  final String content;
   @HiveField(1)
   final List<String> images;
 
-  const HabitMotivation({@required this.text, this.images});
+  const HabitMotivation({@required this.content, this.images});
 
   HabitMotivation copyWith({
-    String text,
+    String content,
     List<String> images,
   }) {
-    if ((text == null || identical(text, this.text)) &&
+    if ((content == null || identical(content, this.content)) &&
         (images == null || identical(images, this.images))) {
       return this;
     }
 
     return HabitMotivation(
-      text: text ?? this.text,
+      content: content ?? this.content,
       images: images ?? this.images,
     );
   }
 
+  factory HabitMotivation.fromJson(Map<String, dynamic> map) {
+    return HabitMotivation(
+      content: map['content'] as String,
+      images: (map['images'] as List).map((e) => e as String).toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    // ignore: unnecessary_cast
+    return {
+      'content': this.content ?? "",
+      'images': this.images ?? [],
+    } as Map<String, dynamic>;
+  }
+
   @override
   List<Object> get props => [
-        text,
+        content,
         images,
       ];
 }

@@ -6,9 +6,14 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:totodo/bloc/detail_habit/bloc.dart';
 import 'package:totodo/data/model/habit/diary_item.dart';
 import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
+import 'package:totodo/presentation/custom_ui/hex_color.dart';
 import 'package:totodo/presentation/screen/detail_habit/dialog_complete_habit.dart';
 import 'package:totodo/presentation/screen/detail_habit/slide_to_confirm.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
+import 'package:totodo/utils/util.dart';
+
+import '../../../utils/my_const/color_const.dart';
+import '../../../utils/my_const/map_const.dart';
 
 class HeaderDetailHabit extends StatefulWidget {
   final double maxHeight;
@@ -98,7 +103,9 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
   Widget _buildContainerCheck() {
     return Container(
       padding: const EdgeInsets.all(16.0),
-      color: kColorGreenLight,
+      color: (_state.habit.images?.imgBg?.isNotEmpty ?? false)
+          ? HexColor(_state.habit.images.imgBg)
+          : HexColor(kCheckInColor[1]),
       // color: Colors.red,
       height: MediaQuery.of(_context).size.height,
       child: SingleChildScrollView(
@@ -107,17 +114,27 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
             SizedBox(
               height: !_state.habit.isDoneOnDay(_state.chosenDay)
                   ? (_state.habit?.motivation?.images?.isNotEmpty ?? false)
-                      ? 160
+                      ? 140
                       : 220.0
                   : (_state.habit?.motivation?.images?.isNotEmpty ?? false)
-                      ? 120
+                      ? 100
                       : 180.0,
             ),
-            Image.asset(
-              kImageTag,
-              width: 120.0,
-              height: 120.0,
-            ),
+            if ((_state.habit.images?.imgUnCheckIn?.length ?? 0) > 3)
+              Image.file(
+                File(_state.habit.images?.imgUnCheckIn),
+                width: 120.0,
+                height: 120.0,
+                fit: BoxFit.cover,
+              ),
+            if ((_state.habit.images?.imgUnCheckIn?.length ?? 0) <= 3)
+              Image.asset(
+                getAssetCheckIn(
+                    int.parse(_state.habit.images?.imgUnCheckIn ?? "1")),
+                width: 120.0,
+                height: 120.0,
+                fit: BoxFit.cover,
+              ),
             SizedBox(
               height: 48.0,
             ),
@@ -129,7 +146,7 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
               height: 4.0,
             ),
             Text(
-              _state.habit.motivation.text,
+              _state.habit.motivation.content,
               style: kFontRegularWhite_14_80,
               textAlign: TextAlign.center,
             ),
@@ -145,9 +162,9 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
                       borderRadius: BorderRadius.circular(16.0),
                       child: Image.file(
                         File(imagePath),
-                        height: 120,
-                        width: 120,
-                        fit: BoxFit.fitWidth,
+                        height: 110,
+                        width: 110,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -176,7 +193,7 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
                 lineHeight: 6.0,
                 alignment: MainAxisAlignment.center,
                 percent: _state.habit.currentAmountOnDay(_state.chosenDay) /
-                    _state.habit.totalDayAmount,
+                    _state.habit.missionDayTarget,
                 backgroundColor: Colors.white.withOpacity(0.3),
                 progressColor: Colors.white,
               ),
@@ -186,7 +203,7 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
             if (_state.habit.typeHabitGoal ==
                 EHabitGoal.reachACertainAmount.index)
               Text(
-                "${_state.habit.currentAmountOnDay(_state.chosenDay)}/${_state.habit.totalDayAmount} ${kHabitMissionDayUnit[_state.habit.missionDayUnit]}",
+                "${_state.habit.currentAmountOnDay(_state.chosenDay)}/${_state.habit.missionDayTarget} ${kHabitMissionDayUnit[_state.habit.missionDayUnit]}",
                 style: kFontRegularWhite_12_80,
                 textAlign: TextAlign.center,
               ),
@@ -221,10 +238,13 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
         return DialogCompleteHabit(_state.habit.name);
       },
     );
-    _detailHabitBloc.add(AddDiary(
-        DiaryItem(
-            text: result[kCompletedHabitDialogTextKey] as String,
-            images: result[kCompletedHabitDialogImagesKey] as List<String>),
-        _state.chosenDay));
+    if (result != null) {
+      _detailHabitBloc.add(AddDiary(
+          Diary(
+              text: result[kCompletedHabitDialogTextKey] as String,
+              images: result[kCompletedHabitDialogImagesKey] as List<String>,
+              feeling: result[kCompletedHabitDialogFeelingKey] as int),
+          _state.chosenDay));
+    }
   }
 }

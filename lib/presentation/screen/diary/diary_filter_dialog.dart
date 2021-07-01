@@ -71,14 +71,14 @@ class _DiaryFilterDialogState extends State<DiaryFilterDialog> {
               value: habitFilter?.id ?? '',
               isExpanded: true,
               onChanged: (value) {
-                if (!(value?.isEmpty ?? true)) {
-                  setState(() {
+                setState(() {
+                  if (!(value?.isEmpty ?? true)) {
                     habitFilter =
                         widget.habits.firstWhere((habit) => habit.id == value);
-                  });
-                } else {
-                  habitFilter = null;
-                }
+                  } else {
+                    habitFilter = null;
+                  }
+                });
               },
               items: <DropdownMenuItem<String>>[
                 const DropdownMenuItem<String>(value: '', child: Text('All')),

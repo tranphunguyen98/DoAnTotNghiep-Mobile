@@ -11,10 +11,10 @@ import 'package:totodo/utils/my_const/my_const.dart';
 import 'diary_filter_dialog.dart';
 
 class DiaryScreen extends StatefulWidget {
-  final List<DiaryItemData> listData;
+  final String habitId;
   final String title;
 
-  const DiaryScreen({this.listData, this.title});
+  const DiaryScreen({this.habitId, this.title});
 
   @override
   _DiaryScreenState createState() => _DiaryScreenState();
@@ -28,7 +28,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
   void initState() {
     _diaryBloc = DiaryBloc(
       habitRepository: getIt.get<IHabitRepository>(),
-    )..add(InitDataDiary(diaries: widget.listData));
+    )..add(InitDataDiary(habitId: widget.habitId));
     super.initState();
   }
 
@@ -120,9 +120,6 @@ class _DiaryScreenState extends State<DiaryScreen> {
   }
 
   String getTitle() {
-    if (widget.title?.isNotEmpty ?? false) {
-      return widget.title;
-    }
     String title = "";
     if (_state.habitFilter != null) {
       title += _state.habitFilter.name;
@@ -132,6 +129,11 @@ class _DiaryScreenState extends State<DiaryScreen> {
     }
 
     if (_state.dateFilter != DiaryState.kFilterDateNoDate) {
+      title += kDateFilterHabit[_state.dateFilter];
+    }
+
+    if (_state.habitFilter == null &&
+        _state.dateFilter == DiaryState.kFilterDateNoDate) {
       title += kDateFilterHabit[_state.dateFilter];
     }
 

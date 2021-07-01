@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
+import 'package:totodo/utils/my_const/map_const.dart';
 
 part 'habit_frequency.g.dart';
 
@@ -23,6 +24,29 @@ class HabitFrequency extends Equatable {
     this.weeklyDays,
     this.intervalDays,
   });
+
+  factory HabitFrequency.fromJson(Map<String, dynamic> map) {
+    return HabitFrequency(
+      typeFrequency: (map['typeFrequency'] as String) ==
+              kServerHabitFrequency[EHabitFrequency.daily.index]
+          ? EHabitFrequency.daily.index
+          : EHabitFrequency.weekly.index,
+      dailyDays: (map['dailyDays'] as List).map((e) {
+        if (e is int) return e;
+      }).toList(),
+      weeklyDays: (map['weeklyDays'] ?? 1) as int,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    // ignore: unnecessary_cast
+    return {
+      'typeFrequency': kServerHabitFrequency[this.typeFrequency],
+      'dailyDays': this.dailyDays,
+      'weeklyDays': null, // TODO khong hieu gi luon
+      'weeklyUnit': null,
+    } as Map<String, dynamic>;
+  }
 
   HabitFrequency copyWith({
     int typeFrequency,

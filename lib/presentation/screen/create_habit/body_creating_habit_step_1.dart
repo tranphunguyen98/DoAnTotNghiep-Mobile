@@ -2,12 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:totodo/bloc/create_habit/bloc.dart';
 import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/data/model/habit/habit_icon.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
+
+import '../../../utils/my_const/color_const.dart';
+import '../../../utils/my_const/font_const.dart';
+import '../../../utils/util.dart';
+import '../../custom_ui/custom_ui.dart';
 
 class BodyCreatingHabitStep1 extends StatefulWidget {
   final Habit _habit;
@@ -24,17 +30,33 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _quoteController = TextEditingController();
+  final TextEditingController _textIconController = TextEditingController();
 
   final picker = ImagePicker();
+  bool isIcon;
+  Color textIconColor = Colors.greenAccent;
+  String icon;
 
   @override
   void initState() {
     _createHabitBloc = BlocProvider.of<CreateHabitBloc>(context);
     _nameController.text =
         _createHabitBloc.state.habit?.name ?? widget._habit?.name ?? '';
-    _quoteController.text = _createHabitBloc.state.habit?.motivation?.text ??
-        widget._habit?.motivation?.text ??
-        '';
+    _quoteController.text =
+        (_createHabitBloc.state.habit?.motivation?.content?.isNotEmpty ?? false)
+            ? _createHabitBloc.state.habit?.motivation?.content
+            : widget._habit?.motivation?.content ?? '';
+
+    icon = _createHabitBloc.state.habit.icon?.iconImage;
+    if (widget._habit?.icon?.iconText?.isNotEmpty ?? false) {
+      isIcon = false;
+      _textIconController.text = widget._habit.icon.iconText;
+      textIconColor = HexColor(widget._habit.icon.iconColor);
+    } else {
+      _textIconController.text = 'A';
+      isIcon = true;
+    }
+
     super.initState();
   }
 
@@ -52,13 +74,20 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
       builder: (context, state) {
         _state = state;
 
+        if (_state.loading) {
+          return Center(
+            child: CircularProgressIndicator(
+              backgroundColor: kColorPrimary,
+            ),
+          );
+        }
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildName(),
               // _buildCategory(),
-              _buildIcon(),
+              if (isIcon) _buildIcon() else _buildIconText(),
               _buildQuote(),
               _buildImage(),
             ],
@@ -90,85 +119,164 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
   }
 
   Widget _buildName() {
+    if (icon == null && (_state.habit.icon.iconImage?.length ?? 0) > 2) {
+      icon = _state.habit.icon.iconImage;
+    }
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Tên Thói Quen',
-            style: kFontMediumBlack_14,
-          ),
-          const SizedBox(
-            height: 16.0,
-          ),
-          Row(
-            children: [
-              Image.asset(
-                _state.habit?.icon?.iconImage ?? kListIconDefault.first,
-                width: 48,
-                height: 48,
-              ),
-              const SizedBox(
-                width: 16.0,
-              ),
-              Expanded(
-                child: TextField(
-                  style: kFontRegularBlack2_14,
-                  controller: _nameController,
-                  onChanged: _onNameHabitChanged,
-                  decoration: InputDecoration(
-                    hintText: 'Thiền',
-                    errorText:
-                        _state?.msg?.isNotEmpty ?? false ? _state.msg : null,
-                    hintStyle: kFontRegularGray1_14,
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: kColorGray1, width: 0.5),
-                    ),
-                  ),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Tên Thói Quen',
+              style: kFontMediumBlack_14,
+            ),
+            const SizedBox(
+              height: 16.0,
+            ),
+            _buildNameTextField(),
+            const SizedBox(
+              height: 16.0,
+            ),
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isIcon = true;
+                    });
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(48),
+                        ),
+                        boxShadow: [
+                          if (isIcon)
+                            BoxShadow(
+                              color: kColorPrimary,
+                              spreadRadius: 3,
+                              blurRadius: 3,
+                              // offset: Offset(0, 1), // changes position of shadow
+                            ),
+                        ],
+                      ),
+                      child: ((icon?.length ?? 0) > 2)
+                          ? Image.file(File(icon), width: 48, height: 48)
+                          : Image.asset(
+                              getAssetIcon(int.parse(
+                                  (_state.habit.icon?.iconImage?.isNotEmpty ??
+                                          false)
+                                      ? _state.habit.icon?.iconImage
+                                      : "1")),
+                              width: 48,
+                              height: 48,
+                            )),
                 ),
-              ),
-            ],
-          ),
-        ],
+                SizedBox(
+                  width: 16.0,
+                ),
+                _buildTextIcon(_state.habit.icon),
+              ],
+            )
+          ],
+        )
+        //     if (_state.habit.icon?.iconImage?.isNotEmpty ?? false)
+        //
+        // else
+        //
+        //
+        // ]
+
+        );
+  }
+
+  Widget _buildNameTextField() {
+    return TextField(
+      style: kFontRegularBlack2_14,
+      controller: _nameController,
+      onChanged: _onNameHabitChanged,
+      decoration: InputDecoration(
+        hintText: 'Thiền',
+        errorText: _state?.msg?.isNotEmpty ?? false ? _state.msg : null,
+        hintStyle: kFontRegularGray1_14,
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: kColorGray1, width: 0.5),
+        ),
       ),
     );
   }
 
-  Widget _buildCategory() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Phân loại',
-            style: kFontMediumBlack_14,
-          ),
-          const SizedBox(
-            height: 8.0,
-          ),
-          DropdownButton<Map<String, dynamic>>(
-            isExpanded: true,
-            value: getHabitTypeFromId(_state.habit.type),
-            items: kHabitType.map((value) {
-              return DropdownMenuItem<Map<String, dynamic>>(
-                value: value,
-                child: Text(
-                  value[kKeyHabitTypeLabel] as String,
+  Widget _buildTextIcon(HabitIcon icon) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          isIcon = false;
+        });
+      },
+      child: Container(
+        height: 44,
+        width: 44,
+        decoration: BoxDecoration(
+            color: textIconColor,
+            shape: BoxShape.circle,
+            boxShadow: [
+              if (!isIcon)
+                BoxShadow(
+                  color: kColorPrimary,
+                  spreadRadius: 3,
+                  blurRadius: 3,
+                  // offset: Offset(0, 1), // changes position of shadow
                 ),
-              );
-            }).toList(),
-            onChanged: _onTypeHabitChanged,
-          ),
-        ],
+            ]),
+        child: Center(
+            child: Text(
+          _textIconController.text,
+          style: kFontSemiboldWhite_18,
+        )),
       ),
     );
   }
+
+  // Widget _buildCategory() {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(16.0),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(
+  //           'Phân loại',
+  //           style: kFontMediumBlack_14,
+  //         ),
+  //         const SizedBox(
+  //           height: 8.0,
+  //         ),
+  //         DropdownButton<Map<String, dynamic>>(
+  //           isExpanded: true,
+  //           value: getHabitTypeFromId(_state.habit.type),
+  //           items: kHabitType.map((value) {
+  //             return DropdownMenuItem<Map<String, dynamic>>(
+  //               value: value,
+  //               child: Text(
+  //                 value[kKeyHabitTypeLabel] as String,
+  //               ),
+  //             );
+  //           }).toList(),
+  //           onChanged: _onTypeHabitChanged,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildIcon() {
-    final int indexIcon = kListIconDefault
-        .indexOf(_state?.habit?.icon?.iconImage ?? kIconMeditation);
+    final int indexIcon = int.parse(
+            ((_state.habit?.icon?.iconImage?.isNotEmpty ?? false) &&
+                    _state.habit.icon.iconImage.length <= 2)
+                ? _state.habit?.icon?.iconImage
+                : "1") -
+        1;
     return Padding(
       padding: const EdgeInsets.only(
           left: 16.0, top: 16.0, bottom: 16.0, right: 16.0),
@@ -183,14 +291,14 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
             height: 16.0,
           ),
           SizedBox(
-            height: 50 * 2.0,
+            height: 50 * 4.0,
             child: GridView.builder(
               scrollDirection: Axis.horizontal,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
                   crossAxisSpacing: 8.0,
                   mainAxisSpacing: 8.0),
-              itemCount: kListIconDefault.length,
+              itemCount: 57,
               itemBuilder: (context, index) => Stack(
                 children: [
                   GestureDetector(
@@ -198,18 +306,18 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
                       onIconHabitChanged(index);
                     },
                     child: Image.asset(
-                      kListIconDefault[index],
+                      getAssetIcon(index + 1),
                       width: 50,
                       height: 50,
                     ),
                   ),
-                  if (index == indexIcon)
+                  if (index == indexIcon && isIcon)
                     Positioned(
                       right: 0.0,
                       bottom: 0.0,
                       child: CircleAvatar(
                         radius: 8.0,
-                        backgroundColor: kColorPrimary.withOpacity(0.6),
+                        backgroundColor: kColorPrimary.withOpacity(0.8),
                         child: Padding(
                           padding: const EdgeInsets.all(2.0),
                           child: Icon(
@@ -224,6 +332,92 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
               ),
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIconText() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 32),
+      child: Row(
+        // crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            'Tên',
+            style: kFontRegularGray1_14,
+          ),
+          SizedBox(
+            width: 16,
+          ),
+          SizedBox(
+            width: 60,
+            height: 40,
+            child: TextField(
+              controller: _textIconController,
+              textAlign: TextAlign.center,
+              onChanged: (value) {
+                if (value.isNotEmpty) {
+                  setState(() {
+                    _onTextIconChanged();
+                  });
+                }
+              },
+              autofocus: true,
+              maxLength: 2,
+              decoration: InputDecoration(counterText: ""),
+            ),
+          ),
+          SizedBox(
+            width: 24,
+          ),
+          Text(
+            'Màu',
+            style: kFontRegularGray1_14,
+          ),
+          SizedBox(
+            width: 16,
+          ),
+          GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Chọn màu'),
+                      content: SingleChildScrollView(
+                        child: BlockPicker(
+                          pickerColor: textIconColor,
+                          onColorChanged: (value) {
+                            setState(() {
+                              textIconColor = value;
+                              _onTextIconChanged();
+                            });
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: Container(
+                height: 32,
+                width: 32,
+                decoration: BoxDecoration(
+                  color: textIconColor,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(32),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: kColorPrimary.withOpacity(0.6),
+                      spreadRadius: 2,
+                      blurRadius: 2,
+                      // offset: Offset(0, 1), // changes position of shadow
+                    ),
+                  ],
+                ),
+              ))
         ],
       ),
     );
@@ -297,7 +491,7 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
                       File(image),
                       height: imageSize,
                       width: imageSize,
-                      fit: BoxFit.fitWidth,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -354,18 +548,28 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
     _createHabitBloc.add(CreatingHabitDataChanged(name: value));
   }
 
+  void _onTextIconChanged() {
+    _createHabitBloc.add(CreatingHabitDataChanged(
+        icon: HabitIcon(
+      iconText:
+          _textIconController.text.isNotEmpty ? _textIconController.text : 'A',
+      iconColor: getHexFromColor(textIconColor),
+    )));
+  }
+
   void _onTypeHabitChanged(Map<String, dynamic> newValue) {
     _createHabitBloc
         .add(CreatingHabitDataChanged(type: newValue[kKeyHabitTypeId] as int));
   }
 
   void onIconHabitChanged(int index) {
+    icon = (index + 1).toString();
     _createHabitBloc.add(
       CreatingHabitDataChanged(
         icon: HabitIcon(
-          iconImage: kListIconDefault[index],
+          iconImage: (index + 1).toString(),
         ),
-        type: kHabitType[0][kKeyHabitTypeId] as int,
+        // type: kHabitType[0][kKeyHabitTypeId] as int,
       ),
     );
   }
@@ -374,7 +578,7 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
     _createHabitBloc.add(
       CreatingHabitDataChanged(
         motivation: _state.habit.motivation.copyWith(
-          text: value,
+          content: value,
         ),
       ),
     );

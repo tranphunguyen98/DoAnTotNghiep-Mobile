@@ -58,24 +58,25 @@ Future<void> showNotificationAtScheduleCron({
   String crontab,
   String channelKey,
   Color color,
-  String picture,
-  NotificationLayout notificationLayout,
+  // // String picture,
+  // NotificationLayout notificationLayout,
   List<NotificationActionButton> actionButtons,
 }) async {
   await AwesomeNotifications().createNotification(
       content: NotificationContent(
-          id: id,
-          channelKey: channelKey ?? kChannelKeyHigh,
-          title: title ?? '',
-          body: body,
-          payload: payload,
-          notificationLayout: notificationLayout,
-          autoCancel: false,
-          displayOnForeground: true,
-          displayOnBackground: true,
-          backgroundColor: color,
-          color: color,
-          bigPicture: picture),
+        id: id,
+        channelKey: channelKey ?? kChannelKeyHigh,
+        title: title ?? '',
+        body: body,
+        payload: payload,
+        // notificationLayout: notificationLayout,
+        autoCancel: false,
+        displayOnForeground: true,
+        displayOnBackground: true,
+        backgroundColor: color,
+        color: color,
+        // bigPicture: picture
+      ),
       schedule: NotificationSchedule(
         crontabSchedule: crontab ??
             CronHelper.instance.atDate(scheduleTime.toUtc(), initialSecond: 0),
@@ -84,21 +85,21 @@ Future<void> showNotificationAtScheduleCron({
 }
 
 Future<void> showNotificationScheduledWithHabit(Habit habit) async {
-  habit.reminds.forEach((remind) {
+  habit.remind.forEach((remind) {
     showNotificationAtScheduleCron(
         id: '${habit.id}${remind.minute}${remind.hour}'.hashCode,
         title: habit.name,
-        body: habit.motivation.text ?? '',
+        body: habit.motivation.content ?? '',
         payload: {
           kKeyPayloadNotificationType: kValuePayloadNotificationHabitType,
           kKeyPayloadNotificationId: habit.id
         },
         channelKey: kChannelKeyHigh,
         crontab: habit.cronReminder(remind),
-        notificationLayout: NotificationLayout.BigPicture,
-        picture: (habit.motivation?.images?.isNotEmpty ?? false)
-            ? "file:/${habit.motivation.images[0]}"
-            : null,
+        // notificationLayout: NotificationLayout.BigPicture,
+        // picture: (habit.motivation?.images?.isNotEmpty ?? false)
+        //     ? "file:/${habit.motivation.images[0]}"
+        //     : null,
         color: Colors.blue);
   });
 }

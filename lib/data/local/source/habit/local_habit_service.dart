@@ -10,28 +10,29 @@ import 'package:totodo/utils/util.dart';
 class LocalHabitService {
   static const kNameBoxHabit = "habit";
 
-  Box _habitBoxHabit;
+  Box _habitBox;
 
   LocalHabitService() {
-    _habitBoxHabit = Hive.box(kNameBoxHabit);
+    _habitBox = Hive.box(kNameBoxHabit);
   }
 
   Future<bool> addHabit(Habit habit) async {
     if (habit.id == null) {
-      _habitBoxHabit.add(
+      _habitBox.add(
           habit.copyWith(id: DateTime.now().microsecondsSinceEpoch.toString()));
       return true;
+    } else {
+      _habitBox.add(habit);
     }
     // log('habitcreate', habit);
-    _habitBoxHabit.add(habit);
     return true;
   }
 
   Future<List<Habit>> getAllHabit() async {
     final listHabit = <Habit>[];
     // _habitBoxHabit.clear();
-    for (var i = 0; i < _habitBoxHabit.length; i++) {
-      listHabit.add(_habitBoxHabit.getAt(i) as Habit);
+    for (var i = 0; i < _habitBox.length; i++) {
+      listHabit.add(_habitBox.getAt(i) as Habit);
     }
 
     log("LIST HABIT: ${listHabit.length}");
@@ -39,7 +40,7 @@ class LocalHabitService {
   }
 
   Future<Habit> getHabitFromId(String idHabit) async {
-    final habit = await _habitBoxHabit.values
+    final habit = await _habitBox.values
         .firstWhere((element) => (element as Habit).id == idHabit) as Habit;
 
     return habit;
@@ -48,14 +49,31 @@ class LocalHabitService {
   Future<bool> updateHabit(Habit habit) async {
     int indexUpdated = -1;
 
-    for (var i = 0; i < _habitBoxHabit.length; i++) {
-      if ((_habitBoxHabit.getAt(i) as Habit).id == habit.id) {
+    for (var i = 0; i < _habitBox.length; i++) {
+      if ((_habitBox.getAt(i) as Habit).id == habit.id) {
         indexUpdated = i;
         break;
       }
     }
     if (indexUpdated > -1) {
-      _habitBoxHabit.putAt(indexUpdated, habit);
+      _habitBox.putAt(indexUpdated,
+          habit.copyWith(updatedAt: DateTime.now().toIso8601String()));
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> updateHabitAsync(Habit habit) async {
+    int indexUpdated = -1;
+
+    for (var i = 0; i < _habitBox.length; i++) {
+      if ((_habitBox.getAt(i) as Habit).id == habit.id) {
+        indexUpdated = i;
+        break;
+      }
+    }
+    if (indexUpdated > -1) {
+      _habitBox.putAt(indexUpdated, habit);
       return true;
     }
     return false;
@@ -68,7 +86,7 @@ class LocalHabitService {
 
     bool isContainDay = false;
     for (int i = 0; i < habitProgress.length; i++) {
-      if (DateHelper.isSameDayString(habitProgress[i].day, chosenDay)) {
+      if (DateHelper.isSameDayString(habitProgress[i].date, chosenDay)) {
         log("EHabitMissionDayCheckIn1 ${habit.typeHabitMissionDayCheckIn}");
         if (habit.typeHabitGoal == EHabitGoal.archiveItAll.index) {
           habitProgress[i] =
@@ -77,18 +95,16 @@ class LocalHabitService {
           if (habit.typeHabitMissionDayCheckIn ==
               EHabitMissionDayCheckIn.auto.index) {
             habitProgress[i] = habitProgress[i].copyWith(
-              currentCheckInAmounts: habitProgress[i].currentCheckInAmounts +
-                  habit.missionDayCheckInStep,
+              current: habitProgress[i].current + habit.missionDayCheckInStep,
             );
-            if (habitProgress[i].currentCheckInAmounts >=
-                habit.totalDayAmount) {
+            if (habitProgress[i].current >= habit.missionDayTarget) {
               habitProgress[i] = habitProgress[i].copyWith(isDone: true);
             }
           } else if (habit.typeHabitMissionDayCheckIn ==
               EHabitMissionDayCheckIn.completedAll.index) {
             log("EHabitMissionDayCheckIn1");
-            habitProgress[i] = habitProgress[i].copyWith(
-                isDone: true, currentCheckInAmounts: habit.totalDayAmount);
+            habitProgress[i] = habitProgress[i]
+                .copyWith(isDone: true, current: habit.missionDayTarget);
           }
         }
         isContainDay = true;
@@ -98,20 +114,18 @@ class LocalHabitService {
 
     if (!isContainDay) {
       if (habit.typeHabitGoal == EHabitGoal.archiveItAll.index) {
-        habitProgress.add(HabitProgressItem(day: chosenDay, isDone: true));
+        habitProgress.add(HabitProgressItem(date: chosenDay, isDone: true));
       } else {
         if (habit.typeHabitMissionDayCheckIn ==
             EHabitMissionDayCheckIn.auto.index) {
           habitProgress.add(HabitProgressItem(
-              day: chosenDay,
-              currentCheckInAmounts: habit.missionDayCheckInStep,
-              isDone: habit.missionDayCheckInStep >= habit.totalDayAmount));
+              date: chosenDay,
+              current: habit.missionDayCheckInStep,
+              isDone: habit.missionDayCheckInStep >= habit.missionDayTarget));
         } else if (habit.typeHabitMissionDayCheckIn ==
             EHabitMissionDayCheckIn.completedAll.index) {
           habitProgress.add(HabitProgressItem(
-              day: chosenDay,
-              currentCheckInAmounts: habit.totalDayAmount,
-              isDone: true));
+              date: chosenDay, current: habit.missionDayTarget, isDone: true));
         }
       }
     }
@@ -125,9 +139,8 @@ class LocalHabitService {
     progress.addAll(habit.habitProgress);
 
     for (int i = 0; i < progress.length; i++) {
-      if (DateHelper.isSameDayString(progress[i].day, chosenDay)) {
-        progress[i] =
-            progress[i].copyWith(currentCheckInAmounts: 0, isDone: false);
+      if (DateHelper.isSameDayString(progress[i].date, chosenDay)) {
+        progress[i] = progress[i].copyWith(current: 0, isDone: false);
         break;
       }
     }
@@ -135,7 +148,32 @@ class LocalHabitService {
     return true;
   } //</editor-fold>
 
+  Future<void> saveHabits(List<Habit> habits) async {
+    await _habitBox.clear();
+    for (final habit in habits) {
+      await _habitBox.add(habit);
+    }
+
+    final a = await getAllHabit();
+    log('a', a);
+  }
+
   Future<void> clearData() async {
-    _habitBoxHabit.clear();
+    _habitBox.clear();
+  }
+
+  Future<void> permanentlyDeleteTask(String habitId) async {
+    int indexUpdated = -1;
+
+    for (var i = 0; i < _habitBox.length; i++) {
+      if ((_habitBox.getAt(i) as Habit).id == habitId) {
+        indexUpdated = i;
+        break;
+      }
+    }
+
+    if (indexUpdated > -1) {
+      _habitBox.deleteAt(indexUpdated);
+    }
   }
 }

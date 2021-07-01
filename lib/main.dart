@@ -4,12 +4,15 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:totodo/data/local/model/local_task.dart';
 import 'package:totodo/data/local/source/habit/local_habit_service.dart';
+import 'package:totodo/data/model/habit/diary_item.dart';
 import 'package:totodo/utils/notification_helper.dart';
 
 import 'app_config.dart';
 import 'data/local/model/local_task.dart';
+import 'data/local/source/habit/local_diary_service.dart';
 import 'data/local/source/task/local_task_service.dart';
 import 'data/model/check_item.dart';
+import 'data/model/habit/diary_item.dart';
 import 'data/model/habit/diary_item.dart';
 import 'data/model/habit/habit.dart';
 import 'data/model/habit/habit_frequency.dart';
@@ -62,7 +65,7 @@ Future _initHive() async {
   await Hive.openBox(LocalTaskService.kNameBoxProject);
   await Hive.openBox(LocalTaskService.kNameBoxLabel);
   // Habit
-  Hive.registerAdapter<DiaryItem>(DiaryItemAdapter());
+  Hive.registerAdapter<Diary>(DiaryAdapter());
   Hive.registerAdapter<HabitFrequency>(HabitFrequencyAdapter());
   Hive.registerAdapter<HabitIcon>(HabitIconAdapter());
   Hive.registerAdapter<HabitImage>(HabitImageAdapter());
@@ -72,4 +75,5 @@ Future _initHive() async {
   Hive.registerAdapter<Habit>(HabitAdapter());
 
   await Hive.openBox(LocalHabitService.kNameBoxHabit);
+  await Hive.openBox(LocalDiaryService.kNameBoxDiary);
 }

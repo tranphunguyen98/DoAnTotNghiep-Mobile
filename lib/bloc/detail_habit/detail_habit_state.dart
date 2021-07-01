@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/data/model/habit/habit_progress_item.dart';
-import 'package:totodo/presentation/screen/diary/item_diary.dart';
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/map_const.dart';
 import 'package:totodo/utils/util.dart';
@@ -29,7 +28,7 @@ class DetailHabitState extends Equatable {
     return habit.habitProgress
         .where((progress) =>
             progress.isDone &&
-            DateHelper.isSameMonthString(progress.day, chosenMonth))
+            DateHelper.isSameMonthString(progress.date, chosenMonth))
         .length;
   }
 
@@ -61,37 +60,38 @@ class DetailHabitState extends Equatable {
 
   int get theCurrentStreak {
     return findCurrentStreak(habit.habitProgress
-        .where((progressItem) =>
-            DateHelper.isSameMonthString(progressItem.day, chosenMonth))
+        // .where((progressItem) =>
+        //     DateHelper.isSameMonthString(progressItem.date, chosenMonth))
         .toList());
   }
 
   int get theLongestStreakInMonth {
     return findLongestStreak(habit.habitProgress
         .where((progressItem) =>
-            DateHelper.isSameMonthString(progressItem.day, chosenMonth))
+            DateHelper.isSameMonthString(progressItem.date, chosenMonth))
         .toList());
   }
 
   int get theCurrentStreakInMonth {
     return findLongestStreak(habit.habitProgress
         .where((progressItem) =>
-            DateHelper.isSameMonthString(progressItem.day, chosenMonth))
+            DateHelper.isSameMonthString(progressItem.date, chosenMonth))
         .toList());
   }
 
-  List<DiaryItemData> get listDiary {
-    //TODO Move to diary bloc
-    return habit.habitProgress
-        .where((itemProgress) => itemProgress.diary != null)
-        .map((itemProgress) => DiaryItemData(
-              date: DateTime.parse(itemProgress.day),
-              title: habit.name,
-              content: itemProgress.diary.text,
-              images: itemProgress.diary.images,
-            ))
-        .toList();
-  }
+  // List<DiaryItemData> get listDiary {
+  //   //TODO Move to diary bloc
+  //   return [];
+  //   // return habit.habitProgress
+  //   //     .where((itemProgress) => itemProgress.diary != null)
+  //   //     .map((itemProgress) => DiaryItemData(
+  //   //           date: DateTime.parse(itemProgress.date),
+  //   //           title: habit.name,
+  //   //           content: itemProgress.diary.text,
+  //   //           images: itemProgress.diary.images,
+  //   //         ))
+  //   //     .toList();
+  // }
 
   factory DetailHabitState.loading() => const DetailHabitState(loading: true);
 
@@ -135,8 +135,8 @@ class DetailHabitState extends Equatable {
     }
     final List<HabitProgressItem> _currentMonthHabitProgress = habitProgress;
 
-    _currentMonthHabitProgress
-        .sort((a, b) => DateTime.parse(a.day).compareTo(DateTime.parse(b.day)));
+    _currentMonthHabitProgress.sort(
+        (a, b) => DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
 
     int longestStreak = 0;
     int currentStreak = 0;
@@ -151,8 +151,8 @@ class DetailHabitState extends Equatable {
       if (_currentMonthHabitProgress[i].isDone) {
         if (currentStreak == 0) {
           currentStreak = 1;
-        } else if (isConsecutive(_currentMonthHabitProgress[i].day,
-            _currentMonthHabitProgress[i - 1].day)) {
+        } else if (isConsecutive(_currentMonthHabitProgress[i].date,
+            _currentMonthHabitProgress[i - 1].date)) {
           currentStreak++;
         } else {
           if (currentStreak > longestStreak) {
@@ -182,8 +182,8 @@ class DetailHabitState extends Equatable {
     }
     List<HabitProgressItem> _currentMonthHabitProgress = habitProgress;
 
-    _currentMonthHabitProgress
-        .sort((a, b) => DateTime.parse(a.day).compareTo(DateTime.parse(b.day)));
+    _currentMonthHabitProgress.sort(
+        (a, b) => DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
 
     _currentMonthHabitProgress = _currentMonthHabitProgress.reversed.toList();
 
@@ -195,8 +195,8 @@ class DetailHabitState extends Equatable {
 
     for (int i = 1; i < _currentMonthHabitProgress.length; i++) {
       if (_currentMonthHabitProgress[i].isDone &&
-          isConsecutive(_currentMonthHabitProgress[i - 1].day,
-              _currentMonthHabitProgress[i].day)) {
+          isConsecutive(_currentMonthHabitProgress[i - 1].date,
+              _currentMonthHabitProgress[i].date)) {
         currentStreak++;
       } else {
         break;

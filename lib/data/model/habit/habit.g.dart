@@ -25,15 +25,16 @@ class HabitAdapter extends TypeAdapter<Habit> {
       motivation: fields[6] as HabitMotivation,
       missionDayUnit: fields[7] as int,
       missionDayCheckInStep: fields[8] as int,
-      totalDayAmount: fields[9] as int,
+      missionDayTarget: fields[9] as int,
       typeHabitMissionDayCheckIn: fields[14] as int,
       typeHabitGoal: fields[15] as int,
       isFinished: fields[10] as bool,
       isTrashed: fields[17] as bool,
+      isCreatedOnLocal: fields[19] as bool,
       type: fields[12] as int,
       createdAt: fields[16] as String,
       updatedAt: fields[18] as String,
-      reminds: (fields[5] as List)?.cast<HabitRemind>(),
+      remind: (fields[5] as List)?.cast<HabitRemind>(),
       frequency: fields[13] as HabitFrequency,
       habitProgress: (fields[11] as List)?.cast<HabitProgressItem>(),
     );
@@ -42,7 +43,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(19)
+      ..writeByte(20)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -54,7 +55,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(4)
       ..write(obj.isSaveDiary)
       ..writeByte(5)
-      ..write(obj.reminds)
+      ..write(obj.remind)
       ..writeByte(6)
       ..write(obj.motivation)
       ..writeByte(7)
@@ -62,7 +63,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(8)
       ..write(obj.missionDayCheckInStep)
       ..writeByte(9)
-      ..write(obj.totalDayAmount)
+      ..write(obj.missionDayTarget)
       ..writeByte(10)
       ..write(obj.isFinished)
       ..writeByte(11)
@@ -80,7 +81,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(17)
       ..write(obj.isTrashed)
       ..writeByte(18)
-      ..write(obj.updatedAt);
+      ..write(obj.updatedAt)
+      ..writeByte(19)
+      ..write(obj.isCreatedOnLocal);
   }
 
   @override

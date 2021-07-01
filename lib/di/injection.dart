@@ -13,6 +13,7 @@ import 'package:totodo/data/data_source/user/local_user_data_source.dart';
 import 'package:totodo/data/data_source/user/remote_user_data_source.dart';
 import 'package:totodo/data/local/mapper/local_task_mapper.dart';
 import 'package:totodo/data/local/source/habit/cache_habit_data_source_impl.dart';
+import 'package:totodo/data/local/source/habit/local_diary_service.dart';
 import 'package:totodo/data/local/source/habit/local_habit_service.dart';
 import 'package:totodo/data/local/source/task/cache_task_data_source_impl.dart';
 import 'package:totodo/data/local/source/task/local_task_service.dart';
@@ -84,16 +85,19 @@ Future<void> configureDependencies() async {
 
   // Habit
   getIt.registerLazySingleton<RemoteHabitService>(
-      () => RemoteHabitService(getIt.get<Dio>()));
+      () => RemoteHabitService(getIt.get<Dio>(), baseUrl: kBaseUrl));
 
   getIt.registerLazySingleton<RemoteHabitDataSource>(
       () => RemoteHabitDataSourceImpl(getIt.get<RemoteHabitService>()));
 
-  getIt.registerLazySingleton<LocalHabitDataSource>(
-      () => LocalHabitDataSourceImplement(getIt.get<LocalHabitService>()));
+  getIt.registerLazySingleton<LocalHabitDataSource>(() =>
+      LocalHabitDataSourceImplement(
+          getIt.get<LocalHabitService>(), getIt.get<LocalDiaryService>()));
 
   getIt.registerLazySingleton<IHabitRepository>(() => HabitRepositoryImpl(
-      getIt.get<RemoteHabitDataSource>(), getIt.get<LocalHabitDataSource>()));
+      getIt.get<RemoteHabitDataSource>(),
+      getIt.get<LocalHabitDataSource>(),
+      getIt.get<LocalUserDataSource>()));
 
   getIt.registerLazySingleton<HomeBloc>(() => HomeBloc(
       taskRepository: getIt.get<ITaskRepository>(),

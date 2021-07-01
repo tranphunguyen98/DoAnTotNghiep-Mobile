@@ -19,13 +19,13 @@ class BodyCreatingHabitStep2 extends StatefulWidget {
 class _BodyCreatingHabitStep2State extends State<BodyCreatingHabitStep2> {
   CreateHabitBloc _createHabitBloc;
   CreateHabitState _state;
-  double valueInterval = 2;
+  // double valueInterval = 2;
 
   @override
   void initState() {
     _createHabitBloc = BlocProvider.of<CreateHabitBloc>(context);
-    valueInterval =
-        _createHabitBloc.state.habit.frequency.intervalDays.toDouble();
+    // valueInterval =
+    //     _createHabitBloc.state.habit.frequency.intervalDays?.toDouble() ?? 2;
     super.initState();
   }
 
@@ -104,36 +104,36 @@ class _BodyCreatingHabitStep2State extends State<BodyCreatingHabitStep2> {
     );
   }
 
-  Widget _buildIntervalFrequency() {
-    return ContainerInfo(
-        title: 'Mỗi ${valueInterval.toInt()} ngày',
-        child: Column(
-          children: [
-            Slider(
-              value: valueInterval,
-              min: 2,
-              max: 30,
-              onChangeEnd: _onIntervalFrequencyHabitChanged,
-              onChanged: (double value) {
-                setState(() {
-                  valueInterval = value;
-                });
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: const [Text('2'), Spacer(), Text('30')],
-              ),
-            )
-          ],
-        ));
-  }
+  // Widget _buildIntervalFrequency() {
+  //   return ContainerInfo(
+  //       title: 'Mỗi ${valueInterval.toInt()} ngày',
+  //       child: Column(
+  //         children: [
+  //           Slider(
+  //             value: valueInterval,
+  //             min: 2,
+  //             max: 30,
+  //             onChangeEnd: _onIntervalFrequencyHabitChanged,
+  //             onChanged: (double value) {
+  //               setState(() {
+  //                 valueInterval = value;
+  //               });
+  //             },
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.symmetric(horizontal: 16),
+  //             child: Row(
+  //               children: const [Text('2'), Spacer(), Text('30')],
+  //             ),
+  //           )
+  //         ],
+  //       ));
+  // }
 
   Widget _buildGoal() {
     final textGoal = _state.habit.typeHabitGoal == EHabitGoal.archiveItAll.index
         ? 'Hoàn thành trong 1 lần'
-        : '${_state.habit.totalDayAmount} ${kHabitMissionDayUnit[_state.habit.missionDayUnit]} mỗi ngày';
+        : '${_state.habit.missionDayTarget} ${kHabitMissionDayUnit[_state.habit.missionDayUnit]} mỗi ngày';
     return ContainerInfo(
         title: 'Mục tiêu',
         child: SizedBox(
@@ -184,8 +184,8 @@ class _BodyCreatingHabitStep2State extends State<BodyCreatingHabitStep2> {
   }
 
   Widget _buildReminder() {
-    final reminds = _state.habit.reminds;
-    reminds.sort((a, b) {
+    final remind = _state.habit.remind;
+    remind.sort((a, b) {
       if (a.hour > b.hour) {
         return 1;
       } else if (a.hour == b.hour) {
@@ -199,7 +199,7 @@ class _BodyCreatingHabitStep2State extends State<BodyCreatingHabitStep2> {
       title: 'Nhắc nhở',
       child: Wrap(
         children: [
-          ..._state.habit.reminds
+          ..._state.habit.remind
               .map(
                 (e) => ItemReminderHabit(
                   habitRemind: e,
@@ -214,7 +214,7 @@ class _BodyCreatingHabitStep2State extends State<BodyCreatingHabitStep2> {
                 initialTime: const TimeOfDay(hour: 9, minute: 0),
               );
               if (picker != null) {
-                _onHabitRemindsChanged(
+                _onHabitremindChanged(
                     HabitRemind(hour: picker.hour, minute: picker.minute));
               }
             },
@@ -273,13 +273,13 @@ class _BodyCreatingHabitStep2State extends State<BodyCreatingHabitStep2> {
     );
   }
 
-  void _onHabitRemindsChanged(HabitRemind habitRemind) {
-    final reminds = <HabitRemind>[];
-    reminds.addAll(_state.habit.reminds);
-    if (!reminds.contains(habitRemind)) {
-      reminds.add(habitRemind);
+  void _onHabitremindChanged(HabitRemind habitRemind) {
+    final remind = <HabitRemind>[];
+    remind.addAll(_state.habit.remind);
+    if (!remind.contains(habitRemind)) {
+      remind.add(habitRemind);
       _createHabitBloc.add(
-        CreatingHabitDataChanged(reminds: reminds),
+        CreatingHabitDataChanged(remind: remind),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -291,11 +291,11 @@ class _BodyCreatingHabitStep2State extends State<BodyCreatingHabitStep2> {
   }
 
   void _onRemoveRemind(HabitRemind habitRemind) {
-    final reminds = <HabitRemind>[];
-    reminds.addAll(_state.habit.reminds);
-    reminds.remove(habitRemind);
+    final remind = <HabitRemind>[];
+    remind.addAll(_state.habit.remind);
+    remind.remove(habitRemind);
     _createHabitBloc.add(
-      CreatingHabitDataChanged(reminds: reminds),
+      CreatingHabitDataChanged(remind: remind),
     );
   }
 }

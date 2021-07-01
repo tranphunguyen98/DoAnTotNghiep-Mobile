@@ -14,6 +14,7 @@ import 'package:totodo/presentation/screen/detail_habit/header_detail_habit.dart
 import 'package:totodo/presentation/screen/detail_habit/popup_menu_habit_detail.dart';
 import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
+import 'package:totodo/utils/util.dart';
 
 const kDataKey = 'data';
 const kTitleKey = 'title';
@@ -98,7 +99,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                           onPressed: () {
                             Navigator.of(context).pushNamed(AppRouter.kDiary,
                                 arguments: {
-                                  kDataKey: state.listDiary,
+                                  kDataKey: state.habit.id,
                                   kTitleKey: state.habit.name
                                 });
                           },
@@ -211,8 +212,17 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
   Widget _buildCalendar() {
     return TableCalendar(
       firstDay: DateTime.utc(2010, 10, 16),
-      lastDay: DateTime.now().toUtc(),
-      focusedDay: DateTime.now().toUtc(),
+      lastDay: DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        DateUtils.getDaysInMonth(DateTime.now().year, DateTime.now().month),
+      ),
+      pageJumpingEnabled: true,
+      onPageChanged: (focusedDay) {
+        log('testCalendar', focusedDay);
+        // currentMonth = focusedDay.month;
+      },
+      focusedDay: DateTime.now(),
       availableCalendarFormats: const {
         CalendarFormat.month: 'Month',
       },
@@ -283,7 +293,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
 
   Widget _buildMonthlyCompletionRate() {
     return ContainerInfo(
-      title: 'Tỉ lệ hoàn thành trong tháng',
+      title: 'Tỉ lệ hoàn thành trong tháng ${DateTime.now().month}',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -337,22 +347,32 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
 
   Widget _buildDailyGoals() {
     List<StepChartItem> listStepChartItem;
-    if (DateTime.now().day > 10) {
-      listStepChartItem = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
-          .map((days) => StepChartItem(
-              DateTime.now().subtract(Duration(days: days)).day - 1,
-              _state.habit.currentAmountOnDay(DateTime.now()
-                  .subtract(Duration(days: days))
-                  .toIso8601String())))
-          .toList();
-    }
+    // if (DateTime.now().day > 10) {
+    listStepChartItem = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+        .map((days) => StepChartItem(
+            DateTime.now().subtract(Duration(days: days)).day - 1,
+            _state.habit.currentAmountOnDay(DateTime.now()
+                .subtract(Duration(days: days))
+                .toIso8601String())))
+        .toList();
+    // } else {
+    //   listStepChartItem = List.generate(10, (index) => index + 1)
+    //       .map((days) => StepChartItem(
+    //           DateTime(DateTime.now().year, DateTime.now().month)
+    //               .add(Duration(days: days))
+    //               .day,
+    //           _state.habit.currentAmountOnDay(DateTime.now()
+    //               .subtract(Duration(days: days))
+    //               .toIso8601String())))
+    //       .toList();
+    // }
     return ContainerInfo(
       title: 'Mục tiêu hằng ngày (Count)', //TODO change type Count => ...
       child: Container(
         height: 240.0,
         padding: const EdgeInsets.only(top: 8.0),
         child: ChartDetailHabit(
-          target: _state.habit.totalDayAmount,
+          target: _state.habit.missionDayTarget,
           listStepChartItem: listStepChartItem,
         ),
       ),

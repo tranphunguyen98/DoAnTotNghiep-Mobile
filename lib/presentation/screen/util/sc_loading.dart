@@ -27,7 +27,7 @@ class LoadingScreen extends StatelessWidget {
                 height: 16,
               ),
               Text(
-                'Loading data, please waiting...',
+                'Đang tải dữ liệu, vui lòng chờ...',
                 style: kFontSemiboldWhite_16,
               )
             ],

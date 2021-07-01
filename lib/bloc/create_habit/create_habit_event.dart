@@ -40,10 +40,10 @@ class CreatingHabitDataChanged extends CreateHabitEvent {
   final HabitIcon icon;
   final HabitMotivation motivation;
   final HabitFrequency frequency;
-  final List<HabitRemind> reminds;
+  final List<HabitRemind> remind;
   final int missionDayUnit;
   final int missionDayCheckInStep;
-  final int totalDayAmount;
+  final int missionDayTarget;
   final int typeHabitGoal;
   final int typeHabitMissionDayCheckIn;
 
@@ -53,10 +53,10 @@ class CreatingHabitDataChanged extends CreateHabitEvent {
       this.icon,
       this.motivation,
       this.frequency,
-      this.reminds,
+      this.remind,
       this.missionDayUnit,
       this.missionDayCheckInStep,
-      this.totalDayAmount,
+      this.missionDayTarget,
       this.typeHabitGoal,
       this.typeHabitMissionDayCheckIn});
 
@@ -67,17 +67,17 @@ class CreatingHabitDataChanged extends CreateHabitEvent {
         icon,
         motivation,
         frequency,
-        reminds,
+        remind,
         missionDayUnit,
         missionDayCheckInStep,
-        totalDayAmount,
+        missionDayTarget,
         typeHabitGoal,
         typeHabitMissionDayCheckIn
       ];
 
   @override
   String toString() {
-    return 'CreatingHabitDataChanged{name: $name, type: $type, icon: $icon, motivation: $motivation, frequency: $frequency, reminds: $reminds, missionDayUnit: $missionDayUnit, missionDayCheckInStep: $missionDayCheckInStep, totalDayAmount: $totalDayAmount, typeHabitGoal: $typeHabitGoal, typeHabitMissionDayCheckIn: $typeHabitMissionDayCheckIn}';
+    return 'CreatingHabitDataChanged{name: $name, type: $type, icon: $icon, motivation: $motivation, frequency: $frequency, remind: $remind, missionDayUnit: $missionDayUnit, missionDayCheckInStep: $missionDayCheckInStep, missionDayTarget: $missionDayTarget, typeHabitGoal: $typeHabitGoal, typeHabitMissionDayCheckIn: $typeHabitMissionDayCheckIn}';
   }
 }
 

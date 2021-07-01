@@ -23,7 +23,7 @@ class _DialogGoalState extends State<DialogGoal> {
   void initState() {
     _createHabitBloc = BlocProvider.of<CreateHabitBloc>(context);
     _amountController.text =
-        _createHabitBloc.state.habit.totalDayAmount.toString();
+        _createHabitBloc.state.habit.missionDayTarget.toString();
     _amountOneTimeCheckController.text =
         _createHabitBloc.state.habit.missionDayCheckInStep.toString();
     super.initState();
@@ -294,7 +294,7 @@ class _DialogGoalState extends State<DialogGoal> {
 
   void _onHabitTotalAmountChanged(String value) {
     _createHabitBloc
-        .add(CreatingHabitDataChanged(totalDayAmount: int.parse(value)));
+        .add(CreatingHabitDataChanged(missionDayTarget: int.parse(value)));
   }
 
   void _onMissionDayCheckInStepChanged(String value) {

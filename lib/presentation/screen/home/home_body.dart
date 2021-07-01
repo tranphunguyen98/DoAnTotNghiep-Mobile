@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/di/injection.dart';
-import 'package:totodo/presentation/common_widgets/widget_container_error.dart';
 import 'package:totodo/presentation/screen/habit/habit_screen.dart';
+import 'package:totodo/presentation/screen/setting/setting_body.dart';
 import 'package:totodo/presentation/screen/task/sc_task.dart';
 
 class HomeBody extends StatefulWidget {
@@ -28,7 +28,7 @@ class _HomeBodyState extends State<HomeBody> {
           case HomeState.kBottomNavigationHabit:
             return HabitScreen();
         }
-        return const ContainerError('Index Bottom Navigation Invalid');
+        return SettingBody();
       },
     );
   }

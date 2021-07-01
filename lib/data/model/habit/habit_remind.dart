@@ -17,6 +17,21 @@ class HabitRemind extends Equatable {
     @required this.minute,
   });
 
+  factory HabitRemind.fromJson(Map<String, dynamic> map) {
+    return HabitRemind(
+      hour: map['hour'] as int,
+      minute: map['minute'] as int,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    // ignore: unnecessary_cast
+    return {
+      'hour': this.hour,
+      'minute': this.minute,
+    } as Map<String, dynamic>;
+  }
+
   @override
   List<Object> get props => [
         hour,

@@ -17,7 +17,7 @@ class HabitMotivationAdapter extends TypeAdapter<HabitMotivation> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HabitMotivation(
-      text: fields[0] as String,
+      content: fields[0] as String,
       images: (fields[1] as List)?.cast<String>(),
     );
   }
@@ -27,7 +27,7 @@ class HabitMotivationAdapter extends TypeAdapter<HabitMotivation> {
     writer
       ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.text)
+      ..write(obj.content)
       ..writeByte(1)
       ..write(obj.images);
   }

@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:objectid/objectid.dart';
 import 'package:totodo/data/model/habit/diary_item.dart';
 import 'package:totodo/data/model/habit/habit.dart';
-import 'package:totodo/data/model/habit/habit_progress_item.dart';
 import 'package:totodo/data/repository_interface/i_habit_repository.dart';
-import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/file_helper.dart';
 import 'package:totodo/utils/util.dart';
 
@@ -46,37 +44,37 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
   }
 
   Stream<DetailHabitState> _mapAddDiaryToState(
-      DiaryItem diaryItem, String dateString) async* {
-    final List<HabitProgressItem> habitProgress = [];
-    habitProgress.addAll(state.habit.habitProgress);
-
-    final int index = habitProgress.indexWhere(
-        (element) => DateHelper.isSameDayString(element.day, dateString));
-
+      Diary diaryItem, String dateString) async* {
     final List<String> newImagePaths = [];
     if (diaryItem.images?.isNotEmpty ?? false) {
       for (final imagePath in diaryItem.images) {
-        final newPath = await saveImage(
-            imagePath, ObjectId().hexString + getExtensionFromPath(imagePath));
+        final imageFilePath =
+            "${ObjectId().hexString}${getExtensionFromPath(imagePath)}";
+        final newPath = await saveImageFromGallery(
+            imagePath, state.habit.id, imageFilePath);
         newImagePaths.add(newPath);
       }
       diaryItem.images.forEach((imagePath) async {});
       log('testImage', newImagePaths);
     }
-    habitProgress[index] = habitProgress[index]
-        .copyWith(diary: diaryItem.copyWith(images: newImagePaths));
 
-    final habit = state.habit.copyWith(habitProgress: habitProgress);
-    await _habitRepository.updateHabit(habit);
-    yield state.copyWith(habit: habit);
+    await _habitRepository.addDiary(diaryItem.copyWith(
+      images: newImagePaths,
+      habit: state.habit.id,
+      updatedAt: DateTime.now().toIso8601String(),
+      createdAt: DateTime.now().toIso8601String(),
+      time: DateTime.now().toIso8601String(),
+    ));
   }
 
   Future<void> saveImages() async {
     if (state.habit.motivation?.images?.isNotEmpty ?? false) {
       final List<String> newImagePaths = [];
       for (final imagePath in state.habit.motivation.images) {
-        final newPath = await saveImage(
-            imagePath, ObjectId().hexString + getExtensionFromPath(imagePath));
+        final imageFilePath =
+            "${ObjectId().hexString}${getExtensionFromPath(imagePath)}";
+        final newPath = await saveImageFromGallery(
+            imagePath, state.habit.id, imageFilePath);
         newImagePaths.add(newPath);
       }
       state.habit.copyWith(
@@ -87,7 +85,7 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
 
   Stream<DetailHabitState> _mapDeleteHabitToState() async* {
     final habit = state.habit.copyWith(isTrashed: true);
-    await _habitRepository.updateHabit(habit);
+    await _habitRepository.deleteHabit(habit);
     yield state.copyWith(habit: habit);
   }
 

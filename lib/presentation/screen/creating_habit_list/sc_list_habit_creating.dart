@@ -4,7 +4,6 @@ import 'package:totodo/presentation/screen/creating_habit_list/list_habit_creati
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 import 'package:totodo/utils/my_const/map_const.dart';
-import 'package:totodo/utils/util.dart';
 
 class ListHabitCreatingScreen extends StatelessWidget {
   @override
@@ -35,7 +34,6 @@ class ListHabitCreatingScreen extends StatelessWidget {
                 onPressed: () async {
                   final success = await Navigator.of(context)
                       .pushNamed(AppRouter.kCreateHabit);
-                  log('success' * 100, success);
                   if (success is bool && success) {
                     Navigator.of(context).pop();
                   }

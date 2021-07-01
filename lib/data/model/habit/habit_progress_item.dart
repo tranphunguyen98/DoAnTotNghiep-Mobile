@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
-import 'package:totodo/data/model/habit/diary_item.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
 
 part 'habit_progress_item.g.dart';
@@ -9,44 +8,63 @@ part 'habit_progress_item.g.dart';
 @HiveType(typeId: kHiveTypeProgressItem)
 class HabitProgressItem extends Equatable {
   @HiveField(0)
-  final DiaryItem diary; // TODO
+  final int current;
   @HiveField(1)
-  final int currentCheckInAmounts;
-  @HiveField(2)
   final bool isDone;
+  @HiveField(2)
+  final String date;
   @HiveField(3)
-  final String day;
+  final String id;
 
   const HabitProgressItem({
-    this.diary,
-    this.currentCheckInAmounts = 0,
+    this.id,
+    this.current = 0,
     this.isDone = false,
-    @required this.day,
+    @required this.date,
   });
 
+  factory HabitProgressItem.fromJson(Map<String, dynamic> map) {
+    return HabitProgressItem(
+      // diary: map['diary'] as DiaryItem,
+      current: map['current'] as int,
+      isDone: map['isDone'] as bool ?? false,
+      date: map['date'] as String,
+      id: map['_id'] as String,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    // ignore: unnecessary_cast
+    return {
+      // 'diary': this.diary,
+      'current': this.current,
+      'isDone': this.isDone,
+      'date': this.date,
+      '_id': this.id,
+    } as Map<String, dynamic>;
+  }
+
   HabitProgressItem copyWith({
-    DiaryItem diary,
-    int currentCheckInAmounts,
+    int current,
     bool isDone,
-    String day,
+    String date,
+    String id,
   }) {
-    if ((diary == null || identical(diary, this.diary)) &&
-        (currentCheckInAmounts == null ||
-            identical(currentCheckInAmounts, this.currentCheckInAmounts)) &&
+    if ((current == null || identical(current, this.current)) &&
         (isDone == null || identical(isDone, this.isDone)) &&
-        (day == null || identical(day, this.day))) {
+        (date == null || identical(date, this.date)) &&
+        (id == null || identical(id, this.id))) {
       return this;
     }
 
     return HabitProgressItem(
-      diary: diary ?? this.diary,
-      currentCheckInAmounts:
-          currentCheckInAmounts ?? this.currentCheckInAmounts,
+      current: current ?? this.current,
       isDone: isDone ?? this.isDone,
-      day: day ?? this.day,
+      date: date ?? this.date,
+      id: id ?? this.id,
     );
   }
 
   @override
-  List<Object> get props => [diary, currentCheckInAmounts, isDone, day];
+  List<Object> get props => [current, isDone, date];
 }

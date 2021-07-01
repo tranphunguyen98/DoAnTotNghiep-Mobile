@@ -17,10 +17,10 @@ class HabitProgressItemAdapter extends TypeAdapter<HabitProgressItem> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HabitProgressItem(
-      diary: fields[0] as DiaryItem,
-      currentCheckInAmounts: fields[1] as int,
-      isDone: fields[2] as bool,
-      day: fields[3] as String,
+      id: fields[3] as String,
+      current: fields[0] as int,
+      isDone: fields[1] as bool,
+      date: fields[2] as String,
     );
   }
 
@@ -29,13 +29,13 @@ class HabitProgressItemAdapter extends TypeAdapter<HabitProgressItem> {
     writer
       ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.diary)
+      ..write(obj.current)
       ..writeByte(1)
-      ..write(obj.currentCheckInAmounts)
-      ..writeByte(2)
       ..write(obj.isDone)
+      ..writeByte(2)
+      ..write(obj.date)
       ..writeByte(3)
-      ..write(obj.day);
+      ..write(obj.id);
   }
 
   @override

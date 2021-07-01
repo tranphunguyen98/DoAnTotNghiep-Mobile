@@ -33,7 +33,7 @@ dependencies:
   firebase_core: ^0.4.0+8
   flutter_facebook_login: ^3.0.0
   flutter_icons: ^1.1.0
-
+  flutter_colorpicker: ^0.4.0
   # Notification
   flutter_local_notifications: ^4.0.1+2
   flutter_native_timezone: ^1.0.10
@@ -124,3 +124,5 @@ flutter:
     - assets/
     - assets/habit/
     - assets/emotional/
+    - assets/Habit Icons/
+    - assets/Habit Checkin Imgs/

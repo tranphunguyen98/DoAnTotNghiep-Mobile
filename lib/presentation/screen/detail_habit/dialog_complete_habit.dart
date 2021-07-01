@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:totodo/presentation/custom_ui/custom_emotion_radio.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
 
+const String kCompletedHabitDialogFeelingKey = 'feeling';
 const String kCompletedHabitDialogTextKey = 'text';
 const String kCompletedHabitDialogImagesKey = 'images';
 
@@ -20,7 +22,9 @@ class _DialogCompleteHabitState extends State<DialogCompleteHabit> {
   final TextEditingController _diaryController = TextEditingController();
   final picker = ImagePicker();
   final List<String> images = [];
+  int feeling = 1;
   String messageError;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -28,6 +32,7 @@ class _DialogCompleteHabitState extends State<DialogCompleteHabit> {
         Navigator.pop<Map<String, Object>>(context, {
           kCompletedHabitDialogTextKey: _diaryController.text,
           kCompletedHabitDialogImagesKey: images,
+          kCompletedHabitDialogFeelingKey: feeling,
         });
         return true;
       },
@@ -40,12 +45,19 @@ class _DialogCompleteHabitState extends State<DialogCompleteHabit> {
         insetPadding: EdgeInsets.symmetric(horizontal: 32),
         // contentPadding: EdgeInsets.a,
         content: SizedBox(
-          width: 360.0,
+          width: 380.0,
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(child: _buildEmotional()),
+                  ],
+                ),
+                SizedBox(height: 16.0),
                 TextField(
                   controller: _diaryController,
                   style: kFontRegularBlack2_14,
@@ -89,6 +101,7 @@ class _DialogCompleteHabitState extends State<DialogCompleteHabit> {
                 Navigator.pop<Map<String, Object>>(context, {
                   kCompletedHabitDialogTextKey: _diaryController.text,
                   kCompletedHabitDialogImagesKey: images,
+                  kCompletedHabitDialogFeelingKey: feeling,
                 });
               } else {
                 setState(() {
@@ -114,7 +127,7 @@ class _DialogCompleteHabitState extends State<DialogCompleteHabit> {
 
   List<Widget> _getWidgetListMotivationImage() {
     final List<Widget> widgetList = [];
-    const double imageSize = 80.0;
+    const double imageSize = 60.0;
 
     if (images.isNotEmpty) {
       widgetList.addAll(images
@@ -130,7 +143,7 @@ class _DialogCompleteHabitState extends State<DialogCompleteHabit> {
                       File(image),
                       height: imageSize,
                       width: imageSize,
-                      fit: BoxFit.fitWidth,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -201,4 +214,19 @@ class _DialogCompleteHabitState extends State<DialogCompleteHabit> {
   }
 
   void _returnData() {}
+
+  Widget _buildEmotional() {
+    final data = [1, 2, 3, 4, 5];
+    return Center(
+      child: GroupEmotionRadioButton(
+        data: data,
+        defaultSelected: feeling,
+        onRadioValueChanged: (value) {
+          setState(() {
+            feeling = value;
+          });
+        },
+      ),
+    );
+  }
 }

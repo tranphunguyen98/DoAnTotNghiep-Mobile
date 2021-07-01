@@ -10,7 +10,7 @@ abstract class LocalTaskDataSource {
 
   Future<List<LocalTask>> getAllTask();
 
-  Future<void> deleteTask(String taskId);
+  Future<void> deletePermenantlyTask(String taskId);
 
   Future<bool> updateTask(LocalTask task);
 
