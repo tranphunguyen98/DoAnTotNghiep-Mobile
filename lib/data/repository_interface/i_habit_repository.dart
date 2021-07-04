@@ -16,7 +16,7 @@ abstract class IHabitRepository {
 
   Future<List<Habit>> getHabits();
 
-  Future<void> addDiary(Diary diary);
+  Future<void> addDiary(String habitId, Diary diary);
 
   Future<List<Diary>> getDiaries();
 

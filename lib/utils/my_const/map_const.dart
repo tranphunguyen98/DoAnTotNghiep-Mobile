@@ -76,7 +76,7 @@ const Map<String, int> kServerHabitMissionDayUnit = {
   'Trang': 6,
 };
 
-enum EHabitMissionDayCheckIn { auto, manual, completedAll }
+enum EHabitMissionDayCheckIn { auto, manual }
 
 const Map<int, String> kHabitMissionDayCheckIn = {0: 'Tự động', 1: 'Bằng tay'};
 
@@ -151,7 +151,7 @@ final Map<int, String> kCheckInColor = {
   43: "#E07514",
   44: "#39B54A",
   45: "#E83D3D",
-  46: "#B58564",
+  46: "#53C5D0",
   47: "#53840D",
   48: "#5252EF",
   49: "#9E846D",
@@ -163,6 +163,27 @@ final Map<int, String> kCheckInColor = {
   55: "#5B9975",
   56: "#2C631A",
   57: "#629AF4",
+  58: "#3C5666",
+  59: "#662D91",
+  60: "#45377A",
+  61: "#2B136D",
+  62: "#5768FF",
+  63: "#7C4253",
+  64: "#00989D",
+  65: "#00989D",
+  66: "#6A90CC",
+  67: "#385D7F",
+  68: "#934C69",
+  69: "#45377A",
+  70: "#61ADA2",
+  71: "#1957C2",
+  72: "#105066",
+  73: "#7C7F7D",
+  74: "#E83D3D",
+  75: "#6BA6C9",
+  76: "#72BF44",
+  77: "#5E4E72",
+  78: "#FF9161",
 };
 
 final List<Habit> kListHabitDefault = [

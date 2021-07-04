@@ -81,6 +81,7 @@ class LocalHabitService {
 
   Future<bool> checkInHabit(Habit habit, String chosenDay,
       [int checkInAmount]) async {
+    checkInAmount ??= 0;
     final habitProgress = <HabitProgressItem>[];
     habitProgress.addAll(habit.habitProgress);
 
@@ -89,8 +90,13 @@ class LocalHabitService {
       if (DateHelper.isSameDayString(habitProgress[i].date, chosenDay)) {
         log("EHabitMissionDayCheckIn1 ${habit.typeHabitMissionDayCheckIn}");
         if (habit.typeHabitGoal == EHabitGoal.archiveItAll.index) {
-          habitProgress[i] =
-              habitProgress[i].copyWith(isDone: !habitProgress[i].isDone);
+          if (habitProgress[i].isDone) {
+            habitProgress[i] =
+                habitProgress[i].copyWith(isDone: false, current: 0);
+          } else {
+            habitProgress[i] = habitProgress[i]
+                .copyWith(isDone: true, current: habit.missionDayTarget);
+          }
         } else {
           if (habit.typeHabitMissionDayCheckIn ==
               EHabitMissionDayCheckIn.auto.index) {
@@ -101,10 +107,14 @@ class LocalHabitService {
               habitProgress[i] = habitProgress[i].copyWith(isDone: true);
             }
           } else if (habit.typeHabitMissionDayCheckIn ==
-              EHabitMissionDayCheckIn.completedAll.index) {
+              EHabitMissionDayCheckIn.manual.index) {
             log("EHabitMissionDayCheckIn1");
-            habitProgress[i] = habitProgress[i]
-                .copyWith(isDone: true, current: habit.missionDayTarget);
+            habitProgress[i] = habitProgress[i].copyWith(
+              current: habitProgress[i].current + checkInAmount,
+            );
+            if (habitProgress[i].current >= habit.missionDayTarget) {
+              habitProgress[i] = habitProgress[i].copyWith(isDone: true);
+            }
           }
         }
         isContainDay = true;
@@ -123,9 +133,11 @@ class LocalHabitService {
               current: habit.missionDayCheckInStep,
               isDone: habit.missionDayCheckInStep >= habit.missionDayTarget));
         } else if (habit.typeHabitMissionDayCheckIn ==
-            EHabitMissionDayCheckIn.completedAll.index) {
+            EHabitMissionDayCheckIn.manual.index) {
           habitProgress.add(HabitProgressItem(
-              date: chosenDay, current: habit.missionDayTarget, isDone: true));
+              date: chosenDay,
+              current: checkInAmount,
+              isDone: checkInAmount >= habit.missionDayTarget));
         }
       }
     }
@@ -149,7 +161,10 @@ class LocalHabitService {
   } //</editor-fold>
 
   Future<void> saveHabits(List<Habit> habits) async {
-    await _habitBox.clear();
+    if(_habitBox.isNotEmpty) {
+      await _habitBox.clear();
+    }
+
     for (final habit in habits) {
       await _habitBox.add(habit);
     }

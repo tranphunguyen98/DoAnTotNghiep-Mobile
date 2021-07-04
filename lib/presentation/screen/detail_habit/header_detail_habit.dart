@@ -5,10 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:totodo/bloc/detail_habit/bloc.dart';
 import 'package:totodo/data/model/habit/diary_item.dart';
+import 'package:totodo/presentation/common_widgets/url_image.dart';
 import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
 import 'package:totodo/presentation/custom_ui/hex_color.dart';
+import 'package:totodo/presentation/screen/detail_habit/dialog_check_in_habit.dart';
 import 'package:totodo/presentation/screen/detail_habit/dialog_complete_habit.dart';
 import 'package:totodo/presentation/screen/detail_habit/slide_to_confirm.dart';
+import 'package:totodo/utils/file_helper.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
 
@@ -120,14 +123,19 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
                       ? 100
                       : 180.0,
             ),
-            if ((_state.habit.images?.imgUnCheckIn?.length ?? 0) > 3)
-              Image.file(
-                File(_state.habit.images?.imgUnCheckIn),
-                width: 120.0,
-                height: 120.0,
-                fit: BoxFit.cover,
+            if ((_state.habit.images?.imgUnCheckIn?.length ?? 0) > 2)
+              UrlImage(
+                url: _state.habit.images.imgUnCheckIn,
+                height: 120,
+                width: 120,
               ),
-            if ((_state.habit.images?.imgUnCheckIn?.length ?? 0) <= 3)
+            // Image.file(
+            //   File(_state.habit.images?.imgUnCheckIn),
+            //   width: 120.0,
+            //   height: 120.0,
+            //   fit: BoxFit.cover,
+            // ),
+            if ((_state.habit.images?.imgUnCheckIn?.length ?? 0) <= 2)
               Image.asset(
                 getAssetCheckIn(
                     int.parse(_state.habit.images?.imgUnCheckIn ?? "1")),
@@ -160,12 +168,18 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
                     padding: const EdgeInsets.only(right: 8.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16.0),
-                      child: Image.file(
-                        File(imagePath),
-                        height: 110,
-                        width: 110,
-                        fit: BoxFit.cover,
-                      ),
+                      child: imagePath.contains(kLocalFolder)
+                          ? Image.file(
+                              File(imagePath),
+                              height: 110,
+                              width: 110,
+                              fit: BoxFit.cover,
+                            )
+                          : UrlImage(
+                              url: imagePath,
+                              height: 110,
+                              width: 110,
+                            ),
                     ),
                   ),
                 ),
@@ -192,8 +206,12 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
                 width: 120.0,
                 lineHeight: 6.0,
                 alignment: MainAxisAlignment.center,
-                percent: _state.habit.currentAmountOnDay(_state.chosenDay) /
-                    _state.habit.missionDayTarget,
+                percent: (_state.habit.currentAmountOnDay(_state.chosenDay) /
+                            _state.habit.missionDayTarget >
+                        1.0)
+                    ? 1.0
+                    : (_state.habit.currentAmountOnDay(_state.chosenDay) /
+                        _state.habit.missionDayTarget),
                 backgroundColor: Colors.white.withOpacity(0.3),
                 progressColor: Colors.white,
               ),
@@ -228,7 +246,20 @@ class _HeaderDetailHabitState extends State<HeaderDetailHabit> {
   }
 
   Future<void> _onCheckInHabit() async {
-    _detailHabitBloc.add(CheckInHabit());
+    int result;
+    if (_state.habit.typeHabitGoal == EHabitGoal.reachACertainAmount.index &&
+        _state.habit.typeHabitMissionDayCheckIn ==
+            EHabitMissionDayCheckIn.manual.index) {
+      result = await showDialog<int>(
+        context: context,
+        builder: (BuildContext dialogContext) {
+          return DialogCheckInHabit(
+              title:
+                  'Số lượng Check In (${kHabitMissionDayUnit[_state.habit.missionDayUnit]})');
+        },
+      );
+    }
+    _detailHabitBloc.add(CheckInHabit(result));
   }
 
   Future<void> _showDialogAddDiary() async {

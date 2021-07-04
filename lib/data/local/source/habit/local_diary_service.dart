@@ -42,7 +42,7 @@ class LocalDiaryService {
   // }
 
   Future<List<Diary>> getDiaryFromHabitId(String habitId) async {
-    final a = await getAllDiary();
+    // final a = await getAllDiary();
     final diaries = _diaryBox.values
         .where((element) => (element as Diary).habit == habitId)
         .map((e) => e as Diary)
@@ -50,25 +50,29 @@ class LocalDiaryService {
     return diaries;
   }
 
-  Future<bool> updateDiary(Diary habit) async {
+  Future<bool> updateDiary(Diary diary) async {
     int indexUpdated = -1;
 
     for (var i = 0; i < _diaryBox.length; i++) {
-      if ((_diaryBox.getAt(i) as Diary).id == habit.id) {
+      if ((_diaryBox.getAt(i) as Diary).id == diary.id) {
         indexUpdated = i;
         break;
       }
     }
     if (indexUpdated > -1) {
-      _diaryBox.putAt(indexUpdated, habit);
+      _diaryBox.putAt(indexUpdated, diary);
       return true;
     }
     return false;
   }
 
   Future<void> saveDiaries(List<Diary> diaries) async {
-    _diaryBox.clear();
-    _diaryBox.addAll(diaries);
+    if (_diaryBox.isNotEmpty) {
+      await _diaryBox.clear();
+    }
+    for (final diary in diaries) {
+      _diaryBox.add(diary);
+    }
   }
 
   Future<void> clearData() async {

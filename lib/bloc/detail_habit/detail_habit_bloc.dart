@@ -7,6 +7,7 @@ import 'package:totodo/data/repository_interface/i_habit_repository.dart';
 import 'package:totodo/utils/file_helper.dart';
 import 'package:totodo/utils/util.dart';
 
+import '../../utils/my_const/map_const.dart';
 import 'bloc.dart';
 
 class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
@@ -23,7 +24,7 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
     if (event is InitDataDetailHabit) {
       yield* _mapInitDataDetailHabitToState(event.habit, event.chosenDay);
     } else if (event is CheckInHabit) {
-      yield* _mapCheckInHabitToState();
+      yield* _mapCheckInHabitToState(event.checkIn);
     } else if (event is AddDiary) {
       yield* _mapAddDiaryToState(event.item, event.date);
     } else if (event is DeleteHabit) {
@@ -32,7 +33,13 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
       yield* _mapArchiveHabitToState();
     } else if (event is UpdateDataDetailHabit) {
       yield* _mapUpdateDataDetailHabitToState();
+    } else if (event is ChosenDayChanged) {
+      yield* _mapChosenDayChangedToState(event.chosenDay);
     }
+  }
+
+  Stream<DetailHabitState> _mapChosenDayChangedToState(String date) async* {
+    yield state.copyWith(chosenDay: date);
   }
 
   Stream<DetailHabitState> _mapInitDataDetailHabitToState(
@@ -58,13 +65,15 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
       log('testImage', newImagePaths);
     }
 
-    await _habitRepository.addDiary(diaryItem.copyWith(
-      images: newImagePaths,
-      habit: state.habit.id,
-      updatedAt: DateTime.now().toIso8601String(),
-      createdAt: DateTime.now().toIso8601String(),
-      time: DateTime.now().toIso8601String(),
-    ));
+    await _habitRepository.addDiary(
+        state.habit.id,
+        diaryItem.copyWith(
+          images: newImagePaths,
+          habit: state.habit.id,
+          updatedAt: DateTime.now().toIso8601String(),
+          createdAt: DateTime.now().toIso8601String(),
+          time: DateTime.parse(dateString).toIso8601String(),
+        ));
   }
 
   Future<void> saveImages() async {
@@ -89,8 +98,8 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
     yield state.copyWith(habit: habit);
   }
 
-  Stream<DetailHabitState> _mapCheckInHabitToState() async* {
-    await _habitRepository.checkInHabit(state.habit, state.chosenDay);
+  Stream<DetailHabitState> _mapCheckInHabitToState(int amount) async* {
+    await _habitRepository.checkInHabit(state.habit, state.chosenDay, amount);
     final habit = await _habitRepository.getDetailHabit(state.habit.id);
     yield state.copyWith(habit: habit);
   }
@@ -104,6 +113,12 @@ class DetailHabitBloc extends Bloc<DetailHabitEvent, DetailHabitState> {
   Stream<DetailHabitState> _mapUpdateDataDetailHabitToState() async* {
     final Habit updatedHabit =
         await _habitRepository.getDetailHabit(state.habit.id);
-    yield state.copyWith(habit: updatedHabit);
+    yield state.copyWith(
+        habit: updatedHabit.copyWith(
+            images: updatedHabit.images.copyWith(
+      imgBg: updatedHabit.images.imgBg ?? kCheckInColor[1],
+      imgUnCheckIn: updatedHabit.images.imgUnCheckIn ?? "1",
+      imgCheckIn: updatedHabit.images.imgCheckIn ?? "1",
+    )));
   }
 }

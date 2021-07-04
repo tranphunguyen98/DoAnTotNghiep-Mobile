@@ -36,14 +36,14 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
           (await _habitRepository.getDiaryByHabitId(habitId))
               .map(
                 (diary) => DiaryItemData(
-                    date: DateTime.parse(diary.time),
+                    time: DateTime.parse(diary.time),
                     title: habitFilter.name,
                     content: diary.text,
                     images: diary.images,
                     emotional: diary.feeling),
               )
               .toList();
-      diaries.sort((a, b) => b.date.compareTo(a.date));
+      diaries.sort((a, b) => b.time.compareTo(a.time));
       yield DiaryState(
           diaries: diaries, habits: habits, habitFilter: habitFilter);
     } else {
@@ -84,7 +84,7 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
       }
     }
 
-    diaries.sort((a, b) => b.date.compareTo(a.date));
+    diaries.sort((a, b) => b.time.compareTo(a.time));
 
     return diaries;
   }
@@ -113,7 +113,7 @@ class DiaryBloc extends Bloc<DiaryEvent, DiaryState> {
         })
         .map(
           (diary) => DiaryItemData(
-              date: DateTime.parse(diary.time),
+              time: DateTime.parse(diary.time),
               title: habit.name,
               content: diary.text,
               images: diary.images,

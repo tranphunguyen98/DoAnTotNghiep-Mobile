@@ -89,9 +89,9 @@ class Diary extends Equatable {
       '_id': this.id,
       'feeling': this.feeling,
       'time': this.time,
-      'habit': this.habit,
-      'createdAt': this.createdAt,
-      'updatedAt': this.updatedAt,
+      // 'habit': this.habit,
+      // 'createdAt': this.createdAt,
+      // 'updatedAt': this.updatedAt,
     } as Map<String, dynamic>;
   }
 

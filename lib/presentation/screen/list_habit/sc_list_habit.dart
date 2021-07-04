@@ -28,8 +28,8 @@ class _ListHabitScreenState extends State<ListHabitScreen> {
     return BlocBuilder<HabitBloc, HabitState>(
       cubit: _habitBloc,
       builder: (context, state) {
-        return MaterialApp(
-          home: DefaultTabController(
+        return
+           DefaultTabController(
             length: 2,
             child: Scaffold(
               appBar: AppBar(
@@ -49,12 +49,12 @@ class _ListHabitScreenState extends State<ListHabitScreen> {
                   tabs: [
                     Tab(
                         icon: Text(
-                      'Active',
+                      'Chưa hoàn thành',
                       style: kFontSemiboldBlack_16,
                     )),
                     Tab(
                         icon: Text(
-                      'Archived',
+                      'Đã hoàn thành',
                       style: kFontSemiboldBlack_16,
                     )),
                   ],
@@ -73,8 +73,7 @@ class _ListHabitScreenState extends State<ListHabitScreen> {
                 ],
               ),
             ),
-          ),
-        );
+          );
       },
     );
   }

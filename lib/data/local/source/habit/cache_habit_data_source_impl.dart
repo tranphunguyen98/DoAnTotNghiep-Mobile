@@ -39,7 +39,7 @@ class LocalHabitDataSourceImplement implements LocalHabitDataSource {
   @override
   Future<bool> checkInHabit(Habit habit, String chosenDay,
       [int checkInAmount]) {
-    return _habitService.checkInHabit(habit, chosenDay);
+    return _habitService.checkInHabit(habit, chosenDay, checkInAmount);
   }
 
   @override
@@ -80,5 +80,10 @@ class LocalHabitDataSourceImplement implements LocalHabitDataSource {
   @override
   Future<void> deletePermanentlyHabit(Habit habit) {
     return _habitService.permanentlyDeleteTask(habit.id);
+  }
+
+  @override
+  Future<void> updateDiaryAsync(Diary diary) {
+    return _diaryService.updateDiary(diary);
   }
 }

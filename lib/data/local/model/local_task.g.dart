@@ -27,7 +27,7 @@ class LocalTaskAdapter extends TypeAdapter<LocalTask> {
       isStarred: fields[7] as bool,
       isTrashed: fields[8] as bool,
       isCreatedOnLocal: fields[17] as bool,
-      preciseSchedules: (fields[16] as List)?.cast<String>(),
+      attachmentInfos: (fields[16] as List)?.cast<String>(),
       dueDate: fields[9] as String,
       projectId: fields[10] as String,
       labelIds: (fields[11] as List)?.cast<String>(),
@@ -75,7 +75,7 @@ class LocalTaskAdapter extends TypeAdapter<LocalTask> {
       ..writeByte(15)
       ..write(obj.crontabSchedule)
       ..writeByte(16)
-      ..write(obj.preciseSchedules)
+      ..write(obj.attachmentInfos)
       ..writeByte(17)
       ..write(obj.isCreatedOnLocal);
   }

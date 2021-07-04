@@ -10,6 +10,7 @@ import 'package:totodo/utils/date_helper.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 
+import '../../../utils/util.dart';
 import 'habit_icon.dart';
 
 part 'habit.g.dart';
@@ -227,6 +228,7 @@ class Habit extends Equatable {
   }
 
   factory Habit.fromJson(Map<String, dynamic> map) {
+    if (map == null) return null;
     final jsonRemindList = map['remind'] as List;
     final List<HabitRemind> remindList = [];
     for (final remindJson in jsonRemindList) {
@@ -249,14 +251,15 @@ class Habit extends Equatable {
       remind: remindList,
       motivation:
           HabitMotivation.fromJson(map['motivation'] as Map<String, dynamic>),
-      missionDayUnit: 0,
+      missionDayUnit: isInt(map['missionDayUnit'] as String)
+          ? int.parse(map['missionDayUnit'] as String)
+          : 0,
       // TODO 0 -> "0"
       // kServerHabitMissionDayUnit[map['missionDayUnit'] as String] ?? ,
       missionDayCheckInStep: map['missionDayCheckInStep'] as int,
       missionDayTarget: map['missionDayTarget'] as int,
       isFinished: map['isFinished'] as bool,
       habitProgress: progressList,
-      // type: map['type'] as int,
       frequency:
           HabitFrequency.fromJson(map['frequency'] as Map<String, dynamic>),
       typeHabitGoal: map['typeHabitGoal'] as int,
@@ -265,13 +268,15 @@ class Habit extends Equatable {
     );
 
     int typeGoal = EHabitGoal.reachACertainAmount.index;
-    int typeCheckIn;
-    if (habit.missionDayCheckInStep == 0) {
-      typeCheckIn = EHabitMissionDayCheckIn.manual.index;
-    } else if (habit.missionDayCheckInStep >= habit.missionDayTarget) {
-      typeCheckIn = EHabitMissionDayCheckIn.completedAll.index;
+    int typeCheckIn = EHabitMissionDayCheckIn.auto.index;
+    if (habit.missionDayCheckInStep == 1 && habit.missionDayTarget == 1) {
+      typeGoal = EHabitGoal.archiveItAll.index;
     } else {
-      typeCheckIn = EHabitMissionDayCheckIn.auto.index;
+      if (habit.missionDayCheckInStep == 0) {
+        typeCheckIn = EHabitMissionDayCheckIn.manual.index;
+      } else {
+        typeCheckIn = EHabitMissionDayCheckIn.auto.index;
+      }
     }
 
     return habit.copyWith(
@@ -288,7 +293,7 @@ class Habit extends Equatable {
       'isSaveDiary': isSaveDiary,
       'remind': remind.map((e) => e.toJson()).toList(),
       'motivation': motivation.toJson(),
-      'missionDayUnit': kHabitMissionDayUnit[missionDayUnit],
+      'missionDayUnit': missionDayUnit.toString(),
       'missionDayCheckInStep': missionDayCheckInStep,
       'missionDayTarget': missionDayTarget,
       'isFinished': isFinished,

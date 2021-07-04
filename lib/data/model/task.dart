@@ -26,7 +26,7 @@ class Task extends Equatable {
   final List<CheckItem> checkList;
   final String completedDate;
   final String crontabSchedule; // cron expression - reminder
-  final List<String> preciseSchedules; // precise datetime - reminder
+  final List<String> attachmentInfos; // precise datetime - reminder
   final bool isCreatedOnLocal;
 
   //<editor-fold desc="Data Methods" defaultstate="collapsed">
@@ -48,7 +48,7 @@ class Task extends Equatable {
       this.sectionId,
       this.checkList = const [],
       this.completedDate,
-      this.preciseSchedules,
+      this.attachmentInfos,
       this.crontabSchedule});
 
   Task copyWith({
@@ -68,7 +68,7 @@ class Task extends Equatable {
     List<CheckItem> checkList,
     String completedDate,
     String crontabSchedule,
-    List<String> preciseSchedules,
+    List<String> attachmentInfos,
     bool isCreatedOnLocal,
   }) {
     if ((id == null || identical(id, this.id)) &&
@@ -91,8 +91,8 @@ class Task extends Equatable {
             identical(crontabSchedule, this.crontabSchedule)) &&
         (isCreatedOnLocal == null ||
             identical(isCreatedOnLocal, this.isCreatedOnLocal)) &&
-        (preciseSchedules == null ||
-            identical(preciseSchedules, this.preciseSchedules))) {
+        (attachmentInfos == null ||
+            identical(attachmentInfos, this.attachmentInfos))) {
       return this;
     }
 
@@ -113,7 +113,7 @@ class Task extends Equatable {
       checkList: checkList ?? this.checkList,
       completedDate: completedDate ?? this.completedDate,
       crontabSchedule: crontabSchedule ?? this.crontabSchedule,
-      preciseSchedules: preciseSchedules ?? this.preciseSchedules,
+      attachmentInfos: attachmentInfos ?? this.attachmentInfos,
       isCreatedOnLocal: isCreatedOnLocal ?? this.isCreatedOnLocal,
     );
   }
@@ -135,7 +135,7 @@ class Task extends Equatable {
         ;
     // ' checkList: $checkList, completedDate: $completedDate,'
     // ' crontabSchedule: $crontabSchedule,'
-    // ' preciseSchedules: $preciseSchedules,'
+    // ' attachmentInfos: $attachmentInfos,'
   }
 
   // factory Task.fromJson(Map<String, dynamic> map) {
@@ -156,7 +156,7 @@ class Task extends Equatable {
   //     checkList: map['checkList'] as List<CheckItem>,
   //     completedDate: map['completedDate'] as String,
   //     crontabSchedule: map['crontabSchedule'] as String,
-  //     preciseSchedules: map['preciseSchedules'] as List<String>,
+  //     attachmentInfos: map['attachmentInfos'] as List<String>,
   //   );
   // }
 
@@ -178,7 +178,7 @@ class Task extends Equatable {
   //     'checkList': checkList,
   //     'completedDate': completedDate,
   //     'crontabSchedule': crontabSchedule,
-  //     'preciseSchedules': preciseSchedules,
+  //     'attachmentInfos': attachmentInfos,
   //   } as Map<String, dynamic>;
   // }
 
@@ -203,7 +203,7 @@ class Task extends Equatable {
         sectionId,
         completedDate,
         crontabSchedule,
-        preciseSchedules,
+        attachmentInfos,
         isCreatedOnLocal,
       ];
 }

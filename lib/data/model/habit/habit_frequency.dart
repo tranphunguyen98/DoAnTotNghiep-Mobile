@@ -43,7 +43,7 @@ class HabitFrequency extends Equatable {
     return {
       'typeFrequency': kServerHabitFrequency[this.typeFrequency],
       'dailyDays': this.dailyDays,
-      'weeklyDays': null, // TODO khong hieu gi luon
+      'weeklyDays': weeklyDays,
       'weeklyUnit': null,
     } as Map<String, dynamic>;
   }

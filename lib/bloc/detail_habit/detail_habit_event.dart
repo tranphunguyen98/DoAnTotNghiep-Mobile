@@ -26,7 +26,13 @@ class InitDataDetailHabit extends DetailHabitEvent {
   }
 }
 
-class CheckInHabit extends DetailHabitEvent {}
+class CheckInHabit extends DetailHabitEvent {
+  final int checkIn;
+  const CheckInHabit([this.checkIn]);
+
+  @override
+  List<Object> get props => [checkIn];
+}
 
 class AddDiary extends DetailHabitEvent {
   final Diary item;
@@ -48,3 +54,19 @@ class DeleteHabit extends DetailHabitEvent {}
 class ArchiveHabit extends DetailHabitEvent {}
 
 class UpdateDataDetailHabit extends DetailHabitEvent {}
+
+class ChosenDayChanged extends DetailHabitEvent {
+  final String chosenDay;
+
+  const ChosenDayChanged({
+    this.chosenDay,
+  });
+
+  @override
+  List<Object> get props => [chosenDay];
+
+  @override
+  String toString() {
+    return 'ChosenDayChanged{chosenDay: $chosenDay}';
+  }
+}

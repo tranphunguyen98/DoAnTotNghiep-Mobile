@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:totodo/utils/my_const/hive_const.dart';
 
+import '../../../utils/my_const/my_const.dart';
+
 part 'habit_image.g.dart';
 
 @HiveType(typeId: kHiveTypeHabitImage)
@@ -31,9 +33,9 @@ class HabitImage extends Equatable {
   Map<String, dynamic> toJson() {
     // ignore: unnecessary_cast
     return {
-      'imgBg': this.imgBg,
-      'imgUnCheckIn': this.imgUnCheckIn,
-      'imgCheckIn': this.imgCheckIn,
+      'imgBg': this.imgBg ?? kCheckInColor[1],
+      'imgUnCheckIn': this.imgUnCheckIn ?? "1",
+      'imgCheckIn': this.imgCheckIn ?? "1",
     } as Map<String, dynamic>;
   }
 
@@ -48,7 +50,7 @@ class HabitImage extends Equatable {
       return this;
     }
 
-    return new HabitImage(
+    return HabitImage(
       imgBg: imgBg ?? this.imgBg,
       imgUnCheckIn: imgUnCheckIn ?? this.imgUnCheckIn,
       imgCheckIn: imgCheckIn ?? this.imgCheckIn,

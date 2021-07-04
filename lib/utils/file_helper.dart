@@ -1,12 +1,18 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:totodo/utils/util.dart';
 
+const String kLocalFolder = '/data/user/0';
 Future<String> saveImageFromGallery(
     String imagePath, String id, String fileName) async {
+  if (imagePath.contains('http')) {
+    throw Exception(
+      'image path is invalid: $imagePath $id',
+    );
+  }
 // getting a directory path for saving
+
   final imageFile = File(imagePath);
   final String rootPath = (await getApplicationDocumentsDirectory()).path;
   final String savingPath = '$rootPath/images';
@@ -18,34 +24,34 @@ Future<String> saveImageFromGallery(
   return newImage.path;
 }
 
-Future<String> saveImageFromUrl(String url, String fileName) async {
-  final dio = Dio();
-  final String rootPath = (await getApplicationDocumentsDirectory()).path;
-  final String savingPath = '$rootPath/images';
-  await createDir(savingPath);
-  var isSuccess = false;
-  await dio
-      .download(url, '$savingPath/$fileName',
-          options: Options(receiveTimeout: 3000))
-      .timeout(
-    Duration(seconds: 3),
-    onTimeout: () {
-      log('testAsync', 'timeOut $url $fileName');
-      return null;
-    },
-  ).then((value) {
-    if (value != null) {
-      isSuccess = true;
-    }
-  }).onError((error, stackTrace) {
-    log('testAsync', stackTrace);
-    return null;
-  });
-  if (isSuccess) {
-    return '$savingPath/$fileName';
-  }
-  return null;
-}
+// Future<String> saveImageFromUrl(String url, String fileName) async {
+//   final dio = Dio();
+//   final String rootPath = (await getApplicationDocumentsDirectory()).path;
+//   final String savingPath = '$rootPath/images';
+//   await createDir(savingPath);
+//   var isSuccess = false;
+//   await dio
+//       .download(url, '$savingPath/$fileName',
+//           options: Options(receiveTimeout: 3000))
+//       .timeout(
+//     Duration(seconds: 3),
+//     onTimeout: () {
+//       log('testAsync', 'timeOut $url $fileName');
+//       return null;
+//     },
+//   ).then((value) {
+//     if (value != null) {
+//       isSuccess = true;
+//     }
+//   }).onError((error, stackTrace) {
+//     log('testAsync', stackTrace);
+//     return null;
+//   });
+//   if (isSuccess) {
+//     return '$savingPath/$fileName';
+//   }
+//   return null;
+// }
 
 String getExtensionFromPath(String fileName) {
   final int i = fileName.lastIndexOf('.');

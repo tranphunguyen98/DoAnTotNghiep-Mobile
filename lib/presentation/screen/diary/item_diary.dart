@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:totodo/presentation/common_widgets/url_image.dart';
+import 'package:totodo/utils/file_helper.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
 
@@ -26,7 +28,7 @@ class ItemDiary extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    data.date.day.toString(),
+                    data.time.day.toString(),
                     style: kFontSemiboldBlack_22,
                   ),
                   Container(
@@ -38,7 +40,7 @@ class ItemDiary extends StatelessWidget {
               ),
               SizedBox(width: 2.0),
               Text(
-                "Tháng ${data.date.month}",
+                "Tháng ${data.time.month}",
                 style: kFontRegularBlack2_14,
               ),
               Spacer(),
@@ -71,16 +73,24 @@ class ItemDiary extends StatelessWidget {
           if (!(data?.images?.isEmpty ?? true))
             Row(children: [
               ...data.images.map(
-                (e) => Padding(
+                (imagePath) => Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child: Image.file(
-                      File(e),
-                      width: 80,
-                      height: 80.0,
-                      fit: BoxFit.cover,
-                    ),
+                    child: imagePath.contains(kLocalFolder)
+                        ? Image.file(
+                            File(imagePath),
+                            width: 80,
+                            height: 80.0,
+                            fit: BoxFit.cover,
+                          )
+                        : UrlImage(
+                            url: imagePath,
+                            height: 80.0,
+                            width: 80.0,
+                          ),
+
+                    // ),
                   ),
                 ),
               )
@@ -99,14 +109,14 @@ class ItemDiary extends StatelessWidget {
 }
 
 class DiaryItemData {
-  final DateTime date;
+  final DateTime time;
   final String title;
   final String content;
   final List<String> images;
   final int emotional;
 
   const DiaryItemData({
-    @required this.date,
+    @required this.time,
     @required this.title,
     this.emotional,
     this.content,
@@ -120,7 +130,7 @@ class DiaryItemData {
     List<String> images,
     int emotional,
   }) {
-    if ((date == null || identical(date, this.date)) &&
+    if ((date == null || identical(date, this.time)) &&
         (title == null || identical(title, this.title)) &&
         (content == null || identical(content, this.content)) &&
         (images == null || identical(images, this.images)) &&
@@ -129,7 +139,7 @@ class DiaryItemData {
     }
 
     return DiaryItemData(
-      date: date ?? this.date,
+      time: date ?? this.time,
       title: title ?? this.title,
       content: content ?? this.content,
       images: images ?? this.images,

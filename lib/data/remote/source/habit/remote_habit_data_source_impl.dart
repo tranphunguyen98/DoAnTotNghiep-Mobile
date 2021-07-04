@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:totodo/data/data_source/habit/remote_habit_data_source.dart';
 import 'package:totodo/data/model/habit/diary_item.dart';
 import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/data/remote/source/habit/remote_habit_service.dart';
 import 'package:totodo/utils/util.dart';
+
+import '../../exception/unauthenticated_exception.dart';
 
 class RemoteHabitDataSourceImpl implements RemoteHabitDataSource {
   final RemoteHabitService _habitService;
@@ -31,6 +35,7 @@ class RemoteHabitDataSourceImpl implements RemoteHabitDataSource {
     try {
       final habitListResponse = await _habitService.getHabits(authorization);
       if (habitListResponse.succeeded) {
+        habitListResponse.habits.removeWhere((element) => element == null);
         return habitListResponse.habits;
       }
       throw Exception(habitListResponse.message ?? "Error Dio");
@@ -56,9 +61,19 @@ class RemoteHabitDataSourceImpl implements RemoteHabitDataSource {
   }
 
   @override
-  Future<bool> updateHabit(String authorization, Habit habit) {
-    // TODO: implement updateHabit
-    throw UnimplementedError();
+  Future<Habit> updateHabit(String authorization, Habit habit) async {
+    try {
+      final response = await _habitService.updateHabit(
+          authorization, habit.id, habit.toJson());
+      return response.habit;
+    } on DioError catch (e, stacktrace) {
+      log('stacktrace', stacktrace);
+      if (e.type == DioErrorType.RESPONSE &&
+          e.response.statusCode == HttpStatus.unauthorized) {
+        throw UnauthenticatedException(e.response.statusMessage);
+      }
+      throw Exception(e.response.data["message"] ?? "Error Dio");
+    }
   }
 
   @override
@@ -81,6 +96,19 @@ class RemoteHabitDataSourceImpl implements RemoteHabitDataSource {
     try {
       final diaryListResponse =
           await _habitService.deleteHabit(authorization, habit.id);
+    } on DioError catch (e, stacktrace) {
+      log('Unhandled', stacktrace);
+      throw Exception(e.response.data["message"] ?? "Error Dio");
+    }
+  }
+
+  @override
+  Future<void> addDiary(
+      String authorization, String habitId, Diary diary) async {
+    try {
+      final response = await _habitService.addDiary(
+          authorization, habitId, diary.text, diary.feeling, diary.time);
+      ;
     } on DioError catch (e, stacktrace) {
       log('Unhandled', stacktrace);
       throw Exception(e.response.data["message"] ?? "Error Dio");

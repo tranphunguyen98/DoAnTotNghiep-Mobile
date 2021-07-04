@@ -57,16 +57,17 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
     return BlocProvider<DetailHabitBloc>(
       create: (context) => _detailHabitBloc,
       child: BlocConsumer<DetailHabitBloc, DetailHabitState>(
-        listenWhen: (previous, current) =>
-            previous.habit != null &&
-                current.habit != null &&
-                previous.habit?.isTrashed != current.habit?.isTrashed ||
-            previous.habit?.isFinished != current.habit?.isFinished,
+        listenWhen: (previous, current) {
+          if (previous.habit == null) return false;
+          return previous.habit != null &&
+                  current.habit != null &&
+                  previous.habit?.isTrashed != current.habit?.isTrashed ||
+              previous.habit?.isFinished != current.habit?.isFinished;
+        },
         listener: (context, state) {
           _state = state;
-          if (state.habit?.isTrashed ??
-              false || state.habit.isFinished ??
-              false) {
+          if ((state.habit?.isTrashed ?? false) ||
+              (state.habit?.isFinished ?? false)) {
             Navigator.pop(context);
           }
         },
@@ -220,7 +221,8 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
       pageJumpingEnabled: true,
       onPageChanged: (focusedDay) {
         log('testCalendar', focusedDay);
-        // currentMonth = focusedDay.month;
+        _detailHabitBloc
+            .add(ChosenDayChanged(chosenDay: focusedDay.toIso8601String()));
       },
       focusedDay: DateTime.now(),
       availableCalendarFormats: const {

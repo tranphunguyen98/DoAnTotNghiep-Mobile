@@ -37,11 +37,12 @@ class DetailHabitState extends Equatable {
   }
 
   int get targetDays {
+    final now = DateTime.now();
     if (habit.frequency.typeFrequency == EHabitFrequency.weekly.index) {
-      return DateTime.now().day;
+      return DateUtils.getDaysInMonth(now.year, now.month);
     } else if (habit.frequency.typeFrequency == EHabitFrequency.daily.index) {
       int targetDays = 0;
-      for (int i = 0; i < DateTime.now().day; i++) {
+      for (int i = 0; i < DateUtils.getDaysInMonth(now.year, now.month); i++) {
         final weekday = DateTime.now().subtract(Duration(days: i)).weekday;
         if (habit.frequency.dailyDays.contains(
             DateHelper.convertStandardWeekdayToCustomWeekday(weekday))) {
@@ -133,26 +134,27 @@ class DetailHabitState extends Equatable {
     if (habitProgress.isEmpty) {
       return 0;
     }
-    final List<HabitProgressItem> _currentMonthHabitProgress = habitProgress;
 
-    _currentMonthHabitProgress.sort(
+    final List<HabitProgressItem> _currentHabitProgress = habitProgress;
+
+    _currentHabitProgress.sort(
         (a, b) => DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
 
     int longestStreak = 0;
     int currentStreak = 0;
 
-    if (_currentMonthHabitProgress.first.isDone) {
+    if (_currentHabitProgress.first.isDone) {
       currentStreak++;
     }
 
-    log("listProgress", _currentMonthHabitProgress);
+    log("listProgress", _currentHabitProgress);
 
-    for (int i = 1; i < _currentMonthHabitProgress.length; i++) {
-      if (_currentMonthHabitProgress[i].isDone) {
+    for (int i = 1; i < _currentHabitProgress.length; i++) {
+      if (_currentHabitProgress[i].isDone) {
         if (currentStreak == 0) {
           currentStreak = 1;
-        } else if (isConsecutive(_currentMonthHabitProgress[i].date,
-            _currentMonthHabitProgress[i - 1].date)) {
+        } else if (isConsecutive(
+            _currentHabitProgress[i].date, _currentHabitProgress[i - 1].date)) {
           currentStreak++;
         } else {
           if (currentStreak > longestStreak) {

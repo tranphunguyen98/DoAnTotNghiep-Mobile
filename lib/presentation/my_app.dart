@@ -107,7 +107,7 @@ class _MyAppState extends State<MyApp> {
     final config = AppConfig.of(context);
     return MaterialApp(
       navigatorKey: _navigatorKey,
-      debugShowCheckedModeBanner: config.debugTag,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.light,
         primaryColor: kColorPrimary,

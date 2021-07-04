@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:objectid/objectid.dart';
 import 'package:totodo/bloc/home/bloc.dart';
 import 'package:totodo/bloc/task_detail/bloc.dart';
 import 'package:totodo/data/model/check_item.dart';
@@ -9,6 +13,7 @@ import 'package:totodo/data/model/task.dart';
 import 'package:totodo/data/repository_interface/i_task_repository.dart';
 import 'package:totodo/di/injection.dart';
 import 'package:totodo/presentation/common_widgets/barrel_common_widgets.dart';
+import 'package:totodo/presentation/common_widgets/url_image.dart';
 import 'package:totodo/presentation/common_widgets/widget_circle_inkwell.dart';
 import 'package:totodo/presentation/common_widgets/widget_icon_outline_button.dart';
 import 'package:totodo/presentation/common_widgets/widget_item_popup_menu.dart';
@@ -18,6 +23,7 @@ import 'package:totodo/presentation/router.dart';
 import 'package:totodo/presentation/screen/home/dropdown_choice.dart';
 import 'package:totodo/presentation/screen/task_detail/item_checklist.dart';
 import 'package:totodo/utils/date_helper.dart';
+import 'package:totodo/utils/file_helper.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
 
@@ -52,6 +58,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
       TextEditingController();
 
   final String _idDebounce = 'debounceDetailTask';
+  final picker = ImagePicker();
 
   @override
   void initState() {
@@ -145,6 +152,8 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
                         ),
                         _buildCheckList(state),
                         _buildEditTextAddCheckList(state),
+                        SizedBox(height: 16),
+                        _buildImages(state),
                       ],
                     ),
                   ],
@@ -522,5 +531,101 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
       _taskDetailBloc.add(
           SubmitEditTask(state.taskEdit.copyWith(priority: Task.kPriority4)));
     }
+  }
+
+  Widget _buildImages(TaskDetailState state) {
+    return Wrap(
+      spacing: 8,
+      children: [
+        ...state.taskEdit.attachmentInfos?.map((image) {
+              if (image.contains(RegExp('($kLocalFolder|jpg|png)'))) {
+                return Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 8.0, top: 8.0, right: 8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16.0),
+                        child: image.contains(kLocalFolder)
+                            ? Image.file(
+                                File(image),
+                                height: 110,
+                                width: 110,
+                                fit: BoxFit.cover,
+                              )
+                            : UrlImage(url: image, height: 120, width: 120),
+                      ),
+                    ),
+                    Positioned(
+                      right: 0.0,
+                      top: 0.0,
+                      child: Icon(
+                        Icons.circle,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Positioned(
+                      right: 0.0,
+                      top: 0.0,
+                      child: GestureDetector(
+                        onTap: () {
+                          // _onTap(image);
+                        },
+                        child: Icon(
+                          Icons.cancel,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            })?.toList() ??
+            [],
+        GestureDetector(
+          onTap: () {
+            _getImage(state);
+          },
+          child: Container(
+            height: 110,
+            width: 110,
+            margin: const EdgeInsets.only(bottom: 8.0, top: 8, right: 8),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+              border: Border.all(color: Colors.grey[300]),
+            ),
+            child: Icon(
+              Icons.add_photo_alternate,
+              size: 32,
+              color: Colors.grey[500],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future _getImage(TaskDetailState state) async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    // setState(() async {
+    if (pickedFile != null) {
+      final imageFile = File(pickedFile.path);
+      final List<String> images = [];
+      images.addAll(state.taskEdit?.attachmentInfos ?? []);
+
+      final imageFilePath =
+          "${ObjectId().hexString}${getExtensionFromPath(imageFile.path)}";
+      final newPath = await saveImageFromGallery(
+          imageFile.path, state.taskEdit.id, imageFilePath);
+
+      images.add(newPath);
+      _taskDetailBloc.add(
+        SubmitEditTask(
+          state.taskEdit.copyWith(attachmentInfos: images),
+        ),
+      );
+    }
+    // });
   }
 }

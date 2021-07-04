@@ -54,13 +54,40 @@ class _RemoteTaskService implements RemoteTaskService {
   }
 
   @override
-  Future<TaskListResponse> addTask(authorization, body) async {
+  Future<TaskListResponse> addTask(authorization, id, name, dueDate, section,
+      projectId, labelIds, checkList) async {
     ArgumentError.checkNotNull(authorization, 'authorization');
-    ArgumentError.checkNotNull(body, 'body');
+    ArgumentError.checkNotNull(id, 'id');
+    ArgumentError.checkNotNull(name, 'name');
+    ArgumentError.checkNotNull(dueDate, 'dueDate');
+    ArgumentError.checkNotNull(section, 'section');
+    ArgumentError.checkNotNull(projectId, 'projectId');
+    ArgumentError.checkNotNull(labelIds, 'labelIds');
+    ArgumentError.checkNotNull(checkList, 'checkList');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body ?? <String, dynamic>{});
+    final _data = FormData();
+    if (id != null) {
+      _data.fields.add(MapEntry('_id', id));
+    }
+    if (name != null) {
+      _data.fields.add(MapEntry('name', name));
+    }
+    if (dueDate != null) {
+      _data.fields.add(MapEntry('dueDate', dueDate));
+    }
+    if (section != null) {
+      _data.fields.add(MapEntry('section', section));
+    }
+    if (projectId != null) {
+      _data.fields.add(MapEntry('projectId', projectId));
+    }
+    labelIds?.forEach((i) {
+      _data.fields.add(MapEntry('labelIds', i));
+    });
+    checkList?.forEach((i) {
+      _data.fields.add(MapEntry('checkList', i));
+    });
     final _result = await _dio.request<Map<String, dynamic>>('/tasks',
         queryParameters: queryParameters,
         options: RequestOptions(

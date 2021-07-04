@@ -42,7 +42,7 @@ Future<void> configureDependencies() async {
 
   const String kBaseUrl = 'https://personal-task-management-be.herokuapp.com/';
   // const String kBaseUrl = 'http://192.168.43.26:3006/';
-  // const String kBaseUrl = 'http://192.168.1.3:3006/';
+  // const String kBaseUrl = 'http://192.168.1.6:3006/';
 
   getIt.registerLazySingleton<DateFormat>(() => DateFormat('MMM yyyy'));
   getIt.registerSingleton<Logger>(Logger());

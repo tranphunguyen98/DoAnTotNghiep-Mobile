@@ -5,11 +5,12 @@ import 'package:objectid/objectid.dart';
 import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/data/model/habit/habit_image.dart';
 import 'package:totodo/data/repository_interface/i_habit_repository.dart';
-import 'package:totodo/utils/file_helper.dart';
 import 'package:totodo/utils/my_const/map_const.dart';
 import 'package:totodo/utils/notification_helper.dart';
 import 'package:totodo/utils/util.dart';
 
+import '../../data/model/habit/habit_image.dart';
+import '../../utils/my_const/map_const.dart';
 import '../../utils/util.dart';
 import 'bloc.dart';
 
@@ -39,28 +40,28 @@ class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
     yield state.copyWith(habit: habit, loading: false);
   }
 
-  Stream<CreateHabitState> _mapSubmitEditingHabitToState() async* {
-    final Habit habit =
-        state.habit.copyWith(updatedAt: DateTime.now().toIso8601String());
-
-    await _habitRepository.updateHabit(habit);
-
-    //TODO add reminder
-    // if (!(state.taskAdd.taskDate?.isEmpty ?? true)) {
-    //   showNotificationScheduledWithTask(taskSubmit);
-    // }
-
-    yield state.copyWith(
-      success: true,
-      habit: Habit(),
-    );
-  }
+  // Stream<CreateHabitState> _mapSubmitEditingHabitToState() async* {
+  //   final Habit habit =
+  //       state.habit.copyWith(updatedAt: DateTime.now().toIso8601String());
+  //
+  //   await _habitRepository.updateHabit(habit);
+  //
+  //   //TODO add reminder
+  //   // if (!(state.taskAdd.taskDate?.isEmpty ?? true)) {
+  //   //   showNotificationScheduledWithTask(taskSubmit);
+  //   // }
+  //
+  //   yield state.copyWith(
+  //     success: true,
+  //     habit: Habit(),
+  //   );
+  // }
 
   Stream<CreateHabitState> _mapSubmitCreatingHabitToState() async* {
     Habit habit = state.habit;
 
     if (habit.id?.isEmpty ?? true) {
-      habit = await saveImages(habit.copyWith(
+      habit = habit.copyWith(
           id: state.habit.id ?? ObjectId().hexString,
           createdAt: DateTime.now().toIso8601String(),
           updatedAt: DateTime.now().toIso8601String(),
@@ -68,8 +69,8 @@ class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
               imgBg: (habit.icon?.iconImage?.isNotEmpty ?? false)
                   ? kCheckInColor[int.parse(habit.icon.iconImage)]
                   : kCheckInColor[0],
-              imgUnCheckIn: habit.icon.iconImage,
-              imgCheckIn: habit.icon.iconImage)));
+              imgUnCheckIn: habit.icon.iconImage ?? "1",
+              imgCheckIn: habit.icon.iconImage ?? "1"));
 
       log('testNotification', habit);
       showNotificationScheduledWithHabit(habit);
@@ -77,10 +78,34 @@ class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
     } else {
       //Edit habit
       final oldHabit = await _habitRepository.getDetailHabit(state.habit.id);
-      if (((state.habit.motivation?.images?.isNotEmpty ?? false) &&
-              state.habit.motivation.images.length <= 2) &&
-          state.habit.motivation.images != oldHabit.motivation.images) {
-        habit = await saveImages(habit);
+      // if (((state.habit.motivation?.images?.isNotEmpty ?? false) &&
+      //         state.habit.motivation.images.length <= 2) &&
+      //     state.habit.motivation.images != oldHabit.motivation.images) {
+      // habit = await saveImages(habit);
+      // }
+      if (habit.remind != oldHabit.remind) {
+        for (final remind in oldHabit.remind) {
+          await AwesomeNotifications().cancelSchedule(
+              '${habit.id}${remind.minute}${remind.hour}'.hashCode);
+        }
+        showNotificationScheduledWithHabit(habit);
+      }
+
+      if (oldHabit.icon != habit.icon) {
+        if (isInt(habit.icon.iconImage)) {
+          final int valueIcon = int.parse(habit.icon.iconImage);
+          habit = habit.copyWith(
+            images: HabitImage(
+                imgBg: kCheckInColor[valueIcon],
+                imgUnCheckIn: habit.icon.iconImage,
+                imgCheckIn: habit.icon.iconImage),
+          );
+        } else if (habit.icon.iconText?.isNotEmpty ?? false) {
+          habit = habit.copyWith(
+            images: HabitImage(
+                imgBg: kCheckInColor[1], imgUnCheckIn: "1", imgCheckIn: "1"),
+          );
+        }
       }
       habit = habit.copyWith(updatedAt: DateTime.now().toIso8601String());
       await AwesomeNotifications().cancelSchedule(habit.id.hashCode);
@@ -97,22 +122,26 @@ class CreateHabitBloc extends Bloc<CreateHabitEvent, CreateHabitState> {
     );
   }
 
-  Future<Habit> saveImages(Habit habit) async {
-    if (habit.motivation?.images?.isNotEmpty ?? false) {
-      final List<String> newImagePaths = [];
-      habit.motivation.images.forEach((imagePath) async {
-        final imageFilePath =
-            "${ObjectId().hexString}${getExtensionFromPath(imagePath)}";
-        final newPath =
-            await saveImageFromGallery(imagePath, habit.id, imageFilePath);
-        newImagePaths.add(newPath);
-      });
-      return habit.copyWith(
-          motivation: habit.motivation.copyWith(images: newImagePaths));
-      log('testImage', newImagePaths);
-    }
-    return habit;
-  }
+  // Future<Habit> saveImages(Habit habit) async {
+  //   if (habit.motivation?.images?.isNotEmpty ?? false) {
+  //     final List<String> newImagePaths = [];
+  //     habit.motivation.images.forEach((imagePath) async {
+  //       if (imagePath.contains(kLocalFolder)) {
+  //         final imageFilePath =
+  //             "${ObjectId().hexString}${getExtensionFromPath(imagePath)}";
+  //         final newPath =
+  //             await saveImageFromGallery(imagePath, habit.id, imageFilePath);
+  //         newImagePaths.add(newPath);
+  //       } else {
+  //         return imagePath;
+  //       }
+  //     });
+  //     return habit.copyWith(
+  //         motivation: habit.motivation.copyWith(images: newImagePaths));
+  //     log('testImage', newImagePaths);
+  //   }
+  //   return habit;
+  // }
 
   Stream<CreateHabitState> _mapCreatingHabitDataChangedToState(
       CreatingHabitDataChanged event) async* {

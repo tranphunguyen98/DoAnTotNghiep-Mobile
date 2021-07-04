@@ -25,10 +25,17 @@ abstract class RemoteTaskService {
   Future<TaskResponse> getTaskDetail(
       @Header("authorization") String authorization, @Path() String taskId);
 
+  @MultiPart()
   @POST("/tasks")
   Future<TaskListResponse> addTask(
     @Header("authorization") String authorization,
-    @Body() Map<String, dynamic> body,
+    @Part(name: '_id') String id,
+    @Part(name: 'name') String name,
+    @Part(name: 'dueDate') String dueDate,
+    @Part(name: 'section') String section,
+    @Part(name: 'projectId') String projectId,
+    @Part(name: 'labelIds') List<String> labelIds,
+    @Part(name: 'checkList') List<String> checkList,
   );
 
   @PUT("/tasks/{taskId}")

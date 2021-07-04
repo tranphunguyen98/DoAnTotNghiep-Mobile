@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:totodo/bloc/habit/bloc.dart';
 import 'package:totodo/bloc/habit/habit_bloc.dart';
 import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/data/model/habit/habit_icon.dart';
 import 'package:totodo/di/injection.dart';
+import 'package:totodo/presentation/common_widgets/url_image.dart';
 import 'package:totodo/presentation/custom_ui/hex_color.dart';
 import 'package:totodo/utils/my_const/color_const.dart';
 import 'package:totodo/utils/my_const/font_const.dart';
@@ -49,11 +48,7 @@ class ItemHabit extends StatelessWidget {
                               width: 48,
                               height: 48,
                             )
-                          : Image.file(
-                              File(_habit.icon.iconImage),
-                              width: 48,
-                              height: 48,
-                            )
+                          : UrlImage(url: _habit.icon.iconImage)
                       : _buildTextIcon(_habit.icon)),
           SizedBox(
             width: 16.0,
@@ -70,7 +65,7 @@ class ItemHabit extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '${_habit.currentAmountOnDay(chosenDay)}/${_habit.missionDayTarget}',
+                      '${_habit.currentAmountOnDay(chosenDay)}/${_habit.missionDayTarget} ${kHabitMissionDayUnit[_habit.missionDayUnit]}',
                       style: kFontRegularGray1_12,
                     ),
                   ],

@@ -15,5 +15,6 @@ abstract class LocalHabitDataSource {
   Future<List<Diary>> getDiaryByHabitId(String habitId);
   Future<void> clearOffline();
   Future<void> deletePermanentlyHabit(Habit habit);
-  Future<void> updateHabitAsync(Habit updatedLocalHabit);
+  Future<void> updateHabitAsync(Habit habit);
+  Future<void> updateDiaryAsync(Diary diary);
 }

@@ -39,7 +39,7 @@ class LocalTask {
   @HiveField(15)
   final String crontabSchedule; // cron expression - reminder
   @HiveField(16)
-  final List<String> preciseSchedules;
+  final List<String> attachmentInfos;
   @HiveField(17)
   final bool isCreatedOnLocal;
 
@@ -56,7 +56,7 @@ class LocalTask {
     bool isStarred,
     bool isTrashed,
     bool isCreatedOnLocal,
-    this.preciseSchedules,
+    this.attachmentInfos,
     this.dueDate,
     this.projectId,
     this.labelIds,
@@ -93,7 +93,7 @@ class LocalTask {
       checkList: [],
       completedDate: map['completedDate'] as String,
       crontabSchedule: map['crontabSchedule'] as String,
-      preciseSchedules: [],
+      attachmentInfos: [],
     );
   }
 
@@ -111,12 +111,12 @@ class LocalTask {
       'isTrashed': isTrashed,
       'dueDate': dueDate,
       'projectId': projectId,
-      'labelIds': labelIds,
+      'labelIds': labelIds ?? [],
       'sectionId': sectionId,
-      'checkList': checkList,
+      'checkList': checkList ?? [],
       'completedDate': completedDate,
       'crontabSchedule': crontabSchedule,
-      'preciseSchedules': preciseSchedules,
+      'attachmentInfos': attachmentInfos,
     } as Map<String, dynamic>;
   }
 
@@ -137,7 +137,7 @@ class LocalTask {
     List<CheckItem> checkList,
     String completedDate,
     String crontabSchedule,
-    List<String> preciseSchedules,
+    List<String> attachmentInfos,
     bool isOnlyCreatedOnLocal,
   }) {
     if ((id == null || identical(id, this.id)) &&
@@ -158,8 +158,8 @@ class LocalTask {
             identical(completedDate, this.completedDate)) &&
         (crontabSchedule == null ||
             identical(crontabSchedule, this.crontabSchedule)) &&
-        (preciseSchedules == null ||
-            identical(preciseSchedules, this.preciseSchedules)) &&
+        (attachmentInfos == null ||
+            identical(attachmentInfos, this.attachmentInfos)) &&
         (isOnlyCreatedOnLocal == null ||
             identical(isOnlyCreatedOnLocal, this.isCreatedOnLocal))) {
       return this;
@@ -182,7 +182,7 @@ class LocalTask {
       checkList: checkList ?? this.checkList,
       completedDate: completedDate ?? this.completedDate,
       crontabSchedule: crontabSchedule ?? this.crontabSchedule,
-      preciseSchedules: preciseSchedules ?? this.preciseSchedules,
+      attachmentInfos: attachmentInfos ?? this.attachmentInfos,
       isCreatedOnLocal: isOnlyCreatedOnLocal ?? this.isCreatedOnLocal,
     );
   }
@@ -194,6 +194,6 @@ class LocalTask {
         ' priority: $priority, description: $description, isCompleted: $isCompleted,'
         ' isStarred: $isStarred, isTrashed: $isTrashed, dueDate: $dueDate, projectId: $projectId,'
         ' labelIds: $labelIds, sectionId: $sectionId, checkList: $checkList, completedDate: $completedDate,'
-        ' crontabSchedule: $crontabSchedule, preciseSchedules: $preciseSchedules, isLocal: $isCreatedOnLocal}';
+        ' crontabSchedule: $crontabSchedule, attachmentInfos: $attachmentInfos, isLocal: $isCreatedOnLocal}';
   }
 }

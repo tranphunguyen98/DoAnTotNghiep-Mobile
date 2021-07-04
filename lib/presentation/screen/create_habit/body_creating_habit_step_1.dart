@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:objectid/objectid.dart';
 import 'package:totodo/bloc/create_habit/bloc.dart';
 import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/data/model/habit/habit_icon.dart';
+import 'package:totodo/presentation/common_widgets/url_image.dart';
+import 'package:totodo/utils/file_helper.dart';
 import 'package:totodo/utils/my_const/my_const.dart';
 import 'package:totodo/utils/util.dart';
 
@@ -47,7 +50,9 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
             ? _createHabitBloc.state.habit?.motivation?.content
             : widget._habit?.motivation?.content ?? '';
 
-    icon = _createHabitBloc.state.habit.icon?.iconImage;
+    icon = _createHabitBloc.state.habit.icon?.iconImage ??
+        widget?._habit?.icon?.iconImage ??
+        icon;
     if (widget._habit?.icon?.iconText?.isNotEmpty ?? false) {
       isIcon = false;
       _textIconController.text = widget._habit.icon.iconText;
@@ -100,12 +105,18 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
   Future _getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
-    setState(() {
+    setState(() async {
       if (pickedFile != null) {
         final imageFile = File(pickedFile.path);
         final List<String> images = [];
         images.addAll(_state.habit.motivation.images ?? []);
-        images.add(imageFile.path);
+
+        final imageFilePath =
+            "${ObjectId().hexString}${getExtensionFromPath(imageFile.path)}";
+        final newPath = await saveImageFromGallery(
+            imageFile.path, _state.habit.id, imageFilePath);
+
+        images.add(newPath);
 
         _createHabitBloc.add(
           CreatingHabitDataChanged(
@@ -120,7 +131,7 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
 
   Widget _buildName() {
     if (icon == null && (_state.habit.icon.iconImage?.length ?? 0) > 2) {
-      icon = _state.habit.icon.iconImage;
+      icon = _state.habit.icon.iconImage ?? icon;
     }
     return Padding(
         padding: const EdgeInsets.all(16.0),
@@ -163,13 +174,11 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
                         ],
                       ),
                       child: ((icon?.length ?? 0) > 2)
-                          ? Image.file(File(icon), width: 48, height: 48)
+                          ? UrlImage(url: icon, height: 48, width: 48)
+                          // Image.file(File(icon), width: 48, height: 48)
                           : Image.asset(
                               getAssetIcon(int.parse(
-                                  (_state.habit.icon?.iconImage?.isNotEmpty ??
-                                          false)
-                                      ? _state.habit.icon?.iconImage
-                                      : "1")),
+                                  (icon?.isNotEmpty ?? false) ? icon : "1")),
                               width: 48,
                               height: 48,
                             )),
@@ -271,12 +280,11 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
   // }
 
   Widget _buildIcon() {
-    final int indexIcon = int.parse(
-            ((_state.habit?.icon?.iconImage?.isNotEmpty ?? false) &&
-                    _state.habit.icon.iconImage.length <= 2)
-                ? _state.habit?.icon?.iconImage
-                : "1") -
-        1;
+    if (icon == null && (_state.habit.icon.iconImage?.length ?? 0) > 2) {
+      icon = _state.habit.icon.iconImage;
+    }
+    //Bug change icon
+    final int indexIcon = int.parse(isInt(icon) ? icon : "0") - 1;
     return Padding(
       padding: const EdgeInsets.only(
           left: 16.0, top: 16.0, bottom: 16.0, right: 16.0),
@@ -298,7 +306,7 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
                   crossAxisCount: 4,
                   crossAxisSpacing: 8.0,
                   mainAxisSpacing: 8.0),
-              itemCount: 57,
+              itemCount: 78,
               itemBuilder: (context, index) => Stack(
                 children: [
                   GestureDetector(
@@ -487,12 +495,15 @@ class _BodyCreatingHabitStep1State extends State<BodyCreatingHabitStep1> {
                       const EdgeInsets.only(bottom: 8.0, top: 8.0, right: 8.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: Image.file(
-                      File(image),
-                      height: imageSize,
-                      width: imageSize,
-                      fit: BoxFit.cover,
-                    ),
+                    child: image.contains(kLocalFolder)
+                        ? Image.file(
+                            File(image),
+                            height: imageSize,
+                            width: imageSize,
+                            fit: BoxFit.cover,
+                          )
+                        : UrlImage(
+                            url: image, height: imageSize, width: imageSize),
                   ),
                 ),
                 Positioned(

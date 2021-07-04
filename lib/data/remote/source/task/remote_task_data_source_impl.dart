@@ -18,8 +18,16 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   @override
   Future<LocalTask> addTask(String authorization, LocalTask localTask) async {
     try {
-      final taskResponse =
-          await _taskService.addTask(authorization, localTask.toJson());
+      final taskResponse = await _taskService.addTask(
+        authorization,
+        localTask.id,
+        localTask.name,
+        localTask.dueDate,
+        localTask.sectionId,
+        localTask.projectId,
+        localTask.labelIds,
+        [],
+      );
       if (taskResponse.succeeded) {
         return taskResponse.tasks.first;
       }
@@ -139,9 +147,18 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   @override
   Future<LocalTask> updateTask(String authorization, LocalTask task) async {
     // log("TaskToJson", task.toJson());
-    final response =
-        await _taskService.updateTask(authorization, task.id, task.toJson());
-    return response.task;
+    try {
+      final response =
+          await _taskService.updateTask(authorization, task.id, task.toJson());
+      return response.task;
+    } on DioError catch (e, stacktrace) {
+      log('stacktrace', stacktrace);
+      if (e.type == DioErrorType.RESPONSE &&
+          e.response.statusCode == HttpStatus.unauthorized) {
+        throw UnauthenticatedException(e.response.statusMessage);
+      }
+      throw Exception(e.response.data["message"] ?? "Error Dio");
+    }
   }
 
   @override

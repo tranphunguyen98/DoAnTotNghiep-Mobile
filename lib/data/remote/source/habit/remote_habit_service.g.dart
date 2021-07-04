@@ -54,10 +54,30 @@ class _RemoteHabitService implements RemoteHabitService {
   }
 
   @override
+  Future<HabitResponse> updateHabit(authorization, habitId, body) async {
+    ArgumentError.checkNotNull(authorization, 'authorization');
+    ArgumentError.checkNotNull(habitId, 'habitId');
+    ArgumentError.checkNotNull(body, 'body');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body ?? <String, dynamic>{});
+    final _result = await _dio.request<Map<String, dynamic>>('habits/$habitId',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'PATCH',
+            headers: <String, dynamic>{r'authorization': authorization},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = HabitResponse.fromJson(_result.data);
+    return value;
+  }
+
+  @override
   Future<HabitResponse> addHabit(authorization, body) async {
     ArgumentError.checkNotNull(authorization, 'authorization');
     ArgumentError.checkNotNull(body, 'body');
-    log('testAsync body', body);
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
@@ -71,6 +91,39 @@ class _RemoteHabitService implements RemoteHabitService {
             baseUrl: baseUrl),
         data: _data);
     final value = HabitResponse.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<MessageResponse> addDiary(
+      authorization, habitId, text, feeling, time) async {
+    ArgumentError.checkNotNull(authorization, 'authorization');
+    ArgumentError.checkNotNull(habitId, 'habitId');
+    ArgumentError.checkNotNull(text, 'text');
+    ArgumentError.checkNotNull(feeling, 'feeling');
+    ArgumentError.checkNotNull(time, 'time');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = FormData();
+    if (text != null) {
+      _data.fields.add(MapEntry('text', text));
+    }
+    if (feeling != null) {
+      _data.fields.add(MapEntry('feeling', feeling.toString()));
+    }
+    if (time != null) {
+      _data.fields.add(MapEntry('time', time));
+    }
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/habits/$habitId/add-diary',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{r'authorization': authorization},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = MessageResponse.fromJson(_result.data);
     return value;
   }
 

@@ -56,6 +56,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
         if (state is AddProjectState) {
           if (state == AddProjectState.success()) {
             getIt<HomeBloc>().add(DataProjectChanged());
+            getIt<HomeBloc>().add(DataListTaskChanged());
             Navigator.of(context).pop();
           }
         }
