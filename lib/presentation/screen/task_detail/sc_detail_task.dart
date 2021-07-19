@@ -241,7 +241,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
       checkList.addAll(state.taskEdit.checkList ?? []);
       checkList.add(
         CheckItem(
-          id: DateTime.now().microsecondsSinceEpoch.toString(),
+          id: ObjectId().hexString,
           name: _checkListNameController.text,
         ),
       );
@@ -342,6 +342,28 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
     );
   }
 
+  Widget _buildButtonRemind(TaskDetailState state, BuildContext context) {
+    Color colorButton = kColorGray1;
+    if (!(state.taskEdit.crontabSchedule?.isEmpty ?? true)) {
+      if (DateHelper.isOverDueString(state.taskEdit.crontabSchedule)) {
+        colorButton = Colors.red;
+      } else {
+        colorButton = Colors.green;
+      }
+    }
+    return IconOutlineButton(
+      DateHelper.getDisplayTextDateFromDate(
+              state.taskEdit.crontabSchedule ?? "") ??
+          "No Date",
+      Icons.alarm,
+      colorIcon: colorButton,
+      colorBorder: colorButton,
+      onPressed: () async {
+        await onPressedPickRemind(context, state);
+      },
+    );
+  }
+
   Row _buildRowCheckBoxAndEditText(
       BuildContext context, TaskDetailState state) {
     _nameTaskController.text = state.taskEdit.name;
@@ -356,7 +378,8 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
             width: 24.0,
             height: 24.0,
             child: Checkbox(
-              value: state.taskEdit.isCompleted,
+              value: state.taskEdit.isCompleted ?? false,
+              // value: true,
               onChanged: (value) {
                 if (value) {
                   _taskDetailBloc.add(SubmitEditTask(state.taskEdit.copyWith(
@@ -407,19 +430,41 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
   }
 
   Future onPressedPickDate(BuildContext context, TaskDetailState state) async {
+    final picker = await showDatePicker(
+      context: context,
+      initialDate: DateTime.parse((state.taskEdit.dueDate?.isNotEmpty ?? false)
+          ? state.taskEdit.dueDate
+          : DateTime.now().toIso8601String()),
+      firstDate: DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+      ),
+      lastDate: DateTime(2100),
+    );
+    if (picker != null) {
+      _taskDetailBloc.add(TaskSubmitDateChanged(picker.toIso8601String()));
+    }
+  }
+
+  Future onPressedPickRemind(
+      BuildContext context, TaskDetailState state) async {
     final picker = await showCustomDatePicker(
         context: context,
         initialDate: DateTime.parse(
-            state.taskEdit.dueDate ?? DateTime.now().toIso8601String()),
+            (state.taskEdit.crontabSchedule?.isNotEmpty ?? false)
+                ? state.taskEdit.crontabSchedule
+                : DateTime.now().toIso8601String()),
         firstDate: DateTime(
           DateTime.now().year,
           DateTime.now().month,
         ),
         lastDate: DateTime(2100),
-        selectedTimeOfDay:
-            DateHelper.getTimeOfDayFromDateString(state.taskEdit.dueDate));
+        selectedTimeOfDay: DateHelper.getTimeOfDayFromDateString(
+            (state.taskEdit.crontabSchedule?.isNotEmpty ?? false)
+                ? state.taskEdit.crontabSchedule
+                : DateTime.now().toIso8601String()));
     if (picker != null) {
-      _taskDetailBloc.add(TaskSubmitDateChanged(picker.toIso8601String()));
+      _taskDetailBloc.add(TaskSubmitRemindChanged(picker.toIso8601String()));
     }
   }
 
@@ -453,6 +498,10 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
     return Row(
       children: [
         _buildButtonDate(state, context),
+        SizedBox(
+          width: 16.0,
+        ),
+        _buildButtonRemind(state, context),
         Spacer(),
         PopupMenuButton<DropdownChoice>(
           offset: const Offset(0, -300),
@@ -498,7 +547,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
                   checkItem: e,
                   onItemCheckChange: (value) {
                     _taskDetailBloc
-                        .add(UpdateItemCheckList(e.copyWith(isCheck: value)));
+                        .add(UpdateItemCheckList(e.copyWith(isDone: value)));
                   },
                   onItemCheckNameChange: (value) {
                     if (value.isNotEmpty) {
@@ -569,7 +618,7 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
                       top: 0.0,
                       child: GestureDetector(
                         onTap: () {
-                          // _onTap(image);
+                          _onTap(image, state);
                         },
                         child: Icon(
                           Icons.cancel,
@@ -602,6 +651,16 @@ class _ScreenDetailTaskState extends State<ScreenDetailTask> {
           ),
         ),
       ],
+    );
+  }
+
+  void _onTap(String image, TaskDetailState state) {
+    final images = state.taskEdit.attachmentInfos;
+    images.remove(image);
+    _taskDetailBloc.add(
+      SubmitEditTask(
+        state.taskEdit.copyWith(attachmentInfos: images),
+      ),
     );
   }
 

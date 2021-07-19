@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -16,8 +17,18 @@ class RemoteHabitDataSourceImpl implements RemoteHabitDataSource {
 
   @override
   Future<bool> addHabit(String authorization, Habit habit) async {
-    final response =
-        await _habitService.addHabit(authorization, habit.toJson());
+    final response = await _habitService.addHabit(
+        authorization,
+        habit.id,
+        habit.name,
+        jsonEncode(habit.icon.toJson()),
+        jsonEncode(habit.images.toJson()),
+        jsonEncode(habit.remind.map((e) => e.toJson()).toList()),
+        jsonEncode(habit.motivation.toJson()),
+        jsonEncode(habit.frequency.toJson()),
+        habit.missionDayUnit,
+        habit.missionDayCheckInStep,
+        habit.missionDayTarget);
     if (response.succeeded) {
       return true;
     }
@@ -64,7 +75,19 @@ class RemoteHabitDataSourceImpl implements RemoteHabitDataSource {
   Future<Habit> updateHabit(String authorization, Habit habit) async {
     try {
       final response = await _habitService.updateHabit(
-          authorization, habit.id, habit.toJson());
+          authorization,
+          habit.id,
+          habit.name,
+          jsonEncode(habit.icon.toJson()),
+          jsonEncode(habit.images.toJson()),
+          jsonEncode(habit.remind.map((e) => e.toJson()).toList()),
+          jsonEncode(habit.motivation.toJson()),
+          jsonEncode(habit.frequency.toJson()),
+          jsonEncode(habit.habitProgress.map((e) => e.toJson()).toList()),
+          habit.missionDayUnit,
+          habit.missionDayCheckInStep,
+          habit.missionDayTarget,
+          habit.isFinished);
       return response.habit;
     } on DioError catch (e, stacktrace) {
       log('stacktrace', stacktrace);

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -22,11 +23,13 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
         authorization,
         localTask.id,
         localTask.name,
-        localTask.dueDate,
-        localTask.sectionId,
+        localTask.dueDate ?? '',
+        localTask.crontabSchedule ?? '',
+        localTask.sectionId ?? '',
         localTask.projectId,
-        localTask.labelIds,
-        [],
+        jsonEncode(localTask.labelIds),
+        jsonEncode(localTask.checkList),
+        localTask.priority,
       );
       if (taskResponse.succeeded) {
         return taskResponse.tasks.first;
@@ -145,11 +148,25 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   }
 
   @override
-  Future<LocalTask> updateTask(String authorization, LocalTask task) async {
+  Future<LocalTask> updateTask(
+      String authorization, LocalTask localTask) async {
     // log("TaskToJson", task.toJson());
     try {
-      final response =
-          await _taskService.updateTask(authorization, task.id, task.toJson());
+      final response = await _taskService.updateTask(
+        authorization,
+        localTask.id,
+        localTask.name,
+        localTask.dueDate ?? '',
+        localTask.crontabSchedule ?? '',
+        localTask.sectionId ?? '',
+        localTask.projectId,
+        jsonEncode(localTask.labelIds),
+        jsonEncode(localTask.checkList),
+        localTask.priority,
+        localTask.isCompleted,
+        localTask.completedDate,
+        jsonEncode(localTask.attachmentInfos ?? []),
+      );
       return response.task;
     } on DioError catch (e, stacktrace) {
       log('stacktrace', stacktrace);

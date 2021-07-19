@@ -297,7 +297,7 @@ class Habit extends Equatable {
       'missionDayCheckInStep': missionDayCheckInStep,
       'missionDayTarget': missionDayTarget,
       'isFinished': isFinished,
-      'habitProgress': habitProgress.map((e) => e.toMap()).toList(),
+      'habitProgress': habitProgress.map((e) => e.toJson()).toList(),
       // 'type': type,
       'frequency': frequency.toJson(),
       // 'typeHabitMissionDayCheckIn': typeHabitMissionDayCheckIn,

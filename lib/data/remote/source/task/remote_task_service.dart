@@ -32,15 +32,31 @@ abstract class RemoteTaskService {
     @Part(name: '_id') String id,
     @Part(name: 'name') String name,
     @Part(name: 'dueDate') String dueDate,
+    @Part(name: 'crontabSchedule') String crontabSchedule,
     @Part(name: 'section') String section,
     @Part(name: 'projectId') String projectId,
-    @Part(name: 'labelIds') List<String> labelIds,
-    @Part(name: 'checkList') List<String> checkList,
+    @Part(name: 'labelIds') String labelIds,
+    @Part(name: 'checkList') String checkList,
+    @Part(name: 'priority') int priority,
   );
 
+  @MultiPart()
   @PUT("/tasks/{taskId}")
-  Future<TaskResponse> updateTask(@Header("authorization") String authorization,
-      @Path() String taskId, @Body() Map<String, dynamic> body);
+  Future<TaskResponse> updateTask(
+    @Header("authorization") String authorization,
+    @Path() String taskId,
+    @Part(name: 'name') String name,
+    @Part(name: 'dueDate') String dueDate,
+    @Part(name: 'crontabSchedule') String crontabSchedule,
+    @Part(name: 'section') String section,
+    @Part(name: 'projectId') String projectId,
+    @Part(name: 'labelIds') String labelIds,
+    @Part(name: 'checkList') String checkList,
+    @Part(name: 'priority') int priority,
+    @Part(name: 'isCompleted') bool isCompleted,
+    @Part(name: 'completedDate') String completedDate,
+    @Part(name: 'attachmentInfos') String attachmentInfos,
+  );
 
   @DELETE("/tasks/{taskId}")
   Future<MessageResponse> deleteTask(

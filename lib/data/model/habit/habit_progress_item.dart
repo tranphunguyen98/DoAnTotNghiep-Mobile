@@ -33,7 +33,7 @@ class HabitProgressItem extends Equatable {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     // ignore: unnecessary_cast
     return {
       // 'diary': this.diary,

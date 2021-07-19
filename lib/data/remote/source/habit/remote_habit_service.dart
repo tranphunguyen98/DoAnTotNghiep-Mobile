@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:totodo/data/remote/response/diary_response.dart';
 import 'package:totodo/data/remote/response/habit_diary_response.dart';
 import 'package:totodo/data/remote/response/habit_list_response.dart';
 import 'package:totodo/data/remote/response/habit_response.dart';
@@ -22,17 +21,38 @@ abstract class RemoteHabitService {
   Future<HabitResponse> getHabitDetail(
       @Header("authorization") String authorization, @Path() String habitId);
 
+  @MultiPart()
   @PATCH("habits/{habitId}")
   Future<HabitResponse> updateHabit(
     @Header("authorization") String authorization,
     @Path() String habitId,
-    @Body() Map<String, dynamic> body,
+    @Part(name: 'name') String name,
+    @Part(name: 'icon') String icon,
+    @Part(name: 'images') String images,
+    @Part(name: 'remind') String remind,
+    @Part(name: 'motivation') String motivation,
+    @Part(name: 'frequency') String frequency,
+    @Part(name: 'habitProgress') String habitProgress,
+    @Part(name: 'missionDayUnit') int missionDayUnit,
+    @Part(name: 'missionDayCheckInStep') int missionDayCheckInStep,
+    @Part(name: 'missionDayTarget') int missionDayTarget,
+    @Part(name: 'isFinished') bool isFinished,
   );
 
+  @MultiPart()
   @POST("/habits")
   Future<HabitResponse> addHabit(
     @Header("authorization") String authorization,
-    @Body() Map<String, dynamic> body,
+    @Part(name: '_id') String id,
+    @Part(name: 'name') String name,
+    @Part(name: 'icon') String icon,
+    @Part(name: 'images') String images,
+    @Part(name: 'remind') String remind,
+    @Part(name: 'motivation') String motivation,
+    @Part(name: 'frequency') String frequency,
+    @Part(name: 'missionDayUnit') int missionDayUnit,
+    @Part(name: 'missionDayCheckInStep') int missionDayCheckInStep,
+    @Part(name: 'missionDayTarget') int missionDayTarget,
   );
 
   @MultiPart()

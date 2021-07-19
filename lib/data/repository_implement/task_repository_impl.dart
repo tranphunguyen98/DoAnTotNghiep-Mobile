@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
 import 'package:objectid/objectid.dart';
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
@@ -23,6 +26,7 @@ class TaskRepositoryImpl implements ITaskRepository {
   final LocalUserDataSource _localUserDataSource;
   final RemoteUserDataSource _remoteUserDataSource;
   final LocalTaskMapper _localTaskMapper;
+  final cloudinary = CloudinaryPublic('totodo', 'UPLOAD_PRESET', cache: false);
 
   TaskRepositoryImpl(
       this._remoteTaskDataSource,
@@ -58,6 +62,8 @@ class TaskRepositoryImpl implements ITaskRepository {
       log('testAsync', 'server error $stackTrace');
     } on Exception catch (e) {
       log('testAsync', 'server error $e');
+      // final _data = FormData();
+      // _data.attachmentInfos.add(MapEntry('key', []));
     }
   }
 
@@ -88,29 +94,77 @@ class TaskRepositoryImpl implements ITaskRepository {
     final user = await _localUserDataSource.getUser();
     final localTask = _localTaskMapper.mapToLocal(task);
 
-    // _remoteTaskDataSource
-    //     .updateTask(user.authorization, localTask)
-    //     .then((value) async {
-    //   // log('testAsync updated task', updatedLocalTask);
-    //   // log('testAsync updated task1',
-    //   // await _localTaskDataSource.getDetailTask(updatedLocalTask.id));
-    //   final updatedLocalTask = await _remoteTaskDataSource.getDetailTask(
-    //       user.authorization, localTask.id);
-    //   await _localTaskDataSource.updateTaskAsync(updatedLocalTask);
-    //
-    //   log('testAsync updated task1',
-    //       await _localTaskDataSource.getDetailTask(updatedLocalTask.id));
-    // });
+    await _localTaskDataSource.updateTask(localTask);
 
-    return _localTaskDataSource.updateTask(localTask);
+    final futures = <Future<String>>[];
+    if (task.attachmentInfos?.isNotEmpty ?? false) {
+      try {
+        for (final element in task.attachmentInfos) {
+          futures.add(uploadFile(element));
+        }
+      } catch (e) {
+        log('testAsyn $e');
+      }
+    }
+
+    Future.wait(futures).then((files) {
+      _remoteTaskDataSource
+          .updateTask(
+              user.authorization, localTask.copyWith(attachmentInfos: files))
+          .then((value) async {
+        // log('testAsync updated task', updatedLocalTask);
+        // log('testAsync updated task1',
+        // await _localTaskDataSource.getDetailTask(updatedLocalTask.id));
+        final updatedLocalTask = await _remoteTaskDataSource.getDetailTask(
+            user.authorization, localTask.id);
+        await _localTaskDataSource.updateTaskAsync(updatedLocalTask);
+
+        log('testAsync updated task1',
+            await _localTaskDataSource.getDetailTask(updatedLocalTask.id));
+      });
+    });
+    // List<CloudinaryResponse> uploadedImages = await CloudinaryFile.multiUpload(
+    //   images
+    //       .map(
+    //         (image) => CloudinaryFile.fromFutureByteData(
+    //           image.getByteData(),
+    //           identifier: image.identifier,
+    //         ),
+    //       )
+    //       .toList(),
+    // );
+    return true;
+  }
+
+  Future<String> uploadFile(String imagePath) async {
+    const url = 'https://api.cloudinary.com/v1_1/dswsqdumn/image/upload';
+
+    final Dio dio = Dio();
+    final FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(
+        imagePath,
+      ),
+      "upload_preset": "totodo",
+      "cloud_name": "dswsqdumn",
+    });
+    try {
+      Response response = await dio.post(url, data: formData);
+
+      var data = jsonDecode(response.toString());
+      return data['url'] as String;
+      print(data['secure_url']);
+    } catch (e) {
+      print(e);
+    }
+    return "";
   }
 
   @override
   Future<void> addProject(Project project) async {
     final user = await _localUserDataSource.getUser();
-    // final serverProject =
-    //     await _remoteTaskDataSource.addProject(user.authorization, project);
-    return _localTaskDataSource.addProject(project);
+    final serverProject =
+        await _remoteTaskDataSource.addProject(user.authorization, project);
+    return _localTaskDataSource.addProject(serverProject);
   }
 
   @override
@@ -133,14 +187,14 @@ class TaskRepositoryImpl implements ITaskRepository {
   Future<void> addLabel(Label label) async {
     final user = await _localUserDataSource.getUser();
     try {
-      // final serverLabel =
-      //     await _remoteTaskDataSource.addLabel(user.authorization, label);
-      return _localTaskDataSource.addLabel(label);
+      final serverLabel =
+          await _remoteTaskDataSource.addLabel(user.authorization, label);
+      return _localTaskDataSource.addLabel(serverLabel);
     } catch (e) {
       // TODO try remove :v
       rethrow;
     }
-    // return _localTaskDataSource.addLabel(label);
+    return _localTaskDataSource.addLabel(label);
   }
 
   @override
@@ -162,11 +216,11 @@ class TaskRepositoryImpl implements ITaskRepository {
 
   @override
   Future<void> addSection(String projectId, Section section) async {
-    return _localTaskDataSource.addSection(projectId, section);
+    // return _localTaskDataSource.addSection(projectId, section);
     final user = await _localUserDataSource.getUser();
-    // final serverSection = await _remoteTaskDataSource.addSection(
-    //     user.authorization, projectId, section);
-    await _localTaskDataSource.addSection(projectId, section);
+    final serverSection = await _remoteTaskDataSource.addSection(
+        user.authorization, projectId, section);
+    await _localTaskDataSource.addSection(projectId, serverSection);
   }
 
   @override
@@ -207,9 +261,9 @@ class TaskRepositoryImpl implements ITaskRepository {
     final user = await _localUserDataSource.getUser();
     final localTask = _localTaskMapper.mapToLocal(task);
 
-    // _remoteTaskDataSource.deleteTask(user.authorization, task.id).then((value) {
-    //   _localTaskDataSource.deletePermenantlyTask(task.id);
-    // });
+    _remoteTaskDataSource.deleteTask(user.authorization, task.id).then((value) {
+      _localTaskDataSource.deletePermenantlyTask(task.id);
+    });
 
     return _localTaskDataSource.updateTask(localTask.copyWith(isTrashed: true));
   }
@@ -217,103 +271,103 @@ class TaskRepositoryImpl implements ITaskRepository {
   @override
   Future<bool> asyncData() async {
     log('testAsync async....');
-    // final user = await _localUserDataSource.getUser();
-    //
-    // final localTasks = await _localTaskDataSource.getAllTask();
-    // final serverTasks =
-    //     await _remoteTaskDataSource.getAllTask(user.authorization);
-    //
-    // final updatedLocalTasks = _getUpdatedLocalTask(localTasks, serverTasks);
-    // final updatedServerTasks = _getUpdatedLocalTask(serverTasks, localTasks);
-    //
-    // log('testAsync local', localTasks);
-    // log('testAsync server', serverTasks);
-    // log('testAsync updated local', updatedLocalTasks);
-    // log('testAsync updated server', updatedServerTasks);
-    // // final futures = <Future>[];
-    //
-    // // user delete task on local
-    // final deletedTaskOnLocal =
-    //     updatedLocalTasks.where((task) => task.isTrashed).toList();
-    // deletedTaskOnLocal.forEach((task) async {
-    //   await _remoteTaskDataSource
-    //       .deleteTask(user.authorization, task.id)
-    //       .then((value) async => _localTaskDataSource.deletePermenantlyTask(task.id));
-    //   _removeHandedTask(updatedLocalTasks, updatedServerTasks, task);
-    //   log('testAsync user delete on local ${task.name}');
-    // });
-    //
-    // //User delete task on server
-    // final deletedTaskOnServer = localTasks
-    //     .where((localTask) =>
-    //         !serverTasks.any((serverTask) => serverTask.id == localTask.id) &&
-    //         !localTask.isCreatedOnLocal)
-    //     .toList();
-    // deletedTaskOnServer.forEach((localTask) async {
-    //   log('testAsync user delete on server ${localTask.name}');
-    //   await _localTaskDataSource.deletePermenantlyTask(localTask.id);
-    //   _removeHandedTask(updatedLocalTasks, updatedServerTasks, localTask);
-    // });
-    //
-    // log('testAsync updated local deleted', deletedTaskOnLocal);
-    // log('testAsync updated server deleted', deletedTaskOnServer);
-    // log('testAsync updated local1', updatedLocalTasks);
-    // log('testAsy nc updated server1', updatedServerTasks);
-    // //User edited task on local
-    // final editedTaskOnLocal = _getEditedTask(updatedLocalTasks, serverTasks);
-    // for (final localTask in editedTaskOnLocal) {
-    //   log('testAsync user edited on local ${localTask.name}');
-    //   await _remoteTaskDataSource
-    //       .updateTask(user.authorization, localTask)
-    //       .then((value) async {
-    //     final updatedLocalTask = await _remoteTaskDataSource.getDetailTask(
-    //         user.authorization, localTask.id);
-    //     await _localTaskDataSource.updateTaskAsync(updatedLocalTask);
-    //   });
-    //   _removeHandedTask(updatedLocalTasks, updatedServerTasks, localTask);
-    // }
-    //
-    // //User edited task on Server
-    // final editedTaskOnServer = _getEditedTask(updatedServerTasks, localTasks);
-    // for (final serverTask in editedTaskOnServer) {
-    //   log('testAsync user edited on server ${serverTask.name}');
-    //   await _localTaskDataSource.updateTaskAsync(serverTask);
-    //   _removeHandedTask(updatedLocalTasks, updatedServerTasks, serverTask);
-    // }
-    //
-    // log('testAsync updated local edited', editedTaskOnLocal);
-    // log('testAsync updated server edited', editedTaskOnServer);
-    // log('testAsync updated local2', updatedLocalTasks);
-    // log('testAsync updated server2', updatedServerTasks);
-    // //User add task on local
-    // final addedOnServer = updatedLocalTasks
-    //     .where((localTask) =>
-    //         !serverTasks.any((serverTask) => serverTask.id == localTask.id) &&
-    //         localTask.isCreatedOnLocal)
-    //     .toList();
-    // addedOnServer.forEach((localTask) async {
-    //   log('testAsync user created on local ${localTask.name}');
-    //
-    //   await _remoteTaskDataSource
-    //       .addTask(user.authorization, localTask)
-    //       .then((value) async {
-    //     final updatedLocalTask = await _remoteTaskDataSource.getDetailTask(
-    //         user.authorization, localTask.id);
-    //     await _localTaskDataSource.updateTaskAsync(updatedLocalTask);
-    //   });
-    //   _removeHandedTask(updatedLocalTasks, updatedServerTasks, localTask);
-    // });
-    //
-    // //User add task on server
-    // updatedServerTasks
-    //     .where((serverTask) =>
-    //         !localTasks.any((localTask) => localTask.id == serverTask.id))
-    //     .forEach((serverTask) async {
-    //   log('testAsync user create task on server ${serverTask.name}');
-    //   await _localTaskDataSource.addTask(serverTask);
-    // });
-    // log('testAsync updated local', updatedLocalTasks);
-    // log('testAsync updated server', updatedServerTasks);
+    final user = await _localUserDataSource.getUser();
+
+    final localTasks = await _localTaskDataSource.getAllTask();
+    final serverTasks =
+        await _remoteTaskDataSource.getAllTask(user.authorization);
+
+    final updatedLocalTasks = _getUpdatedLocalTask(localTasks, serverTasks);
+    final updatedServerTasks = _getUpdatedLocalTask(serverTasks, localTasks);
+
+    log('testAsync local', localTasks);
+    log('testAsync server', serverTasks);
+    log('testAsync updated local', updatedLocalTasks);
+    log('testAsync updated server', updatedServerTasks);
+    // final futures = <Future>[];
+
+    // user delete task on local
+    final deletedTaskOnLocal =
+        updatedLocalTasks.where((task) => task.isTrashed).toList();
+    deletedTaskOnLocal.forEach((task) async {
+      await _remoteTaskDataSource.deleteTask(user.authorization, task.id).then(
+          (value) async => _localTaskDataSource.deletePermenantlyTask(task.id));
+      _removeHandedTask(updatedLocalTasks, updatedServerTasks, task);
+      log('testAsync user delete on local ${task.name}');
+    });
+
+    //User delete task on server
+    final deletedTaskOnServer = localTasks
+        .where((localTask) =>
+            !serverTasks.any((serverTask) => serverTask.id == localTask.id) &&
+            !localTask.isCreatedOnLocal)
+        .toList();
+    deletedTaskOnServer.forEach((localTask) async {
+      log('testAsync user delete on server ${localTask.name}');
+      await _localTaskDataSource.deletePermenantlyTask(localTask.id);
+      _removeHandedTask(updatedLocalTasks, updatedServerTasks, localTask);
+    });
+
+    log('testAsync updated local deleted', deletedTaskOnLocal);
+    log('testAsync updated server deleted', deletedTaskOnServer);
+    log('testAsync updated local1', updatedLocalTasks);
+    log('testAsy nc updated server1', updatedServerTasks);
+    //User edited task on local
+    final editedTaskOnLocal = _getEditedTask(updatedLocalTasks, serverTasks);
+    for (final localTask in editedTaskOnLocal) {
+      log('testAsync user edited on local ${localTask.name}');
+      // await _remoteTaskDataSource
+      //     .updateTask(user.authorization, localTask)
+      //     .then((value) async {
+      //   final updatedLocalTask = await _remoteTaskDataSource.getDetailTask(
+      //       user.authorization, localTask.id);
+      //   await _localTaskDataSource.updateTaskAsync(updatedLocalTask);
+      // });
+      _removeHandedTask(updatedLocalTasks, updatedServerTasks, localTask);
+    }
+
+    //User edited task on Server
+    final editedTaskOnServer = _getEditedTask(updatedServerTasks, localTasks);
+    for (final serverTask in editedTaskOnServer) {
+      log('testAsync user edited on server ${serverTask.name}');
+      await _localTaskDataSource.updateTaskAsync(serverTask);
+      _removeHandedTask(updatedLocalTasks, updatedServerTasks, serverTask);
+    }
+
+    log('testAsync updated local edited', editedTaskOnLocal);
+    log('testAsync updated server edited', editedTaskOnServer);
+    log('testAsync updated local2', updatedLocalTasks);
+    log('testAsync updated server2', updatedServerTasks);
+    //User add task on local
+    final addedOnServer = updatedLocalTasks
+        .where((localTask) =>
+            !serverTasks.any((serverTask) => serverTask.id == localTask.id) &&
+            localTask.isCreatedOnLocal)
+        .toList();
+    addedOnServer.forEach((localTask) async {
+      log('testAsync user created on local ${localTask.name}');
+
+      // await _remoteTaskDataSource
+      //     .addTask(user.authorization, localTask)
+      //     .then((value) async {
+      //   final updatedLocalTask = await _remoteTaskDataSource.getDetailTask(
+      //       user.authorization, localTask.id);
+      //   await _localTaskDataSource.updateTaskAsync(updatedLocalTask);
+      // });
+      _removeHandedTask(updatedLocalTasks, updatedServerTasks, localTask);
+    });
+
+    //User add task on server
+    updatedServerTasks
+        .where((serverTask) =>
+            !localTasks.any((localTask) => localTask.id == serverTask.id))
+        .forEach((serverTask) async {
+      log('testAsync user created task on server ${serverTask.name}');
+      await _localTaskDataSource.addTask(serverTask);
+    });
+
+    log('testAsync updated local', updatedLocalTasks);
+    log('testAsync updated server', updatedServerTasks);
     // await Future.wait(futures);
     return true;
   }

@@ -1,18 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:totodo/bloc/home/home_event.dart';
 import 'package:totodo/data/local/model/local_task.dart';
 import 'package:totodo/data/local/source/habit/local_habit_service.dart';
 import 'package:totodo/data/model/habit/diary_item.dart';
 import 'package:totodo/utils/notification_helper.dart';
 
 import 'app_config.dart';
+import 'bloc/home/bloc.dart';
 import 'data/local/model/local_task.dart';
 import 'data/local/source/habit/local_diary_service.dart';
 import 'data/local/source/task/local_task_service.dart';
 import 'data/model/check_item.dart';
-import 'data/model/habit/diary_item.dart';
 import 'data/model/habit/diary_item.dart';
 import 'data/model/habit/habit.dart';
 import 'data/model/habit/habit_frequency.dart';
@@ -28,9 +31,42 @@ import 'di/injection.dart';
 import 'presentation/my_app.dart';
 import 'presentation/router.dart';
 
+const kSyncTask = "syncWithBE";
+const kSyncTaskName = "syncWithBEName";
+
+// void callbackDispatcher() {
+//   Workmanager().executeTask((task, inputData) {
+//     print(
+//       'testAsync wordmanage init11111111111',
+//     );
+//     getIt.get<HomeBloc>().add(AsyncData());
+//     print(
+//       'testAsync wordmanage success',
+//     );
+//     return Future.value(true);
+//   });
+// }
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  print(
+    'testAsync wordmanage init1',
+  );
+  // Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  // Workmanager().registerPeriodicTask(
+  //   kSyncTask,
+  //   kSyncTaskName,
+  // );
+  Timer.periodic(Duration(seconds: 20), (timer) {
+    print(
+      'testAsync Timer ${timer.tick}',
+    );
+    getIt.get<HomeBloc>().add(AsyncData());
+  });
 
+  print(
+    'testAsync wordmanage init2',
+  );
   //Init Hive
   await _initHive();
 

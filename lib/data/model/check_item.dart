@@ -25,24 +25,24 @@ class CheckItem extends Equatable {
   CheckItem copyWith({
     String id,
     String name,
-    bool isCheck,
+    bool isDone,
   }) {
     if ((id == null || identical(id, this.id)) &&
         (name == null || identical(name, this.name)) &&
-        (isCheck == null || identical(isCheck, isDone))) {
+        (isDone == null || identical(isDone, isDone))) {
       return this;
     }
 
     return CheckItem(
       id: id ?? this.id,
       name: name ?? this.name,
-      isDone: isCheck ?? isDone,
+      isDone: isDone ?? isDone,
     );
   }
 
   @override
   String toString() {
-    return 'CheckItem{id: $id, name: $name, isCheck: $isDone}';
+    return 'CheckItem{id: $id, name: $name, isDone: $isDone}';
   }
 
   @override
@@ -61,7 +61,7 @@ class CheckItem extends Equatable {
     return CheckItem(
       id: map['_id'] as String,
       name: map['name'] as String,
-      isDone: map['isCheck'] as bool,
+      isDone: map['isDone'] as bool,
     );
   }
 
@@ -70,7 +70,7 @@ class CheckItem extends Equatable {
     return {
       '_id': id,
       'name': name,
-      'isCheck': isDone,
+      'isDone': isDone,
     } as Map<String, dynamic>;
   }
 

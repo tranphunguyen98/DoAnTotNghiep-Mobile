@@ -54,16 +54,28 @@ class _RemoteTaskService implements RemoteTaskService {
   }
 
   @override
-  Future<TaskListResponse> addTask(authorization, id, name, dueDate, section,
-      projectId, labelIds, checkList) async {
-    ArgumentError.checkNotNull(authorization, 'authorization');
-    ArgumentError.checkNotNull(id, 'id');
-    ArgumentError.checkNotNull(name, 'name');
-    ArgumentError.checkNotNull(dueDate, 'dueDate');
-    ArgumentError.checkNotNull(section, 'section');
-    ArgumentError.checkNotNull(projectId, 'projectId');
-    ArgumentError.checkNotNull(labelIds, 'labelIds');
-    ArgumentError.checkNotNull(checkList, 'checkList');
+  Future<TaskListResponse> addTask(
+      authorization,
+      id,
+      name,
+      dueDate,
+      crontabSchedule,
+      section,
+      projectId,
+      labelIds,
+      checkList,
+      priority) async {
+    // ArgumentError.checkNotNull(authorization, 'authorization');
+    // ArgumentError.checkNotNull(id, 'id');
+    // ArgumentError.checkNotNull(name, 'name');
+    // ArgumentError.checkNotNull(dueDate, 'dueDate');
+    // ArgumentError.checkNotNull(crontabSchedule, 'crontabSchedule');
+    // ArgumentError.checkNotNull(section, 'section');
+    // ArgumentError.checkNotNull(projectId, 'projectId');
+    // ArgumentError.checkNotNull(labelIds, 'labelIds');
+    // ArgumentError.checkNotNull(checkList, 'checkList');
+    // ArgumentError.checkNotNull(priority, 'priority');
+    // ArgumentError.checkNotNull(files, 'files');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = FormData();
@@ -76,18 +88,25 @@ class _RemoteTaskService implements RemoteTaskService {
     if (dueDate != null) {
       _data.fields.add(MapEntry('dueDate', dueDate));
     }
+    if (crontabSchedule != null) {
+      _data.fields.add(MapEntry('crontabSchedule', crontabSchedule));
+    }
     if (section != null) {
       _data.fields.add(MapEntry('section', section));
     }
     if (projectId != null) {
       _data.fields.add(MapEntry('projectId', projectId));
     }
-    labelIds?.forEach((i) {
-      _data.fields.add(MapEntry('labelIds', i));
-    });
-    checkList?.forEach((i) {
-      _data.fields.add(MapEntry('checkList', i));
-    });
+    if (labelIds != null) {
+      _data.fields.add(MapEntry('labelIds', labelIds));
+    }
+    if (checkList != null) {
+      _data.fields.add(MapEntry('checkList', checkList));
+    }
+    if (priority != null) {
+      _data.fields.add(MapEntry('priority', priority.toString()));
+    }
+
     final _result = await _dio.request<Map<String, dynamic>>('/tasks',
         queryParameters: queryParameters,
         options: RequestOptions(
@@ -101,14 +120,75 @@ class _RemoteTaskService implements RemoteTaskService {
   }
 
   @override
-  Future<TaskResponse> updateTask(authorization, taskId, body) async {
-    ArgumentError.checkNotNull(authorization, 'authorization');
-    ArgumentError.checkNotNull(taskId, 'taskId');
-    ArgumentError.checkNotNull(body, 'body');
+  Future<TaskResponse> updateTask(
+      authorization,
+      taskId,
+      name,
+      dueDate,
+      crontabSchedule,
+      section,
+      projectId,
+      labelIds,
+      checkList,
+      priority,
+      isCompleted,
+      completedDate,
+      attachmentInfos) async {
+    // ArgumentError.checkNotNull(authorization, 'authorization');
+    // ArgumentError.checkNotNull(taskId, 'taskId');
+    // ArgumentError.checkNotNull(name, 'name');
+    // ArgumentError.checkNotNull(dueDate, 'dueDate');
+    // ArgumentError.checkNotNull(crontabSchedule, 'crontabSchedule');
+    // ArgumentError.checkNotNull(section, 'section');
+    // // ArgumentError.checkNotNull(projectId, 'projectId');
+    // ArgumentError.checkNotNull(labelIds, 'labelIds');
+    // ArgumentError.checkNotNull(checkList, 'checkList');
+    // ArgumentError.checkNotNull(priority, 'priority');
+    // ArgumentError.checkNotNull(isCompleted, 'isCompleted');
+    // ArgumentError.checkNotNull(completedDate, 'completedDate');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body ?? <String, dynamic>{});
+    final _data = FormData();
+    if (name != null) {
+      _data.fields.add(MapEntry('name', name));
+    }
+    if (dueDate != null) {
+      _data.fields.add(MapEntry('dueDate', dueDate));
+    }
+    if (crontabSchedule != null) {
+      _data.fields.add(MapEntry('crontabSchedule', crontabSchedule));
+    }
+    if (section != null) {
+      _data.fields.add(MapEntry('section', section));
+    }
+    if (projectId != null) {
+      _data.fields.add(MapEntry('projectId', projectId));
+    }
+    if (labelIds != null) {
+      _data.fields.add(MapEntry('labelIds', labelIds));
+    }
+    if (checkList != null) {
+      _data.fields.add(MapEntry('checkList', checkList));
+    }
+    if (priority != null) {
+      _data.fields.add(MapEntry('priority', priority.toString()));
+    }
+    if (isCompleted != null) {
+      _data.fields.add(MapEntry('isCompleted', isCompleted.toString()));
+    }
+    if (completedDate != null) {
+      _data.fields.add(MapEntry('completedDate', completedDate));
+    }
+
+    if (attachmentInfos != null) {
+      _data.fields.add(MapEntry('attachmentInfos', attachmentInfos));
+    }
+    // if (files?.isNotEmpty ?? false) {
+    //   for (var file in files) {
+    //     _data.files.add(MapEntry('files', MultipartFile.fromFileSync(file)));
+    //   }
+    // }
+
     final _result = await _dio.request<Map<String, dynamic>>('/tasks/$taskId',
         queryParameters: queryParameters,
         options: RequestOptions(

@@ -2,8 +2,10 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications/awesome_notifications.dart'
     hide DateUtils;
 import 'package:flutter/material.dart';
+import 'package:totodo/data/local/model/local_task.dart';
 import 'package:totodo/data/model/habit/habit.dart';
 import 'package:totodo/data/model/task.dart';
+import 'package:totodo/utils/util.dart';
 
 const String kValuePayloadNotificationTaskType = 'task';
 const String kValuePayloadNotificationHabitType = 'habit';
@@ -105,6 +107,7 @@ Future<void> showNotificationScheduledWithHabit(Habit habit) async {
 }
 
 Future<void> showNotificationScheduledWithTask(Task task) async {
+  log('testAsync ${task.dueDate}');
   showNotificationAtScheduleCron(
       id: task.id.hashCode,
       title: task.name,
@@ -112,7 +115,34 @@ Future<void> showNotificationScheduledWithTask(Task task) async {
         kKeyPayloadNotificationType: kValuePayloadNotificationTaskType,
         kKeyPayloadNotificationId: task.id
       },
-      scheduleTime: DateTime.parse(task.dueDate),
+      scheduleTime: DateTime.parse(task.crontabSchedule),
+      channelKey:
+          task.priority == Task.kPriority1 ? kChannelKeyMax : kChannelKeyHigh,
+      color: getColorFromPriority(task.priority),
+      actionButtons: [
+        NotificationActionButton(
+          key: kDoneNotificationKey,
+          label: 'Hoàn thành',
+        ),
+        NotificationActionButton(
+          key: kSnoozedNotificationKey,
+          label: 'Hoãn lại (Phút)',
+          buttonType: ActionButtonType.InputField,
+        )
+      ]);
+}
+
+Future<void> showNotificationScheduledWithTaskLocal(LocalTask task) async {
+  var dateTimeParse = DateTime.parse(task.crontabSchedule);
+  log('testAsync crontab ${dateTimeParse.toLocal().toIso8601String()}');
+  showNotificationAtScheduleCron(
+      id: task.id.hashCode,
+      title: task.name,
+      payload: {
+        kKeyPayloadNotificationType: kValuePayloadNotificationTaskType,
+        kKeyPayloadNotificationId: task.id
+      },
+      scheduleTime: dateTimeParse.toLocal(),
       channelKey:
           task.priority == Task.kPriority1 ? kChannelKeyMax : kChannelKeyHigh,
       color: getColorFromPriority(task.priority),

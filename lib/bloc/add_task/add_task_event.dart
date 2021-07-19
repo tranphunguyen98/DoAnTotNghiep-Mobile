@@ -9,6 +9,7 @@ abstract class TaskAddEvent extends Equatable {
 
 class TaskAddChanged extends TaskAddEvent {
   final String taskName;
+  final String crontabSchedule;
   final int priority;
   final Project project;
   final List<Label> labels;
@@ -17,6 +18,7 @@ class TaskAddChanged extends TaskAddEvent {
 
   TaskAddChanged(
       {this.taskName,
+      this.crontabSchedule,
       this.priority,
       this.project,
       this.labels,
@@ -24,8 +26,15 @@ class TaskAddChanged extends TaskAddEvent {
       this.sectionId});
 
   @override
-  List<Object> get props =>
-      [taskName, priority, project, labels, sectionId, taskDate];
+  List<Object> get props => [
+        taskName,
+        priority,
+        project,
+        labels,
+        sectionId,
+        taskDate,
+        crontabSchedule
+      ];
 
   @override
   String toString() {

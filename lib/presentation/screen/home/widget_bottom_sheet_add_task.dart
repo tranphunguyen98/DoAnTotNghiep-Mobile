@@ -82,6 +82,7 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
                   _buildTextNameTask(),
                   if (!(state.taskAdd.labels?.isEmpty ?? true))
                     _buildListChipLabel(),
+                  buildRowFuction(),
                   buildRowDateAndProject(),
                 ],
               ),
@@ -164,11 +165,7 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
   //     children: [
   //       _buildLabel(),
   //       _buildPriority(),
-  //       CircleInkWell(
-  //         Icons.alarm,
-  //         size: 24.0,
-  //         onPressed: () {},
-  //       ),
+
   //       const CircleInkWell(
   //         Icons.mode_comment_outlined,
   //         size: 24.0,
@@ -191,15 +188,9 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
 
   Row buildRowDateAndProject() {
     return Row(
-      mainAxisSize: MainAxisSize.min,
       children: [
-        _buildLabel(),
-        _buildPriority(),
-        const SizedBox(
-          width: 8.0,
-        ),
-        Expanded(
-          flex: 8,
+        SizedBox(
+          width: 120,
           child: IconOutlineButton(
             DateHelper.getDisplayTextDateFromDate(
                     addState.taskAdd.dueDate ?? "") ??
@@ -217,10 +208,8 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
         const SizedBox(
           width: 8.0,
         ),
-        Expanded(flex: 6, child: _buildPopupProject()),
-        const SizedBox(
-          width: 8.0,
-        ),
+        SizedBox(width: 120, child: _buildPopupProject()),
+        Spacer(),
         CircleInkWell(
           Icons.send_outlined,
           size: 24.0,
@@ -231,6 +220,32 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
                   _textNameTaskController.clear();
                 }
               : null,
+        ),
+      ],
+    );
+  }
+
+  Row buildRowFuction() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildLabel(),
+        _buildPriority(),
+        const SizedBox(
+          width: 8.0,
+        ),
+        CircleInkWell(
+          Icons.alarm,
+          size: 24.0,
+          color: (addState.taskAdd.crontabSchedule?.isNotEmpty ?? false)
+              ? Colors.red
+              : null,
+          onPressed: () async {
+            await onPressedPickRemind();
+          },
+        ),
+        const SizedBox(
+          width: 8.0,
         ),
       ],
     );
@@ -295,6 +310,31 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
       visible = false;
     });
 
+    final picker = await showDatePicker(
+      context: context,
+      initialDate: DateTime.parse(
+          addState.taskAdd.dueDate ?? DateTime.now().toIso8601String()),
+      firstDate: DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+      ),
+      lastDate: DateTime(2100),
+      // selectedTimeOfDay:
+      //     DateHelper.getTimeOfDayFromDateString(addState.taskAdd.dueDate)
+    );
+    setState(() {
+      visible = true;
+    });
+    if (picker != null) {
+      _taskAddBloc.add(TaskAddChanged(taskDate: picker.toIso8601String()));
+    }
+  }
+
+  Future onPressedPickRemind() async {
+    setState(() {
+      visible = false;
+    });
+
     final picker = await showCustomDatePicker(
         context: context,
         initialDate: DateTime.parse(
@@ -310,7 +350,8 @@ class _BottomSheetAddTaskState extends State<BottomSheetAddTask> {
       visible = true;
     });
     if (picker != null) {
-      _taskAddBloc.add(TaskAddChanged(taskDate: picker.toIso8601String()));
+      _taskAddBloc
+          .add(TaskAddChanged(crontabSchedule: picker.toIso8601String()));
     }
   }
 

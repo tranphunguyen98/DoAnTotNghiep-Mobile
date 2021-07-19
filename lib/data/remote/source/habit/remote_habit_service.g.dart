@@ -54,14 +54,71 @@ class _RemoteHabitService implements RemoteHabitService {
   }
 
   @override
-  Future<HabitResponse> updateHabit(authorization, habitId, body) async {
+  Future<HabitResponse> updateHabit(
+      authorization,
+      habitId,
+      name,
+      icon,
+      images,
+      remind,
+      motivation,
+      frequency,
+      habitProgress,
+      missionDayUnit,
+      missionDayCheckInStep,
+      missionDayTarget,
+      isFinished) async {
     ArgumentError.checkNotNull(authorization, 'authorization');
     ArgumentError.checkNotNull(habitId, 'habitId');
-    ArgumentError.checkNotNull(body, 'body');
+    ArgumentError.checkNotNull(name, 'name');
+    ArgumentError.checkNotNull(icon, 'icon');
+    ArgumentError.checkNotNull(images, 'images');
+    ArgumentError.checkNotNull(remind, 'remind');
+    ArgumentError.checkNotNull(motivation, 'motivation');
+    ArgumentError.checkNotNull(frequency, 'frequency');
+    ArgumentError.checkNotNull(habitProgress, 'habitProgress');
+    ArgumentError.checkNotNull(missionDayUnit, 'missionDayUnit');
+    ArgumentError.checkNotNull(missionDayCheckInStep, 'missionDayCheckInStep');
+    ArgumentError.checkNotNull(missionDayTarget, 'missionDayTarget');
+    ArgumentError.checkNotNull(isFinished, 'isFinished');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body ?? <String, dynamic>{});
+    final _data = FormData();
+    if (name != null) {
+      _data.fields.add(MapEntry('name', name));
+    }
+    if (icon != null) {
+      _data.fields.add(MapEntry('icon', icon));
+    }
+    if (images != null) {
+      _data.fields.add(MapEntry('images', images));
+    }
+    if (remind != null) {
+      _data.fields.add(MapEntry('remind', remind));
+    }
+    if (motivation != null) {
+      _data.fields.add(MapEntry('motivation', motivation));
+    }
+    if (frequency != null) {
+      _data.fields.add(MapEntry('frequency', frequency));
+    }
+    if (habitProgress != null) {
+      _data.fields.add(MapEntry('habitProgress', habitProgress));
+    }
+    if (missionDayUnit != null) {
+      _data.fields.add(MapEntry('missionDayUnit', missionDayUnit.toString()));
+    }
+    if (missionDayCheckInStep != null) {
+      _data.fields.add(
+          MapEntry('missionDayCheckInStep', missionDayCheckInStep.toString()));
+    }
+    if (missionDayTarget != null) {
+      _data.fields
+          .add(MapEntry('missionDayTarget', missionDayTarget.toString()));
+    }
+    if (isFinished != null) {
+      _data.fields.add(MapEntry('isFinished', isFinished.toString()));
+    }
     final _result = await _dio.request<Map<String, dynamic>>('habits/$habitId',
         queryParameters: queryParameters,
         options: RequestOptions(
@@ -75,13 +132,64 @@ class _RemoteHabitService implements RemoteHabitService {
   }
 
   @override
-  Future<HabitResponse> addHabit(authorization, body) async {
+  Future<HabitResponse> addHabit(
+      authorization,
+      id,
+      name,
+      icon,
+      images,
+      remind,
+      motivation,
+      frequency,
+      missionDayUnit,
+      missionDayCheckInStep,
+      missionDayTarget) async {
     ArgumentError.checkNotNull(authorization, 'authorization');
-    ArgumentError.checkNotNull(body, 'body');
+    ArgumentError.checkNotNull(id, 'id');
+    ArgumentError.checkNotNull(name, 'name');
+    ArgumentError.checkNotNull(icon, 'icon');
+    ArgumentError.checkNotNull(images, 'images');
+    ArgumentError.checkNotNull(remind, 'remind');
+    ArgumentError.checkNotNull(motivation, 'motivation');
+    ArgumentError.checkNotNull(frequency, 'frequency');
+    ArgumentError.checkNotNull(missionDayUnit, 'missionDayUnit');
+    ArgumentError.checkNotNull(missionDayCheckInStep, 'missionDayCheckInStep');
+    ArgumentError.checkNotNull(missionDayTarget, 'missionDayTarget');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body ?? <String, dynamic>{});
+    final _data = FormData();
+    if (id != null) {
+      _data.fields.add(MapEntry('_id', id));
+    }
+    if (name != null) {
+      _data.fields.add(MapEntry('name', name));
+    }
+    if (icon != null) {
+      _data.fields.add(MapEntry('icon', icon));
+    }
+    if (images != null) {
+      _data.fields.add(MapEntry('images', images));
+    }
+    if (remind != null) {
+      _data.fields.add(MapEntry('remind', remind));
+    }
+    if (motivation != null) {
+      _data.fields.add(MapEntry('motivation', motivation));
+    }
+    if (frequency != null) {
+      _data.fields.add(MapEntry('frequency', frequency));
+    }
+    if (missionDayUnit != null) {
+      _data.fields.add(MapEntry('missionDayUnit', missionDayUnit.toString()));
+    }
+    if (missionDayCheckInStep != null) {
+      _data.fields.add(
+          MapEntry('missionDayCheckInStep', missionDayCheckInStep.toString()));
+    }
+    if (missionDayTarget != null) {
+      _data.fields
+          .add(MapEntry('missionDayTarget', missionDayTarget.toString()));
+    }
     final _result = await _dio.request<Map<String, dynamic>>('/habits',
         queryParameters: queryParameters,
         options: RequestOptions(

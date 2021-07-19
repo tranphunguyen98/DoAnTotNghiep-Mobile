@@ -34,6 +34,8 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
       yield* _mapTaskSubmitDateChangedToState(event.taskDate);
     } else if (event is DeleteTask) {
       yield* _mapDeleteTaskToState();
+    } else if (event is TaskSubmitRemindChanged) {
+      yield* _mapTaskSubmitDateRemindChangedToState(event.remind);
     }
   }
 
@@ -111,9 +113,24 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
       String dueDate) async* {
     var taskEdit = state.taskEdit;
     if (dueDate != taskEdit.dueDate && !taskEdit.isCompleted) {
-      await AwesomeNotifications().cancelSchedule(taskEdit.id.hashCode);
       if (dueDate != null) {
         taskEdit = taskEdit.copyWith(dueDate: dueDate);
+        await _taskRepository.updateTask(taskEdit);
+        yield state.copyWith(
+          taskEdit: taskEdit,
+        );
+      }
+      //TODO update task with noDate
+    }
+  }
+
+  Stream<TaskDetailState> _mapTaskSubmitDateRemindChangedToState(
+      String crontabSchedule) async* {
+    var taskEdit = state.taskEdit;
+    if (crontabSchedule != taskEdit.crontabSchedule && !taskEdit.isCompleted) {
+      await AwesomeNotifications().cancelSchedule(taskEdit.id.hashCode);
+      if (crontabSchedule != null) {
+        taskEdit = taskEdit.copyWith(crontabSchedule: crontabSchedule);
         await showNotificationScheduledWithTask(taskEdit);
         await _taskRepository.updateTask(taskEdit);
         yield state.copyWith(

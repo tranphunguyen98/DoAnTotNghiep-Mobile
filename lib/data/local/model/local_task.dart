@@ -83,17 +83,25 @@ class LocalTask {
       isTrashed: map['isTrashed'] as bool ?? false,
       dueDate: map['dueDate'] as String,
       projectId: map['projectId'] as String,
-      labelIds: [],
+      labelIds: (map['labelIds'] != null)
+          ? (map['labelIds'] as List).map((e) => e as String).toList()
+          : [],
       //TODO labelIds
       // ((map['labelIds'] ?? []) as List)
       //         ?.map((e) => e as String)
       //         ?.toList() ??
       //     [],
       sectionId: map['sectionId'] as String,
-      checkList: [],
+      checkList: (map['checkList'] != null)
+          ? (map['checkList'] as List)
+              .map((e) => CheckItem.fromJson(e as Map<String, Object>))
+              .toList()
+          : [],
       completedDate: map['completedDate'] as String,
       crontabSchedule: map['crontabSchedule'] as String,
-      attachmentInfos: [],
+      attachmentInfos: (map['attachmentInfos'] != null)
+          ? (map['attachmentInfos'] as List).map((e) => e as String).toList()
+          : [],
     );
   }
 
@@ -105,14 +113,14 @@ class LocalTask {
       'updatedAt': updatedAt,
       'priority': priority,
       'name': name,
-      'description': description,
+      'description': description ?? "",
       'isCompleted': isCompleted,
       'isStarred': isStarred,
       'isTrashed': isTrashed,
-      'dueDate': dueDate,
-      'projectId': projectId,
+      'dueDate': dueDate ?? "",
+      'projectId': projectId ?? "",
       'labelIds': labelIds ?? [],
-      'sectionId': sectionId,
+      'sectionId': sectionId ?? "",
       'checkList': checkList ?? [],
       'completedDate': completedDate,
       'crontabSchedule': crontabSchedule,

@@ -1,8 +1,10 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:totodo/data/data_source/task/local_task_data_source.dart';
 import 'package:totodo/data/local/model/local_task.dart';
 import 'package:totodo/data/model/label.dart';
 import 'package:totodo/data/model/project.dart';
 import 'package:totodo/data/model/section.dart';
+import 'package:totodo/utils/notification_helper.dart';
 
 import 'local_task_service.dart';
 
@@ -12,7 +14,12 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
   const LocalTaskDataSourceImplement(this._taskService);
 
   @override
-  Future<String> addTask(LocalTask task) => _taskService.addTask(task);
+  Future<String> addTask(LocalTask task) {
+    if (task.crontabSchedule?.isNotEmpty ?? false) {
+      showNotificationScheduledWithTaskLocal(task);
+    }
+    return _taskService.addTask(task);
+  }
 
   @override
   Future<LocalTask> getDetailTask(String id) {
@@ -31,6 +38,11 @@ class LocalTaskDataSourceImplement implements LocalTaskDataSource {
 
   @override
   Future<bool> updateTaskAsync(LocalTask task) async {
+    final oldTask = await getDetailTask(task.id);
+    if (oldTask.crontabSchedule != task.crontabSchedule) {
+      AwesomeNotifications().cancelSchedule(task.id.hashCode);
+      showNotificationScheduledWithTaskLocal(task);
+    }
     return _taskService.updateTaskAsync(task);
   }
 

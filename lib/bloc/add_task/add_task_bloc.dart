@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:totodo/data/model/task.dart';
 import 'package:totodo/data/repository_interface/i_task_repository.dart';
-import 'package:totodo/utils/notification_helper.dart';
 
 import 'bloc.dart';
 
@@ -35,6 +34,7 @@ class TaskAddBloc extends Bloc<TaskAddEvent, TaskAddState> {
     taskAdd = taskAdd.copyWith(project: event.project);
     taskAdd = taskAdd.copyWith(labels: event.labels);
     taskAdd = taskAdd.copyWith(sectionId: event.sectionId);
+    taskAdd = taskAdd.copyWith(crontabSchedule: event.crontabSchedule);
 
     yield state.updateTask(taskAdd);
   }
@@ -57,10 +57,6 @@ class TaskAddBloc extends Bloc<TaskAddEvent, TaskAddState> {
       await _taskRepository.addTask(taskSubmit);
     } catch (e) {
       yield state.copyWith(errorMessage: e.toString());
-    }
-
-    if (!(state.taskAdd.dueDate?.isEmpty ?? true)) {
-      showNotificationScheduledWithTask(taskSubmit);
     }
 
     yield state.copyWith(

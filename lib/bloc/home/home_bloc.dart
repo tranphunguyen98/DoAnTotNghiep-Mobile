@@ -4,6 +4,7 @@ import 'package:totodo/data/model/label.dart';
 import 'package:totodo/data/model/project.dart';
 import 'package:totodo/data/model/task.dart';
 import 'package:totodo/data/remote/exception/unauthenticated_exception.dart';
+import 'package:totodo/data/repository_interface/i_habit_repository.dart';
 import 'package:totodo/data/repository_interface/i_task_repository.dart';
 import 'package:totodo/data/repository_interface/i_user_repository.dart';
 import 'package:totodo/presentation/screen/home/drawer_item_data.dart';
@@ -16,14 +17,17 @@ import 'bloc.dart';
 //TODO update isCompleted not working with server
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ITaskRepository _taskRepository;
+  final IHabitRepository _habitRepository;
   final IUserRepository _userRepository;
 
-  HomeBloc(
-      {@required ITaskRepository taskRepository,
-      @required IUserRepository userRepository})
-      : assert(taskRepository != null),
+  HomeBloc({
+    @required ITaskRepository taskRepository,
+    @required IUserRepository userRepository,
+    @required IHabitRepository habitRepository,
+  })  : assert(taskRepository != null),
         _taskRepository = taskRepository,
         _userRepository = userRepository,
+        _habitRepository = habitRepository,
         super(HomeState.loading());
 
   @override
@@ -286,7 +290,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       log('testAsync checkServerSuccess');
       yield state.copyWith(syncing: true);
       await _taskRepository.asyncData();
-      yield* _mapOpenHomeScreenToState();
+      await _habitRepository.saveDataOnLocal();
+      yield* _mapDataListTaskChangedState();
+      // yield* _mapOpenHomeScreenToState();
     }
   }
 

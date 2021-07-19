@@ -49,6 +49,20 @@ class TaskSubmitDateChanged extends TaskDetailEvent {
   }
 }
 
+class TaskSubmitRemindChanged extends TaskDetailEvent {
+  final String remind;
+
+  TaskSubmitRemindChanged(this.remind);
+
+  @override
+  List<Object> get props => [remind];
+
+  @override
+  String toString() {
+    return 'TaskSubmitRemindChanged{taskDate: $remind';
+  }
+}
+
 class UpdateItemCheckList extends TaskDetailEvent {
   final CheckItem checkItem;
 

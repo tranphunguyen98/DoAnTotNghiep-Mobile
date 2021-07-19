@@ -30,9 +30,9 @@ class HabitRepositoryImpl implements IHabitRepository {
       _remoteHabitDataSource
           .addHabit(user.authorization, habit)
           .then((value) async {
-        final updatedLocalHabit = await _remoteHabitDataSource.getDetailHabit(
-            user.authorization, habit.id);
-        await _localHabitDataSource.updateHabitAsync(updatedLocalHabit);
+        // final updatedLocalHabit = await _remoteHabitDataSource.getDetailHabit(
+        //     user.authorization, habit.id);
+        // await _localHabitDataSource.updateHabitAsync(updatedLocalHabit);
       });
 
       return _localHabitDataSource.addHabit(habit);
@@ -70,16 +70,16 @@ class HabitRepositoryImpl implements IHabitRepository {
   Future<void> updateHabit(Habit habit) async {
     final user = await _localUserDataSource.getUser();
 
-    // _remoteHabitDataSource
-    //     .updateHabit(user.authorization, habit)
-    //     .then((value) async {
-    //   final updatedLocalTask = await _remoteHabitDataSource.getDetailHabit(
-    //       user.authorization, habit.id);
-    //   await _localHabitDataSource.updateHabitAsync(updatedLocalTask);
-    //
-    //   // log('testAsync updated task1',
-    //   //     await _localTaskDataSource.getDetailTask(updatedLocalTask.id));
-    // });
+    _remoteHabitDataSource
+        .updateHabit(user.authorization, habit)
+        .then((value) async {
+      // final updatedLocalTask = await _remoteHabitDataSource.getDetailHabit(
+      //     user.authorization, habit.id);
+      // await _localHabitDataSource.updateHabitAsync(updatedLocalTask);
+
+      // log('testAsync updated task1',
+      //     await _localTaskDataSource.getDetailTask(updatedLocalTask.id));
+    });
 
     return _localHabitDataSource.updateHabit(habit);
   }

@@ -40,9 +40,9 @@ final getIt = GetIt.instance;
 Future<void> configureDependencies() async {
   $initGetIt(getIt);
 
-  const String kBaseUrl = 'https://personal-task-management-be.herokuapp.com/';
-  // const String kBaseUrl = 'http://192.168.43.26:3006/';
-  // const String kBaseUrl = 'http://192.168.1.6:3006/';
+  // const String kBaseUrl = 'https://personal-task-management-be.herokuapp.com/';
+  // const String kBaseUrl = 'http://192.168.1.3:3006/';
+  const String kBaseUrl = 'http://192.168.1.6:3006/';
 
   getIt.registerLazySingleton<DateFormat>(() => DateFormat('MMM yyyy'));
   getIt.registerSingleton<Logger>(Logger());
@@ -99,9 +99,13 @@ Future<void> configureDependencies() async {
       getIt.get<LocalHabitDataSource>(),
       getIt.get<LocalUserDataSource>()));
 
-  getIt.registerLazySingleton<HomeBloc>(() => HomeBloc(
+  getIt.registerLazySingleton<HomeBloc>(
+    () => HomeBloc(
       taskRepository: getIt.get<ITaskRepository>(),
-      userRepository: getIt.get<IUserRepository>()));
+      userRepository: getIt.get<IUserRepository>(),
+      habitRepository: getIt.get<IHabitRepository>(),
+    ),
+  );
 
   getIt.registerLazySingleton<HabitBloc>(
       () => HabitBloc(habitRepository: getIt.get<IHabitRepository>()));
